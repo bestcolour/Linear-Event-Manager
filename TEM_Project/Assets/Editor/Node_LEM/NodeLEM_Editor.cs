@@ -11,12 +11,14 @@ public class NodeLEM_Editor : EditorWindow
     public static NodeLEM_Editor instance = default;
     public static LinearEvent m_EditingLinearEvent = default;
 
-    //Collection of nodes and connections
+    //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
     List<Connection> m_AllConnectionsInEditor = default;
-    List<Node> m_AllSelectedNodes = new List<Node>();
-
     Node s_StartNode = default, s_EndNode = default;
+
+    #region Process Event Variables
+
+    List<Node> m_AllSelectedNodes = new List<Node>();
 
     public static Node s_CurrentClickedNode = null;
     public static bool? s_CurrentNodeLastRecordedSelectState = null;
@@ -27,22 +29,25 @@ public class NodeLEM_Editor : EditorWindow
     Vector2 m_AmountOfMouseDragThisUpdate = default;
     Vector2 m_AmountOfOffset = default;
 
-    #region GUI Style References
-    bool m_SkinsLoaded = false;
+    //Selection box variables
+    Vector2? m_InitialClickedPosition = default;
+    public static Rect s_SelectionBox = default;
+    static Color s_SelectionBoxColour = new Color(0.6f, 0.8f, 1f, .2f);
+    static Color s_SelectionBoxOutlineColour = new Color(0f, 0.298f, 0.6f, 1f);
 
-    static Dictionary<string, NodeSkinCollection> s_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
+    //Currently selected in / out points
+    ConnectionPoint m_SelectedInPoint = default;
+    ConnectionPoint m_SelectedOutPoint = default;
 
-
-    GUIStyle m_InPointStyle = default;
-    GUIStyle m_OutPointStyle = default;
-    GUIStyle m_ConnectionPointStyleNormal = default;
-    GUIStyle m_ConnectionPointStyleSelected = default;
-
-    //Start End Node
-    NodeSkinCollection m_StartNodeSkins = default;
-    NodeSkinCollection m_EndNodeSkins = default;
+    #endregion
 
 
+    //NodeCommandInvoker m_CommandInvoker = default;
+
+    static LEMSkinsLibrary s_SkinsLibrary = new LEMSkinsLibrary();
+
+
+    #region GUI Style
     //Function that sets the connection point's style
     void SetConnectionPointStyles(ConnectionPoint point, bool state)
     {
@@ -50,10 +55,10 @@ public class NodeLEM_Editor : EditorWindow
         {
             if (state)
             {
-                point.style = m_ConnectionPointStyleSelected;
+                point.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
                 return;
             }
-            point.style = m_ConnectionPointStyleNormal;
+            point.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
         }
     }
 
@@ -61,18 +66,8 @@ public class NodeLEM_Editor : EditorWindow
     public static GUIStyle s_NodeTextInputStyle = default;
     public static GUIStyle s_NodeParagraphStyle = default;
 
+
     #endregion
-
-    //Selection box variables
-    Vector2? m_InitialClickedPosition = default;
-    public static Rect s_SelectionBox = default;
-
-    //Bool to record whether user is dragging the execution pins
-    //Currently selected in / out points
-    ConnectionPoint m_SelectedInPoint = default;
-    ConnectionPoint m_SelectedOutPoint = default;
-
-    //NodeCommandInvoker m_CommandInvoker = default;
 
     public static void OpenWindow()
     {
@@ -90,16 +85,15 @@ public class NodeLEM_Editor : EditorWindow
         m_EditingLinearEvent = linearEvent;
     }
 
+    #region Initialisation
+
     void OnEnable()
     {
         instance = this;
 
-        //If gui style has not been loaded
-        if (!m_SkinsLoaded)
-        {
-            LoadingNodeSkins();
-            m_SkinsLoaded = true;
-        }
+        s_SkinsLibrary.LoadLibrary();
+
+        InitialiseTextStyle();
 
         //Creates instance of invoker
         //if (m_CommandInvoker == null)
@@ -121,6 +115,66 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
+    void InitialiseTextStyle()
+    {
+        //Initialising public static node title styles
+        s_NodeHeaderStyle = new GUIStyle();
+        s_NodeHeaderStyle.fontSize = 13;
+
+        s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
+        s_NodeTextInputStyle.fontSize = 10;
+
+        s_NodeParagraphStyle = new GUIStyle();
+        s_NodeParagraphStyle.fontSize = 10;
+    }
+
+    void InitialiseStartEndNodes()
+    {
+        if (s_StartNode == null)
+        {
+            s_StartNode = new StartNode();
+            //Initialise the new node 
+            s_StartNode.Initialise
+                (new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), s_SkinsLibrary.s_StartNodeSkins, s_SkinsLibrary.s_ConnectionPointStyleNormal,
+                OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
+
+            //Add the node into collection in editor
+            m_AllNodesInEditor.Add(s_StartNode);
+        }
+
+        if (s_EndNode == null)
+        {
+            s_EndNode = new EndNode();
+            //Initialise the new node 
+            s_EndNode.Initialise
+                (new Vector2(EditorGUIUtility.currentViewWidth * 0.85f, 50f), s_SkinsLibrary.s_EndNodeSkins, s_SkinsLibrary.s_ConnectionPointStyleNormal,
+                OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
+
+            //Add the node into collection in editor
+            m_AllNodesInEditor.Add(s_EndNode);
+        }
+
+    }
+
+    #endregion
+
+    #region Resets
+
+    void ResetEventVariables()
+    {
+        m_InitialClickedPosition = null;
+        s_SelectionBox = default;
+        s_CurrentClickedNode = null;
+        GUI.changed = true;
+    }
+
+    void ResetDrawingBezierCurve()
+    {
+        //Reset bezierline drawing
+        m_SelectedOutPoint = null;
+        m_SelectedInPoint = null;
+    }
+
     void OnDisable()
     {
         ResetDrawingBezierCurve();
@@ -128,9 +182,8 @@ public class NodeLEM_Editor : EditorWindow
         s_CurrentNodeLastRecordedSelectState = null;
         m_EditingLinearEvent = null;
     }
+    #endregion
 
-    //OnGUI is called for rendering and handling GUI events.
-    //Something like onvalidate but it is triggered every time a new event occurs (mouse click, mouse move etc) for GUI rendering
     void OnGUI()
     {
         Event currentEvent = Event.current;
@@ -277,20 +330,12 @@ public class NodeLEM_Editor : EditorWindow
 
     void DrawSelectionBox(Vector2 currentMousePosition)
     {
-        //If there is a intiitial click position cached
         if (m_InitialClickedPosition != null)
         {
-            //Set colour of the box to light blue
-            Color boxColour = new Color(0.6f, 0.8f, 1f, .2f);
-            Color boxOutLineColour = new Color(0f, 0.298f, 0.6f, 1f);
-
             Vector2 initialClickPos = (Vector2)m_InitialClickedPosition;
 
             s_SelectionBox = new Rect(initialClickPos, currentMousePosition - initialClickPos);
-            //The coordinates of the editor window is upside down from the usual 
-            //the y value increases the more the point goes downwards
-            // the x value increases the more the point goes rightwards
-            Handles.DrawSolidRectangleWithOutline(s_SelectionBox, boxColour, boxOutLineColour);
+            Handles.DrawSolidRectangleWithOutline(s_SelectionBox, s_SelectionBoxColour, s_SelectionBoxOutlineColour);
         }
     }
 
@@ -307,7 +352,8 @@ public class NodeLEM_Editor : EditorWindow
     {
         if (GUI.Button(new Rect(position.width - 215f, 0, 100f, 50f), "Refresh"))
         {
-            LoadingNodeSkins();
+            //LoadingNodeSkins();
+            s_SkinsLibrary.LoadLibrary();
             OnDisable();
             OnEnable();
         }
@@ -316,8 +362,6 @@ public class NodeLEM_Editor : EditorWindow
 
 
     #endregion
-
-
 
     //Checks what the current event is right now, and then execute code accordingly
     void ProcessEvents(Event e)
@@ -338,7 +382,7 @@ public class NodeLEM_Editor : EditorWindow
                 if (e.button == 1)
                 {
                     //and if that the mouse is not clicking on any nodes currently
-                    if (s_CurrentClickedNode == null || !s_CurrentClickedNode.IsSelected )
+                    if (s_CurrentClickedNode == null || !s_CurrentClickedNode.IsSelected)
                     {
                         //Open a custom created that allows creation of more nodes
                         ProcessContextMenu(e.mousePosition);
@@ -404,7 +448,7 @@ public class NodeLEM_Editor : EditorWindow
                     case KeyCode.Delete:
 
                         //Remove start and end node 
-                        if(m_AllSelectedNodes.Contains(s_StartNode))
+                        if (m_AllSelectedNodes.Contains(s_StartNode))
                         {
                             s_StartNode.DeselectNode();
                         }
@@ -414,7 +458,7 @@ public class NodeLEM_Editor : EditorWindow
                             s_EndNode.DeselectNode();
                         }
 
-                        while (s_HaveMultipleNodeSelected )
+                        while (s_HaveMultipleNodeSelected)
                         {
                             OnClickRemoveNode(m_AllSelectedNodes[0]);
                         }
@@ -489,11 +533,11 @@ public class NodeLEM_Editor : EditorWindow
         BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
         //Get the respective skin from the collection of nodeskin
-        NodeSkinCollection nodeSkin = s_NodeStyleDictionary[nameOfNodeType];
+        NodeSkinCollection nodeSkin = s_SkinsLibrary.s_NodeStyleDictionary[nameOfNodeType];
 
         //Initialise the new node 
         newEffectNode.Initialise
-            (mousePosition, nodeSkin, m_ConnectionPointStyleNormal,
+            (mousePosition, nodeSkin, s_SkinsLibrary.s_ConnectionPointStyleNormal,
             OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
 
 
@@ -538,8 +582,8 @@ public class NodeLEM_Editor : EditorWindow
             for (int i = 0; i < connectionToRemove.Length; i++)
             {
                 //Reset the connections' in and out points to prevent the points to look unchanged
-                connectionToRemove[i].inPoint.style = m_ConnectionPointStyleNormal;
-                connectionToRemove[i].outPoint.style = m_ConnectionPointStyleNormal;
+                connectionToRemove[i].inPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+                connectionToRemove[i].outPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
                 //Remove the connections
                 m_AllConnectionsInEditor.Remove(connectionToRemove[i]);
             }
@@ -552,7 +596,7 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    
+
 
     //Drags the window canvas (think like animator window)
     void OnDrag(Vector2 delta)
@@ -597,7 +641,7 @@ public class NodeLEM_Editor : EditorWindow
         m_SelectedInPoint = connectionPoint;
 
         //Set the style to show  that point has been selected
-        m_SelectedInPoint.style = m_ConnectionPointStyleSelected;
+        m_SelectedInPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
 
         //If current selected outpoint is not null
         if (m_SelectedOutPoint != null)
@@ -609,14 +653,14 @@ public class NodeLEM_Editor : EditorWindow
             //have connection with the same node
             //Another thing to check is if the selected inpoint's connected node is equal to selected output node. If it is then dont bother connecting
             if (m_SelectedOutPoint.parentNode != m_SelectedInPoint.parentNode &&
-                castedOutPoint.nextNode != m_SelectedInPoint.parentNode)
+                castedOutPoint.m_NextNodeID != m_SelectedInPoint.parentNode.NodeID)
             {
                 //Set the styles to show  that points has been selected
-                m_SelectedInPoint.style = m_ConnectionPointStyleSelected;
-                m_SelectedOutPoint.style = m_ConnectionPointStyleSelected;
+                m_SelectedInPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
+                m_SelectedOutPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
 
                 //Link
-                castedOutPoint.nextNode = m_SelectedInPoint.parentNode;
+                castedOutPoint.m_NextNodeID = m_SelectedInPoint.parentNode.NodeID;
                 CreateConnection();
                 ResetDrawingBezierCurve();
             }
@@ -624,8 +668,8 @@ public class NodeLEM_Editor : EditorWindow
             else
             {
                 //Reset both points' style to normal
-                m_SelectedInPoint.style = m_ConnectionPointStyleNormal;
-                m_SelectedOutPoint.style = m_ConnectionPointStyleNormal;
+                m_SelectedInPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+                m_SelectedOutPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
 
                 ResetDrawingBezierCurve();
             }
@@ -639,7 +683,7 @@ public class NodeLEM_Editor : EditorWindow
         m_SelectedOutPoint = connectionPoint;
 
         //Set the style to show  that point has been selected
-        m_SelectedOutPoint.style = m_ConnectionPointStyleSelected;
+        m_SelectedOutPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
 
         if (m_SelectedInPoint != null)
         {
@@ -649,14 +693,14 @@ public class NodeLEM_Editor : EditorWindow
             //In this case we dont want them to be the same cause its stupid to 
             //have connection with the same node
             if (m_SelectedOutPoint.parentNode != m_SelectedInPoint.parentNode &&
-                castedOutPoint.nextNode != m_SelectedInPoint.parentNode)
+                castedOutPoint.m_NextNodeID != m_SelectedInPoint.parentNode.NodeID)
             {
                 //Set the styles to show  that points has been selected
-                m_SelectedInPoint.style = m_ConnectionPointStyleSelected;
-                m_SelectedOutPoint.style = m_ConnectionPointStyleSelected;
+                m_SelectedInPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
+                m_SelectedOutPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
 
                 //link
-                castedOutPoint.nextNode = m_SelectedInPoint.parentNode;
+                castedOutPoint.m_NextNodeID = m_SelectedInPoint.parentNode.NodeID;
                 CreateConnection();
                 ResetDrawingBezierCurve();
             }
@@ -664,8 +708,8 @@ public class NodeLEM_Editor : EditorWindow
             else
             {
                 //Reset both points' style to normal
-                m_SelectedInPoint.style = m_ConnectionPointStyleNormal;
-                m_SelectedOutPoint.style = m_ConnectionPointStyleNormal;
+                m_SelectedInPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+                m_SelectedOutPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
 
                 ResetDrawingBezierCurve();
             }
@@ -683,11 +727,11 @@ public class NodeLEM_Editor : EditorWindow
     {
         //Up cast the connection pt so that we can reset the outpt's nextnode
         OutConnectionPoint castedOutPoint = (OutConnectionPoint)connectionToRemove.outPoint;
-        castedOutPoint.nextNode = null;
+        castedOutPoint.m_NextNodeID = null;
 
         //Reset the connections' in and out points to prevent the points to look unchanged
-        connectionToRemove.inPoint.style = m_ConnectionPointStyleNormal;
-        connectionToRemove.outPoint.style = m_ConnectionPointStyleNormal;
+        connectionToRemove.inPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+        connectionToRemove.outPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
 
         m_AllConnectionsInEditor.Remove(connectionToRemove);
     }
@@ -711,97 +755,7 @@ public class NodeLEM_Editor : EditorWindow
 
     #endregion
 
-    void LoadingNodeSkins()
-    {
-        //Reset dictionary
-        s_NodeStyleDictionary.Clear();
-        s_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
-
-
-        //Initialising public static node title styles
-        s_NodeHeaderStyle = new GUIStyle();
-        s_NodeHeaderStyle.fontSize = 13;
-
-        s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
-        s_NodeTextInputStyle.fontSize = 10;
-
-        s_NodeParagraphStyle = new GUIStyle();
-        s_NodeParagraphStyle.fontSize = 10;
-
-        string[] namesOfNodeEffectType = LEMDictionary.GetNodeTypeKeys();
-
-        //The number range covers all the skins needed for gameobject effect related nodes
-        //Naming convention is very important here
-        for (int i = 0; i < namesOfNodeEffectType.Length; i++)
-        {
-            NodeSkinCollection skinCollection = new NodeSkinCollection();
-            //Load the node skins texture
-            skinCollection.light_normal = Resources.Load<Texture2D>("NodeBackground/light_" + namesOfNodeEffectType[i]);
-            skinCollection.light_selected = Resources.Load<Texture2D>("NodeBackground/light_" + namesOfNodeEffectType[i] + "_Selected");
-            skinCollection.textureToRender = skinCollection.light_normal;
-
-            s_NodeStyleDictionary.Add(namesOfNodeEffectType[i], skinCollection);
-        }
-
-        m_StartNodeSkins.light_normal = Resources.Load<Texture2D>("StartEnd/start");
-        m_StartNodeSkins.light_selected = Resources.Load<Texture2D>("StartEnd/start_Selected");
-        m_StartNodeSkins.textureToRender = m_StartNodeSkins.light_normal;
-
-        m_EndNodeSkins.light_normal = Resources.Load<Texture2D>("StartEnd/end");
-        m_EndNodeSkins.light_selected = Resources.Load<Texture2D>("StartEnd/end_Selected");
-        m_EndNodeSkins.textureToRender = m_EndNodeSkins.light_normal;
-
-        //Initialise the execution pin style for normal and selected pins
-        m_ConnectionPointStyleNormal = new GUIStyle();
-        m_ConnectionPointStyleNormal.normal.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin");
-        m_ConnectionPointStyleNormal.active.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin_Selected");
-
-        //Invert the two pins' backgrounds so that the user will be able to know what will happen if they press it
-        m_ConnectionPointStyleSelected = new GUIStyle();
-        m_ConnectionPointStyleSelected.normal.background = m_ConnectionPointStyleNormal.active.background;
-        m_ConnectionPointStyleSelected.active.background = m_ConnectionPointStyleNormal.normal.background;
-
-
-        //Load the in and out point gui styles
-        m_InPointStyle = new GUIStyle();
-        m_InPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
-        m_InPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
-
-        m_OutPointStyle = new GUIStyle();
-        m_OutPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
-        m_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
-
-
-    }
-
-    void InitialiseStartEndNodes()
-    {
-        if (s_StartNode == null)
-        {
-            s_StartNode = new StartNode();
-            //Initialise the new node 
-            s_StartNode.Initialise
-                (new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), m_StartNodeSkins, m_ConnectionPointStyleNormal,
-                OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
-
-            //Add the node into collection in editor
-            m_AllNodesInEditor.Add(s_StartNode);
-        }
-
-        if (s_EndNode == null)
-        {
-            s_EndNode = new EndNode();
-            //Initialise the new node 
-            s_EndNode.Initialise
-                (new Vector2(EditorGUIUtility.currentViewWidth * 0.85f, 50f), m_EndNodeSkins, m_ConnectionPointStyleNormal,
-                OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
-
-            //Add the node into collection in editor
-            m_AllNodesInEditor.Add(s_EndNode);
-        }
-
-    }
-
+   
     #region Saving 
 
     ////Function that firstly causes all the nodes in the editor to save themselves and output a TEM_BaseEffect
@@ -858,21 +812,6 @@ public class NodeLEM_Editor : EditorWindow
 
     #endregion
 
-
-    void ResetEventVariables()
-    {
-        m_InitialClickedPosition = null;
-        s_SelectionBox = default;
-        s_CurrentClickedNode = null;
-        GUI.changed = true;
-    }
-
-    void ResetDrawingBezierCurve()
-    {
-        //Reset bezierline drawing
-        m_SelectedOutPoint = null;
-        m_SelectedInPoint = null;
-    }
 
 
 }

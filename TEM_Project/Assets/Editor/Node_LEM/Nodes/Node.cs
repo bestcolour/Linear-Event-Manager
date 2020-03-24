@@ -239,6 +239,6 @@ public abstract class Node
     //}
 
     //Connect connections with the node's in out points if there is any
-    public virtual void ConnectConnections() { }
+    //public virtual void ConnectConnections() { }
 
 }

@@ -20,7 +20,8 @@ namespace LEM_Effects
         public string m_Description = default;
 
         [Tooltip("Basically holds what should be the next event to trigger")]
-        public LEM_BaseEffect m_NextEffect = default;
+        //public LEM_BaseEffect m_NextEffect = default;
+        public string m_NextEffectNodeID = default;
 
         public NodeBaseData m_NodeBaseData = default;
 
