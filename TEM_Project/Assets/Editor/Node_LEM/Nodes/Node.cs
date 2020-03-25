@@ -70,6 +70,58 @@ public abstract class Node
 
     }
 
+    ////Process events and return a boolean to check if we need to repaint its GUI or not
+    //public bool ProcessNodeEvents(Event e)
+    //{
+    //    switch (e.type)
+    //    {
+    //        //If mouse was press down,
+    //        case EventType.MouseDown:
+    //            return HandleMouseDown(e);
+           
+
+    //            break;
+
+    //        //If mouse was released
+    //        case EventType.MouseUp:
+
+    //            HandleMouseUp(e);
+    //            break;
+
+    //        //If mouse was press down and then dragged around,
+    //        case EventType.MouseDrag:
+
+    //            HandleMouseDrag(e);
+    //            //if (e.button == 0)
+    //            //{
+    //            //    if (m_IsDragged)
+    //            //    {
+    //            //        Drag(e.delta);
+    //            //        //Tell the system that you need to redraw this GUI
+    //            //        return true;
+    //            //    }
+    //            //    //Check if node is within selection box of editor
+    //            //    else if (NodeLEM_Editor.s_SelectionBox.Overlaps(m_Rect, true))
+    //            //    {
+    //            //        SelectBySelectionBox();
+    //            //        return true;
+    //            //    }
+    //            //    //Else if user isnt dragging the canvas
+    //            //    else if (!e.alt)
+    //            //    {
+    //            //        DeselectNode();
+    //            //        return true;
+    //            //    }
+
+    //            //}
+
+    //            break;
+
+    //    }
+
+    //    return false;
+    //}
+
     public bool HandleMouseDown(Event e)
     {
         //Check if mouseposition is within the bounds of the node's rect body

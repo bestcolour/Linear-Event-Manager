@@ -60,7 +60,7 @@ public class NodeLEM_Editor : EditorWindow
     //NodeCommandInvoker m_CommandInvoker = default;
 
     static LEMSkinsLibrary s_SkinsLibrary = new LEMSkinsLibrary();
-    static Texture2D s_EditorBackGroundTexture = default;
+
 
     #region GUI Style
     //Function that sets the connection point's style
@@ -91,6 +91,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Set the title of gui for the window to be TEM Node Editor
         editorWindow.titleContent = new GUIContent("TEM Node Editor");
+
     }
 
     public static void LoadNodeEditor(LinearEvent linearEvent)
@@ -107,7 +108,7 @@ public class NodeLEM_Editor : EditorWindow
 
         s_SkinsLibrary.LoadLibrary();
 
-        InitialiseStyles();
+        InitialiseTextStyle();
 
         //Creates instance of invoker
         //if (m_CommandInvoker == null)
@@ -129,7 +130,7 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    void InitialiseStyles()
+    void InitialiseTextStyle()
     {
         //Initialising public static node title styles
         s_NodeHeaderStyle = new GUIStyle();
@@ -140,10 +141,6 @@ public class NodeLEM_Editor : EditorWindow
 
         s_NodeParagraphStyle = new GUIStyle();
         s_NodeParagraphStyle.fontSize = 10;
-
-        s_EditorBackGroundTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-        s_EditorBackGroundTexture.SetPixel(0, 0, new Color(0.227f, 0.216f, 0.212f));
-        s_EditorBackGroundTexture.Apply();
     }
 
     void InitialiseStartEndNodes()
@@ -204,9 +201,6 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnGUI()
     {
-        //Draw background of for the window
-        GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), s_EditorBackGroundTexture, ScaleMode.StretchToFill);
-
         Event currentEvent = Event.current;
 
         //Draw a grid background
