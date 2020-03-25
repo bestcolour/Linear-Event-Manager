@@ -10,7 +10,8 @@ public class Connection
     public ConnectionPoint outPoint;
 
     //Delegate action to be called when connection is clicked
-    public Action<Connection> OnClickRemoveConnection;
+    public Action<Connection> OnClickRemoveConnection
+    { private get; set; }
 
 
     //Constructor 

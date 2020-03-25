@@ -12,19 +12,21 @@ public class LinearEvent : MonoBehaviour
     //[Header("Flow of Events That Will Run")]
     public LEM_BaseEffect[] m_AllEffects = default;
 
+    //public Dictionary<string, LEM_BaseEffect> m_AllEffectsDictionary = default;
+
     //[Header("Unused Events Saved From Node Editor")]
     //public LEM_BaseEffect[] m_EffectsUnConnected= default;
 
     public NodeBaseData m_StartNodeData = default;
     public NodeBaseData m_EndNodeData = default;
 
-    private void Start()
-    {
-        Debug.Log(m_AllEffects[0].m_Description);
+    //private void Start()
+    //{
+    //    Debug.Log(m_AllEffects[0].m_Description);
 
-        Debug.Log(m_AllEffects[0].TEM_Update());
+    //    Debug.Log(m_AllEffects[0].TEM_Update());
 
-    }
+    //}
 
 
 }

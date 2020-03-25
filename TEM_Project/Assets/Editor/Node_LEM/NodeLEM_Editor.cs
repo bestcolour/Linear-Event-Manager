@@ -9,7 +9,7 @@ using System.Linq;
 public class NodeLEM_Editor : EditorWindow
 {
     public static NodeLEM_Editor instance = default;
-    public static LinearEvent m_EditingLinearEvent = default;
+    public static LinearEvent s_EditingLinearEvent = default;
 
     //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
@@ -27,6 +27,7 @@ public class NodeLEM_Editor : EditorWindow
             return allEffectNodes;
         }
     }
+    Dictionary<string, BaseEffectNode> m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
 
     List<Connection> m_AllConnectionsInEditor = default;
     Node s_StartNode = default, s_EndNode = default;
@@ -91,12 +92,16 @@ public class NodeLEM_Editor : EditorWindow
 
         //Set the title of gui for the window to be TEM Node Editor
         editorWindow.titleContent = new GUIContent("TEM Node Editor");
+
+
     }
 
     public static void LoadNodeEditor(LinearEvent linearEvent)
     {
         OpenWindow();
-        m_EditingLinearEvent = linearEvent;
+
+        s_EditingLinearEvent = linearEvent;
+        instance.LoadFromLinearEvent();
     }
 
     #region Initialisation
@@ -123,6 +128,11 @@ public class NodeLEM_Editor : EditorWindow
         if (m_AllConnectionsInEditor == null)
         {
             m_AllConnectionsInEditor = new List<Connection>();
+        }
+
+        if (m_AllEffectsNodeInEditor == default)
+        {
+            m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
         }
 
         InitialiseStartEndNodes();
@@ -198,7 +208,7 @@ public class NodeLEM_Editor : EditorWindow
         ResetDrawingBezierCurve();
         ResetEventVariables();
         s_CurrentNodeLastRecordedSelectState = null;
-        m_EditingLinearEvent = null;
+        s_EditingLinearEvent = null;
     }
     #endregion
 
@@ -365,7 +375,7 @@ public class NodeLEM_Editor : EditorWindow
         if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), "Save Effects"))
         {
             //SaveNodes();
-            TransferNodeData();
+            SaveToLinearEvent();
         }
     }
 
@@ -509,7 +519,7 @@ public class NodeLEM_Editor : EditorWindow
         if (m_AllNodesInEditor != null)
         {
             //Check current event once and then tell all the nodes to handle that event so they dont have to check
-            switch(e.type)
+            switch (e.type)
             {
                 case EventType.MouseDown:
 
@@ -550,9 +560,9 @@ public class NodeLEM_Editor : EditorWindow
         GenericMenu genericMenu = new GenericMenu();
         //While also delegating that item's function to be OnClickAddNode
         genericMenu.AddItem(new GUIContent("Add Destroy GameObject node"), false,
-            () => AddNode(mousePosition, "DestroyGameObjectNode"));
+            () => CreateNode(mousePosition, "DestroyGameObjectNode"));
         genericMenu.AddItem(new GUIContent("Add Instantiate GameObject node"), false,
-            () => AddNode(mousePosition, "InstantiateGameObjectNode"));
+            () => CreateNode(mousePosition, "InstantiateGameObjectNode"));
 
 
 
@@ -562,10 +572,7 @@ public class NodeLEM_Editor : EditorWindow
 
 
 
-    ////When the add TEM node option is clicked, this function runs
-    //the T type inserted must be of tem_baseeffect class and must be initialisable 
-    //node effect is incase i need to use it for later. If not, remove it
-    void AddNode(Vector2 mousePosition, string nameOfNodeType)
+    void CreateNode(Vector2 mousePosition, string nameOfNodeType)
     {
         BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
@@ -577,9 +584,31 @@ public class NodeLEM_Editor : EditorWindow
             (mousePosition, nodeSkin, s_SkinsLibrary.s_ConnectionPointStyleNormal,
             OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
 
+        newEffectNode.GenerateNodeID();
 
         //Add the node into collection in editor
         m_AllNodesInEditor.Add(newEffectNode);
+        m_AllEffectsNodeInEditor.Add(newEffectNode.NodeID, newEffectNode);
+    }
+
+    void CreateNode(Vector2 mousePosition, string nameOfNodeType, string idToSet, out BaseEffectNode effectNode)
+    {
+        BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
+
+        //Get the respective skin from the collection of nodeskin
+        NodeSkinCollection nodeSkin = s_SkinsLibrary.s_NodeStyleDictionary[nameOfNodeType];
+
+        //Initialise the new node 
+        newEffectNode.Initialise
+            (mousePosition, nodeSkin, s_SkinsLibrary.s_ConnectionPointStyleNormal,
+            OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
+
+        newEffectNode.SetNodeID(idToSet);
+
+        //Add the node into collection in editor
+        m_AllNodesInEditor.Add(newEffectNode);
+        m_AllEffectsNodeInEditor.Add(newEffectNode.NodeID, newEffectNode);
+        effectNode = newEffectNode;
     }
 
     #endregion
@@ -759,6 +788,12 @@ public class NodeLEM_Editor : EditorWindow
         m_AllConnectionsInEditor.Add(new Connection(m_SelectedInPoint, m_SelectedOutPoint, OnClickRemoveConnection));
     }
 
+    void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
+    {
+        //Init the new connection
+        m_AllConnectionsInEditor.Add(new Connection(inPoint, outPoint, OnClickRemoveConnection));
+    }
+
     void OnClickRemoveConnection(Connection connectionToRemove)
     {
         //Up cast the connection pt so that we can reset the outpt's nextnode
@@ -792,13 +827,14 @@ public class NodeLEM_Editor : EditorWindow
     #endregion
 
 
-    #region Saving 
+    #region Saving and Loading
 
-    void TransferNodeData()
+    void SaveToLinearEvent()
     {
         m_AllNodesInEditor.Remove(s_StartNode);
         m_AllNodesInEditor.Remove(s_EndNode);
 
+        //Saving is done here
         LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[m_AllNodesInEditor.Count];
         BaseEffectNode[] allEffectNodes = m_AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
 
@@ -807,66 +843,62 @@ public class NodeLEM_Editor : EditorWindow
             lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
         }
 
-        m_EditingLinearEvent.m_AllEffects = lemEffects;
+        s_EditingLinearEvent.m_AllEffects = lemEffects;
+
+        //Save start and end node data
+        s_EditingLinearEvent.m_StartNodeData = s_StartNode.SaveNodeData();
+        s_EditingLinearEvent.m_EndNodeData = s_EndNode.SaveNodeData();
+
 
         m_AllNodesInEditor.Add(s_StartNode);
         m_AllNodesInEditor.Add(s_EndNode);
 
     }
 
+    void LoadFromLinearEvent()
+    {
+
+        //Load all the nodes into collection first by recreating them
+        for (int i = 0; i < s_EditingLinearEvent.m_AllEffects.Length; i++)
+        {
+
+            //Might wanna remove effect type and just call getType.tostring here but meh i mean storing is bttr in a sense
+            CreateNode(s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_Position,
+                s_EditingLinearEvent.m_AllEffects[i].m_NodeEffectType,
+                s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID
+                , out BaseEffectNode newEffectNode);
+
+            newEffectNode.LoadFromLinearEvent(s_EditingLinearEvent.m_AllEffects[i]);
+
+        }
+
+        //Stitch their connnection back
+        for (int i = 0; i < s_EditingLinearEvent.m_AllEffects.Length; i++)
+        {
+            //Cr8 one connection for each points
+
+            if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID)
+                && !m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
+            {
+                CreateConnection(
+                                m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint,
+                                m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID].m_InPoint
+                                );
+            }
+
+            if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_PrevPointNodeID)
+                 && !m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_InPoint.IsConnected)
+            {
+                CreateConnection(
+                                m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_PrevPointNodeID].m_OutPoint,
+                                m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_InPoint
+                                );
+            }
+
+        }
 
 
-    ////Function that firstly causes all the nodes in the editor to save themselves and output a TEM_BaseEffect
-    //void SaveNodes()
-    //{
-    //    //Remove Start and End Node from list of all nodes to make the nodes in the list all be effectNodes
-    //    m_AllNodesInEditor.Remove(s_StartNode);
-    //    m_AllNodesInEditor.Remove(s_EndNode);
-
-    //    //Save all effect nodes' effect references into their own lem_effect cache
-    //    //in addition, save all effect nodes' position on the window
-    //    for (int i = 0; i < m_AllNodesInEditor.Count; i++)
-    //        m_AllNodesInEditor[i].SaveNodeData();
-
-    //    //Then, connect the next effects of all the nodes connected to the Start node (Using recursive function)
-    //    StartNode lemStartNode = s_StartNode as StartNode;
-    //    List<BaseEffectNode> allConnectedEffectNodes = new List<BaseEffectNode>();
-    //    lemStartNode.StartConnection(ref allConnectedEffectNodes);
-
-    //    //Cr8 a temp base eff array to transfer connected base effects to the LE
-    //    LEM_BaseEffect[] allConnectedEffects = allConnectedEffectNodes.ConvertAll(x => x.m_BaseEffectSaveFile).ToArray();
-
-    //    //Convert all the nodes in editor (which would be effect nodes by now,) into baseEffectNodes
-    //    BaseEffectNode[] allEffectNodesInEditor = Array.ConvertAll(m_AllNodesInEditor.ToArray(), x => (BaseEffectNode)x);
-
-    //    //Then, using the Select function which outputs a ienumerable filled with base effect files, populate allBaseEffects
-    //    LEM_BaseEffect[] allUnConnectedEffects = (allEffectNodesInEditor.Select(x => x.m_BaseEffectSaveFile).ToArray().Except(allConnectedEffects)).ToArray();
-
-
-    //    //Now Save Node Data for start and end nodes
-    //    s_StartNode.SaveNodeData();
-    //    s_EndNode.SaveNodeData();
-
-
-    //    //Assign LE with the results depending on whether there is any
-    //    m_EditingLinearEvent.m_EffectsConnected = allConnectedEffects == default ? default : allConnectedEffects;
-
-    //    //Debug.Log(m_EditingLinearEvent.m_EffectsConnected[0].m_NodeBaseData.m_NodeID);
-    //    //Debug.Log(m_EditingLinearEvent.m_EffectsConnected[0].TEM_Update());
-
-    //    //DestroyGameObject d = (DestroyGameObject)m_EditingLinearEvent.m_EffectsConnected[0];
-    //    //Debug.Log(d.m_TargetObject, d.m_TargetObject);
-
-
-    //    m_EditingLinearEvent.m_EffectsUnConnected = allUnConnectedEffects == default ? default : allUnConnectedEffects;
-
-    //    //Readd the start and end node
-    //    m_AllNodesInEditor.Add(s_StartNode);
-    //    m_AllNodesInEditor.Add(s_EndNode);
-
-    //}
-
-
+    }
 
     #endregion
 

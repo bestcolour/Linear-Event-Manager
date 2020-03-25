@@ -16,6 +16,13 @@ public class DestroyGameObjectNode : BaseEffectNode
         m_Rect.width = 244.9f;
     }
 
+    public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
+    {
+        DestroyGameObject loadFrom = effectToLoadFrom as DestroyGameObject;
+        m_TargetObject = loadFrom.m_TargetObject;
+
+        base.LoadFromLinearEvent(effectToLoadFrom);
+    }
 
     public override void Draw()
     {

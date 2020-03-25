@@ -22,6 +22,12 @@ public class BaseEffectNode : Node
         m_Title = LEMDictionary.RemoveNodeWord(m_Title);
     }
 
+    //For overriding of Load
+    public virtual void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
+    {
+        m_LemEffectDescription = effectToLoadFrom.m_Description;
+    }
+
     public override void Draw()
     {
         base.Draw();

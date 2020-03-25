@@ -5,16 +5,21 @@ public abstract class Node
 {
     public Rect m_Rect = default;
 
-    Guid m_NodeID = default;
+    //Guid m_NodeID = default;
     public string NodeID
     {
         get; private set;
     }
 
-    void GenerateNodeID()
+    public void GenerateNodeID()
     {
-        m_NodeID = Guid.NewGuid();
-        NodeID = m_NodeID.ToString();
+        //m_NodeID = Guid.NewGuid();
+        NodeID = Guid.NewGuid().ToString();
+    }
+
+    public void SetNodeID(string id)
+    {
+        NodeID = id;
     }
 
     protected bool m_IsDragged = default;
@@ -49,7 +54,7 @@ public abstract class Node
         m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint);
 
 
-        GenerateNodeID();
+        //GenerateNodeID();
     }
 
     //Delta here is a finite increment (eg time.delta time, mouse movement delta(Event.delta), rectransform's delta x and y)

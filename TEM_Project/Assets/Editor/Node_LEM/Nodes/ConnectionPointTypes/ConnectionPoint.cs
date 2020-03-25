@@ -11,6 +11,7 @@ public abstract class ConnectionPoint
     public GUIStyle style = default;
 
     public string m_ConnectedNodeID = default;
+    public bool IsConnected => String.IsNullOrEmpty(m_ConnectedNodeID) ? false : true; 
 
     //Create a delegate that takes in a ConnectionPoint as a parameter
     public Action<ConnectionPoint> OnClickConnectionPoint = null;

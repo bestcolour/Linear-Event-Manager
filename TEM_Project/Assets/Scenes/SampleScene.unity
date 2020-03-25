@@ -150,8 +150,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LinearEventName: 
-  m_AllEffects:
-  - {fileID: 1678223185}
+  m_AllEffects: []
+  m_StartNodeData:
+    m_Position: {x: 0, y: 0}
+    m_NodeID: 
+    m_NextPointNodeID: 
+    m_PrevPointNodeID: 
+  m_EndNodeData:
+    m_Position: {x: 0, y: 0}
+    m_NodeID: 
+    m_NextPointNodeID: 
+    m_PrevPointNodeID: 
 --- !u!4 &22978523
 Transform:
   m_ObjectHideFlags: 0
@@ -458,23 +467,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1678223185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: 
-  m_Description: 
-  m_NodeBaseData:
-    m_Position: {x: 186, y: 178}
-    m_NodeID: e113f60e-26fb-4014-bea8-3607b7dc1a9e
-    m_NextPointNodeID: 
-    m_PrevPointNodeID: 
-  m_TargetObject: {fileID: 0}
