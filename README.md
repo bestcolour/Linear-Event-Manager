@@ -1,2 +1,2 @@
-# TEM NodeEditor
- Tutorial Event Manager Project
+# LEM NodeEditor
+ Linear Event Manager Project
