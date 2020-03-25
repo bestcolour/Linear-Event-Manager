@@ -13,6 +13,21 @@ public class NodeLEM_Editor : EditorWindow
 
     //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
+    public BaseEffectNode[] AllEffectNodesInEditor
+    {
+        get
+        {
+            m_AllNodesInEditor.Remove(s_StartNode);
+            m_AllNodesInEditor.Remove(s_EndNode);
+
+            BaseEffectNode[] allEffectNodes = Array.ConvertAll(m_AllNodesInEditor.ToArray(), x => (BaseEffectNode)x).ToArray();
+
+            m_AllNodesInEditor.Add(s_StartNode);
+            m_AllNodesInEditor.Add(s_EndNode);
+            return allEffectNodes;
+        }
+    }
+
     List<Connection> m_AllConnectionsInEditor = default;
     Node s_StartNode = default, s_EndNode = default;
 
@@ -201,7 +216,7 @@ public class NodeLEM_Editor : EditorWindow
         DrawConnections();
         DrawConnectionLine(currentEvent);
         DrawSelectionBox(currentEvent.mousePosition);
-        //DrawSaveButton();
+        DrawSaveButton();
         DrawRefreshButton();
 
 
@@ -339,13 +354,14 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
-    //void DrawSaveButton()
-    //{
-    //    if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), "Save Effects"))
-    //    {
-    //        SaveNodes();
-    //    }
-    //}
+    void DrawSaveButton()
+    {
+        if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), "Save Effects"))
+        {
+            //SaveNodes();
+            TransferNodeData();
+        }
+    }
 
     //Creation use only
     void DrawRefreshButton()
@@ -368,11 +384,8 @@ public class NodeLEM_Editor : EditorWindow
     {
         m_AmountOfMouseDragThisUpdate = Vector2.zero;
 
-        //Do different things based on the event's type
         switch (e.type)
         {
-
-            //If any of the two mouse buttons are down,
             case EventType.MouseDown:
 
                 //Set the currenly clicked node
@@ -401,6 +414,7 @@ public class NodeLEM_Editor : EditorWindow
                     //If mouse indeed clicks on a node,
                     if (s_CurrentClickedNode == null)
                     {
+                        //Set initial position for drawing selection box
                         if (!e.alt)
                         {
                             m_InitialClickedPosition = e.mousePosition;
@@ -423,7 +437,7 @@ public class NodeLEM_Editor : EditorWindow
                 //with alt pressed, then drag the canvas
                 if (e.button == 0)
                 {
-                    if (e.alt && m_InitialClickedPosition == null)
+                    if (e.alt && m_InitialClickedPosition == null && s_CurrentClickedNode == null)
                     {
                         OnDrag(e.delta);
                         GUI.changed = true;
@@ -486,19 +500,36 @@ public class NodeLEM_Editor : EditorWindow
 
     void ProcessNodeEvents(Event e)
     {
-        //If nodes collection is not null
         if (m_AllNodesInEditor != null)
         {
-            //Since the last node is rendered last and is drawn on the top, it should process its events first
-            for (int i = m_AllNodesInEditor.Count - 1; i >= 0; i--)
+            //Check current event once and then tell all the nodes to handle that event so they dont have to check
+            switch(e.type)
             {
-                //If after processing the node events, there is a need for repainting (due to dragging of nodes etc)
-                //reason why it is not dragging is because when the first node drags, it returns the true value and GUI.c
-                if (m_AllNodesInEditor[i].ProcessNodeEvents(e))
-                {
-                    //set static var of GUI Changing to be true
-                    GUI.changed = true;
-                }
+                case EventType.MouseDown:
+
+                    for (int i = m_AllNodesInEditor.Count - 1; i >= 0; i--)
+                        if (m_AllNodesInEditor[i].HandleMouseDown(e))
+                        {
+                            GUI.changed = true;
+                        }
+
+                    break;
+                case EventType.MouseUp:
+                    for (int i = m_AllNodesInEditor.Count - 1; i >= 0; i--)
+                        if (m_AllNodesInEditor[i].HandleMouseUp(e))
+                        {
+                            GUI.changed = true;
+                        }
+                    break;
+
+                case EventType.MouseDrag:
+                    for (int i = m_AllNodesInEditor.Count - 1; i >= 0; i--)
+                        if (m_AllNodesInEditor[i].HandleMouseDrag(e))
+                        {
+                            GUI.changed = true;
+                        }
+                    break;
+
             }
         }
     }
@@ -568,33 +599,6 @@ public class NodeLEM_Editor : EditorWindow
         genericMenu.ShowAsContext();
     }
 
-    void OnClickRemoveNode(Node nodeToRemove)
-    {
-        //Check if there are any connections collection in editor at all
-        if (m_AllConnectionsInEditor != null)
-        {
-            //So if we want to remove a node, we need to clear its connections first
-            //that being said, we need to figure out which connections belong to the node we wanna remove 
-            //then we remove all of those connections that meet that criteria
-
-            Connection[] connectionToRemove = m_AllConnectionsInEditor.FindAll(x => x.inPoint == nodeToRemove.m_InPoint || x.outPoint == nodeToRemove.m_OutPoint).ToArray();
-
-            for (int i = 0; i < connectionToRemove.Length; i++)
-            {
-                //Reset the connections' in and out points to prevent the points to look unchanged
-                connectionToRemove[i].inPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
-                connectionToRemove[i].outPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
-                //Remove the connections
-                m_AllConnectionsInEditor.Remove(connectionToRemove[i]);
-            }
-        }
-
-        //Remove node from selected collection if it is inside
-        RemoveNodeFromSelectedCollection(nodeToRemove);
-        //If there isnt any connection collection, that means prolly that there is no connection drawn at all in the very beginning
-        m_AllNodesInEditor.Remove(nodeToRemove);
-
-    }
 
 
 
@@ -631,10 +635,10 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
-    #region Node Connection Delegates
+    #region Delegates
 
     //Onclick in and out points are to be passed as delegates/actions when creating 
-    //new nodes so that they can pass it to their in and oout points
+    //new nodes so that they can pass it to their in and out points
     void OnClickInPoint(ConnectionPoint connectionPoint)
     {
         //Set currently selected inpoint as the inputted connection point
@@ -653,14 +657,15 @@ public class NodeLEM_Editor : EditorWindow
             //have connection with the same node
             //Another thing to check is if the selected inpoint's connected node is equal to selected output node. If it is then dont bother connecting
             if (m_SelectedOutPoint.parentNode != m_SelectedInPoint.parentNode &&
-                castedOutPoint.m_NextNodeID != m_SelectedInPoint.parentNode.NodeID)
+                castedOutPoint.m_ConnectedNodeID != m_SelectedInPoint.parentNode.NodeID)
             {
                 //Set the styles to show  that points has been selected
                 m_SelectedInPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
                 m_SelectedOutPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
 
                 //Link
-                castedOutPoint.m_NextNodeID = m_SelectedInPoint.parentNode.NodeID;
+                castedOutPoint.m_ConnectedNodeID = m_SelectedInPoint.parentNode.NodeID;
+                m_SelectedInPoint.m_ConnectedNodeID = castedOutPoint.parentNode.NodeID;
                 CreateConnection();
                 ResetDrawingBezierCurve();
             }
@@ -693,14 +698,16 @@ public class NodeLEM_Editor : EditorWindow
             //In this case we dont want them to be the same cause its stupid to 
             //have connection with the same node
             if (m_SelectedOutPoint.parentNode != m_SelectedInPoint.parentNode &&
-                castedOutPoint.m_NextNodeID != m_SelectedInPoint.parentNode.NodeID)
+                castedOutPoint.m_ConnectedNodeID != m_SelectedInPoint.parentNode.NodeID)
             {
                 //Set the styles to show  that points has been selected
                 m_SelectedInPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
                 m_SelectedOutPoint.style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
 
                 //link
-                castedOutPoint.m_NextNodeID = m_SelectedInPoint.parentNode.NodeID;
+                castedOutPoint.m_ConnectedNodeID = m_SelectedInPoint.parentNode.NodeID;
+                m_SelectedInPoint.m_ConnectedNodeID = castedOutPoint.parentNode.NodeID;
+
                 CreateConnection();
                 ResetDrawingBezierCurve();
             }
@@ -716,6 +723,29 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
+    void OnClickRemoveNode(Node nodeToRemove)
+    {
+        if (m_AllConnectionsInEditor != null)
+        {
+            Connection[] connectionToRemove = m_AllConnectionsInEditor.FindAll(x => x.inPoint == nodeToRemove.m_InPoint || x.outPoint == nodeToRemove.m_OutPoint).ToArray();
+
+            for (int i = 0; i < connectionToRemove.Length; i++)
+            {
+                //Reset the connections' in and out points to prevent the points to look unchanged
+                connectionToRemove[i].inPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+                connectionToRemove[i].outPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+                //Remove the connections
+                m_AllConnectionsInEditor.Remove(connectionToRemove[i]);
+            }
+        }
+
+        //Remove node from selected collection if it is inside
+        RemoveNodeFromSelectedCollection(nodeToRemove);
+        //If there isnt any connection collection, that means prolly that there is no connection drawn at all in the very beginning
+        m_AllNodesInEditor.Remove(nodeToRemove);
+
+    }
+
     //Cr8 connection list if there arent any and add a new connection into the list
     void CreateConnection()
     {
@@ -727,7 +757,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         //Up cast the connection pt so that we can reset the outpt's nextnode
         OutConnectionPoint castedOutPoint = (OutConnectionPoint)connectionToRemove.outPoint;
-        castedOutPoint.m_NextNodeID = null;
+        castedOutPoint.m_ConnectedNodeID = null;
 
         //Reset the connections' in and out points to prevent the points to look unchanged
         connectionToRemove.inPoint.style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
@@ -755,8 +785,30 @@ public class NodeLEM_Editor : EditorWindow
 
     #endregion
 
-   
+
     #region Saving 
+
+    void TransferNodeData()
+    {
+        m_AllNodesInEditor.Remove(s_StartNode);
+        m_AllNodesInEditor.Remove(s_EndNode);
+
+        LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[m_AllNodesInEditor.Count];
+        BaseEffectNode[] allEffectNodes = m_AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
+
+        for (int i = 0; i < m_AllNodesInEditor.Count; i++)
+        {
+            lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
+        }
+
+        m_EditingLinearEvent.m_AllEffects = lemEffects;
+
+        m_AllNodesInEditor.Add(s_StartNode);
+        m_AllNodesInEditor.Add(s_EndNode);
+
+    }
+
+
 
     ////Function that firstly causes all the nodes in the editor to save themselves and output a TEM_BaseEffect
     //void SaveNodes()

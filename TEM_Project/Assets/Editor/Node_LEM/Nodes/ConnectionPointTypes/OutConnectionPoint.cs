@@ -3,7 +3,6 @@
 public class OutConnectionPoint : ConnectionPoint
 {
 
-    public string m_NextNodeID = default;
 
     public override void Draw()
     {

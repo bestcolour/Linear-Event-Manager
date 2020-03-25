@@ -9,22 +9,22 @@ public class LinearEvent : MonoBehaviour
     public string m_LinearEventName = default;
 
     //For testing purposes only, remove once if else node and switch case node has been introduced
-    [Header("Flow of Events That Will Run")]
-    public LEM_BaseEffect[] m_EffectsConnected = default;
+    //[Header("Flow of Events That Will Run")]
+    public LEM_BaseEffect[] m_AllEffects = default;
 
-    [Header("Unused Events Saved From Node Editor")]
-    public LEM_BaseEffect[] m_EffectsUnConnected= default;
+    //[Header("Unused Events Saved From Node Editor")]
+    //public LEM_BaseEffect[] m_EffectsUnConnected= default;
 
-    //public NodeBaseData m_StartNodeData = default;
-    //public NodeBaseData m_EndNodeData = default;
+    public NodeBaseData m_StartNodeData = default;
+    public NodeBaseData m_EndNodeData = default;
 
-    //private void Start()
-    //{
-    //    Debug.Log(m_EffectsConnected[0].m_Description);
+    private void Start()
+    {
+        Debug.Log(m_AllEffects[0].m_Description);
 
-    //    Debug.Log(m_EffectsConnected[0].TEM_Update());
+        Debug.Log(m_AllEffects[0].TEM_Update());
 
-    //}
+    }
 
 
 }

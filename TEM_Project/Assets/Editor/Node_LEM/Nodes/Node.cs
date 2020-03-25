@@ -70,130 +70,174 @@ public abstract class Node
 
     }
 
-    //Process events and return a boolean to check if we need to repaint its GUI or not
-    public bool ProcessNodeEvents(Event e)
+    ////Process events and return a boolean to check if we need to repaint its GUI or not
+    //public bool ProcessNodeEvents(Event e)
+    //{
+    //    switch (e.type)
+    //    {
+    //        //If mouse was press down,
+    //        case EventType.MouseDown:
+    //            return HandleMouseDown(e);
+           
+
+    //            break;
+
+    //        //If mouse was released
+    //        case EventType.MouseUp:
+
+    //            HandleMouseUp(e);
+    //            break;
+
+    //        //If mouse was press down and then dragged around,
+    //        case EventType.MouseDrag:
+
+    //            HandleMouseDrag(e);
+    //            //if (e.button == 0)
+    //            //{
+    //            //    if (m_IsDragged)
+    //            //    {
+    //            //        Drag(e.delta);
+    //            //        //Tell the system that you need to redraw this GUI
+    //            //        return true;
+    //            //    }
+    //            //    //Check if node is within selection box of editor
+    //            //    else if (NodeLEM_Editor.s_SelectionBox.Overlaps(m_Rect, true))
+    //            //    {
+    //            //        SelectBySelectionBox();
+    //            //        return true;
+    //            //    }
+    //            //    //Else if user isnt dragging the canvas
+    //            //    else if (!e.alt)
+    //            //    {
+    //            //        DeselectNode();
+    //            //        return true;
+    //            //    }
+
+    //            //}
+
+    //            break;
+
+    //    }
+
+    //    return false;
+    //}
+
+    public bool HandleMouseDown(Event e)
     {
-        switch (e.type)
+        //Check if mouseposition is within the bounds of the node's rect body
+        Node currentClickedNode = NodeLEM_Editor.s_CurrentClickedNode;
+
+        //Check if it is the left mousebutton that was pressed
+        if (e.button == 0)
         {
-            //If mouse was press down,
-            case EventType.MouseDown:
-
-                //Check if mouseposition is within the bounds of the node's rect body
-                Node currentClickedNode = NodeLEM_Editor.s_CurrentClickedNode;
-
-                //Check if it is the left mousebutton that was pressed
-                if (e.button == 0)
+            if (currentClickedNode != null)
+            {
+                //If mouse overlapps this node
+                if (currentClickedNode == this)
                 {
-                    if (currentClickedNode != null)
-                    {
-                        //If mouse overlapps this node
-                        if (currentClickedNode == this)
-                        {
-                            //Record the state of the current node last recorded
-                            NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState = currentClickedNode.m_IsSelected;
-
-                            //if node has not been selected
-                            if (!m_IsSelected)
-                            {
-                                SelectByClicking();
-                                return true;
-                            }
-
-                            //Else if mouse clicks on a selected node
-
-                            //that means i want to deselect it with shift click 
-                            if (e.shift)
-                            {
-                                DeselectNode();
-                                return true;
-                            }
-
-                            // or i want to drag this selected nodes 
-                            m_IsDragged = true;
-                            return false;
-                        }
-
-
-                        //else if mouse doesnt overlapp this node
-                        //If this node is selected
-                        if (m_IsSelected)
-                        {
-                            //If shift click is pressed , dont run the code below
-                            if (e.shift)
-                            {
-                                return false;
-                            }
-
-                            //Deselect if this node is selected but there isnt multiple selected nodes
-                            // or if there is no node clicked
-                            if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState == false)
-                            {
-                                DeselectNode();
-                                return true;
-                            }
-                            //when there is another node clicked in the window,
-                            //as well as having multiple nodes selected
-                            else if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState == true)
-                            {
-                                m_IsDragged = true;
-                            }
-
-                        }
-
-                        return false;
-                    }
-
                     //Record the state of the current node last recorded
-                    NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState = null;
+                    NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState = currentClickedNode.m_IsSelected;
 
-                    DeselectNode();
-                    return true;
-                }
-
-                break;
-
-            //If mouse was released
-            case EventType.MouseUp:
-
-                //Reset draggin bool
-                m_IsDragged = false;
-                break;
-
-            //If mouse was press down and then dragged around,
-            case EventType.MouseDrag:
-
-                if (e.button == 0)
-                {
-                    if (m_IsDragged)
+                    //if node has not been selected
+                    if (!m_IsSelected)
                     {
-                        Drag(e.delta);
-                        //Tell the system that you need to redraw this GUI
+                        SelectByClicking();
                         return true;
                     }
-                    //Check if node is within selection box of editor
-                    else if (NodeLEM_Editor.s_SelectionBox.Overlaps(m_Rect, true))
-                    {
-                        SelectBySelectionBox();
-                        return true;
-                    }
-                    else
+
+                    //Else if mouse clicks on a selected node
+
+                    //that means i want to deselect it with shift click 
+                    if (e.shift)
                     {
                         DeselectNode();
                         return true;
                     }
 
+                    // or i want to drag this selected nodes 
+                    m_IsDragged = true;
+                    return false;
                 }
 
-                break;
 
+                //else if mouse doesnt overlapp this node
+                //If this node is selected
+                if (m_IsSelected)
+                {
+                    //If shift click is pressed , dont run the code below
+                    if (e.shift)
+                    {
+                        return false;
+                    }
+
+                    //Deselect if this node is selected but there isnt multiple selected nodes
+                    // or if there is no node clicked
+                    if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState == false)
+                    {
+                        DeselectNode();
+                        return true;
+                    }
+                    //when there is another node clicked in the window,
+                    //as well as having multiple nodes selected
+                    else if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState == true)
+                    {
+                        m_IsDragged = true;
+                    }
+
+                }
+
+                return false;
+            }
+
+            //Record the state of the current node last recorded
+            NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState = null;
+
+            if (!e.alt)
+            {
+                DeselectNode();
+            }
+            return true;
         }
 
         return false;
     }
 
+    public bool HandleMouseUp(Event e)
+    {
+        //Reset draggin bool
+        m_IsDragged = false;
+        return false;
+    }
+
+    public bool HandleMouseDrag(Event e)
+    {
+        if (e.button == 0)
+        {
+            if (m_IsDragged)
+            {
+                Drag(e.delta);
+                //Tell the system that you need to redraw this GUI
+                return true;
+            }
+            //Check if node is within selection box of editor
+            else if (NodeLEM_Editor.s_SelectionBox.Overlaps(m_Rect, true))
+            {
+                SelectBySelectionBox();
+                return true;
+            }
+            //Else if user isnt dragging the canvas
+            else if (!e.alt)
+            {
+                DeselectNode();
+                return true;
+            }
+        }
+        return false;
+    }
+
     #region Modes of Selection
 
-    public void SelectBySelectionBox()
+    void SelectBySelectionBox()
     {
         //Change the visual to indicate that node has been selected
         m_NodeSkin.textureToRender = m_NodeSkin.light_selected;
@@ -205,7 +249,7 @@ public abstract class Node
 
     }
 
-    public void SelectByClicking()
+    void SelectByClicking()
     {
         //Change the visual to indicate that node has been selected
         //nodeSkin.style = nodeSkin.light_selected;
@@ -229,14 +273,11 @@ public abstract class Node
 
     #endregion
 
-    /// <summary>
-    /// This function will be overrided in BaseEffect child node Types to save effect data. In addition, there will be just position saving for both normal and Effect nodes 
-    /// </summary>
-    /// (Add it here for the position saving,connections,etc)
-    //public virtual void SaveNodeData()
-    //{
-    //    m_NodeBaseDataSaveFile = new NodeBaseData(m_Rect.position, NodeID, m_OutPoint.parentNode.NodeID, m_InPoint.parentNode.NodeID);
-    //}
+    //Returns only NodeBaseData (use for non effect nodes)
+    public virtual NodeBaseData SaveNodeData()
+    {
+        return new NodeBaseData(m_Rect.position, NodeID, m_OutPoint.m_ConnectedNodeID, m_InPoint.m_ConnectedNodeID);
+    }
 
     //Connect connections with the node's in out points if there is any
     //public virtual void ConnectConnections() { }

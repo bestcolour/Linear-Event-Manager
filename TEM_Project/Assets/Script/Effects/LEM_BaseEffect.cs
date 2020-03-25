@@ -10,7 +10,7 @@ namespace LEM_Effects
 {
 
     [Serializable]
-    public class LEM_BaseEffect
+    public class LEM_BaseEffect :ScriptableObject
     {
 
         //Records the node type this effect belongs to
@@ -19,9 +19,9 @@ namespace LEM_Effects
         [Tooltip("Write a summary about what this event does if you want to"), TextArea(3, 5)]
         public string m_Description = default;
 
-        [Tooltip("Basically holds what should be the next event to trigger")]
-        //public LEM_BaseEffect m_NextEffect = default;
-        public string m_NextEffectNodeID = default;
+        //[Tooltip("Basically holds what should be the next event to trigger")]
+        ////public LEM_BaseEffect m_NextEffect = default;
+        //public string m_NextEffectNodeID = default;
 
         public NodeBaseData m_NodeBaseData = default;
 

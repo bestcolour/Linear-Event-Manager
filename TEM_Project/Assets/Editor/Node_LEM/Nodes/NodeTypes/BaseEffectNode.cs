@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class BaseEffectNode : Node
 {
     //TEM effect related variables
-    public string m_TemEffectDescription = default;
+    public string m_LemEffectDescription = default;
     //public LEM_BaseEffect m_BaseEffectSaveFile = default;
     public string m_Title = default;
 
@@ -29,10 +29,14 @@ public class BaseEffectNode : Node
         GUI.Label(new Rect(m_Rect.x + 40, m_Rect.y + 5, m_Rect.width, 30f), m_Title, NodeLEM_Editor.s_NodeHeaderStyle);
 
         //Draw the description text field
-        m_TemEffectDescription = EditorGUI.TextArea(new Rect(m_Rect.x + 10f, m_Rect.y + 50f, m_Rect.width - 20f, 40f), m_TemEffectDescription, NodeLEM_Editor.s_NodeTextInputStyle);
+        m_LemEffectDescription = EditorGUI.TextArea(new Rect(m_Rect.x + 10f, m_Rect.y + 50f, m_Rect.width - 20f, 40f), m_LemEffectDescription, NodeLEM_Editor.s_NodeTextInputStyle);
 
     }
 
+    public virtual LEM_BaseEffect CompileToBaseEffect()
+    {
+        return null;
+    }
 
     //public virtual void Connect(ref List<BaseEffectNode> connectedEffectNodes)
     //{

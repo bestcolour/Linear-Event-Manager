@@ -5,7 +5,7 @@ using LEM_Effects;
 
 public class DestroyGameObjectNode : BaseEffectNode
 {
-    public GameObject m_GoDestroy = default;
+    public GameObject m_TargetObject = default;
 
     public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode)
     {
@@ -22,7 +22,18 @@ public class DestroyGameObjectNode : BaseEffectNode
         base.Draw();
 
         //Draw a object field for inputting  the gameobject to destroy
-        m_GoDestroy = (GameObject)EditorGUI.ObjectField(new Rect(m_Rect.x + 10, m_Rect.y + 100f, m_Rect.width - 20, 20f), "Object To Destroy", m_GoDestroy, typeof(GameObject), true);
+        m_TargetObject = (GameObject)EditorGUI.ObjectField(new Rect(m_Rect.x + 10, m_Rect.y + 100f, m_Rect.width - 20, 20f), "Object To Destroy", m_TargetObject, typeof(GameObject), true);
+
+    }
+
+    public override LEM_BaseEffect CompileToBaseEffect()
+    {
+        DestroyGameObject myEffect = ScriptableObject.CreateInstance<DestroyGameObject>();
+        myEffect.m_NodeEffectType = this.GetType().ToString();
+        myEffect.m_Description = m_LemEffectDescription;
+        myEffect.m_NodeBaseData = new NodeBaseData(m_Rect.position, NodeID, m_OutPoint.m_ConnectedNodeID, m_InPoint.m_ConnectedNodeID);
+        myEffect.m_TargetObject = m_TargetObject;
+        return myEffect;
 
     }
 
