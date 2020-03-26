@@ -675,11 +675,7 @@ public class NodeLEM_Editor : EditorWindow
         //If current selected outpoint is not null
         if (m_SelectedOutPoint != null)
         {
-            //OutConnectionPoint castedOutPoint = (OutConnectionPoint)m_SelectedOutPoint;
-
             //Check if selected in point node is same as selected out point npde
-            //In this case we dont want them to be the same cause its stupid to 
-            //have connection with the same node
             //Another thing to check is if the selected inpoint's connected node is equal to selected output node. If it is then dont bother connecting
             if (m_SelectedOutPoint.m_ParentNode != m_SelectedInPoint.m_ParentNode &&
                 m_SelectedOutPoint.m_ConnectedNodeID != m_SelectedInPoint.m_ParentNode.NodeID)
@@ -691,7 +687,6 @@ public class NodeLEM_Editor : EditorWindow
                 CreateConnection();
                 ResetDrawingBezierCurve();
             }
-            //Else just reset
             else
             {
                 //Reset both points' style to normal
@@ -871,6 +866,9 @@ public class NodeLEM_Editor : EditorWindow
                                 m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID].m_InPoint,
                                 m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint
                                 );
+
+                TrySetConnectionPoint(m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID].m_InPoint,true);
+                TrySetConnectionPoint(m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint, true);
             }
 
             //if current effect has a m_PrevPointNodeID and that the node this effect is assigned to doesnt have a connection on the inpoint,
@@ -881,6 +879,9 @@ public class NodeLEM_Editor : EditorWindow
                                 m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_InPoint,
                                 m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_PrevPointNodeID].m_OutPoint
                                 );
+
+                TrySetConnectionPoint(m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_InPoint, true);
+                TrySetConnectionPoint(m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_PrevPointNodeID].m_OutPoint, true);
             }
 
         }

@@ -32,9 +32,5 @@ public abstract class ConnectionPoint
     public virtual void Draw()
     { }
 
-    //public void ChangeStyle(GUIStyle styleToChange)
-    //{
-    //    Style = styleToChange;
-    //}
 
 }
