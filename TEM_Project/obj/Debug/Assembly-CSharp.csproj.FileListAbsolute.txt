@@ -464,15 +464,6 @@ C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\Boo.Lan
 C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\Unity.CecilTools.dll
 C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\UnityEngine.xml
 C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\UnityEditor.xml
-C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\Unity.Timeline.Editor.pdb
-C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\Unity.VSCode.Editor.pdb
-C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\Unity.TextMeshPro.Editor.pdb
-C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\UnityEngine.UI.pdb
-C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\Unity.Timeline.pdb
-C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\Unity.CollabProxy.Editor.pdb
-C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\Unity.Rider.Editor.pdb
-C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\Unity.TextMeshPro.pdb
-C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\UnityEditor.UI.pdb
 C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\UnityEngine.AIModule.xml
 C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\UnityEngine.ARModule.xml
 C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project\Temp\bin\Debug\UnityEngine.AccessibilityModule.xml

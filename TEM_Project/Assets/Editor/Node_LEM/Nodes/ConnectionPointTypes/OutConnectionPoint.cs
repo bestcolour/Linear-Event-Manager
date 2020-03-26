@@ -12,7 +12,7 @@ public class OutConnectionPoint : ConnectionPoint
         m_Rect.x = m_ParentNode.m_Rect.x + m_ParentNode.m_Rect.width - 30f;
 
         //Create a button that will execute the below code if pressed
-        if (GUI.Button(m_Rect, "", Style))
+        if (GUI.Button(m_Rect, "", m_Style))
         {
             //Check if deelgate action is null or not before executing
             d_OnClickConnectionPoint?.Invoke(this);

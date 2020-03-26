@@ -8,10 +8,12 @@ public abstract class ConnectionPoint
 
     public Node m_ParentNode = default;
 
-    public GUIStyle Style = default;
+    public GUIStyle m_Style = default;
 
     public string m_ConnectedNodeID = default;
     public bool IsConnected => String.IsNullOrEmpty(m_ConnectedNodeID) ? false : true;
+
+    //protected int m_MaxConnections
 
     //Create a delegate that takes in a ConnectionPoint as a parameter
     public Action<ConnectionPoint> d_OnClickConnectionPoint = null;
@@ -20,7 +22,7 @@ public abstract class ConnectionPoint
     public virtual void Initialise(Node parentNode, GUIStyle style, Action<ConnectionPoint> onClickConnectionPoint)
     {
         this.m_ParentNode = parentNode;
-        this.Style = style;
+        this.m_Style = style;
         this.d_OnClickConnectionPoint = onClickConnectionPoint;
 
         m_Rect = new Rect(0, 0, 20, 23);

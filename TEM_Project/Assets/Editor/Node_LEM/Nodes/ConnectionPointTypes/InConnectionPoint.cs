@@ -13,7 +13,7 @@ public class InConnectionPoint : ConnectionPoint
         //respective ends of the parentnode
         m_Rect.x = m_ParentNode.m_Rect.x+ 10f;
 
-        if (GUI.Button(m_Rect, "", Style))
+        if (GUI.Button(m_Rect, "", m_Style))
         {
             d_OnClickConnectionPoint?.Invoke(this);
         }

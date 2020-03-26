@@ -40,6 +40,16 @@ public class NodeLEM_Editor : EditorWindow
 
     //Currently selected in / out points
     ConnectionPoint m_SelectedInPoint = default;
+    void TrySetConnectionPoint(ConnectionPoint connectionPoint, bool isSelected)
+    {
+        if (connectionPoint == null)
+            return;
+
+        //connectionPoint.m_Style = isSelected == true ? s_SkinsLibrary.s_ConnectionPointStyleSelected : s_SkinsLibrary.s_ConnectionPointStyleNormal;
+        connectionPoint.m_Style = isSelected == true ? s_SkinsLibrary.s_ConnectionPointStyleSelected : s_SkinsLibrary.s_ConnectionPointStyleNormal;
+    }
+
+    //ConnectionPoint SelectedInPoint
     ConnectionPoint m_SelectedOutPoint = default;
 
     #endregion
@@ -408,9 +418,9 @@ public class NodeLEM_Editor : EditorWindow
                         {
                             m_InitialClickedPosition = e.mousePosition;
 
-                            m_SelectedInPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
-                            m_SelectedOutPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
 
+                            TrySetConnectionPoint(m_SelectedInPoint, false);
+                            TrySetConnectionPoint(m_SelectedOutPoint, false);
                             ResetDrawingBezierCurve();
                         }
 
@@ -473,8 +483,8 @@ public class NodeLEM_Editor : EditorWindow
 
                     case KeyCode.Escape:
 
-                        m_SelectedInPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
-                        m_SelectedOutPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+                        TrySetConnectionPoint(m_SelectedInPoint, false);
+                        TrySetConnectionPoint(m_SelectedOutPoint, false);
 
                         ResetDrawingBezierCurve();
                         break;
@@ -650,11 +660,17 @@ public class NodeLEM_Editor : EditorWindow
     //new nodes so that they can pass it to their in and out points
     void OnClickInPoint(ConnectionPoint connectionPoint)
     {
-        //Set currently selected inpoint as the inputted connection point
-        m_SelectedInPoint = connectionPoint;
+        //Check if player already has a selected in point
+        if (m_SelectedInPoint != null)
+        {
+            TrySetConnectionPoint(m_SelectedInPoint, false);
+            m_SelectedInPoint = connectionPoint;
+            TrySetConnectionPoint(m_SelectedInPoint, true);
+            return;
+        }
 
-        //Set the style to show  that point has been selected
-        m_SelectedInPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
+        m_SelectedInPoint = connectionPoint;
+        TrySetConnectionPoint(m_SelectedInPoint, true);
 
         //If current selected outpoint is not null
         if (m_SelectedOutPoint != null)
@@ -669,8 +685,8 @@ public class NodeLEM_Editor : EditorWindow
                 m_SelectedOutPoint.m_ConnectedNodeID != m_SelectedInPoint.m_ParentNode.NodeID)
             {
                 //Set the styles to show  that points has been selected
-                m_SelectedInPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
-                m_SelectedOutPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
+                TrySetConnectionPoint(m_SelectedInPoint, true);
+                TrySetConnectionPoint(m_SelectedOutPoint, true);
 
                 CreateConnection();
                 ResetDrawingBezierCurve();
@@ -679,8 +695,8 @@ public class NodeLEM_Editor : EditorWindow
             else
             {
                 //Reset both points' style to normal
-                m_SelectedInPoint.Style  =s_SkinsLibrary.s_ConnectionPointStyleNormal;
-                m_SelectedOutPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+                TrySetConnectionPoint(m_SelectedInPoint, false);
+                TrySetConnectionPoint(m_SelectedOutPoint, false);
 
                 ResetDrawingBezierCurve();
             }
@@ -690,11 +706,18 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnClickOutPoint(ConnectionPoint connectionPoint)
     {
-        //Set currently selected inpoint as the inputted connection point
-        m_SelectedOutPoint = connectionPoint;
 
-        //Set the style to show  that point has been selected
-        m_SelectedOutPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
+        //Check if player already has a selected in point
+        if (m_SelectedOutPoint != null)
+        {
+            TrySetConnectionPoint(m_SelectedOutPoint, false);
+            m_SelectedOutPoint = connectionPoint;
+            TrySetConnectionPoint(m_SelectedOutPoint, true);
+            return;
+        }
+
+        m_SelectedOutPoint = connectionPoint;
+        TrySetConnectionPoint(m_SelectedOutPoint, true);
 
         if (m_SelectedInPoint != null)
         {
@@ -706,8 +729,8 @@ public class NodeLEM_Editor : EditorWindow
                 m_SelectedOutPoint.m_ConnectedNodeID != m_SelectedInPoint.m_ParentNode.NodeID)
             {
                 //Set the styles to show  that points has been selected
-                m_SelectedInPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
-                m_SelectedOutPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleSelected;
+                TrySetConnectionPoint(m_SelectedInPoint, true);
+                TrySetConnectionPoint(m_SelectedOutPoint, true);
 
                 CreateConnection();
                 ResetDrawingBezierCurve();
@@ -716,8 +739,8 @@ public class NodeLEM_Editor : EditorWindow
             else
             {
                 //Reset both points' style to normal
-                m_SelectedInPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
-                m_SelectedOutPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+                TrySetConnectionPoint(m_SelectedInPoint, false);
+                TrySetConnectionPoint(m_SelectedOutPoint, false);
 
                 ResetDrawingBezierCurve();
             }
@@ -731,8 +754,8 @@ public class NodeLEM_Editor : EditorWindow
         for (int i = 0; i < connectionToRemove.Length; i++)
         {
             //Reset the connections' in and out points to prevent the points to look unchanged
-            connectionToRemove[i].m_InPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
-            connectionToRemove[i].m_OutPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+            TrySetConnectionPoint(connectionToRemove[i].m_InPoint, false);
+            TrySetConnectionPoint(connectionToRemove[i].m_OutPoint, false);
             //Remove the connections
             m_AllConnectionsInEditor.Remove(connectionToRemove[i]);
         }
@@ -763,8 +786,8 @@ public class NodeLEM_Editor : EditorWindow
         connectionToRemove.m_OutPoint.m_ConnectedNodeID = null;
 
         //Reset the connections' in and out points to prevent the points to look unchanged
-        connectionToRemove.m_InPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
-        connectionToRemove.m_OutPoint.Style = s_SkinsLibrary.s_ConnectionPointStyleNormal;
+        TrySetConnectionPoint(connectionToRemove.m_InPoint, false);
+        TrySetConnectionPoint(connectionToRemove.m_OutPoint, false);
 
         m_AllConnectionsInEditor.Remove(connectionToRemove);
     }
