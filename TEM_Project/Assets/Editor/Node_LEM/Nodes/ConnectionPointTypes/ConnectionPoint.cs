@@ -13,7 +13,7 @@ public abstract class ConnectionPoint
     public string m_ConnectedNodeID = default;
     public bool IsConnected => String.IsNullOrEmpty(m_ConnectedNodeID) ? false : true;
 
-    //protected int m_MaxConnections
+    //protected int m_MaxConnections 
 
     //Create a delegate that takes in a ConnectionPoint as a parameter
     public Action<ConnectionPoint> d_OnClickConnectionPoint = null;

@@ -193,6 +193,12 @@ public class NodeLEM_Editor : EditorWindow
         s_CurrentNodeLastRecordedSelectState = null;
         s_EditingLinearEvent = null;
     }
+
+    //Called when window is closed
+    private void OnDestroy()
+    {
+        LEM_InspectorEditor.s_IsLoaded = false;
+    }
     #endregion
 
     void OnGUI()

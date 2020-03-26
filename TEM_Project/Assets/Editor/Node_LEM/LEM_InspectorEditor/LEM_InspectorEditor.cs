@@ -10,6 +10,7 @@ public class LEM_InspectorEditor : Editor
     //Declare measurements
     float m_LineHeight = EditorGUIUtility.singleLineHeight;
     float m_LineHeightSpace = EditorGUIUtility.singleLineHeight * 1.5f;
+    public static bool s_IsLoaded = false;
 
     //OnGUI for inspector
     public override void OnInspectorGUI()
@@ -18,16 +19,29 @@ public class LEM_InspectorEditor : Editor
 
         LinearEvent linearEvent = (LinearEvent)target;
 
-        //Creates a button to load the node editor
-        if (GUILayout.Button("Load in Node Editor", GUILayout.Height(m_LineHeightSpace * 2)))
-        {
-            NodeLEM_Editor.LoadNodeEditor(linearEvent);
-        }
+        DrawLoadButton(ref linearEvent);
 
         EditorGUILayout.Space();
 
         //Draw Rest of Default Inspector
         base.OnInspectorGUI();
+
+    }
+
+
+    void DrawLoadButton(ref LinearEvent linearEvent)
+    {
+        bool wasEnabled = GUI.enabled;
+        GUI.enabled = !s_IsLoaded;
+
+        //Creates a button to load the node editor
+        if (GUILayout.Button("Load in Node Editor", GUILayout.Height(m_LineHeightSpace * 2)))
+        {
+            NodeLEM_Editor.LoadNodeEditor(linearEvent);
+            s_IsLoaded = true;
+        }
+
+        GUI.enabled = wasEnabled;
 
     }
 
