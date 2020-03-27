@@ -12,6 +12,8 @@ public abstract class ConnectionPoint
 
     public GUIStyle m_Style = default;
 
+    public virtual bool IsConnected { get; }
+
     //public string m_ConnectedNodeID = default;
     //public bool IsConnected => String.IsNullOrEmpty(m_ConnectedNodeID) ? false : true;
 
@@ -36,11 +38,11 @@ public abstract class ConnectionPoint
     //Drawing the connection point
     public virtual void Draw(){ }
 
-    public virtual void AddConnectedNodeID(string idToAdd) {   }
+    public virtual void SetOrAddConnectedNodeID(string idToAdd) {   }
 
     public virtual void RemoveConnectedNodeID(string idToRemove) { }
 
-    public virtual bool IsConnected() { return false; }
+    //public virtual bool IsConnectedT() { return false; }
 
     public virtual string GetConnectedNodeID(int index) { return ""; }
 

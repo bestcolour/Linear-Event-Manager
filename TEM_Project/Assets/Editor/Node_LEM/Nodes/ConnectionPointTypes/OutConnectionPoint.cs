@@ -4,6 +4,8 @@ public class OutConnectionPoint : ConnectionPoint
 {
     string m_ConnectedNodeID = default;
 
+    public override bool IsConnected => !string.IsNullOrEmpty(m_ConnectedNodeID);
+
     public override void Draw()
     {
         //Draw connection pt at the top of the node
@@ -21,7 +23,7 @@ public class OutConnectionPoint : ConnectionPoint
     }
 
     //For out connection point, we gotta restrcit the number of connected nodes it can hv
-    public override void AddConnectedNodeID(string idToAdd)
+    public override void SetOrAddConnectedNodeID(string idToAdd)
     {
         //For now if outconnection point is 
         //if (IsConnected())
@@ -31,10 +33,10 @@ public class OutConnectionPoint : ConnectionPoint
 
     }
 
-    public override bool IsConnected()
-    {
-        return !string.IsNullOrEmpty(m_ConnectedNodeID);
-    }
+    //public override bool IsConnectedT()
+    //{
+    //    return !string.IsNullOrEmpty(m_ConnectedNodeID);
+    //}
 
     public override string GetConnectedNodeID(int index)
     {

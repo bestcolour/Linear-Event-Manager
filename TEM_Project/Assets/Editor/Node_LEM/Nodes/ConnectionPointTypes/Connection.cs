@@ -19,8 +19,8 @@ public class Connection
         //inPoint.m_ConnectedNodeIDs.Add(outPoint.m_ParentNode.NodeID);
         //outPoint.m_ConnectedNodeIDs.Add(inPoint.m_ParentNode.NodeID);
 
-        inPoint.AddConnectedNodeID(outPoint.m_ParentNode.NodeID);
-        outPoint.AddConnectedNodeID(inPoint.m_ParentNode.NodeID);
+        inPoint.SetOrAddConnectedNodeID(outPoint.m_ParentNode.NodeID);
+        outPoint.SetOrAddConnectedNodeID(inPoint.m_ParentNode.NodeID);
         //inPoint.m_ConnectedNodeID = outPoint.m_ParentNode.NodeID;
         //outPoint.m_ConnectedNodeID = inPoint.m_ParentNode.NodeID;
 

@@ -7,6 +7,8 @@ public class InConnectionPoint : ConnectionPoint
 
     List<string> m_ConnectedNodeIDs = new List<string>();
 
+    public override bool IsConnected => m_ConnectedNodeIDs.Count > 0;
+
     public override void Draw()
     {
         //Draw connection pt at the top of the node
@@ -23,7 +25,7 @@ public class InConnectionPoint : ConnectionPoint
 
     }
 
-    public override void AddConnectedNodeID(string idToAdd)
+    public override void SetOrAddConnectedNodeID(string idToAdd)
     {
         if (!m_ConnectedNodeIDs.Contains(idToAdd))
         {   
@@ -31,10 +33,10 @@ public class InConnectionPoint : ConnectionPoint
         }
     }
 
-    public override bool IsConnected()
-    {
-        return m_ConnectedNodeIDs.Count > 0;
-    }
+    //public override bool IsConnectedT()
+    //{
+    //    return m_ConnectedNodeIDs.Count > 0;
+    //}
 
     public override string GetConnectedNodeID(int index)
     {

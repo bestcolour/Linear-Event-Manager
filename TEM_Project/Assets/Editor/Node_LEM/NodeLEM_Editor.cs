@@ -38,46 +38,49 @@ public class NodeLEM_Editor : EditorWindow
     static Color s_SelectionBoxColour = new Color(0.6f, 0.8f, 1f, .2f);
     static Color s_SelectionBoxOutlineColour = new Color(0f, 0.298f, 0.6f, 1f);
 
-    //Currently selected in / out points
-    struct SelectedPointType 
-    {
-        public const int SelectedInPoint = 0;
-        public const int SelectedOutPoint = 1;
-    }
+    ////Currently selected in / out points
+    //struct SelectedPointType 
+    //{
+    //    public const int SELECTEDINPOINT = 0;
+    //    public const int SELECTEDOUTPOINT = 1;
+    //}
 
-    ConnectionPoint m_SelectedInPoint = default;
-    void TrySetSelectedConnectionPoint(int selectedPoint,bool isSelected,ConnectionPoint connectionToSetTo)
-    {
-        if (m_SelectedInPoint == null)
-            return;
+    //void TrySetSelectedConnectionPoint(int selectedPoint,/*bool isSelected,*/ConnectionPoint connectionToSetTo)
+    //{
+    //    //Set the values first before attempting to set the visual
+    //    if (selectedPoint == SelectedPointType.SELECTEDINPOINT)
+    //        m_SelectedInPoint = connectionToSetTo;
+    //    else if (selectedPoint == SelectedPointType.SELECTEDOUTPOINT)
+    //        m_SelectedOutPoint = connectionToSetTo;
 
-        //Set the values first before attempting to set the visual
-        if (selectedPoint == SelectedPointType.SelectedInPoint)
-        {
-            m_SelectedInPoint = connectionToSetTo;
-        }
-        else if (selectedPoint == SelectedPointType.SelectedOutPoint)
-        {
-            m_SelectedOutPoint = connectionToSetTo;
-        }
 
-        TrySetConnectionPoint(connectionToSetTo, isSelected);
-    }
 
-    void TrySetConnectionPoint(ConnectionPoint connectionPoint, bool isSelected)
+    //    TrySetConnectionPoint(connectionToSetTo/*, isSelected*/);
+    //}
+
+    /// <summary>
+    /// Sets the skin of a connection point without checking if it is connected. 
+    /// </summary>
+    /// <param name="connectionPoint"></param>
+    /// <param name="isSelected">For Selected skin put 1 else for normal skin, put x != 1 </param>
+    void TrySetConnectionPointSkin(ConnectionPoint connectionPoint,int isSelected)
     {
         if (connectionPoint == null)
             return;
 
-        //if (isSelected)
-        //{
-
-        //}
-
-        connectionPoint.m_Style = isSelected == true ? s_SkinsLibrary.m_ConnectionPointStyleSelected : s_SkinsLibrary.m_ConnectionPointStyleNormal;
+        connectionPoint.m_Style = isSelected == 1 ? s_SkinsLibrary.m_ConnectionPointStyleSelected : s_SkinsLibrary.m_ConnectionPointStyleNormal;
     }
 
-    //ConnectionPoint SelectedInPoint
+    void TrySetConnectionPoint(ConnectionPoint connectionPoint/*, bool isSelected*/)
+    {
+        if (connectionPoint == null)
+            return;
+
+        connectionPoint.m_Style = connectionPoint.IsConnected ? s_SkinsLibrary.m_ConnectionPointStyleSelected : s_SkinsLibrary.m_ConnectionPointStyleNormal;
+        //connectionPoint.m_Style = isSelected ? s_SkinsLibrary.m_ConnectionPointStyleSelected : s_SkinsLibrary.m_ConnectionPointStyleNormal;
+    }
+
+    ConnectionPoint m_SelectedInPoint = default;
     ConnectionPoint m_SelectedOutPoint = default;
 
     #endregion
@@ -236,11 +239,7 @@ public class NodeLEM_Editor : EditorWindow
 
         Event currentEvent = Event.current;
 
-        //Draw a grid background
-        //Draw this one to show every increment of 20 distance
         DrawGrid(20, 0.2f, Color.gray);
-        //Draw this one to show every increment of 100 distance
-        //also make this more opaque to show this every 5 increments
         DrawGrid(100, 0.4f, Color.gray);
 
 
@@ -453,8 +452,8 @@ public class NodeLEM_Editor : EditorWindow
                             m_InitialClickedPosition = e.mousePosition;
 
 
-                            TrySetConnectionPoint(m_SelectedInPoint, false);
-                            TrySetConnectionPoint(m_SelectedOutPoint, false);
+                            TrySetConnectionPoint(m_SelectedInPoint /*, false*/);
+                            TrySetConnectionPoint(m_SelectedOutPoint/*, false*/);
                             ResetDrawingBezierCurve();
                         }
 
@@ -517,8 +516,8 @@ public class NodeLEM_Editor : EditorWindow
 
                     case KeyCode.Escape:
 
-                        TrySetConnectionPoint(m_SelectedInPoint, false);
-                        TrySetConnectionPoint(m_SelectedOutPoint, false);
+                        TrySetConnectionPoint(m_SelectedInPoint /*, false*/);
+                        TrySetConnectionPoint(m_SelectedOutPoint/*, false*/);
 
                         ResetDrawingBezierCurve();
                         break;
@@ -690,21 +689,21 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Delegates
 
-    //Onclick in and out points are to be passed as delegates/actions when creating 
-    //new nodes so that they can pass it to their in and out points
     void OnClickInPoint(ConnectionPoint connectionPoint)
     {
-        //Check if player already has a selected in point
+        //Check if player already has a selected in point and if so set its prev skin to normal
         if (m_SelectedInPoint != null)
         {
-            TrySetConnectionPoint(m_SelectedInPoint, false);
+            TrySetConnectionPoint(m_SelectedInPoint/*, false*/);
             m_SelectedInPoint = connectionPoint;
-            TrySetConnectionPoint(m_SelectedInPoint, true);
+            //After dealing with old connectionpt skin,  sets the inpoint to selected skin
+            TrySetConnectionPointSkin(m_SelectedInPoint, 1);
             return;
         }
 
         m_SelectedInPoint = connectionPoint;
-        TrySetConnectionPoint(m_SelectedInPoint, true);
+        //TrySetConnectionPoint(m_SelectedInPoint/*, true*/);
+        TrySetConnectionPointSkin(m_SelectedInPoint, 1);
 
         //If current selected outpoint is not null
         if (m_SelectedOutPoint != null)
@@ -718,14 +717,22 @@ public class NodeLEM_Editor : EditorWindow
                 //TrySetConnectionPoint(m_SelectedInPoint, true);
                 //TrySetConnectionPoint(m_SelectedOutPoint, true);
 
+                //Remove the old connection if outpoint has an old connection
+                if (m_SelectedOutPoint.IsConnected)
+                {
+                    OnClickRemoveConnection(m_AllConnectionsInEditor.Find(
+                        x => x.m_OutPoint.m_ParentNode.NodeID == m_SelectedOutPoint.m_ParentNode.NodeID
+                        && x.m_InPoint.m_ParentNode.NodeID == m_SelectedOutPoint.GetConnectedNodeID(0)));
+                }
+
                 CreateConnection();
                 ResetDrawingBezierCurve();
             }
             else
             {
                 //Reset both points' style to normal
-                TrySetConnectionPoint(m_SelectedInPoint, false);
-                TrySetConnectionPoint(m_SelectedOutPoint, false);
+                TrySetConnectionPoint(m_SelectedInPoint /*, false*/);
+                TrySetConnectionPoint(m_SelectedOutPoint/*, false*/);
 
                 ResetDrawingBezierCurve();
             }
@@ -736,17 +743,18 @@ public class NodeLEM_Editor : EditorWindow
     void OnClickOutPoint(ConnectionPoint connectionPoint)
     {
 
-        //Check if player already has a selected in point
+        //Check if player already has a selected out point and wishes to choose another one
         if (m_SelectedOutPoint != null)
         {
-            TrySetConnectionPoint(m_SelectedOutPoint, false);
+            TrySetConnectionPoint(m_SelectedOutPoint/*, false*/);
             m_SelectedOutPoint = connectionPoint;
-            TrySetConnectionPoint(m_SelectedOutPoint, true);
+            TrySetConnectionPointSkin(m_SelectedOutPoint,1);
             return;
         }
 
         m_SelectedOutPoint = connectionPoint;
-        TrySetConnectionPoint(m_SelectedOutPoint, true);
+        //TrySetConnectionPoint(m_SelectedOutPoint/*, true*/);
+        TrySetConnectionPointSkin(m_SelectedOutPoint, 1);
 
         if (m_SelectedInPoint != null)
         {
@@ -761,6 +769,14 @@ public class NodeLEM_Editor : EditorWindow
                 //TrySetConnectionPoint(m_SelectedInPoint, true);
                 //TrySetConnectionPoint(m_SelectedOutPoint, true);
 
+                //Remove the old connection if outpoint has an old connection
+                if (m_SelectedOutPoint.IsConnected)
+                {
+                    OnClickRemoveConnection(m_AllConnectionsInEditor.Find(
+                        x => x.m_OutPoint.m_ParentNode.NodeID == m_SelectedOutPoint.m_ParentNode.NodeID
+                        && x.m_InPoint.m_ParentNode.NodeID == m_SelectedOutPoint.GetConnectedNodeID(0)));
+                }
+
                 CreateConnection();
                 ResetDrawingBezierCurve();
             }
@@ -768,10 +784,10 @@ public class NodeLEM_Editor : EditorWindow
             else
             {
                 //Reset both points' style to normal
-                TrySetConnectionPoint(m_SelectedInPoint, false);
-                TrySetConnectionPoint(m_SelectedOutPoint, false);
-
+                TrySetConnectionPoint(m_SelectedInPoint /*, false*/);
+                TrySetConnectionPoint(m_SelectedOutPoint/*, false*/);
                 ResetDrawingBezierCurve();
+
             }
         }
     }
@@ -782,11 +798,11 @@ public class NodeLEM_Editor : EditorWindow
 
         for (int i = 0; i < connectionToRemove.Length; i++)
         {
-            //Reset the connections' in and out points to prevent the points to look unchanged
-            TrySetConnectionPoint(connectionToRemove[i].m_InPoint, false);
-            TrySetConnectionPoint(connectionToRemove[i].m_OutPoint, false);
+            ////Reset the connections' in and out points to prevent the points to look unchanged
+            //TrySetConnectionPoint(connectionToRemove[i].m_InPoint, false);
+            //TrySetConnectionPoint(connectionToRemove[i].m_OutPoint, false);
             //Remove the connections
-            m_AllConnectionsInEditor.Remove(connectionToRemove[i]);
+            OnClickRemoveConnection(connectionToRemove[i]);
         }
 
         //Remove node from selected collection if it is inside
@@ -800,16 +816,16 @@ public class NodeLEM_Editor : EditorWindow
 
     void CreateConnection()
     {
-        TrySetConnectionPoint(m_SelectedInPoint, true);
-        TrySetConnectionPoint(m_SelectedOutPoint, true);
         m_AllConnectionsInEditor.Add(new Connection(m_SelectedInPoint, m_SelectedOutPoint, OnClickRemoveConnection));
+        TrySetConnectionPoint(m_SelectedInPoint/*, true*/);
+        TrySetConnectionPoint(m_SelectedOutPoint/*, true*/);
     }
 
     void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
     {
-        TrySetConnectionPoint(inPoint, true);
-        TrySetConnectionPoint(outPoint, true);
         m_AllConnectionsInEditor.Add(new Connection(inPoint, outPoint, OnClickRemoveConnection));
+        TrySetConnectionPoint(inPoint /*, true*/);
+        TrySetConnectionPoint(outPoint/*, true*/);
     }
 
     void OnClickRemoveConnection(Connection connectionToRemove)
@@ -819,8 +835,8 @@ public class NodeLEM_Editor : EditorWindow
         connectionToRemove.m_OutPoint.RemoveConnectedNodeID(null);
 
         //Reset the connections' in and out points to prevent the points to look unchanged
-        TrySetConnectionPoint(connectionToRemove.m_InPoint, false);
-        TrySetConnectionPoint(connectionToRemove.m_OutPoint, false);
+        TrySetConnectionPoint(connectionToRemove.m_InPoint /*, false*/);
+        TrySetConnectionPoint(connectionToRemove.m_OutPoint/*, false*/);
 
         m_AllConnectionsInEditor.Remove(connectionToRemove);
     }
@@ -897,7 +913,7 @@ public class NodeLEM_Editor : EditorWindow
 
             //if current effect has a m_NextPointNodeID and that the node this effect is assigned to doesnt have a connection on the outpoint,
             if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID)
-                && !m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected())
+                && !m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
             {
                 CreateConnection(
                                 m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID].m_InPoint,
