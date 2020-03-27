@@ -229,7 +229,7 @@ public abstract class Node
     //Returns only NodeBaseData (use for non effect nodes)
     public virtual NodeBaseData SaveNodeData()
     {
-        return new NodeBaseData(m_Rect.position, NodeID, m_OutPoint.m_ConnectedNodeID, m_InPoint.m_ConnectedNodeID);
+        return new NodeBaseData(m_Rect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
     }
 
     //Connect connections with the node's in out points if there is any

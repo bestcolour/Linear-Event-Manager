@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class InConnectionPoint : ConnectionPoint
 {
+
+    List<string> m_ConnectedNodeIDs = new List<string>();
+
     public override void Draw()
     {
         //Draw connection pt at the top of the node
@@ -19,5 +22,32 @@ public class InConnectionPoint : ConnectionPoint
         }
 
     }
+
+    public override void AddConnectedNodeID(string idToAdd)
+    {
+        if (!m_ConnectedNodeIDs.Contains(idToAdd))
+        {   
+            m_ConnectedNodeIDs.Add(idToAdd);
+        }
+    }
+
+    public override bool IsConnected()
+    {
+        return m_ConnectedNodeIDs.Count > 0;
+    }
+
+    public override string GetConnectedNodeID(int index)
+    {
+        return m_ConnectedNodeIDs[index];
+    }
+
+    public override void RemoveConnectedNodeID(string idToRemove)
+    {
+        if (m_ConnectedNodeIDs.Contains(idToRemove))
+        {
+            m_ConnectedNodeIDs.Remove(idToRemove);
+        }
+    }
+
 
 }

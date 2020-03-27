@@ -38,7 +38,7 @@ public class DestroyGameObjectNode : BaseEffectNode
         DestroyGameObject myEffect = ScriptableObject.CreateInstance<DestroyGameObject>();
         myEffect.m_NodeEffectType = this.GetType().ToString();
         myEffect.m_Description = m_LemEffectDescription;
-        myEffect.m_NodeBaseData = new NodeBaseData(m_Rect.position, NodeID, m_OutPoint.m_ConnectedNodeID, m_InPoint.m_ConnectedNodeID);
+        myEffect.m_NodeBaseData = new NodeBaseData(m_Rect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
         myEffect.m_TargetObject = m_TargetObject;
         return myEffect;
 
