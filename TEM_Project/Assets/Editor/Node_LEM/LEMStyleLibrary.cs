@@ -6,9 +6,9 @@ using UnityEditor;
 /// <summary>
 /// Should only be used by NodeLEMEditor 
 /// </summary>
-public class LEMSkinsLibrary
+public class LEMStyleLibrary
 {
-    public static LEMSkinsLibrary Instance = default;
+    public static LEMStyleLibrary Instance = default;
     public bool m_SkinsLoaded = false;
 
     public Dictionary<string, NodeSkinCollection> m_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
@@ -18,9 +18,16 @@ public class LEMSkinsLibrary
     public GUIStyle m_ConnectionPointStyleNormal = default;
     public GUIStyle m_ConnectionPointStyleSelected = default;
 
+    //Node fontstyles
+    public GUIStyle s_NodeHeaderStyle = default;
+    public GUIStyle s_NodeTextInputStyle = default;
+    public GUIStyle s_NodeParagraphStyle = default;
+
     //Start End Node
     public NodeSkinCollection m_StartNodeSkins = default;
     public NodeSkinCollection m_EndNodeSkins = default;
+
+    public NodeSkinCollection m_WhiteBackGroundSkin = default;
 
     public void LoadLibrary()
     {
@@ -81,6 +88,10 @@ public class LEMSkinsLibrary
         m_OutPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
         m_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
 
+        m_WhiteBackGroundSkin = new NodeSkinCollection();
+        m_WhiteBackGroundSkin.light_normal = Resources.Load<Texture2D>("NodeBg/White_BackGround");
+        m_WhiteBackGroundSkin.light_selected = Resources.Load<Texture2D>("NodeBg/White_BackGround_Selected");
+        m_WhiteBackGroundSkin.textureToRender = m_WhiteBackGroundSkin.light_normal;
 
     }
 

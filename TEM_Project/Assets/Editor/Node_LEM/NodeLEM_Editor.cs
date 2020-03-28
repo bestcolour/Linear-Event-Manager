@@ -35,8 +35,8 @@ public class NodeLEM_Editor : EditorWindow
     //Selection box variables
     Vector2? m_InitialClickedPosition = default;
     public static Rect s_SelectionBox = default;
-    static Color s_SelectionBoxColour = new Color(0.6f, 0.8f, 1f, .2f);
-    static Color s_SelectionBoxOutlineColour = new Color(0f, 0.298f, 0.6f, 1f);
+    static readonly Color s_SelectionBoxColour = new Color(0.6f, 0.8f, 1f, .2f);
+    static readonly Color s_SelectionBoxOutlineColour = new Color(0f, 0.298f, 0.6f, 1f);
 
     /// <summary>
     /// Sets the skin of a connection point without checking if it is connected. 
@@ -51,7 +51,7 @@ public class NodeLEM_Editor : EditorWindow
         connectionPoint.m_Style = isSelected == 1 ? s_SkinsLibrary.m_ConnectionPointStyleSelected : s_SkinsLibrary.m_ConnectionPointStyleNormal;
     }
 
-    void TrySetConnectionPoint(ConnectionPoint connectionPoint/*, bool isSelected*/)
+    void TrySetConnectionPoint(ConnectionPoint connectionPoint)
     {
         if (connectionPoint == null)
             return;
@@ -67,7 +67,7 @@ public class NodeLEM_Editor : EditorWindow
 
     //NodeCommandInvoker m_CommandInvoker = default;
 
-    static LEMSkinsLibrary s_SkinsLibrary = new LEMSkinsLibrary();
+    static readonly LEMStyleLibrary s_SkinsLibrary = new LEMStyleLibrary();
     static Texture2D s_EditorBackGroundTexture = default;
 
     #region GUI Styles
@@ -229,7 +229,6 @@ public class NodeLEM_Editor : EditorWindow
         DrawSelectionBox(currentEvent.mousePosition);
         DrawSaveButton();
         DrawRefreshButton();
-
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
         ProcessEvents(currentEvent);
@@ -501,12 +500,14 @@ public class NodeLEM_Editor : EditorWindow
                         ResetDrawingBezierCurve();
                         break;
 
+
                 }
 
                 break;
 
-        }
+          
 
+        }
     }
 
     void ProcessNodeEvents(Event e)
@@ -573,6 +574,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Get the respective skin from the collection of nodeskin
         NodeSkinCollection nodeSkin = s_SkinsLibrary.m_NodeStyleDictionary[nameOfNodeType];
+        //NodeSkinCollection nodeSkin = s_SkinsLibrary.m_WhiteBackGroundSkin;
 
         //Initialise the new node 
         newEffectNode.Initialise

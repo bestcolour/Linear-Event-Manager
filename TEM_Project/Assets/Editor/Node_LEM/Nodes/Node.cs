@@ -52,9 +52,6 @@ public abstract class Node
         //Initialise in and out points
         m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint);
         m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint);
-
-
-        //GenerateNodeID();
     }
 
     //Delta here is a finite increment (eg time.delta time, mouse movement delta(Event.delta), rectransform's delta x and y)
@@ -66,14 +63,19 @@ public abstract class Node
     //Draws the node using its position, dimensions and style
     public virtual void Draw()
     {
+        Color prevColour = GUI.color;
+        GUI.color = Color.red;
         //Draw the node box,description and title
         GUI.DrawTexture(m_Rect, m_NodeSkin.textureToRender);
+        GUI.color = prevColour;
 
         //Draw the in out points as well
         m_InPoint.Draw();
         m_OutPoint.Draw();
 
     }
+
+    #region Process Events
 
     public bool HandleMouseDown(Event e)
     {
@@ -186,7 +188,8 @@ public abstract class Node
             }
         }
         return false;
-    }
+    } 
+    #endregion
 
     #region Modes of Selection
 
