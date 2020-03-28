@@ -10,34 +10,45 @@ public class StartNode : Node
     {
         base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode);
 
-        m_MidRect.width = 131f;
-        m_MidRect.height = 50f;
+        SetNodeRects(position, NodeTextureDimensions.START_END_NODE, NodeTextureDimensions.START_END_NODE);
     }
 
     public override void Draw()
     {
+        if (m_IsSelected)
+        {
+            GUI.DrawTexture(new Rect(
+                m_TotalRect.x - NodeTextureDimensions.STARTEND_OUTLINE_OFFSET.x,
+                m_TotalRect.y - NodeTextureDimensions.STARTEND_OUTLINE_OFFSET.y,
+                m_TotalRect.width * 1.1f, m_TotalRect.height * 1.1f),
+                m_NodeSkin.m_SelectedMidOutline);
+        }
+
         //Draw the node box,description and title
-        GUI.DrawTexture(m_MidRect, m_NodeSkin.textureToRender);
+        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground);
+
+        //GUI.Label(new Rect(m_TotalRect.center,m_TotalRect.size), "Start", LEMStyleLibrary.s_StartEndStyle);
+        GUI.Label(m_TotalRect, "Start", LEMStyleLibrary.s_StartEndStyle);
 
         //Draw the in out points as well
         m_OutPoint.Draw();
 
     }
+    public override void Drag(Vector2 delta)
+    {
+        m_MidRect.position += delta;
+        m_TotalRect.position += delta;
+    }
 
-    ////Use this node's connect next effect to start the whole chain of linking
-    ////of Next Effect
-    //public void StartConnection(ref List<BaseEffectNode> connectedNodes)
-    //{
-    //    BaseEffectNode firstBaseEffectNode = (BaseEffectNode)m_OutPoint.nextNode;
+    protected override void SetNodeRects(Vector2 mousePosition, Vector2 midSize, Vector2 topSize)
+    {
+        //Default node size
+        m_MidRect.size = midSize;
+        m_MidRect.position = mousePosition;
 
-    //    if (firstBaseEffectNode != null)
-    //    {
-    //        firstBaseEffectNode.Connect(ref connectedNodes);
-    //        return;
-    //    }
-
-    //    //If there is no connected effect node to the start node, then debug a warning saying, that there isnt any start node
-    //    Debug.LogWarning("There is no Effect Node connected to the Start Node");
-    //}
+        //Get total size and avrg pos
+        m_TotalRect.size = m_MidRect.size;
+        m_TotalRect.position = mousePosition;
+    }
 
 }

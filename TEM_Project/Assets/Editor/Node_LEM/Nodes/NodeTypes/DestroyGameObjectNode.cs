@@ -11,9 +11,8 @@ public class DestroyGameObjectNode : BaseEffectNode
     {
         base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode);
 
-        //Override the rect size
-        m_MidRect.height = 150f;
-        m_MidRect.width = 244.9f;
+        //Override the rect size n pos
+        SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
     }
 
     public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)

@@ -17,9 +17,8 @@ public class InstantiateGameObjectNode : BaseEffectNode
     {
         base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode);
 
-        //Override the rect size
-        m_MidRect.height = 280f;
-        m_MidRect.width = 275f;
+        //Override the rect size n pos
+        SetNodeRects(position, NodeTextureDimensions.BIG_MID_SIZE, NodeTextureDimensions.BIG_TOP_SIZE);
     }
 
     public override void Draw()

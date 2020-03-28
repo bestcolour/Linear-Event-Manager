@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Node
 {
-    public Rect m_MidRect = default;
-    public Rect m_TopRect = default;
+    public Rect m_MidRect = new Rect();
+    public Rect m_TopRect = new Rect();
+    public Rect m_TotalRect = new Rect();
+
+    //List<NodeRectTexturePair> m_RectsToDraw = new List<NodeRectTexturePair>();
 
     //Guid m_NodeID = default;
     public string NodeID
@@ -36,15 +40,11 @@ public abstract class Node
     protected Action<Node> d_OnSelectNode = null;
     protected Action<Node> d_OnDeselectNode = null;
 
-    //public NodeBaseData m_NodeBaseDataSaveFile = default;
-
     public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
         Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint
         , Action<Node> onSelectNode, Action<Node> onDeSelectNode)
     {
-        m_MidRect = new Rect(position.x, position.y, 200f, 50f);
-        m_TopRect = new Rect(position.x, position.y + 25f, 200f, 25f);
-
+        SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
 
         this.m_NodeSkin = nodeSkin;
 
@@ -58,23 +58,31 @@ public abstract class Node
     }
 
     //Delta here is a finite increment (eg time.delta time, mouse movement delta(Event.delta), rectransform's delta x and y)
-    public void Drag(Vector2 delta)
+    public virtual void Drag(Vector2 delta)
     {
+        m_TopRect.position += delta;
         m_MidRect.position += delta;
-        m_MidRect.position += delta;
+        m_TotalRect.position += delta;
     }
 
     //Draws the node using its position, dimensions and style
     //only start & end node completely overrides the draw method
     public virtual void Draw()
     {
+        if (m_IsSelected)
+        {
+            GUI.DrawTexture(new Rect(
+                m_TotalRect.x - NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.x,
+                m_TotalRect.y - NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.y,
+                m_TotalRect.width * 1.075f, m_TotalRect.height * 1.075f),
+                m_NodeSkin.m_SelectedMidOutline);
+        }
 
         //Draw the top of the node
         GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground);
 
         //Draw the node background
-        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_NodeBackground);
-
+        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground);
 
 
         //Draw the in out points as well
@@ -183,7 +191,7 @@ public abstract class Node
                 return true;
             }
             //Check if node is within selection box of editor
-            else if (NodeLEM_Editor.s_SelectionBox.Overlaps(m_MidRect, true))
+            else if (NodeLEM_Editor.s_SelectionBox.Overlaps(m_TotalRect, true))
             {
                 SelectBySelectionBox();
                 return true;
@@ -196,7 +204,7 @@ public abstract class Node
             }
         }
         return false;
-    } 
+    }
     #endregion
 
     #region Modes of Selection
@@ -204,7 +212,7 @@ public abstract class Node
     void SelectBySelectionBox()
     {
         //Change the visual to indicate that node has been selected
-        m_NodeSkin.textureToRender = m_NodeSkin.m_SelectedOutline;
+        //m_NodeSkin.textureToRender = m_NodeSkin.m_SelectedOutline;
 
         //Invoke onselect delegate
         d_OnSelectNode?.Invoke(this);
@@ -217,7 +225,7 @@ public abstract class Node
     {
         //Change the visual to indicate that node has been selected
         //nodeSkin.style = nodeSkin.light_selected;
-        m_NodeSkin.textureToRender = m_NodeSkin.m_SelectedOutline;
+        //m_NodeSkin.textureToRender = m_NodeSkin.m_SelectedOutline;
 
         m_IsDragged = true;
 
@@ -232,7 +240,7 @@ public abstract class Node
     {
         d_OnDeselectNode?.Invoke(this);
         m_IsSelected = false;
-        m_NodeSkin.textureToRender = m_NodeSkin.m_NodeBackground;
+        //m_NodeSkin.textureToRender = m_NodeSkin.m_NodeBackground;
     }
 
     #endregion
@@ -243,7 +251,22 @@ public abstract class Node
         return new NodeBaseData(m_MidRect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
     }
 
-    //Connect connections with the node's in out points if there is any
-    //public virtual void ConnectConnections() { }
+    //Change values here
+    protected virtual void SetNodeRects(Vector2 mousePosition, Vector2 midSize, Vector2 topSize)
+    {
+        //Default node size
+        m_MidRect.size = midSize;
+        m_MidRect.position = mousePosition;
+
+        m_TopRect.size = topSize;
+        mousePosition += -Vector2.up * (m_TopRect.size.y - 2);
+        m_TopRect.position = mousePosition;
+
+        //Get total size and avrg pos
+        m_TotalRect.size = new Vector2(midSize.x, midSize.y + topSize.y - 2);
+        m_TotalRect.position = m_TopRect.position;
+
+    }
+
 
 }

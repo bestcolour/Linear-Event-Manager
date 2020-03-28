@@ -41,7 +41,8 @@ public class LEMStyleLibrary
 
     //Node fontstyles
     public static readonly GUIStyle s_NodeHeaderStyle = new GUIStyle();
-    public static readonly GUIStyle s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
+    public static readonly GUIStyle s_StartEndStyle = new GUIStyle();
+    public static GUIStyle s_NodeTextInputStyle = null;
     public static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
 
     //Start End Node    
@@ -49,7 +50,8 @@ public class LEMStyleLibrary
     public static NodeSkinCollection s_EndNodeSkins = new NodeSkinCollection();
 
     //Just a default skin
-    public static NodeSkinCollection m_WhiteBackGroundSkin = default;
+    public static NodeSkinCollection s_WhiteBackGroundSkin = default;
+   
 
     public static void LoadLibrary()
     {
@@ -82,13 +84,13 @@ public class LEMStyleLibrary
         //    m_NodeStyleDictionary.Add(namesOfNodeEffectType[i], skinCollection);
         //}
 
-        s_StartNodeSkins.m_NodeBackground = Resources.Load<Texture2D>("StartEnd/start");
-        s_StartNodeSkins.m_SelectedOutline = Resources.Load<Texture2D>("StartEnd/start_Selected");
-        s_StartNodeSkins.textureToRender = s_StartNodeSkins.m_NodeBackground;
+        s_StartNodeSkins.m_MidBackground = Resources.Load<Texture2D>("StartEnd/start");
+        s_StartNodeSkins.m_SelectedMidOutline = Resources.Load<Texture2D>("StartEnd/start_Selected");
+        //s_StartNodeSkins.textureToRender = s_StartNodeSkins.m_NodeBackground;
 
-        s_EndNodeSkins.m_NodeBackground = Resources.Load<Texture2D>("StartEnd/end");
-        s_EndNodeSkins.m_SelectedOutline = Resources.Load<Texture2D>("StartEnd/end_Selected");
-        s_EndNodeSkins.textureToRender = s_EndNodeSkins.m_NodeBackground;
+        s_EndNodeSkins.m_MidBackground = Resources.Load<Texture2D>("StartEnd/end");
+        s_EndNodeSkins.m_SelectedMidOutline = Resources.Load<Texture2D>("StartEnd/end_Selected");
+        //s_EndNodeSkins.textureToRender = s_EndNodeSkins.m_NodeBackground;
 
         //Initialise the execution pin style for normal and selected pins
         s_ConnectionPointStyleNormal = new GUIStyle();
@@ -110,18 +112,26 @@ public class LEMStyleLibrary
         s_OutPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
         s_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
 
-        m_WhiteBackGroundSkin = new NodeSkinCollection();
-        m_WhiteBackGroundSkin.m_NodeBackground = Resources.Load<Texture2D>("NodeBg/White_BackGround");
-        m_WhiteBackGroundSkin.m_SelectedOutline = Resources.Load<Texture2D>("NodeBg/White_BackGround_Selected");
-        m_WhiteBackGroundSkin.textureToRender = m_WhiteBackGroundSkin.m_NodeBackground;
+        s_WhiteBackGroundSkin = new NodeSkinCollection();
+        s_WhiteBackGroundSkin.m_MidBackground = Resources.Load<Texture2D>("NodeBg/White_BackGround");
+        s_WhiteBackGroundSkin.m_SelectedMidOutline = Resources.Load<Texture2D>("NodeBg/White_BackGround_Selected");
+        s_WhiteBackGroundSkin.m_TopBackground = Resources.Load<Texture2D>("NodeBg/White_Top");
+        s_WhiteBackGroundSkin.m_SelectedTopOutline = Resources.Load<Texture2D>("NodeBg/White_Top_Selected");
+        //m_WhiteBackGroundSkin.textureToRender = m_WhiteBackGroundSkin.m_NodeBackground;                     
+
 
 
         //Initialising public static node title styles
         s_NodeHeaderStyle.fontSize = 13;
+        s_NodeHeaderStyle.alignment = TextAnchor.MiddleCenter;
 
+        s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
         s_NodeTextInputStyle.fontSize = 10;
 
         s_NodeParagraphStyle.fontSize = 10;
+
+        s_StartEndStyle.fontSize = 20;
+        s_StartEndStyle.alignment = TextAnchor.MiddleCenter;
 
     }
 

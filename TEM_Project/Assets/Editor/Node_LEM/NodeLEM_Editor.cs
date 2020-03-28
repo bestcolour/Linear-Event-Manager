@@ -146,7 +146,7 @@ public class NodeLEM_Editor : EditorWindow
             s_StartNode = new StartNode();
             //Initialise the new node 
             s_StartNode.Initialise
-                (new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), LEMStyleLibrary.s_StartNodeSkins, LEMStyleLibrary.s_ConnectionPointStyleNormal,
+                (new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), LEMStyleLibrary.s_WhiteBackGroundSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
                 OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
 
             //Add the node into collection in editor
@@ -158,7 +158,7 @@ public class NodeLEM_Editor : EditorWindow
             s_EndNode = new EndNode();
             //Initialise the new node 
             s_EndNode.Initialise
-                (new Vector2(EditorGUIUtility.currentViewWidth * 0.85f, 50f), LEMStyleLibrary.s_EndNodeSkins, LEMStyleLibrary.s_ConnectionPointStyleNormal,
+                (new Vector2(EditorGUIUtility.currentViewWidth * 0.85f, 50f), LEMStyleLibrary.s_WhiteBackGroundSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
                 OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
 
             //Add the node into collection in editor
@@ -389,7 +389,7 @@ public class NodeLEM_Editor : EditorWindow
             case EventType.MouseDown:
 
                 //Set the currenly clicked node
-                s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_MidRect.Contains(e.mousePosition));
+                s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(e.mousePosition));
 
                 //Check if the mouse button down is the right click button
                 if (e.button == 1)
@@ -563,7 +563,7 @@ public class NodeLEM_Editor : EditorWindow
         BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
         //Get the respective skin from the collection of nodeskin
-        NodeSkinCollection nodeSkin = LEMStyleLibrary.m_WhiteBackGroundSkin;
+        NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
         //NodeSkinCollection nodeSkin = s_SkinsLibrary.m_WhiteBackGroundSkin;
 
         //Initialise the new node 
@@ -584,7 +584,7 @@ public class NodeLEM_Editor : EditorWindow
         BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
         //Get the respective skin from the collection of nodeskin
-        NodeSkinCollection nodeSkin = LEMStyleLibrary.m_WhiteBackGroundSkin;
+        NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
 
         //Initialise the new node 
         newEffectNode.Initialise
