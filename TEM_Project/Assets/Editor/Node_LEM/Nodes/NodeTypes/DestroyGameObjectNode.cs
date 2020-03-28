@@ -7,9 +7,9 @@ public class DestroyGameObjectNode : BaseEffectNode
 {
     public GameObject m_TargetObject = default;
 
-    public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode)
+    public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
     {
-        base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode);
+        base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
 
         //Override the rect size n pos
         SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
@@ -18,7 +18,7 @@ public class DestroyGameObjectNode : BaseEffectNode
     public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
     {
         DestroyGameObject loadFrom = effectToLoadFrom as DestroyGameObject;
-        m_TargetObject = loadFrom.m_TargetObject;
+        loadFrom.UnPack(out m_TargetObject);
 
         base.LoadFromLinearEvent(effectToLoadFrom);
     }
@@ -38,23 +38,9 @@ public class DestroyGameObjectNode : BaseEffectNode
         myEffect.m_NodeEffectType = this.GetType().ToString();
         myEffect.m_Description = m_LemEffectDescription;
         myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
-        myEffect.m_TargetObject = m_TargetObject;
+        myEffect.SetUp(m_TargetObject);
         return myEffect;
 
     }
-
-    //public override void SaveNodeData()
-    //{
-    //    base.SaveNodeData();
-
-    //    DestroyGameObject baseEffectCopy = new DestroyGameObject(m_GoDestroy);
-
-    //    baseEffectCopy.m_Description = m_TemEffectDescription;
-    //    baseEffectCopy.m_NodeEffectType = this.GetType().ToString();
-    //    baseEffectCopy.m_NodeBaseData = m_NodeBaseDataSaveFile;
-    //    //record this in temp after all transfer of values or references
-    //    m_BaseEffectSaveFile = baseEffectCopy;
-
-    //}
 
 }

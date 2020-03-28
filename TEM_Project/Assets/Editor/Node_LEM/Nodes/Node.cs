@@ -5,10 +5,8 @@ using UnityEngine;
 public abstract class Node
 {
     public Rect m_MidRect = new Rect();
-    public Rect m_TopRect = new Rect();
+    public Rect m_TopRect = default;
     public Rect m_TotalRect = new Rect();
-
-    //List<NodeRectTexturePair> m_RectsToDraw = new List<NodeRectTexturePair>();
 
     //Guid m_NodeID = default;
     public string NodeID
@@ -36,14 +34,18 @@ public abstract class Node
     public OutConnectionPoint m_OutPoint = new OutConnectionPoint();
 
     protected NodeSkinCollection m_NodeSkin = default;
+    //Top skin will pull from a static cache
+    protected Color m_MidSkinColour = default;
 
     protected Action<Node> d_OnSelectNode = null;
     protected Action<Node> d_OnDeselectNode = null;
 
     public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
         Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint
-        , Action<Node> onSelectNode, Action<Node> onDeSelectNode)
+        , Action<Node> onSelectNode, Action<Node> onDeSelectNode,Color midSkinColour )
     {
+        m_TopRect = new Rect();
+
         SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
 
         this.m_NodeSkin = nodeSkin;
@@ -55,6 +57,8 @@ public abstract class Node
         //Initialise in and out points
         m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint);
         m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint);
+
+        m_MidSkinColour = midSkinColour;
     }
 
     //Delta here is a finite increment (eg time.delta time, mouse movement delta(Event.delta), rectransform's delta x and y)
@@ -78,12 +82,16 @@ public abstract class Node
                 m_NodeSkin.m_SelectedMidOutline);
         }
 
+        LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
+
         //Draw the top of the node
+        GUI.color =LEMStyleLibrary.s_CurrentTopTextureColour;
         GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground);
 
-        //Draw the node background
+        //Draw the node midskin with its colour
+        GUI.color = m_MidSkinColour;
         GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground);
-
+        GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
         //Draw the in out points as well
         m_InPoint.Draw();

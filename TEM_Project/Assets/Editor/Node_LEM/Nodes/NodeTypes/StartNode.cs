@@ -5,12 +5,11 @@ using System.Collections;
 
 public class StartNode : Node
 {
-
-    public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode)
+    public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
     {
-        base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode);
-
+        base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
         SetNodeRects(position, NodeTextureDimensions.START_END_NODE, NodeTextureDimensions.START_END_NODE);
+
     }
 
     public override void Draw()
@@ -25,7 +24,10 @@ public class StartNode : Node
         }
 
         //Draw the node box,description and title
+        LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
+        GUI.color = m_MidSkinColour;
         GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground);
+        GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
         //GUI.Label(new Rect(m_TotalRect.center,m_TotalRect.size), "Start", LEMStyleLibrary.s_StartEndStyle);
         GUI.Label(m_TotalRect, "Start", LEMStyleLibrary.s_StartEndStyle);

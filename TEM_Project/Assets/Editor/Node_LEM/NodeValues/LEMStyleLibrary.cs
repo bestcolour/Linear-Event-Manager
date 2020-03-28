@@ -23,9 +23,12 @@ public class LEMStyleLibrary
     static LEMStyleLibrary m_Instance = null;
     public static bool m_SkinsLoaded = false;
 
+    #region Colours
     //public Dictionary<string, NodeSkinCollection> m_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
-    public static Dictionary<string, Color> m_NodeColourDictionary = new Dictionary<string, Color>
+    public static Dictionary<string, Color> s_NodeColourDictionary = new Dictionary<string, Color>
     {
+        {"StartNode",                  new Color(0.11f, 0.937f, 0.11f) },
+        {"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
         { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
         { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) }
 
@@ -33,6 +36,13 @@ public class LEMStyleLibrary
 
 
     };
+
+    public static Color s_GUIPreviousColour = default;
+    //To be pulled by all nodes with top textures 
+    public static Color s_CurrentTopTextureColour = default;
+
+
+    #endregion
 
     public static GUIStyle s_InPointStyle = default;
     public static GUIStyle s_OutPointStyle = default;
@@ -45,13 +55,14 @@ public class LEMStyleLibrary
     public static GUIStyle s_NodeTextInputStyle = null;
     public static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
 
+
     //Start End Node    
-    public static NodeSkinCollection s_StartNodeSkins = new NodeSkinCollection();
-    public static NodeSkinCollection s_EndNodeSkins = new NodeSkinCollection();
+    //public static NodeSkinCollection s_StartNodeSkins = new NodeSkinCollection();
+    //public static NodeSkinCollection s_EndNodeSkins = new NodeSkinCollection();
 
     //Just a default skin
     public static NodeSkinCollection s_WhiteBackGroundSkin = default;
-   
+
 
     public static void LoadLibrary()
     {
@@ -69,7 +80,7 @@ public class LEMStyleLibrary
         //Reset dictionary
         //m_NodeStyleDictionary.Clear();
 
-        string[] namesOfNodeEffectType = LEMDictionary.GetNodeTypeKeys();
+        //string[] namesOfNodeEffectType = LEMDictionary.GetNodeTypeKeys();
 
         //The number range covers all the skins needed for gameobject effect related nodes
         //Naming convention is very important here
@@ -84,12 +95,12 @@ public class LEMStyleLibrary
         //    m_NodeStyleDictionary.Add(namesOfNodeEffectType[i], skinCollection);
         //}
 
-        s_StartNodeSkins.m_MidBackground = Resources.Load<Texture2D>("StartEnd/start");
-        s_StartNodeSkins.m_SelectedMidOutline = Resources.Load<Texture2D>("StartEnd/start_Selected");
-        //s_StartNodeSkins.textureToRender = s_StartNodeSkins.m_NodeBackground;
+        //s_StartNodeSkins.m_MidBackground = Resources.Load<Texture2D>("StartEnd/start");
+        //s_StartNodeSkins.m_SelectedMidOutline = Resources.Load<Texture2D>("StartEnd/start_Selected");
+        ////s_StartNodeSkins.textureToRender = s_StartNodeSkins.m_NodeBackground;
 
-        s_EndNodeSkins.m_MidBackground = Resources.Load<Texture2D>("StartEnd/end");
-        s_EndNodeSkins.m_SelectedMidOutline = Resources.Load<Texture2D>("StartEnd/end_Selected");
+        //s_EndNodeSkins.m_MidBackground = Resources.Load<Texture2D>("StartEnd/end");
+        //s_EndNodeSkins.m_SelectedMidOutline = Resources.Load<Texture2D>("StartEnd/end_Selected");
         //s_EndNodeSkins.textureToRender = s_EndNodeSkins.m_NodeBackground;
 
         //Initialise the execution pin style for normal and selected pins
@@ -132,6 +143,9 @@ public class LEMStyleLibrary
 
         s_StartEndStyle.fontSize = 20;
         s_StartEndStyle.alignment = TextAnchor.MiddleCenter;
+
+        //For now, just set the current top texture to a light themed colour
+        s_CurrentTopTextureColour = new Color(0.862f, 0.894f, 0.862f);
 
     }
 

@@ -7,11 +7,16 @@ namespace LEM_Effects
     public class DestroyGameObject : LEM_BaseEffect
     {
         [Tooltip("Object to destroy")]
-        [SerializeField] public GameObject m_TargetObject = default;
+        [SerializeField] GameObject m_TargetObject = default;
 
-        public DestroyGameObject(GameObject targetObject)
+        public void SetUp(GameObject targetObject)
         {
             m_TargetObject = targetObject;
+        }
+
+        public void UnPack(out GameObject targetObject)
+        {
+            targetObject = m_TargetObject;
         }
 
         public override bool TEM_Update()
@@ -22,5 +27,5 @@ namespace LEM_Effects
             return true;
         }
 
-    } 
+    }
 }

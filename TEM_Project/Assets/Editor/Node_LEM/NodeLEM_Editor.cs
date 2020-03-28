@@ -147,7 +147,7 @@ public class NodeLEM_Editor : EditorWindow
             //Initialise the new node 
             s_StartNode.Initialise
                 (new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), LEMStyleLibrary.s_WhiteBackGroundSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
-                OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
+                OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection,LEMStyleLibrary.s_NodeColourDictionary["StartNode"]);
 
             //Add the node into collection in editor
             m_AllNodesInEditor.Add(s_StartNode);
@@ -159,7 +159,7 @@ public class NodeLEM_Editor : EditorWindow
             //Initialise the new node 
             s_EndNode.Initialise
                 (new Vector2(EditorGUIUtility.currentViewWidth * 0.85f, 50f), LEMStyleLibrary.s_WhiteBackGroundSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
-                OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
+                OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection, LEMStyleLibrary.s_NodeColourDictionary["EndNode"]);
 
             //Add the node into collection in editor
             m_AllNodesInEditor.Add(s_EndNode);
@@ -564,12 +564,18 @@ public class NodeLEM_Editor : EditorWindow
 
         //Get the respective skin from the collection of nodeskin
         NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
-        //NodeSkinCollection nodeSkin = s_SkinsLibrary.m_WhiteBackGroundSkin;
 
         //Initialise the new node 
         newEffectNode.Initialise
-            (mousePosition, nodeSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
-            OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
+            (mousePosition, 
+            nodeSkin, 
+            LEMStyleLibrary.s_ConnectionPointStyleNormal,
+            OnClickInPoint, 
+            OnClickOutPoint, 
+            AddNodeToSelectedCollection, 
+            RemoveNodeFromSelectedCollection,
+            LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
+            );
 
         newEffectNode.GenerateNodeID();
 
@@ -588,8 +594,15 @@ public class NodeLEM_Editor : EditorWindow
 
         //Initialise the new node 
         newEffectNode.Initialise
-            (mousePosition, nodeSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
-            OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
+            (mousePosition, 
+            nodeSkin, 
+            LEMStyleLibrary.s_ConnectionPointStyleNormal,
+            OnClickInPoint, 
+            OnClickOutPoint,
+            AddNodeToSelectedCollection,
+            RemoveNodeFromSelectedCollection,
+            LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
+            );
 
         newEffectNode.SetNodeID(idToSet);
 
