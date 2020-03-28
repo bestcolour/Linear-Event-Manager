@@ -8,28 +8,50 @@ using UnityEditor;
 /// </summary>
 public class LEMStyleLibrary
 {
-    public static LEMStyleLibrary Instance = default;
-    public bool m_SkinsLoaded = false;
+    public static LEMStyleLibrary Instance
+    {
+        get
+        {
+            //Self initialise
+            if (m_Instance == null)
+            {
+                RefreshLibrary();
+            }
+            return m_Instance;
+        }
+    }
+    static LEMStyleLibrary m_Instance = null;
+    public static bool m_SkinsLoaded = false;
 
-    public Dictionary<string, NodeSkinCollection> m_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
+    //public Dictionary<string, NodeSkinCollection> m_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
+    public static Dictionary<string, Color> m_NodeColourDictionary = new Dictionary<string, Color>
+    {
+        { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
+        { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) }
 
-    public GUIStyle m_InPointStyle = default;
-    public GUIStyle m_OutPointStyle = default;
-    public GUIStyle m_ConnectionPointStyleNormal = default;
-    public GUIStyle m_ConnectionPointStyleSelected = default;
+
+
+
+    };
+
+    public static GUIStyle s_InPointStyle = default;
+    public static GUIStyle s_OutPointStyle = default;
+    public static GUIStyle s_ConnectionPointStyleNormal = default;
+    public static GUIStyle s_ConnectionPointStyleSelected = default;
 
     //Node fontstyles
-    public GUIStyle s_NodeHeaderStyle = default;
-    public GUIStyle s_NodeTextInputStyle = default;
-    public GUIStyle s_NodeParagraphStyle = default;
+    public static readonly GUIStyle s_NodeHeaderStyle = new GUIStyle();
+    public static readonly GUIStyle s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
+    public static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
 
-    //Start End Node
-    public NodeSkinCollection m_StartNodeSkins = default;
-    public NodeSkinCollection m_EndNodeSkins = default;
+    //Start End Node    
+    public static NodeSkinCollection s_StartNodeSkins = new NodeSkinCollection();
+    public static NodeSkinCollection s_EndNodeSkins = new NodeSkinCollection();
 
-    public NodeSkinCollection m_WhiteBackGroundSkin = default;
+    //Just a default skin
+    public static NodeSkinCollection m_WhiteBackGroundSkin = default;
 
-    public void LoadLibrary()
+    public static void LoadLibrary()
     {
         //If gui style has not been loaded
         if (!m_SkinsLoaded)
@@ -40,59 +62,73 @@ public class LEMStyleLibrary
     }
 
 
-    void LoadingNodeSkins()
+    static void LoadingNodeSkins()
     {
         //Reset dictionary
-        m_NodeStyleDictionary.Clear();
+        //m_NodeStyleDictionary.Clear();
 
         string[] namesOfNodeEffectType = LEMDictionary.GetNodeTypeKeys();
 
         //The number range covers all the skins needed for gameobject effect related nodes
         //Naming convention is very important here
-        for (int i = 0; i < namesOfNodeEffectType.Length; i++)
-        {
-            NodeSkinCollection skinCollection = new NodeSkinCollection();
-            //Load the node skins texture
-            skinCollection.light_normal = Resources.Load<Texture2D>("NodeBackground/light_" + namesOfNodeEffectType[i]);
-            skinCollection.light_selected = Resources.Load<Texture2D>("NodeBackground/light_" + namesOfNodeEffectType[i] + "_Selected");
-            skinCollection.textureToRender = skinCollection.light_normal;
+        //for (int i = 0; i < namesOfNodeEffectType.Length; i++)
+        //{
+        //    NodeSkinCollection skinCollection = new NodeSkinCollection();
+        //    //Load the node skins texture
+        //    skinCollection.light_normal = Resources.Load<Texture2D>("NodeBackground/light_" + namesOfNodeEffectType[i]);
+        //    skinCollection.light_selected = Resources.Load<Texture2D>("NodeBackground/light_" + namesOfNodeEffectType[i] + "_Selected");
+        //    skinCollection.textureToRender = skinCollection.light_normal;
 
-            m_NodeStyleDictionary.Add(namesOfNodeEffectType[i], skinCollection);
-        }
+        //    m_NodeStyleDictionary.Add(namesOfNodeEffectType[i], skinCollection);
+        //}
 
-        m_StartNodeSkins.light_normal = Resources.Load<Texture2D>("StartEnd/start");
-        m_StartNodeSkins.light_selected = Resources.Load<Texture2D>("StartEnd/start_Selected");
-        m_StartNodeSkins.textureToRender = m_StartNodeSkins.light_normal;
+        s_StartNodeSkins.m_NodeBackground = Resources.Load<Texture2D>("StartEnd/start");
+        s_StartNodeSkins.m_SelectedOutline = Resources.Load<Texture2D>("StartEnd/start_Selected");
+        s_StartNodeSkins.textureToRender = s_StartNodeSkins.m_NodeBackground;
 
-        m_EndNodeSkins.light_normal = Resources.Load<Texture2D>("StartEnd/end");
-        m_EndNodeSkins.light_selected = Resources.Load<Texture2D>("StartEnd/end_Selected");
-        m_EndNodeSkins.textureToRender = m_EndNodeSkins.light_normal;
+        s_EndNodeSkins.m_NodeBackground = Resources.Load<Texture2D>("StartEnd/end");
+        s_EndNodeSkins.m_SelectedOutline = Resources.Load<Texture2D>("StartEnd/end_Selected");
+        s_EndNodeSkins.textureToRender = s_EndNodeSkins.m_NodeBackground;
 
         //Initialise the execution pin style for normal and selected pins
-        m_ConnectionPointStyleNormal = new GUIStyle();
-        m_ConnectionPointStyleNormal.normal.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin");
-        m_ConnectionPointStyleNormal.active.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin_Selected");
+        s_ConnectionPointStyleNormal = new GUIStyle();
+        s_ConnectionPointStyleNormal.normal.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin");
+        s_ConnectionPointStyleNormal.active.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin_Selected");
 
         //Invert the two pins' backgrounds so that the user will be able to know what will happen if they press it
-        m_ConnectionPointStyleSelected = new GUIStyle();
-        m_ConnectionPointStyleSelected.normal.background = m_ConnectionPointStyleNormal.active.background;
-        m_ConnectionPointStyleSelected.active.background = m_ConnectionPointStyleNormal.normal.background;
+        s_ConnectionPointStyleSelected = new GUIStyle();
+        s_ConnectionPointStyleSelected.normal.background = s_ConnectionPointStyleNormal.active.background;
+        s_ConnectionPointStyleSelected.active.background = s_ConnectionPointStyleNormal.normal.background;
 
 
         //Load the in and out point gui styles
-        m_InPointStyle = new GUIStyle();
-        m_InPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
-        m_InPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
+        s_InPointStyle = new GUIStyle();
+        s_InPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
+        s_InPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
 
-        m_OutPointStyle = new GUIStyle();
-        m_OutPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
-        m_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
+        s_OutPointStyle = new GUIStyle();
+        s_OutPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
+        s_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
 
         m_WhiteBackGroundSkin = new NodeSkinCollection();
-        m_WhiteBackGroundSkin.light_normal = Resources.Load<Texture2D>("NodeBg/White_BackGround");
-        m_WhiteBackGroundSkin.light_selected = Resources.Load<Texture2D>("NodeBg/White_BackGround_Selected");
-        m_WhiteBackGroundSkin.textureToRender = m_WhiteBackGroundSkin.light_normal;
+        m_WhiteBackGroundSkin.m_NodeBackground = Resources.Load<Texture2D>("NodeBg/White_BackGround");
+        m_WhiteBackGroundSkin.m_SelectedOutline = Resources.Load<Texture2D>("NodeBg/White_BackGround_Selected");
+        m_WhiteBackGroundSkin.textureToRender = m_WhiteBackGroundSkin.m_NodeBackground;
 
+
+        //Initialising public static node title styles
+        s_NodeHeaderStyle.fontSize = 13;
+
+        s_NodeTextInputStyle.fontSize = 10;
+
+        s_NodeParagraphStyle.fontSize = 10;
+
+    }
+
+    public static void RefreshLibrary()
+    {
+        m_Instance = new LEMStyleLibrary();
+        LoadLibrary();
     }
 
 }

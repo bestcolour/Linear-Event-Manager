@@ -48,7 +48,7 @@ public class NodeLEM_Editor : EditorWindow
         if (connectionPoint == null)
             return;
 
-        connectionPoint.m_Style = isSelected == 1 ? s_SkinsLibrary.m_ConnectionPointStyleSelected : s_SkinsLibrary.m_ConnectionPointStyleNormal;
+        connectionPoint.m_Style = isSelected == 1 ? LEMStyleLibrary.s_ConnectionPointStyleSelected : LEMStyleLibrary.s_ConnectionPointStyleNormal;
     }
 
     void TrySetConnectionPoint(ConnectionPoint connectionPoint)
@@ -56,7 +56,7 @@ public class NodeLEM_Editor : EditorWindow
         if (connectionPoint == null)
             return;
 
-        connectionPoint.m_Style = connectionPoint.IsConnected ? s_SkinsLibrary.m_ConnectionPointStyleSelected : s_SkinsLibrary.m_ConnectionPointStyleNormal;
+        connectionPoint.m_Style = connectionPoint.IsConnected ? LEMStyleLibrary.s_ConnectionPointStyleSelected : LEMStyleLibrary.s_ConnectionPointStyleNormal;
     }
 
     ConnectionPoint m_SelectedInPoint = default;
@@ -67,14 +67,14 @@ public class NodeLEM_Editor : EditorWindow
 
     //NodeCommandInvoker m_CommandInvoker = default;
 
-    static readonly LEMStyleLibrary s_SkinsLibrary = new LEMStyleLibrary();
+    //static readonly LEMStyleLibrary s_SkinsLibrary = new LEMStyleLibrary();
     static Texture2D s_EditorBackGroundTexture = default;
 
     #region GUI Styles
 
-    public static GUIStyle s_NodeHeaderStyle = default;
-    public static GUIStyle s_NodeTextInputStyle = default;
-    public static GUIStyle s_NodeParagraphStyle = default;
+    //public static GUIStyle s_NodeHeaderStyle = default;
+    //public static GUIStyle s_NodeTextInputStyle = default;
+    //public static GUIStyle s_NodeParagraphStyle = default;
 
     #endregion
 
@@ -103,9 +103,9 @@ public class NodeLEM_Editor : EditorWindow
     {
         instance = this;
 
-        s_SkinsLibrary.LoadLibrary();
+        LEMStyleLibrary.LoadLibrary();
 
-        InitialiseStyles();
+        InitialiseSkin();
 
         //Creates instance of invoker
         //if (m_CommandInvoker == null)
@@ -132,18 +132,8 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    void InitialiseStyles()
+    void InitialiseSkin()
     {
-        //Initialising public static node title styles
-        s_NodeHeaderStyle = new GUIStyle();
-        s_NodeHeaderStyle.fontSize = 13;
-
-        s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
-        s_NodeTextInputStyle.fontSize = 10;
-
-        s_NodeParagraphStyle = new GUIStyle();
-        s_NodeParagraphStyle.fontSize = 10;
-
         s_EditorBackGroundTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
         s_EditorBackGroundTexture.SetPixel(0, 0, new Color(0.227f, 0.216f, 0.212f));
         s_EditorBackGroundTexture.Apply();
@@ -156,7 +146,7 @@ public class NodeLEM_Editor : EditorWindow
             s_StartNode = new StartNode();
             //Initialise the new node 
             s_StartNode.Initialise
-                (new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), s_SkinsLibrary.m_StartNodeSkins, s_SkinsLibrary.m_ConnectionPointStyleNormal,
+                (new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), LEMStyleLibrary.s_StartNodeSkins, LEMStyleLibrary.s_ConnectionPointStyleNormal,
                 OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
 
             //Add the node into collection in editor
@@ -168,7 +158,7 @@ public class NodeLEM_Editor : EditorWindow
             s_EndNode = new EndNode();
             //Initialise the new node 
             s_EndNode.Initialise
-                (new Vector2(EditorGUIUtility.currentViewWidth * 0.85f, 50f), s_SkinsLibrary.m_EndNodeSkins, s_SkinsLibrary.m_ConnectionPointStyleNormal,
+                (new Vector2(EditorGUIUtility.currentViewWidth * 0.85f, 50f), LEMStyleLibrary.s_EndNodeSkins, LEMStyleLibrary.s_ConnectionPointStyleNormal,
                 OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
 
             //Add the node into collection in editor
@@ -379,7 +369,7 @@ public class NodeLEM_Editor : EditorWindow
         if (GUI.Button(new Rect(position.width - 215f, 0, 100f, 50f), "Refresh"))
         {
             //LoadingNodeSkins();
-            s_SkinsLibrary.LoadLibrary();
+            LEMStyleLibrary.LoadLibrary();
             OnDisable();
             OnEnable();
         }
@@ -399,7 +389,7 @@ public class NodeLEM_Editor : EditorWindow
             case EventType.MouseDown:
 
                 //Set the currenly clicked node
-                s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_Rect.Contains(e.mousePosition));
+                s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_MidRect.Contains(e.mousePosition));
 
                 //Check if the mouse button down is the right click button
                 if (e.button == 1)
@@ -573,12 +563,12 @@ public class NodeLEM_Editor : EditorWindow
         BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
         //Get the respective skin from the collection of nodeskin
-        NodeSkinCollection nodeSkin = s_SkinsLibrary.m_NodeStyleDictionary[nameOfNodeType];
+        NodeSkinCollection nodeSkin = LEMStyleLibrary.m_WhiteBackGroundSkin;
         //NodeSkinCollection nodeSkin = s_SkinsLibrary.m_WhiteBackGroundSkin;
 
         //Initialise the new node 
         newEffectNode.Initialise
-            (mousePosition, nodeSkin, s_SkinsLibrary.m_ConnectionPointStyleNormal,
+            (mousePosition, nodeSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
             OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
 
         newEffectNode.GenerateNodeID();
@@ -594,11 +584,11 @@ public class NodeLEM_Editor : EditorWindow
         BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
         //Get the respective skin from the collection of nodeskin
-        NodeSkinCollection nodeSkin = s_SkinsLibrary.m_NodeStyleDictionary[nameOfNodeType];
+        NodeSkinCollection nodeSkin = LEMStyleLibrary.m_WhiteBackGroundSkin;
 
         //Initialise the new node 
         newEffectNode.Initialise
-            (mousePosition, nodeSkin, s_SkinsLibrary.m_ConnectionPointStyleNormal,
+            (mousePosition, nodeSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
             OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection);
 
         newEffectNode.SetNodeID(idToSet);

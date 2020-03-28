@@ -12,8 +12,8 @@ public class DestroyGameObjectNode : BaseEffectNode
         base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode);
 
         //Override the rect size
-        m_Rect.height = 150f;
-        m_Rect.width = 244.9f;
+        m_MidRect.height = 150f;
+        m_MidRect.width = 244.9f;
     }
 
     public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
@@ -29,7 +29,7 @@ public class DestroyGameObjectNode : BaseEffectNode
         base.Draw();
 
         //Draw a object field for inputting  the gameobject to destroy
-        m_TargetObject = (GameObject)EditorGUI.ObjectField(new Rect(m_Rect.x + 10, m_Rect.y + 100f, m_Rect.width - 20, 20f), "Object To Destroy", m_TargetObject, typeof(GameObject), true);
+        m_TargetObject = (GameObject)EditorGUI.ObjectField(new Rect(m_MidRect.x + 10, m_MidRect.y + 100f, m_MidRect.width - 20, 20f), "Object To Destroy", m_TargetObject, typeof(GameObject), true);
 
     }
 
@@ -38,7 +38,7 @@ public class DestroyGameObjectNode : BaseEffectNode
         DestroyGameObject myEffect = ScriptableObject.CreateInstance<DestroyGameObject>();
         myEffect.m_NodeEffectType = this.GetType().ToString();
         myEffect.m_Description = m_LemEffectDescription;
-        myEffect.m_NodeBaseData = new NodeBaseData(m_Rect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
+        myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
         myEffect.m_TargetObject = m_TargetObject;
         return myEffect;
 

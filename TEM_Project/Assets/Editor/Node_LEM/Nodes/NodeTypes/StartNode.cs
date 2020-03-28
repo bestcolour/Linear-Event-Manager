@@ -10,14 +10,14 @@ public class StartNode : Node
     {
         base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode);
 
-        m_Rect.width = 131f;
-        m_Rect.height = 50f;
+        m_MidRect.width = 131f;
+        m_MidRect.height = 50f;
     }
 
     public override void Draw()
     {
         //Draw the node box,description and title
-        GUI.DrawTexture(m_Rect, m_NodeSkin.textureToRender);
+        GUI.DrawTexture(m_MidRect, m_NodeSkin.textureToRender);
 
         //Draw the in out points as well
         m_OutPoint.Draw();

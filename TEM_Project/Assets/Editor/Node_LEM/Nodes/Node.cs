@@ -3,7 +3,8 @@ using UnityEngine;
 
 public abstract class Node
 {
-    public Rect m_Rect = default;
+    public Rect m_MidRect = default;
+    public Rect m_TopRect = default;
 
     //Guid m_NodeID = default;
     public string NodeID
@@ -41,7 +42,9 @@ public abstract class Node
         Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint
         , Action<Node> onSelectNode, Action<Node> onDeSelectNode)
     {
-        m_Rect = new Rect(position.x, position.y, 200f, 50f);
+        m_MidRect = new Rect(position.x, position.y, 200f, 50f);
+        m_TopRect = new Rect(position.x, position.y + 25f, 200f, 25f);
+
 
         this.m_NodeSkin = nodeSkin;
 
@@ -57,17 +60,22 @@ public abstract class Node
     //Delta here is a finite increment (eg time.delta time, mouse movement delta(Event.delta), rectransform's delta x and y)
     public void Drag(Vector2 delta)
     {
-        m_Rect.position += delta;
+        m_MidRect.position += delta;
+        m_MidRect.position += delta;
     }
 
     //Draws the node using its position, dimensions and style
+    //only start & end node completely overrides the draw method
     public virtual void Draw()
     {
-        Color prevColour = GUI.color;
-        GUI.color = Color.red;
-        //Draw the node box,description and title
-        GUI.DrawTexture(m_Rect, m_NodeSkin.textureToRender);
-        GUI.color = prevColour;
+
+        //Draw the top of the node
+        GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground);
+
+        //Draw the node background
+        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_NodeBackground);
+
+
 
         //Draw the in out points as well
         m_InPoint.Draw();
@@ -175,7 +183,7 @@ public abstract class Node
                 return true;
             }
             //Check if node is within selection box of editor
-            else if (NodeLEM_Editor.s_SelectionBox.Overlaps(m_Rect, true))
+            else if (NodeLEM_Editor.s_SelectionBox.Overlaps(m_MidRect, true))
             {
                 SelectBySelectionBox();
                 return true;
@@ -196,7 +204,7 @@ public abstract class Node
     void SelectBySelectionBox()
     {
         //Change the visual to indicate that node has been selected
-        m_NodeSkin.textureToRender = m_NodeSkin.light_selected;
+        m_NodeSkin.textureToRender = m_NodeSkin.m_SelectedOutline;
 
         //Invoke onselect delegate
         d_OnSelectNode?.Invoke(this);
@@ -209,7 +217,7 @@ public abstract class Node
     {
         //Change the visual to indicate that node has been selected
         //nodeSkin.style = nodeSkin.light_selected;
-        m_NodeSkin.textureToRender = m_NodeSkin.light_selected;
+        m_NodeSkin.textureToRender = m_NodeSkin.m_SelectedOutline;
 
         m_IsDragged = true;
 
@@ -224,7 +232,7 @@ public abstract class Node
     {
         d_OnDeselectNode?.Invoke(this);
         m_IsSelected = false;
-        m_NodeSkin.textureToRender = m_NodeSkin.light_normal;
+        m_NodeSkin.textureToRender = m_NodeSkin.m_NodeBackground;
     }
 
     #endregion
@@ -232,7 +240,7 @@ public abstract class Node
     //Returns only NodeBaseData (use for non effect nodes)
     public virtual NodeBaseData SaveNodeData()
     {
-        return new NodeBaseData(m_Rect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
+        return new NodeBaseData(m_MidRect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
     }
 
     //Connect connections with the node's in out points if there is any

@@ -18,15 +18,15 @@ public class InstantiateGameObjectNode : BaseEffectNode
         base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode);
 
         //Override the rect size
-        m_Rect.height = 280f;
-        m_Rect.width = 275f;
+        m_MidRect.height = 280f;
+        m_MidRect.width = 275f;
     }
 
     public override void Draw()
     {
         base.Draw();
 
-        Rect propertyRect = new Rect(m_Rect.x + 10, m_Rect.y + 100f, m_Rect.width - 20, 15f);
+        Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 100f, m_MidRect.width - 20, 15f);
 
         //Draw fields custom to this class
         m_TargetObject = (GameObject)EditorGUI.ObjectField(propertyRect, "Object to Instantiate", m_TargetObject, typeof(GameObject), true);
