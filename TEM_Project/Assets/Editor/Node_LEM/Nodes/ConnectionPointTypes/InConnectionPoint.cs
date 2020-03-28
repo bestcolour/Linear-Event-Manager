@@ -33,11 +33,6 @@ public class InConnectionPoint : ConnectionPoint
         }
     }
 
-    //public override bool IsConnectedT()
-    //{
-    //    return m_ConnectedNodeIDs.Count > 0;
-    //}
-
     public override string GetConnectedNodeID(int index)
     {
         return m_ConnectedNodeIDs[index];

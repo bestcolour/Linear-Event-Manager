@@ -25,19 +25,9 @@ public class OutConnectionPoint : ConnectionPoint
     //For out connection point, we gotta restrcit the number of connected nodes it can hv
     public override void SetOrAddConnectedNodeID(string idToAdd)
     {
-        //For now if outconnection point is 
-        //if (IsConnected())
-        //    return;
-
         m_ConnectedNodeID = idToAdd;
 
     }
-
-    //public override bool IsConnectedT()
-    //{
-    //    return !string.IsNullOrEmpty(m_ConnectedNodeID);
-    //}
-
     public override string GetConnectedNodeID(int index)
     {
         return m_ConnectedNodeID;

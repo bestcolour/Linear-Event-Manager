@@ -14,14 +14,6 @@ public abstract class ConnectionPoint
 
     public virtual bool IsConnected { get; }
 
-    //public string m_ConnectedNodeID = default;
-    //public bool IsConnected => String.IsNullOrEmpty(m_ConnectedNodeID) ? false : true;
-
-    //public List<string> m_ConnectedNodeIDs = new List<string>();
-    //public bool IsConnected => m_ConnectedNodeIDs.Count > 0;
-
-    //protected int m_MaxConnections 
-
     //Create a delegate that takes in a ConnectionPoint as a parameter
     public Action<ConnectionPoint> d_OnClickConnectionPoint = null;
 
@@ -41,8 +33,6 @@ public abstract class ConnectionPoint
     public virtual void SetOrAddConnectedNodeID(string idToAdd) {   }
 
     public virtual void RemoveConnectedNodeID(string idToRemove) { }
-
-    //public virtual bool IsConnectedT() { return false; }
 
     public virtual string GetConnectedNodeID(int index) { return ""; }
 
