@@ -30,7 +30,6 @@ public class BaseEffectNode : Node
     {
         base.Draw();
         GUI.Label(new Rect(m_MidRect.x + 10, m_MidRect.y + 35, m_MidRect.width, 30f), "Description", LEMStyleLibrary.s_NodeParagraphStyle);
-        //GUI.Label(new Rect(m_MidRect.x + 40, m_MidRect.y + 5, m_MidRect.width, 30f), m_Title, LEMStyleLibrary.s_NodeHeaderStyle);
         GUI.Label(m_TopRect, m_Title, LEMStyleLibrary.s_NodeHeaderStyle);
 
         //Draw the description text field

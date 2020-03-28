@@ -120,6 +120,25 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &4923961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 45, y: 327}
+    m_NodeID: b1865904-eb58-4424-8c74-4959b2492e84
+    m_NextPointNodeID: afab7feb-f0f8-44be-bfe8-721d840999d6
+  m_TargetObject: {fileID: 0}
 --- !u!1 &22978521
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,9 +170,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LinearEventName: 
   m_AllEffects:
-  - {fileID: 0}
+  - {fileID: 1363716588}
+  - {fileID: 2060631180}
   m_StartNodeData:
-    m_Position: {x: 233.5, y: 50}
+    m_Position: {x: 622.5, y: 72}
     m_NodeID: 
     m_NextPointNodeID: 
   m_EndNodeData:
@@ -240,6 +260,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &423205390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 400, y: 377}
+    m_NodeID: afab7feb-f0f8-44be-bfe8-721d840999d6
+    m_NextPointNodeID: 5e8f096a-42a2-47de-950a-de3602d07f1e
+  m_TargetObject: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,6 +453,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1363716588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79cf55c551f33604695a8563340495f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: InstantiateGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 142, y: 85}
+    m_NodeID: 36fe6e84-bb42-4210-9005-68f71c85b274
+    m_NextPointNodeID: 
+  m_TargetObject: {fileID: 0}
+  m_NumberOfTimes: 1
+  m_TargetPosition: {x: 0, y: 0, z: 0}
+  m_TargetRotation: {x: 0, y: 0, z: 0}
+  m_TargetScale: {x: 1, y: 1, z: 1}
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,6 +528,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2060631180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 502, y: 198}
+    m_NodeID: 4145df15-051b-4cea-a507-14085594540d
+    m_NextPointNodeID: 
+  m_TargetObject: {fileID: 0}
 --- !u!1 &2127555587
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,15 +577,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LinearEventName: 
-  m_AllEffects: []
+  m_AllEffects:
+  - {fileID: 4923961}
+  - {fileID: 423205390}
   m_StartNodeData:
-    m_Position: {x: 0, y: 0}
-    m_NodeID: 
-    m_NextPointNodeID: 
+    m_Position: {x: 98.5, y: 134}
+    m_NodeID: 04d596bd-c12f-46e4-8339-eb84a7410c3d
+    m_NextPointNodeID: b1865904-eb58-4424-8c74-4959b2492e84
   m_EndNodeData:
-    m_Position: {x: 0, y: 0}
-    m_NodeID: 
-    m_NextPointNodeID: 
+    m_Position: {x: 690.5, y: 169}
+    m_NodeID: 5e8f096a-42a2-47de-950a-de3602d07f1e
+    m_NextPointNodeID: afab7feb-f0f8-44be-bfe8-721d840999d6
 --- !u!4 &2127555589
 Transform:
   m_ObjectHideFlags: 0

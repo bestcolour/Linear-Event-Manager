@@ -42,6 +42,11 @@ public class EndNode : Node
         m_TotalRect.position += delta;
     }
 
+    public override NodeBaseData SaveNodeData()
+    {
+        return new NodeBaseData(m_MidRect.position, NodeID, m_InPoint.GetConnectedNodeID(0));
+    }
+
     protected override void SetNodeRects(Vector2 mousePosition, Vector2 midSize, Vector2 topSize)
     {
         //Default node size

@@ -9,6 +9,8 @@ public class LEMDictionary
     //This is a method to bypass the insanity of making a Dictionary that keeps the Generic T as its TValue
     readonly static Dictionary<string, object> s_NodeTypesDictionary = new Dictionary<string, object>
     {
+        { "StartNode",                          new StartNode() },
+        { "EndNode",                            new EndNode() },
         { "InstantiateGameObjectNode",          new InstantiateGameObjectNode() },
         { "DestroyGameObjectNode",              new DestroyGameObjectNode() }
     };

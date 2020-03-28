@@ -50,4 +50,9 @@ public class InstantiateGameObjectNode : BaseEffectNode
         return effect;
     }
 
+    public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
+    {
+        base.LoadFromLinearEvent(effectToLoadFrom);
+    }
+
 }

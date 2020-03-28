@@ -86,11 +86,11 @@ public abstract class Node
 
         //Draw the top of the node
         GUI.color =LEMStyleLibrary.s_CurrentTopTextureColour;
-        GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground);
+        GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground,ScaleMode.StretchToFill);
 
         //Draw the node midskin with its colour
         GUI.color = m_MidSkinColour;
-        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground);
+        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground,ScaleMode.StretchToFill);
         GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
         //Draw the in out points as well

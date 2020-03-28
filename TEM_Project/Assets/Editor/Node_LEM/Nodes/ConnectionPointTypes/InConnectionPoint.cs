@@ -35,7 +35,10 @@ public class InConnectionPoint : ConnectionPoint
 
     public override string GetConnectedNodeID(int index)
     {
-        return m_ConnectedNodeIDs[index];
+        if(IsConnected)
+            return m_ConnectedNodeIDs[index];
+
+        return "";
     }
 
     public override void RemoveConnectedNodeID(string idToRemove)
