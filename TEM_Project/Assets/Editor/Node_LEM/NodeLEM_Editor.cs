@@ -17,6 +17,7 @@ public class NodeLEM_Editor : EditorWindow
     Dictionary<string, BaseEffectNode> m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
 
     List<Connection> m_AllConnectionsInEditor = default;
+    Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
     Node s_StartNode = default, s_EndNode = default;
 
     #region Process Event Variables
@@ -252,14 +253,17 @@ public class NodeLEM_Editor : EditorWindow
 
     void DrawConnections()
     {
-        //If connections is not equal to null
-        if (m_AllConnectionsInEditor != null)
+        Tuple<string, string>[] allTupleKeys = m_AllConnectionsDictionary.Keys.ToArray();
+        for (int i = 0; i < allTupleKeys.Length; i++)
         {
-            for (int i = 0; i < m_AllConnectionsInEditor.Count; i++)
-            {
-                //Ask its connections to draw itself
-                m_AllConnectionsInEditor[i].Draw();
-            }
+            m_AllConnectionsDictionary[allTupleKeys[i]].Draw();
+        }
+
+
+        for (int i = 0; i < m_AllConnectionsInEditor.Count; i++)
+        {
+            //Ask its connections to draw itself
+            m_AllConnectionsInEditor[i].Draw();
         }
     }
 
@@ -750,6 +754,8 @@ public class NodeLEM_Editor : EditorWindow
                 //Remove the old connection if outpoint has an old connection
                 if (m_SelectedOutPoint.IsConnected)
                 {
+                    //m_AllConnectionsDictionary[new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)]
+
                     OnClickRemoveConnection(m_AllConnectionsInEditor.Find(
                         x => x.m_OutPoint.m_ParentNode.NodeID == m_SelectedOutPoint.m_ParentNode.NodeID
                         && x.m_InPoint.m_ParentNode.NodeID == m_SelectedOutPoint.GetConnectedNodeID(0)));
@@ -841,6 +847,12 @@ public class NodeLEM_Editor : EditorWindow
 
     void CreateConnection()
     {
+        //Add connection to dual key dictionary
+        m_AllConnectionsDictionary.Add(
+            new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID),
+            new Connection(m_SelectedInPoint, m_SelectedOutPoint, OnClickRemoveConnection)
+            );
+
         m_AllConnectionsInEditor.Add(new Connection(m_SelectedInPoint, m_SelectedOutPoint, OnClickRemoveConnection));
         TrySetConnectionPoint(m_SelectedInPoint);
         TrySetConnectionPoint(m_SelectedOutPoint);
@@ -848,6 +860,12 @@ public class NodeLEM_Editor : EditorWindow
 
     void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
     {
+        //Add connection to dual key dictionary
+        m_AllConnectionsDictionary.Add(
+            new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID),
+            new Connection(m_SelectedInPoint, m_SelectedOutPoint, OnClickRemoveConnection)
+            );
+
         m_AllConnectionsInEditor.Add(new Connection(inPoint, outPoint, OnClickRemoveConnection));
         TrySetConnectionPoint(inPoint);
         TrySetConnectionPoint(outPoint);
@@ -864,6 +882,11 @@ public class NodeLEM_Editor : EditorWindow
         TrySetConnectionPoint(connectionToRemove.m_OutPoint);
 
         m_AllConnectionsInEditor.Remove(connectionToRemove);
+        //Remove from dictionary
+        m_AllConnectionsDictionary.Remove(
+            new Tuple<string, string>(connectionToRemove.m_InPoint.m_ParentNode.NodeID,
+            connectionToRemove.m_OutPoint.m_ParentNode.NodeID)
+            );
     }
 
     void AddNodeToSelectedCollection(Node nodeToAdd)
