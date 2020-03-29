@@ -41,6 +41,11 @@ public class InConnectionPoint : ConnectionPoint
         return "";
     }
 
+    public string[] GetAllConnectedNodeIDs()
+    {
+        return m_ConnectedNodeIDs.ToArray();
+    }
+
     public override void RemoveConnectedNodeID(string idToRemove)
     {
         if (m_ConnectedNodeIDs.Contains(idToRemove))

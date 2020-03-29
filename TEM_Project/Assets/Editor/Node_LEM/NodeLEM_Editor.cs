@@ -16,7 +16,7 @@ public class NodeLEM_Editor : EditorWindow
 
     Dictionary<string, BaseEffectNode> m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
 
-    //List<Connection> m_AllConnectionsInEditor = default;
+    //RULE: INPOINT'S CONNECTED NODE ID FIRST THEN OUTPOINT CONNECTED NODE ID
     Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
 
     Node s_StartNode = default, s_EndNode = default;
@@ -755,9 +755,18 @@ public class NodeLEM_Editor : EditorWindow
                 //Remove the old connection if outpoint has an old connection
                 if (m_SelectedOutPoint.IsConnected)
                 {
-                    OnClickRemoveConnection(
-                        m_AllConnectionsDictionary[new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0),m_SelectedOutPoint.m_ParentNode.NodeID)]
-                        );
+                    //If there is such key still exisiting in the dicitionary,
+                    //if (m_AllConnectionsDictionary.TryGetValue(
+                    //      new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID),
+                    //      out Connection connectionValue))
+                    //{
+                    //    OnClickRemoveConnection(connectionValue);
+                    //}
+
+                   
+                    OnClickRemoveConnection(m_AllConnectionsDictionary
+                          [new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
+                          );
 
                     //OnClickRemoveConnection(m_AllConnectionsInEditor.Find(
                     //    x => x.m_OutPoint.m_ParentNode.NodeID == m_SelectedOutPoint.m_ParentNode.NodeID
@@ -808,7 +817,7 @@ public class NodeLEM_Editor : EditorWindow
                 if (m_SelectedOutPoint.IsConnected)
                 {
                     OnClickRemoveConnection(
-                       m_AllConnectionsDictionary[new Tuple<string, string>( m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)]
+                       m_AllConnectionsDictionary[new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
                        );
 
                     //OnClickRemoveConnection(m_AllConnectionsInEditor.Find(
@@ -833,6 +842,25 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnClickRemoveNode(Node nodeToRemove)
     {
+        //Check if there is any connections to be removed from this node
+
+        if(m_AllConnectionsDictionary.TryGetValue(
+            new Tuple<string, string>(nodeToRemove.m_OutPoint.GetConnectedNodeID(0),
+            nodeToRemove.NodeID),
+            out Connection connectionToRemove))
+        {
+            //Remove any connections that is connected to the node's outpoint
+            OnClickRemoveConnection(connectionToRemove);
+        }
+
+        //Remove any and allconnections connected to the node's inpoint
+        string[] allNodesConnectedToInPoint = nodeToRemove.m_InPoint.GetAllConnectedNodeIDs();
+        for (int i = 0; i < allNodesConnectedToInPoint.Length; i++)
+        {
+            OnClickRemoveConnection(m_AllConnectionsDictionary[new Tuple<string, string>(nodeToRemove.NodeID, allNodesConnectedToInPoint[i])]);
+        }
+            //m_AllConnectionsDictionary.Remove(new Tuple<string, string>(nodeToRemove.NodeID, allNodesConnectedToInPoint[i]));
+
         //Connection[] connectionToRemove = m_AllConnectionsInEditor.FindAll(x => x.m_InPoint == nodeToRemove.m_InPoint || x.m_OutPoint == nodeToRemove.m_OutPoint).ToArray();
         //Connection[] connectionToRemove = m_AllConnectionsDictionary.FindAll(x => x.m_InPoint == nodeToRemove.m_InPoint || x.m_OutPoint == nodeToRemove.m_OutPoint).ToArray();
 
@@ -853,6 +881,7 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
+    //Used for clicking on points
     void CreateConnection()
     {
         //Add connection to dual key dictionary
@@ -866,7 +895,7 @@ public class NodeLEM_Editor : EditorWindow
         TrySetConnectionPoint(m_SelectedOutPoint);
     }
 
-    void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
+    void RecreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
     {
         //Add connection to dual key dictionary
         m_AllConnectionsDictionary.Add(
@@ -983,14 +1012,14 @@ public class NodeLEM_Editor : EditorWindow
                 if (s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID == s_EndNode.NodeID)
                 {
                     //Connect with end node
-                    CreateConnection(
+                    RecreateConnection(
                             s_EndNode.m_InPoint,
                              m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint
                              );
                     continue;
                 }
 
-                CreateConnection(
+                RecreateConnection(
                                 m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID].m_InPoint,
                                 m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint
                                 );
@@ -1006,33 +1035,14 @@ public class NodeLEM_Editor : EditorWindow
             //If start node's next node is end node,
             if (s_EditingLinearEvent.m_StartNodeData.m_NextPointNodeID == s_EditingLinearEvent.m_EndNodeData.m_NodeID)
             {
-                CreateConnection(s_EndNode.m_InPoint, s_StartNode.m_OutPoint);
+                RecreateConnection(s_EndNode.m_InPoint, s_StartNode.m_OutPoint);
                 return;
             }
 
             //Else just find the next node from the dictionary of all effects node
-            CreateConnection(
+            RecreateConnection(
                              m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_StartNodeData.m_NextPointNodeID].m_InPoint,
                              s_StartNode.m_OutPoint
-                            );
-        }
-
-        //if node has a m_NextPointNodeID and that the next node this node is assigned to doesnt have a connection on the outpoint,
-        if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_EndNodeData.m_NextPointNodeID)
-            && !s_EndNode.m_OutPoint.IsConnected)
-        {
-
-            //If start node's next node is end node,
-            if (s_EditingLinearEvent.m_StartNodeData.m_NextPointNodeID == s_EditingLinearEvent.m_EndNodeData.m_NodeID)
-            {
-                CreateConnection(s_EndNode.m_InPoint, s_StartNode.m_OutPoint);
-                return;
-            }
-
-            //Else just find the next node from the dictionary of all effects node
-            CreateConnection(
-                             s_EndNode.m_InPoint,
-                             m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_StartNodeData.m_NextPointNodeID].m_OutPoint
                             );
         }
 
