@@ -50,15 +50,44 @@ public class LEMStyleLibrary
     public static GUIStyle s_ConnectionPointStyleSelected = default;
 
     //Node fontstyles
-    public static readonly GUIStyle s_NodeHeaderStyle = new GUIStyle();
-    public static readonly GUIStyle s_StartEndStyle = new GUIStyle();
-    public static GUIStyle s_NodeTextInputStyle = null;
-    public static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
+    const int HEADER_FONTSIZE = 13, PARAGRAPH_FONTSIZE = 10, STARTEND_FONTSIZE = 20;
+    static readonly GUIStyle s_NodeHeaderStyle = new GUIStyle();
+    public static GUIStyle NodeHeaderStyle
+    {
+        get
+        {
+            s_NodeHeaderStyle.fontSize = (int)(HEADER_FONTSIZE * NodeLEM_Editor.GlobalSizeScale);
+            return s_NodeHeaderStyle;
+        }
+    }
+    static readonly GUIStyle s_StartEndStyle = new GUIStyle();
+    public static GUIStyle StartEndStyle
+    {  
+        get
+        {
+            s_StartEndStyle.fontSize = (int)(STARTEND_FONTSIZE * NodeLEM_Editor.GlobalSizeScale);
+            return s_StartEndStyle;
+        }
+    }
+    static GUIStyle s_NodeTextInputStyle = null;
+    public static GUIStyle NodeTextInputStyle
+    {
+        get
+        {
+            s_NodeTextInputStyle.fontSize = (int)(PARAGRAPH_FONTSIZE *NodeLEM_Editor.GlobalSizeScale);
+            return s_NodeTextInputStyle;
+        }
+    }
+    static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
+    public static GUIStyle NodeParagraphStyle
+    {
+        get
+        {
+            s_NodeParagraphStyle.fontSize = (int)(PARAGRAPH_FONTSIZE * NodeLEM_Editor.GlobalSizeScale);
+            return s_NodeParagraphStyle;
+        }
+    }
 
-
-    //Start End Node    
-    //public static NodeSkinCollection s_StartNodeSkins = new NodeSkinCollection();
-    //public static NodeSkinCollection s_EndNodeSkins = new NodeSkinCollection();
 
     //Just a default skin
     public static NodeSkinCollection s_WhiteBackGroundSkin = default;
@@ -77,32 +106,6 @@ public class LEMStyleLibrary
 
     static void LoadingNodeSkins()
     {
-        //Reset dictionary
-        //m_NodeStyleDictionary.Clear();
-
-        //string[] namesOfNodeEffectType = LEMDictionary.GetNodeTypeKeys();
-
-        //The number range covers all the skins needed for gameobject effect related nodes
-        //Naming convention is very important here
-        //for (int i = 0; i < namesOfNodeEffectType.Length; i++)
-        //{
-        //    NodeSkinCollection skinCollection = new NodeSkinCollection();
-        //    //Load the node skins texture
-        //    skinCollection.light_normal = Resources.Load<Texture2D>("NodeBackground/light_" + namesOfNodeEffectType[i]);
-        //    skinCollection.light_selected = Resources.Load<Texture2D>("NodeBackground/light_" + namesOfNodeEffectType[i] + "_Selected");
-        //    skinCollection.textureToRender = skinCollection.light_normal;
-
-        //    m_NodeStyleDictionary.Add(namesOfNodeEffectType[i], skinCollection);
-        //}
-
-        //s_StartNodeSkins.m_MidBackground = Resources.Load<Texture2D>("StartEnd/start");
-        //s_StartNodeSkins.m_SelectedMidOutline = Resources.Load<Texture2D>("StartEnd/start_Selected");
-        ////s_StartNodeSkins.textureToRender = s_StartNodeSkins.m_NodeBackground;
-
-        //s_EndNodeSkins.m_MidBackground = Resources.Load<Texture2D>("StartEnd/end");
-        //s_EndNodeSkins.m_SelectedMidOutline = Resources.Load<Texture2D>("StartEnd/end_Selected");
-        //s_EndNodeSkins.textureToRender = s_EndNodeSkins.m_NodeBackground;
-
         //Initialise the execution pin style for normal and selected pins
         s_ConnectionPointStyleNormal = new GUIStyle();
         s_ConnectionPointStyleNormal.normal.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin");
@@ -128,9 +131,6 @@ public class LEMStyleLibrary
         s_WhiteBackGroundSkin.m_SelectedMidOutline = Resources.Load<Texture2D>("NodeBg/White_BackGround_Selected");
         s_WhiteBackGroundSkin.m_TopBackground = Resources.Load<Texture2D>("NodeBg/White_Top");
         s_WhiteBackGroundSkin.m_SelectedTopOutline = Resources.Load<Texture2D>("NodeBg/White_Top_Selected");
-        //m_WhiteBackGroundSkin.textureToRender = m_WhiteBackGroundSkin.m_NodeBackground;                     
-
-
 
         //Initialising public static node title styles
         s_NodeHeaderStyle.fontSize = 13;

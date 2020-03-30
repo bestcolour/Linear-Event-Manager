@@ -29,7 +29,7 @@ public class EndNode : Node
         GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground);
         GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
-        GUI.Label(m_TotalRect, "End", LEMStyleLibrary.s_StartEndStyle);
+        GUI.Label(m_TotalRect, "End", LEMStyleLibrary.StartEndStyle);
 
 
         //Draw the in out points as well

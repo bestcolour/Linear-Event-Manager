@@ -29,11 +29,12 @@ public class BaseEffectNode : Node
     public override void Draw()
     {
         base.Draw();
-        GUI.Label(new Rect(m_MidRect.x + 10, m_MidRect.y + 35, m_MidRect.width, 30f), "Description", LEMStyleLibrary.s_NodeParagraphStyle);
-        GUI.Label(m_TopRect, m_Title, LEMStyleLibrary.s_NodeHeaderStyle);
+
+        GUI.Label(new Rect(m_MidRect.x + 10, m_MidRect.y + 35, m_MidRect.width, 30f), "Description", LEMStyleLibrary.NodeParagraphStyle);
+        GUI.Label(m_TopRect, m_Title, LEMStyleLibrary.NodeHeaderStyle);
 
         //Draw the description text field
-        m_LemEffectDescription = EditorGUI.TextArea(new Rect(m_MidRect.x + 10f, m_MidRect.y + 50f, m_MidRect.width - 20f, 40f), m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
+        m_LemEffectDescription = EditorGUI.TextArea(new Rect(m_MidRect.x + 10f, m_MidRect.y + 50f, m_MidRect.width - 20f, 40f), m_LemEffectDescription, LEMStyleLibrary.NodeTextInputStyle);
 
     }
 
