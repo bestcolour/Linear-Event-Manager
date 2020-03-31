@@ -4,8 +4,9 @@ using UnityEngine;
 
 public abstract class Node
 {
-    public Rect m_MidRect = new Rect(), m_TopRect = default, m_TotalRect = new Rect();
-    protected Vector2 m_OriginalMidSize = default, m_OriginalTopSize = default, m_OriginalTotalSize = default;
+    public Rect m_MidRect = new Rect();
+    public Rect m_TopRect = default;
+    public Rect m_TotalRect = new Rect();
 
     //Guid m_NodeID = default;
     public string NodeID
@@ -15,6 +16,7 @@ public abstract class Node
 
     public void GenerateNodeID()
     {
+        //m_NodeID = Guid.NewGuid();
         NodeID = Guid.NewGuid().ToString();
     }
 
@@ -40,7 +42,7 @@ public abstract class Node
 
     public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
         Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint
-        , Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
+        , Action<Node> onSelectNode, Action<Node> onDeSelectNode,Color midSkinColour )
     {
         m_TopRect = new Rect();
 
@@ -71,7 +73,6 @@ public abstract class Node
     //only start & end node completely overrides the draw method
     public virtual void Draw()
     {
-
         if (m_IsSelected)
         {
             GUI.DrawTexture(new Rect(
@@ -84,12 +85,12 @@ public abstract class Node
         LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
 
         //Draw the top of the node
-        GUI.color = LEMStyleLibrary.s_CurrentTopTextureColour;
-        GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground, ScaleMode.StretchToFill);
+        GUI.color =LEMStyleLibrary.s_CurrentTopTextureColour;
+        GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground,ScaleMode.StretchToFill);
 
         //Draw the node midskin with its colour
         GUI.color = m_MidSkinColour;
-        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
+        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground,ScaleMode.StretchToFill);
         GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
         //Draw the in out points as well
@@ -255,7 +256,7 @@ public abstract class Node
     //Returns only NodeBaseData (use for non effect nodes)
     public virtual NodeBaseData SaveNodeData()
     {
-        return new NodeBaseData(m_MidRect.position, NodeID, m_OutPoint.GetConnectedNodeID(0));
+        return new NodeBaseData(m_MidRect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
     }
 
     //Change values here
@@ -263,29 +264,16 @@ public abstract class Node
     {
         //Default node size
         m_MidRect.size = midSize;
-        m_OriginalMidSize = midSize;
         m_MidRect.position = mousePosition;
 
         m_TopRect.size = topSize;
-        m_OriginalTopSize = topSize;
         mousePosition += -Vector2.up * (m_TopRect.size.y - 2);
         m_TopRect.position = mousePosition;
 
         //Get total size and avrg pos
         m_TotalRect.size = new Vector2(midSize.x, midSize.y + topSize.y - 2);
-        m_OriginalTotalSize = m_TotalRect.size;
         m_TotalRect.position = m_TopRect.position;
 
-    }
-
-    public virtual void ScaleNode()
-    {
-        m_MidRect.size = m_OriginalMidSize * NodeLEM_Editor.GlobalSizeScale;
-
-        m_TopRect.size = m_OriginalTopSize * NodeLEM_Editor.GlobalSizeScale;
-        Vector2 topRectNewPos = m_MidRect.position - Vector2.up * (m_TopRect.size.y - 2);
-
-        m_TotalRect.size = m_OriginalTotalSize * NodeLEM_Editor.GlobalSizeScale;
     }
 
 }

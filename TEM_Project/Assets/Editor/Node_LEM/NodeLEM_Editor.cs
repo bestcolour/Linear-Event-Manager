@@ -64,22 +64,6 @@ public class NodeLEM_Editor : EditorWindow
     ConnectionPoint m_SelectedInPoint = default;
     ConnectionPoint m_SelectedOutPoint = default;
 
-    //For scrolling
-    const float MIN_SCALESIZE = 0.1f, MAX_SCALESIZE = 1f;
-    const float RATEOF_SCALECHANGE = 0.15f, RATEOF_SLOW_SCALECHANGE = 0.05f;
-    public static float GlobalSizeScale
-    {
-        get
-        {
-            return s_CurrentSizeScale;
-        }
-        private set
-        {
-            s_CurrentSizeScale = Mathf.Clamp(value, MIN_SCALESIZE, MAX_SCALESIZE);
-        }
-    }
-    static float s_CurrentSizeScale = 1f;
-
     #endregion
 
 
@@ -130,6 +114,11 @@ public class NodeLEM_Editor : EditorWindow
             m_AllNodesInEditor = new List<Node>();
         }
 
+        //if (m_AllConnectionsInEditor == null)
+        //{
+        //    m_AllConnectionsInEditor = new List<Connection>();
+        //}
+
         if (m_AllEffectsNodeInEditor == default)
         {
             m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
@@ -152,6 +141,32 @@ public class NodeLEM_Editor : EditorWindow
             CreateBasicNode(new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), "StartNode", out s_StartNode);
         if (s_EndNode == null)
             CreateBasicNode(new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), "EndNode", out s_EndNode);
+
+
+        //if (s_StartNode == null)
+        //{
+        //    s_StartNode = new StartNode();
+        //    //Initialise the new node 
+        //    s_StartNode.Initialise
+        //        (new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), LEMStyleLibrary.s_WhiteBackGroundSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
+        //        OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection, LEMStyleLibrary.s_NodeColourDictionary["StartNode"]);
+
+        //    //Add the node into collection in editor
+        //    m_AllNodesInEditor.Add(s_StartNode);
+        //}
+
+        //if (s_EndNode == null)
+        //{
+        //    s_EndNode = new EndNode();
+        //    //Initialise the new node 
+        //    s_EndNode.Initialise
+        //        (new Vector2(EditorGUIUtility.currentViewWidth * 0.85f, 50f), LEMStyleLibrary.s_WhiteBackGroundSkin, LEMStyleLibrary.s_ConnectionPointStyleNormal,
+        //        OnClickInPoint, OnClickOutPoint, AddNodeToSelectedCollection, RemoveNodeFromSelectedCollection, LEMStyleLibrary.s_NodeColourDictionary["EndNode"]);
+
+        //    //Add the node into collection in editor
+        //    m_AllNodesInEditor.Add(s_EndNode);
+        //}
+
     }
 
     #endregion
@@ -244,6 +259,13 @@ public class NodeLEM_Editor : EditorWindow
         {
             m_AllConnectionsDictionary[allTupleKeys[i]].Draw();
         }
+
+
+        //for (int i = 0; i < m_AllConnectionsInEditor.Count; i++)
+        //{
+        //    //Ask its connections to draw itself
+        //    m_AllConnectionsInEditor[i].Draw();
+        //}
     }
 
     //This is the realtime drawing of a bezier curve line to let users visualise
@@ -347,6 +369,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), "Save Effects"))
         {
+            //SaveNodes();
             SaveToLinearEvent();
         }
     }
@@ -356,6 +379,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         if (GUI.Button(new Rect(position.width - 215f, 0, 100f, 50f), "Refresh"))
         {
+            //LoadingNodeSkins();
             LEMStyleLibrary.LoadLibrary();
             OnDisable();
             OnEnable();
@@ -438,28 +462,6 @@ public class NodeLEM_Editor : EditorWindow
 
                 ResetEventVariables();
                 break;
-
-            case EventType.ScrollWheel:
-                //Scrolling upwards with ur mouse gives a -ve value
-                //scrolling downards gives a +ve value
-
-
-                if (e.delta.y > 0)
-                {
-                    GlobalSizeScale += -RATEOF_SCALECHANGE;
-                }
-                else if (e.delta.y < 0)
-                {
-                    GlobalSizeScale += RATEOF_SCALECHANGE;
-                }
-
-                for (int i = 0; i < m_AllNodesInEditor.Count; i++)
-                {
-                    m_AllNodesInEditor[i].ScaleNode();
-                }
-                GUI.changed = true;
-                break;
-
 
             //If the user presses a keyboard keybutton
             case EventType.KeyUp:
@@ -753,9 +755,22 @@ public class NodeLEM_Editor : EditorWindow
                 //Remove the old connection if outpoint has an old connection
                 if (m_SelectedOutPoint.IsConnected)
                 {
+                    //If there is such key still exisiting in the dicitionary,
+                    //if (m_AllConnectionsDictionary.TryGetValue(
+                    //      new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID),
+                    //      out Connection connectionValue))
+                    //{
+                    //    OnClickRemoveConnection(connectionValue);
+                    //}
+
+                   
                     OnClickRemoveConnection(m_AllConnectionsDictionary
                           [new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
                           );
+
+                    //OnClickRemoveConnection(m_AllConnectionsInEditor.Find(
+                    //    x => x.m_OutPoint.m_ParentNode.NodeID == m_SelectedOutPoint.m_ParentNode.NodeID
+                    //    && x.m_InPoint.m_ParentNode.NodeID == m_SelectedOutPoint.GetConnectedNodeID(0)));
                 }
 
                 CreateConnection();
@@ -804,6 +819,10 @@ public class NodeLEM_Editor : EditorWindow
                     OnClickRemoveConnection(
                        m_AllConnectionsDictionary[new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
                        );
+
+                    //OnClickRemoveConnection(m_AllConnectionsInEditor.Find(
+                    //    x => x.m_OutPoint.m_ParentNode.NodeID == m_SelectedOutPoint.m_ParentNode.NodeID
+                    //    && x.m_InPoint.m_ParentNode.NodeID == m_SelectedOutPoint.GetConnectedNodeID(0)));
                 }
 
                 CreateConnection();
@@ -825,7 +844,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         //Check if there is any connections to be removed from this node
 
-        if (m_AllConnectionsDictionary.TryGetValue(
+        if(m_AllConnectionsDictionary.TryGetValue(
             new Tuple<string, string>(nodeToRemove.m_OutPoint.GetConnectedNodeID(0),
             nodeToRemove.NodeID),
             out Connection connectionToRemove))
@@ -840,6 +859,16 @@ public class NodeLEM_Editor : EditorWindow
         {
             OnClickRemoveConnection(m_AllConnectionsDictionary[new Tuple<string, string>(nodeToRemove.NodeID, allNodesConnectedToInPoint[i])]);
         }
+            //m_AllConnectionsDictionary.Remove(new Tuple<string, string>(nodeToRemove.NodeID, allNodesConnectedToInPoint[i]));
+
+        //Connection[] connectionToRemove = m_AllConnectionsInEditor.FindAll(x => x.m_InPoint == nodeToRemove.m_InPoint || x.m_OutPoint == nodeToRemove.m_OutPoint).ToArray();
+        //Connection[] connectionToRemove = m_AllConnectionsDictionary.FindAll(x => x.m_InPoint == nodeToRemove.m_InPoint || x.m_OutPoint == nodeToRemove.m_OutPoint).ToArray();
+
+        //for (int i = 0; i < connectionToRemove.Length; i++)
+        //{
+        //    //Remove the connections
+        //    OnClickRemoveConnection(connectionToRemove[i]);
+        //}
 
         //Remove node from selected collection if it is inside
         RemoveNodeFromSelectedCollection(nodeToRemove);
@@ -848,6 +877,8 @@ public class NodeLEM_Editor : EditorWindow
 
         if (m_AllEffectsNodeInEditor.ContainsKey(nodeToRemove.NodeID))
             m_AllEffectsNodeInEditor.Remove(nodeToRemove.NodeID);
+
+
     }
 
     //Used for clicking on points
@@ -859,6 +890,7 @@ public class NodeLEM_Editor : EditorWindow
             new Connection(m_SelectedInPoint, m_SelectedOutPoint, OnClickRemoveConnection)
             );
 
+        //m_AllConnectionsInEditor.Add(new Connection(m_SelectedInPoint, m_SelectedOutPoint, OnClickRemoveConnection));
         TrySetConnectionPoint(m_SelectedInPoint);
         TrySetConnectionPoint(m_SelectedOutPoint);
     }
@@ -871,6 +903,7 @@ public class NodeLEM_Editor : EditorWindow
             new Connection(inPoint, outPoint, OnClickRemoveConnection)
             );
 
+        //m_AllConnectionsInEditor.Add(new Connection(inPoint, outPoint, OnClickRemoveConnection));
         TrySetConnectionPoint(inPoint);
         TrySetConnectionPoint(outPoint);
     }
@@ -885,6 +918,7 @@ public class NodeLEM_Editor : EditorWindow
         TrySetConnectionPoint(connectionToRemove.m_InPoint);
         TrySetConnectionPoint(connectionToRemove.m_OutPoint);
 
+        //m_AllConnectionsInEditor.Remove(connectionToRemove);
         //Remove from dictionary
         m_AllConnectionsDictionary.Remove(
             new Tuple<string, string>(connectionToRemove.m_InPoint.m_ParentNode.NodeID,

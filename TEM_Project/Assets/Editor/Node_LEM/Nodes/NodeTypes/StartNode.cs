@@ -30,7 +30,7 @@ public class StartNode : Node
         GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
         //GUI.Label(new Rect(m_TotalRect.center,m_TotalRect.size), "Start", LEMStyleLibrary.s_StartEndStyle);
-        GUI.Label(m_TotalRect, "Start", LEMStyleLibrary.StartEndStyle);
+        GUI.Label(m_TotalRect, "Start", LEMStyleLibrary.s_StartEndStyle);
 
         //Draw the in out points as well
         m_OutPoint.Draw();
