@@ -61,8 +61,12 @@ public class NodeLEM_Editor : EditorWindow
         connectionPoint.m_Style = connectionPoint.IsConnected ? LEMStyleLibrary.s_ConnectionPointStyleSelected : LEMStyleLibrary.s_ConnectionPointStyleNormal;
     }
 
-    ConnectionPoint m_SelectedInPoint = default;
-    ConnectionPoint m_SelectedOutPoint = default;
+    ConnectionPoint m_SelectedInPoint = default, m_SelectedOutPoint = default;
+
+    const float k_MinScale = 0.1f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.1f;
+    float m_CurrentScaleFactor = 1f;
+    float ScaleFactor { get { return m_CurrentScaleFactor; }set{ m_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale);  } }
+
 
     #endregion
 
@@ -185,15 +189,27 @@ public class NodeLEM_Editor : EditorWindow
 
         Event currentEvent = Event.current;
 
+
         DrawGrid(20, 0.2f, Color.gray);
         DrawGrid(100, 0.4f, Color.gray);
 
 
+
+        #region Drawing ZoomableGrapics
+        //Draw graphics that are zoomable
+        EditorZoomFeature.BeginZoom(ScaleFactor,new Rect(0,0,Screen.width,Screen.height));
+
         //Draw the nodes first
         DrawNodes();
+
+        #endregion
+
         DrawConnections();
         DrawConnectionLine(currentEvent);
         DrawSelectionBox(currentEvent.mousePosition);
+
+        EditorZoomFeature.EndZoom();
+
         DrawSaveButton();
         DrawRefreshButton();
 
@@ -348,6 +364,8 @@ public class NodeLEM_Editor : EditorWindow
     }
 
 
+
+
     #endregion
 
     //Checks what the current event is right now, and then execute code accordingly
@@ -421,6 +439,22 @@ public class NodeLEM_Editor : EditorWindow
             case EventType.MouseUp:
 
                 ResetEventVariables();
+                break;
+
+            case EventType.ScrollWheel:
+
+                //If user scrolls downwards
+                if(e.delta.y > 0)
+                {
+                    ScaleFactor += -k_ScaleChangeRate; 
+                }
+                //If user scrolls upwards
+                else
+                {
+                    ScaleFactor += k_ScaleChangeRate;
+                }
+
+                GUI.changed = true;
                 break;
 
             //If the user presses a keyboard keybutton
@@ -787,7 +821,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         //Check if there is any connections to be removed from this node
 
-        if(m_AllConnectionsDictionary.TryGetValue(
+        if (m_AllConnectionsDictionary.TryGetValue(
             new Tuple<string, string>(nodeToRemove.m_OutPoint.GetConnectedNodeID(0),
             nodeToRemove.NodeID),
             out Connection connectionToRemove))
