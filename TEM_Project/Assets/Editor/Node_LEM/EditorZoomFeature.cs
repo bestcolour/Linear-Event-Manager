@@ -9,6 +9,11 @@ public class EditorZoomFeature
 
     static Matrix4x4 s_PreviousGUIMatrix = default;
 
+    public static Vector2 ConvertScreenSpaceToZoomSpace(Vector2 screenPointToConvert, Vector2 zoomRectOrigin,float scaleFactor)
+    {
+        return (screenPointToConvert - zoomRectOrigin) / scaleFactor + zoomRectOrigin;
+    }
+
     public static Rect BeginZoom(float scale,Rect screenCoordsArea)
     {
 

@@ -63,9 +63,9 @@ public class NodeLEM_Editor : EditorWindow
 
     ConnectionPoint m_SelectedInPoint = default, m_SelectedOutPoint = default;
 
-    const float k_MinScale = 0.1f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.1f;
+    const float k_MinScale = 0.4f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.1f;
     float m_CurrentScaleFactor = 1f;
-    float ScaleFactor { get { return m_CurrentScaleFactor; }set{ m_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale);  } }
+    float ScaleFactor { get { return m_CurrentScaleFactor; } set { m_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
 
 
     #endregion
@@ -189,24 +189,21 @@ public class NodeLEM_Editor : EditorWindow
 
         Event currentEvent = Event.current;
 
-
-        DrawGrid(20, 0.2f, Color.gray);
-        DrawGrid(100, 0.4f, Color.gray);
-
-
-
-        #region Drawing ZoomableGrapics
+        DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
+        DrawGrid(100 * ScaleFactor, 0.4f, Color.gray);
         //Draw graphics that are zoomable
-        EditorZoomFeature.BeginZoom(ScaleFactor,new Rect(0,0,Screen.width,Screen.height));
+        EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
+
+        Vector2 zoomSpaceMousePosition = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(currentEvent.mousePosition, currentEvent.mousePosition, ScaleFactor);
 
         //Draw the nodes first
         DrawNodes();
 
-        #endregion
 
         DrawConnections();
         DrawConnectionLine(currentEvent);
-        DrawSelectionBox(currentEvent.mousePosition);
+        DrawSelectionBox(zoomSpaceMousePosition);
+        //DrawSelectionBox(currentEvent.mousePosition);
 
         EditorZoomFeature.EndZoom();
 
@@ -214,7 +211,7 @@ public class NodeLEM_Editor : EditorWindow
         DrawRefreshButton();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
-        ProcessEvents(currentEvent);
+        ProcessEvents(currentEvent, zoomSpaceMousePosition);
         ProcessNodeEvents(currentEvent);
         //If there is any value change in the gui,repaint it
         if (GUI.changed)
@@ -369,7 +366,7 @@ public class NodeLEM_Editor : EditorWindow
     #endregion
 
     //Checks what the current event is right now, and then execute code accordingly
-    void ProcessEvents(Event e)
+    void ProcessEvents(Event e, Vector2 zoomMousePosition)
     {
         m_AmountOfMouseDragThisUpdate = Vector2.zero;
 
@@ -378,7 +375,8 @@ public class NodeLEM_Editor : EditorWindow
             case EventType.MouseDown:
 
                 //Set the currenly clicked node
-                s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(e.mousePosition));
+                s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(zoomMousePosition));
+                //s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(e.mousePosition));
 
                 //Check if the mouse button down is the right click button
                 if (e.button == 1)
@@ -387,7 +385,8 @@ public class NodeLEM_Editor : EditorWindow
                     if (s_CurrentClickedNode == null || !s_CurrentClickedNode.IsSelected)
                     {
                         //Open a custom created that allows creation of more nodes
-                        ProcessContextMenu(e.mousePosition);
+                        ProcessContextMenu(zoomMousePosition);
+                        //ProcessContextMenu(e.mousePosition);
                         return;
                     }
 
@@ -406,7 +405,8 @@ public class NodeLEM_Editor : EditorWindow
                         //Set initial position for drawing selection box
                         if (!e.alt)
                         {
-                            m_InitialClickedPosition = e.mousePosition;
+                            //m_InitialClickedPosition = e.mousePosition;
+                            m_InitialClickedPosition = zoomMousePosition;
 
 
                             TrySetConnectionPoint(m_SelectedInPoint);
@@ -428,7 +428,7 @@ public class NodeLEM_Editor : EditorWindow
                 {
                     if (e.alt && m_InitialClickedPosition == null && s_CurrentClickedNode == null)
                     {
-                        OnDrag(e.delta);
+                        OnDrag(e.delta );
                         GUI.changed = true;
                     }
                 }
@@ -444,9 +444,9 @@ public class NodeLEM_Editor : EditorWindow
             case EventType.ScrollWheel:
 
                 //If user scrolls downwards
-                if(e.delta.y > 0)
+                if (e.delta.y > 0)
                 {
-                    ScaleFactor += -k_ScaleChangeRate; 
+                    ScaleFactor += -k_ScaleChangeRate;
                 }
                 //If user scrolls upwards
                 else
@@ -524,8 +524,10 @@ public class NodeLEM_Editor : EditorWindow
                 break;
 
             case EventType.MouseDrag:
+                Vector2 convertedDelta = e.delta /ScaleFactor;
+
                 for (int i = m_AllNodesInEditor.Count - 1; i >= 0; i--)
-                    if (m_AllNodesInEditor[i].HandleMouseDrag(e))
+                    if (m_AllNodesInEditor[i].HandleMouseDrag(e, convertedDelta))
                         GUI.changed = true;
                 break;
 
@@ -692,7 +694,12 @@ public class NodeLEM_Editor : EditorWindow
     void OnDrag(Vector2 delta)
     {
         //Record the amount of drag there is changed 
+        //Convert delta value for canvas dragging
+        delta /= ScaleFactor;
         m_AmountOfMouseDragThisUpdate = delta;
+
+        //Convert once more for node drag (idk but its a magic number)
+        delta /= ScaleFactor;
 
         //Update all the node's positions as well
         if (m_AllNodesInEditor != null)

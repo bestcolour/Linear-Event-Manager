@@ -188,13 +188,14 @@ public abstract class Node
         return false;
     }
 
-    public bool HandleMouseDrag(Event e)
+    public bool HandleMouseDrag(Event e,Vector2 dragDelta)
     {
         if (e.button == 0)
         {
             if (m_IsDragged)
             {
-                Drag(e.delta);
+                Drag(dragDelta);
+                //Drag(e.delta);
                 //Tell the system that you need to redraw this GUI
                 return true;
             }
