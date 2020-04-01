@@ -67,6 +67,10 @@ public class NodeLEM_Editor : EditorWindow
     float m_CurrentScaleFactor = 1f;
     float ScaleFactor { get { return m_CurrentScaleFactor; } set { m_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
 
+    //Thisvalue must be constantly updated whenever we change our scale value
+    Vector2 m_ZoomCoordinatesOrigin = Vector2.zero;
+
+    bool m_TestDraw = false;
 
     #endregion
 
@@ -193,8 +197,8 @@ public class NodeLEM_Editor : EditorWindow
         DrawGrid(100 * ScaleFactor, 0.4f, Color.gray);
         //Draw graphics that are zoomable
 
-        EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height), currentEvent.mousePosition);
-        Vector2 zoomSpaceMousePosition = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(currentEvent.mousePosition, currentEvent.mousePosition, ScaleFactor);
+        EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
+        Vector2 currMousePos = currentEvent.mousePosition;
 
         //Draw the nodes first
         DrawNodes();
@@ -202,7 +206,12 @@ public class NodeLEM_Editor : EditorWindow
 
         DrawConnections();
         DrawConnectionLine(currentEvent);
-        DrawSelectionBox(zoomSpaceMousePosition);
+        DrawSelectionBox(currMousePos);
+
+        if (m_TestDraw)
+        {
+            DrawTest();
+        }
 
         EditorZoomFeature.EndZoom();
 
@@ -210,7 +219,7 @@ public class NodeLEM_Editor : EditorWindow
         DrawRefreshButton();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
-        ProcessEvents(currentEvent, zoomSpaceMousePosition);
+        ProcessEvents(currentEvent, currMousePos);
         ProcessNodeEvents(currentEvent);
         //If there is any value change in the gui,repaint it
         if (GUI.changed)
@@ -359,13 +368,17 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
+    void DrawTest()
+    {
+        GUI.Box(new Rect(new Vector2(Screen.width * 0.5f*1.25f * ScaleFactor, Screen.height*0.5f*1.29f * ScaleFactor), Vector2.one * 100f), "Im here");
+    }
 
 
 
     #endregion
 
     //Checks what the current event is right now, and then execute code accordingly
-    void ProcessEvents(Event e, Vector2 zoomMousePosition)
+    void ProcessEvents(Event e, Vector2 currMousePosition)
     {
         m_AmountOfMouseDragThisUpdate = Vector2.zero;
 
@@ -373,9 +386,10 @@ public class NodeLEM_Editor : EditorWindow
         {
             case EventType.MouseDown:
 
+                Vector2 zoomSpaceMousePosition = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(ScaleFactor,screenPointToConvert: e.mousePosition,Vector2.zero,m_ZoomCoordinatesOrigin);
+                Debug.Log("Curr Mouse Pos " + zoomSpaceMousePosition + " Window dimension : " + new Vector2(Screen.width,Screen.height));
                 //Set the currenly clicked node
-                s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(zoomMousePosition));
-                //s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(e.mousePosition));
+                s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
 
                 //Check if the mouse button down is the right click button
                 if (e.button == 1)
@@ -384,7 +398,7 @@ public class NodeLEM_Editor : EditorWindow
                     if (s_CurrentClickedNode == null || !s_CurrentClickedNode.IsSelected)
                     {
                         //Open a custom created that allows creation of more nodes
-                        ProcessContextMenu(zoomMousePosition);
+                        ProcessContextMenu(currMousePosition);
                         //ProcessContextMenu(e.mousePosition);
                         return;
                     }
@@ -405,7 +419,7 @@ public class NodeLEM_Editor : EditorWindow
                         if (!e.alt)
                         {
                             //m_InitialClickedPosition = e.mousePosition;
-                            m_InitialClickedPosition = zoomMousePosition;
+                            m_InitialClickedPosition = currMousePosition;
 
 
                             TrySetConnectionPoint(m_SelectedInPoint);
@@ -428,6 +442,7 @@ public class NodeLEM_Editor : EditorWindow
                     if (e.alt && m_InitialClickedPosition == null && s_CurrentClickedNode == null)
                     {
                         OnDrag(e.delta);
+                        Debug.Log(e.delta);
                         GUI.changed = true;
                     }
                 }
@@ -442,6 +457,14 @@ public class NodeLEM_Editor : EditorWindow
 
             case EventType.ScrollWheel:
 
+              
+
+                Vector2 screenCoordsMousePos =e.mousePosition;
+                Vector2 delta = e.delta;
+                Vector2 zoomCoordsMousePos = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(ScaleFactor, screenCoordsMousePos, Vector2.zero, m_ZoomCoordinatesOrigin);
+                //Vector2 zoomCoordsMousePos = ConvertScreenCoordsToZoomCoords(screenCoordsMousePos);
+                float oldZoom = ScaleFactor;
+
                 //If user scrolls downwards
                 if (e.delta.y > 0)
                 {
@@ -452,8 +475,11 @@ public class NodeLEM_Editor : EditorWindow
                 {
                     ScaleFactor += k_ScaleChangeRate;
                 }
+                m_ZoomCoordinatesOrigin += (zoomCoordsMousePos - m_ZoomCoordinatesOrigin) - (oldZoom / ScaleFactor) * (zoomCoordsMousePos - m_ZoomCoordinatesOrigin);
 
-                GUI.changed = true;
+                //OnScroll(e.mousePosition);
+
+                e.Use();
                 break;
 
             //If the user presses a keyboard keybutton
@@ -686,8 +712,20 @@ public class NodeLEM_Editor : EditorWindow
         genericMenu.ShowAsContext();
     }
 
+    void OnScroll(Vector2 mousePosition)
+    {
+        //Drag the canvas towards the direction of mouseposition - center
+        Vector2 v2 = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
 
+        Debug.Log("Center of screen is " + v2);
 
+        m_TestDraw = true;
+
+        //Direction of the drag
+        v2 = mousePosition - v2;
+
+        OnDrag(-v2.normalized * 10f);
+    }
 
     //Drags the window canvas (think like animator window)
     void OnDrag(Vector2 delta)

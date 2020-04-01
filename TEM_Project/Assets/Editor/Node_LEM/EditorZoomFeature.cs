@@ -9,12 +9,12 @@ public class EditorZoomFeature
 
     static Matrix4x4 s_PreviousGUIMatrix = default;
 
-    public static Vector2 ConvertScreenSpaceToZoomSpace(Vector2 screenPointToConvert, Vector2 zoomRectOrigin,float scaleFactor)
+    public static Vector2 ConvertScreenSpaceToZoomSpace(float scaleFactor, Vector2 screenPointToConvert, Vector2 zoomAreaOrigin,Vector2 zoomCoordsOrigin)
     {
-        return (screenPointToConvert - zoomRectOrigin) / scaleFactor + zoomRectOrigin;
+        return (screenPointToConvert - zoomAreaOrigin) / scaleFactor + zoomCoordsOrigin;
     }
 
-    public static Rect BeginZoom(float scale,Rect screenCoordsArea, Vector2 zoomPivot)
+    public static Rect BeginZoom(float scale,Rect screenCoordsArea)
     {
 
         //End group since editor window begins group naturally during onGUI
@@ -22,7 +22,7 @@ public class EditorZoomFeature
 
 
         //Clipping is basically cropping out things that are not inside the rect
-        Rect clippedRect = screenCoordsArea.ScaleSizeBy(1.0f/scale,screenCoordsArea.TopLeft());
+        Rect clippedRect = screenCoordsArea.ScaleSizeBy(1.0f/scale, screenCoordsArea.TopLeft());
 
 
         //This is to compensate for the editor window tab at the top that displays the window name. 
@@ -33,7 +33,7 @@ public class EditorZoomFeature
         s_PreviousGUIMatrix = GUI.matrix;
 
         //Make a composite transformative matrix C = T1*T2*T3*...
-        Matrix4x4 translationMatrix = Matrix4x4.TRS(clippedRect.TopLeft(), Quaternion.identity, Vector3.one);
+        Matrix4x4 translationMatrix = Matrix4x4.TRS(screenCoordsArea.TopLeft(), Quaternion.identity, Vector3.one);
         Matrix4x4 scaleMatrix = Matrix4x4.Scale(new Vector3(scale, scale, 1.0f));
 
         //Apply composite transformative matrix on gui.matrix to scale the gui rendered
