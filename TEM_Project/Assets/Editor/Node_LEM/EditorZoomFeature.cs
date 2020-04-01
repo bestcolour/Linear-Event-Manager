@@ -16,7 +16,7 @@ public class EditorZoomFeature
 
     public static Rect BeginZoom(float scale,Rect screenCoordsArea)
     {
-
+        //Debug.Log(GUI.matrix);
         //End group since editor window begins group naturally during onGUI
         GUI.EndGroup();
 
@@ -42,7 +42,7 @@ public class EditorZoomFeature
         //T2 = Scale the gui about the origin
         //T3 = Return the gui back to its original position using inverse of T1
         GUI.matrix = translationMatrix * scaleMatrix * translationMatrix.inverse * GUI.matrix;
-
+        //Debug.Log(GUI.matrix);
         return clippedRect;
     }
 
@@ -56,7 +56,19 @@ public class EditorZoomFeature
 
     }
 
+    public static Vector2 GetOriginalMousePosition
+    {
+        get
+        {
+            s_PreviousGUIMatrix = GUI.matrix;
+            GUI.matrix = Matrix4x4.identity;
 
+            Vector2 originalMousePosition = Event.current.mousePosition;
+
+            GUI.matrix = s_PreviousGUIMatrix;
+            return originalMousePosition;
+        }
+    }
 
 
 

@@ -72,6 +72,8 @@ public class NodeLEM_Editor : EditorWindow
 
     bool m_TestDraw = false;
 
+  
+
     #endregion
 
 
@@ -188,10 +190,11 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnGUI()
     {
+        Event currentEvent = Event.current;
+
         //Draw background of for the window
         GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), s_EditorBackGroundTexture, ScaleMode.StretchToFill);
 
-        Event currentEvent = Event.current;
 
         DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
         DrawGrid(100 * ScaleFactor, 0.4f, Color.gray);
@@ -199,7 +202,6 @@ public class NodeLEM_Editor : EditorWindow
 
         EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
         Vector2 currMousePos = currentEvent.mousePosition;
-
         //Draw the nodes first
         DrawNodes();
 
@@ -217,10 +219,14 @@ public class NodeLEM_Editor : EditorWindow
 
         DrawSaveButton();
         DrawRefreshButton();
+       
+
+
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
         ProcessEvents(currentEvent, currMousePos);
         ProcessNodeEvents(currentEvent);
+
         //If there is any value change in the gui,repaint it
         if (GUI.changed)
         {
@@ -370,7 +376,7 @@ public class NodeLEM_Editor : EditorWindow
 
     void DrawTest()
     {
-        GUI.Box(new Rect(new Vector2(Screen.width * 0.5f*1.25f * ScaleFactor, Screen.height*0.5f*1.29f * ScaleFactor), Vector2.one * 100f), "Im here");
+        GUI.Box(new Rect(new Vector2(Screen.width * 0.5f * 1.25f * ScaleFactor, Screen.height * 0.5f * 1.29f * ScaleFactor), Vector2.one * 100f), "Im here");
     }
 
 
@@ -386,8 +392,10 @@ public class NodeLEM_Editor : EditorWindow
         {
             case EventType.MouseDown:
 
-                Vector2 zoomSpaceMousePosition = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(ScaleFactor,screenPointToConvert: e.mousePosition,Vector2.zero,m_ZoomCoordinatesOrigin);
-                Debug.Log("Curr Mouse Pos " + zoomSpaceMousePosition + " Window dimension : " + new Vector2(Screen.width,Screen.height));
+                Debug.Log(EditorZoomFeature.GetOriginalMousePosition);
+
+                Vector2 zoomSpaceMousePosition = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(ScaleFactor, screenPointToConvert: e.mousePosition, Vector2.zero, m_ZoomCoordinatesOrigin);
+                //Debug.Log("Curr Mouse Pos " + zoomSpaceMousePosition + " Window dimension : " + new Vector2(Screen.width, Screen.height));
                 //Set the currenly clicked node
                 s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
 
@@ -442,7 +450,6 @@ public class NodeLEM_Editor : EditorWindow
                     if (e.alt && m_InitialClickedPosition == null && s_CurrentClickedNode == null)
                     {
                         OnDrag(e.delta);
-                        Debug.Log(e.delta);
                         GUI.changed = true;
                     }
                 }
@@ -457,9 +464,9 @@ public class NodeLEM_Editor : EditorWindow
 
             case EventType.ScrollWheel:
 
-              
 
-                Vector2 screenCoordsMousePos =e.mousePosition;
+
+                Vector2 screenCoordsMousePos = e.mousePosition;
                 Vector2 delta = e.delta;
                 Vector2 zoomCoordsMousePos = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(ScaleFactor, screenCoordsMousePos, Vector2.zero, m_ZoomCoordinatesOrigin);
                 //Vector2 zoomCoordsMousePos = ConvertScreenCoordsToZoomCoords(screenCoordsMousePos);
