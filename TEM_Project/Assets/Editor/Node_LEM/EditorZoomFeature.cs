@@ -14,14 +14,16 @@ public class EditorZoomFeature
         return (screenPointToConvert - zoomRectOrigin) / scaleFactor + zoomRectOrigin;
     }
 
-    public static Rect BeginZoom(float scale,Rect screenCoordsArea)
+    public static Rect BeginZoom(float scale,Rect screenCoordsArea, Vector2 zoomPivot)
     {
 
         //End group since editor window begins group naturally during onGUI
         GUI.EndGroup();
 
+
         //Clipping is basically cropping out things that are not inside the rect
         Rect clippedRect = screenCoordsArea.ScaleSizeBy(1.0f/scale,screenCoordsArea.TopLeft());
+
 
         //This is to compensate for the editor window tab at the top that displays the window name. 
         clippedRect.y += k_EditorWindowTabHeight;

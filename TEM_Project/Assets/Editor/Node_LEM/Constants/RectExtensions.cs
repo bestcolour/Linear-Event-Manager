@@ -10,6 +10,12 @@ public static class RectExtensions
         return new Vector2(rect.xMin, rect.yMin);
     }
 
+    public static Vector2 BottomRight(this Rect rect)
+    {
+        return new Vector2(rect.xMax, rect.yMax);
+    }
+
+
     /// <summary>
     /// Scales rect with reference to a pivot
     /// </summary>

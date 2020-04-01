@@ -192,8 +192,8 @@ public class NodeLEM_Editor : EditorWindow
         DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
         DrawGrid(100 * ScaleFactor, 0.4f, Color.gray);
         //Draw graphics that are zoomable
-        EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
 
+        EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height), currentEvent.mousePosition);
         Vector2 zoomSpaceMousePosition = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(currentEvent.mousePosition, currentEvent.mousePosition, ScaleFactor);
 
         //Draw the nodes first
@@ -203,7 +203,6 @@ public class NodeLEM_Editor : EditorWindow
         DrawConnections();
         DrawConnectionLine(currentEvent);
         DrawSelectionBox(zoomSpaceMousePosition);
-        //DrawSelectionBox(currentEvent.mousePosition);
 
         EditorZoomFeature.EndZoom();
 
@@ -428,7 +427,7 @@ public class NodeLEM_Editor : EditorWindow
                 {
                     if (e.alt && m_InitialClickedPosition == null && s_CurrentClickedNode == null)
                     {
-                        OnDrag(e.delta );
+                        OnDrag(e.delta);
                         GUI.changed = true;
                     }
                 }
@@ -524,7 +523,7 @@ public class NodeLEM_Editor : EditorWindow
                 break;
 
             case EventType.MouseDrag:
-                Vector2 convertedDelta = e.delta /ScaleFactor;
+                Vector2 convertedDelta = e.delta / ScaleFactor;
 
                 for (int i = m_AllNodesInEditor.Count - 1; i >= 0; i--)
                     if (m_AllNodesInEditor[i].HandleMouseDrag(e, convertedDelta))

@@ -120,25 +120,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &215212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: DestroyGameObjectNode
-  m_Description: 
-  m_NodeBaseData:
-    m_Position: {x: 377, y: 289}
-    m_NodeID: eede2a1a-55a3-4ec0-b257-cce09b6302aa
-    m_NextPointNodeID: 862d50bc-2e9b-481d-8c59-a6239d5e1909
-  m_TargetObject: {fileID: 0}
 --- !u!1 &22978521
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,25 +241,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &217019297
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: DestroyGameObjectNode
-  m_Description: 
-  m_NodeBaseData:
-    m_Position: {x: 43, y: 310}
-    m_NodeID: 20176f0b-8795-4853-b018-b1884e3a6f78
-    m_NextPointNodeID: eede2a1a-55a3-4ec0-b257-cce09b6302aa
-  m_TargetObject: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,6 +490,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1912036819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 320, y: 285}
+    m_NodeID: 3f67dd63-5597-40c7-90b0-ef8b25d42193
+    m_NextPointNodeID: 3b4fcad1-1d9b-4916-bb2f-928b3cd1de92
+  m_TargetObject: {fileID: 0}
 --- !u!114 &2060631180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -578,16 +559,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LinearEventName: 
   m_AllEffects:
-  - {fileID: 217019297}
-  - {fileID: 215212}
+  - {fileID: 1912036819}
   m_StartNodeData:
-    m_Position: {x: 130.5, y: 166}
-    m_NodeID: 5d71a77c-37ed-4a75-afae-dbd76c494111
-    m_NextPointNodeID: 20176f0b-8795-4853-b018-b1884e3a6f78
+    m_Position: {x: 45.00049, y: 248.95801}
+    m_NodeID: 5eca91c1-e241-47ee-ba15-413b631065f8
+    m_NextPointNodeID: 3f67dd63-5597-40c7-90b0-ef8b25d42193
   m_EndNodeData:
-    m_Position: {x: 622.5, y: 85}
-    m_NodeID: 862d50bc-2e9b-481d-8c59-a6239d5e1909
-    m_NextPointNodeID: eede2a1a-55a3-4ec0-b257-cce09b6302aa
+    m_Position: {x: 947.00037, y: 401.95813}
+    m_NodeID: 3b4fcad1-1d9b-4916-bb2f-928b3cd1de92
+    m_NextPointNodeID: 3f67dd63-5597-40c7-90b0-ef8b25d42193
 --- !u!4 &2127555589
 Transform:
   m_ObjectHideFlags: 0
