@@ -64,15 +64,14 @@ public class NodeLEM_Editor : EditorWindow
     ConnectionPoint m_SelectedInPoint = default, m_SelectedOutPoint = default;
 
     const float k_MinScale = 0.4f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.1f;
-    float m_CurrentScaleFactor = 1f;
-    float ScaleFactor { get { return m_CurrentScaleFactor; } set { m_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
+    static float s_CurrentScaleFactor = 1f;
+    float ScaleFactor { get { return s_CurrentScaleFactor; } set { s_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
 
     #endregion
 
 
     //NodeCommandInvoker m_CommandInvoker = default;
 
-    //static readonly LEMStyleLibrary s_SkinsLibrary = new LEMStyleLibrary();
     static Texture2D s_EditorBackGroundTexture = default;
 
 

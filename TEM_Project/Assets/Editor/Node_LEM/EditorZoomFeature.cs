@@ -39,7 +39,6 @@ public class EditorZoomFeature
         //Make a composite transformative matrix C = T1*T2*T3*...
         Matrix4x4 translationMatrix = Matrix4x4.TRS(screenCoordsArea.TopLeft() , Quaternion.identity, Vector3.one);
         Matrix4x4 scaleMatrix = Matrix4x4.Scale(new Vector3(scale, scale, 1.0f));
-        //Matrix4x4 moveMatrix = Matrix4x4.Translate(mousePosition);
 
         //Apply composite transformative matrix on gui.matrix to scale the gui rendered
         // C x P = P`
