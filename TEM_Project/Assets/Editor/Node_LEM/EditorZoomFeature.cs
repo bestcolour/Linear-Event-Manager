@@ -9,12 +9,17 @@ public class EditorZoomFeature
 
     static Matrix4x4 s_PreviousGUIMatrix = default;
 
+    const float k_ScreenWidthConversionMultiplier = 1.2508f;
+    const float k_ScreenHeightConversionMultiplier = 1.2875f;
+    const float k_ScreenConversionMarginOfError = 2.25f;
+
+
     public static Vector2 ConvertScreenSpaceToZoomSpace(float scaleFactor, Vector2 screenPointToConvert, Vector2 zoomAreaOrigin,Vector2 zoomCoordsOrigin)
     {
         return (screenPointToConvert - zoomAreaOrigin) / scaleFactor + zoomCoordsOrigin;
     }
 
-    public static Rect BeginZoom(float scale,Rect screenCoordsArea)
+    public static Rect BeginZoom(float scale,Rect screenCoordsArea/*,Vector2 mousePosition*/)
     {
         //Debug.Log(GUI.matrix);
         //End group since editor window begins group naturally during onGUI
@@ -33,15 +38,16 @@ public class EditorZoomFeature
         s_PreviousGUIMatrix = GUI.matrix;
 
         //Make a composite transformative matrix C = T1*T2*T3*...
-        Matrix4x4 translationMatrix = Matrix4x4.TRS(screenCoordsArea.TopLeft(), Quaternion.identity, Vector3.one);
+        Matrix4x4 translationMatrix = Matrix4x4.TRS(screenCoordsArea.TopLeft() , Quaternion.identity, Vector3.one);
         Matrix4x4 scaleMatrix = Matrix4x4.Scale(new Vector3(scale, scale, 1.0f));
+        //Matrix4x4 moveMatrix = Matrix4x4.Translate(mousePosition);
 
         //Apply composite transformative matrix on gui.matrix to scale the gui rendered
         // C x P = P`
         //T1 = translate, rotate and scale object to the origin. 
         //T2 = Scale the gui about the origin
         //T3 = Return the gui back to its original position using inverse of T1
-        GUI.matrix = translationMatrix * scaleMatrix * translationMatrix.inverse * GUI.matrix;
+        GUI.matrix = translationMatrix * scaleMatrix * translationMatrix.inverse /** moveMatrix */* GUI.matrix;
         //Debug.Log(GUI.matrix);
         return clippedRect;
     }
@@ -64,6 +70,8 @@ public class EditorZoomFeature
             GUI.matrix = Matrix4x4.identity;
 
             Vector2 originalMousePosition = Event.current.mousePosition;
+            originalMousePosition.x = originalMousePosition.x * k_ScreenWidthConversionMultiplier + k_ScreenConversionMarginOfError;
+            originalMousePosition.y = originalMousePosition.y * k_ScreenHeightConversionMultiplier+ k_ScreenConversionMarginOfError;
 
             GUI.matrix = s_PreviousGUIMatrix;
             return originalMousePosition;

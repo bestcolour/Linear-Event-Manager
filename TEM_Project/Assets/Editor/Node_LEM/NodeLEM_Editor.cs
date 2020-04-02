@@ -66,13 +66,13 @@ public class NodeLEM_Editor : EditorWindow
     const float k_MinScale = 0.4f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.1f;
     float m_CurrentScaleFactor = 1f;
     float ScaleFactor { get { return m_CurrentScaleFactor; } set { m_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
-
+    //Vector2 m_MousePositionWhenScrolling = default;
     //Thisvalue must be constantly updated whenever we change our scale value
-    Vector2 m_ZoomCoordinatesOrigin = Vector2.zero;
+    //Vector2 m_ZoomCoordinatesOrigin = Vector2.zero;
 
     bool m_TestDraw = false;
 
-  
+
 
     #endregion
 
@@ -199,7 +199,6 @@ public class NodeLEM_Editor : EditorWindow
         DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
         DrawGrid(100 * ScaleFactor, 0.4f, Color.gray);
         //Draw graphics that are zoomable
-
         EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
         Vector2 currMousePos = currentEvent.mousePosition;
         //Draw the nodes first
@@ -210,16 +209,16 @@ public class NodeLEM_Editor : EditorWindow
         DrawConnectionLine(currentEvent);
         DrawSelectionBox(currMousePos);
 
-        if (m_TestDraw)
-        {
-            DrawTest();
-        }
+        //if (m_TestDraw)
+        //{
+        //    DrawTest();
+        //}
 
         EditorZoomFeature.EndZoom();
 
         DrawSaveButton();
         DrawRefreshButton();
-       
+
 
 
 
@@ -374,10 +373,11 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    void DrawTest()
-    {
-        GUI.Box(new Rect(new Vector2(Screen.width * 0.5f * 1.25f * ScaleFactor, Screen.height * 0.5f * 1.29f * ScaleFactor), Vector2.one * 100f), "Im here");
-    }
+    //void DrawTest()
+    //{
+    //    Vector2 v2 = EditorZoomFeature.GetOriginalMousePosition;
+    //    GUI.Box(new Rect(v2, Vector2.one * 100f), "Im here");
+    //}
 
 
 
@@ -387,15 +387,56 @@ public class NodeLEM_Editor : EditorWindow
     void ProcessEvents(Event e, Vector2 currMousePosition)
     {
         m_AmountOfMouseDragThisUpdate = Vector2.zero;
-
+        //m_MousePositionWhenScrolling = Vector2.zero;
         switch (e.type)
         {
+            case EventType.ScrollWheel:
+
+
+
+                //Vector2 screenCoordsMousePos = e.mousePosition;
+                //Vector2 delta = e.delta;
+                //Vector2 zoomCoordsMousePos = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(ScaleFactor, screenCoordsMousePos, Vector2.zero, m_ZoomCoordinatesOrigin);
+                ////Vector2 zoomCoordsMousePos = ConvertScreenCoordsToZoomCoords(screenCoordsMousePos);
+                //float oldZoom = ScaleFactor;
+
+                //If user scrolls downwards
+
+                //m_ZoomCoordinatesOrigin += (zoomCoordsMousePos - m_ZoomCoordinatesOrigin) - (oldZoom / ScaleFactor) * (zoomCoordsMousePos - m_ZoomCoordinatesOrigin);
+
+
+                int signOfChange = 0;
+                float changeRate = 0f;
+
+                signOfChange = e.delta.y > 0 ? -1 : 1;
+                //If alt key is pressed,
+                changeRate = e.alt ? k_SlowScaleChangeRate : k_ScaleChangeRate;
+
+                ScaleFactor += signOfChange * changeRate;
+
+                //int signOfChange = 0;
+
+                //if (e.delta.y > 0)
+                //{
+                //    signOfChange = ScaleFactor == k_MinScale ? 0 : -1;
+                //}
+                //else
+                //{
+                //    signOfChange = ScaleFactor == k_MaxScale ? 0 : 1;
+                //}
+                ////m_MousePositionWhenScrolling = e.mousePosition;
+                //ScaleFactor += signOfChange * k_ScaleChangeRate;
+
+                //OnScroll(EditorZoomFeature.GetOriginalMousePosition, signOfChange);
+
+                e.Use();
+                break;
+
             case EventType.MouseDown:
 
-                Debug.Log(EditorZoomFeature.GetOriginalMousePosition);
+                //Vector2 zoomSpaceMousePosition = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(ScaleFactor, screenPointToConvert: e.mousePosition, Vector2.zero, m_ZoomCoordinatesOrigin);
+                Debug.Log("Mouse Original Position : " + EditorZoomFeature.GetOriginalMousePosition + " Window size is : " + new Vector2(Screen.width, Screen.height) + " Scale Factor : " + ScaleFactor);
 
-                Vector2 zoomSpaceMousePosition = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(ScaleFactor, screenPointToConvert: e.mousePosition, Vector2.zero, m_ZoomCoordinatesOrigin);
-                //Debug.Log("Curr Mouse Pos " + zoomSpaceMousePosition + " Window dimension : " + new Vector2(Screen.width, Screen.height));
                 //Set the currenly clicked node
                 s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
 
@@ -462,32 +503,7 @@ public class NodeLEM_Editor : EditorWindow
                 ResetEventVariables();
                 break;
 
-            case EventType.ScrollWheel:
-
-
-
-                Vector2 screenCoordsMousePos = e.mousePosition;
-                Vector2 delta = e.delta;
-                Vector2 zoomCoordsMousePos = EditorZoomFeature.ConvertScreenSpaceToZoomSpace(ScaleFactor, screenCoordsMousePos, Vector2.zero, m_ZoomCoordinatesOrigin);
-                //Vector2 zoomCoordsMousePos = ConvertScreenCoordsToZoomCoords(screenCoordsMousePos);
-                float oldZoom = ScaleFactor;
-
-                //If user scrolls downwards
-                if (e.delta.y > 0)
-                {
-                    ScaleFactor += -k_ScaleChangeRate;
-                }
-                //If user scrolls upwards
-                else
-                {
-                    ScaleFactor += k_ScaleChangeRate;
-                }
-                m_ZoomCoordinatesOrigin += (zoomCoordsMousePos - m_ZoomCoordinatesOrigin) - (oldZoom / ScaleFactor) * (zoomCoordsMousePos - m_ZoomCoordinatesOrigin);
-
-                //OnScroll(e.mousePosition);
-
-                e.Use();
-                break;
+           
 
             //If the user presses a keyboard keybutton
             case EventType.KeyUp:
@@ -719,24 +735,29 @@ public class NodeLEM_Editor : EditorWindow
         genericMenu.ShowAsContext();
     }
 
-    void OnScroll(Vector2 mousePosition)
-    {
-        //Drag the canvas towards the direction of mouseposition - center
-        Vector2 v2 = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+    //void OnScroll(Vector2 mousePosition, int signOfChange)
+    //{
 
-        Debug.Log("Center of screen is " + v2);
 
-        m_TestDraw = true;
+    //    //Drag the canvas towards the direction of mouseposition - center
+    //    Vector2 v2 = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
 
-        //Direction of the drag
-        v2 = mousePosition - v2;
+    //    //Debug.Log("Center of screen is " + v2);
 
-        OnDrag(-v2.normalized * 10f);
-    }
+    //    //m_TestDraw = true;
+
+    //    //Debug.Log("mousePosition : " + mousePosition);
+    //    //Direction of the drag
+    //    v2 = mousePosition - v2;
+    //    //Debug.Log("Direction vector of drag " + v2);
+
+    //    OnDrag(-signOfChange * v2 * 0.1f);
+    //}
 
     //Drags the window canvas (think like animator window)
     void OnDrag(Vector2 delta)
     {
+        //Debug.Log(delta);
         //Record the amount of drag there is changed 
         //Convert delta value for canvas dragging
         delta /= ScaleFactor;
