@@ -28,7 +28,11 @@ public class DestroyGameObjectNode : BaseEffectNode
         base.Draw();
 
         //Draw a object field for inputting  the gameobject to destroy
-        m_TargetObject = (GameObject)EditorGUI.ObjectField(new Rect(m_MidRect.x + 10, m_MidRect.y + 100f, m_MidRect.width - 20, 20f), "Object To Destroy", m_TargetObject, typeof(GameObject), true);
+        Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 100f, m_MidRect.width - 20, 20f);
+        GUI.Label(propertyRect, "Object To Destroy");
+        propertyRect.y += 20f;
+        propertyRect.height = 25f;
+        m_TargetObject = (GameObject)EditorGUI.ObjectField(propertyRect, "", m_TargetObject, typeof(GameObject), true);
 
     }
 

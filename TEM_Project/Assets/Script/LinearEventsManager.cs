@@ -12,14 +12,17 @@ public class LinearEventsManager : MonoBehaviour
 {
     public static LinearEventsManager Instance;
 
+    [Header("Settings")]
+    [Tooltip("Should the LEM Manager initialise itself or let other scripts initialise for it?")]
+    [SerializeField] bool m_SelfInitialise = default;
+
+    [Tooltip("Should the LEM Manager play the events on awake?")]
+    [SerializeField] bool m_PlayOnAwake = default;
+   
     //Base effects collection for node editing 
-    public LEM_BaseEffect[] m_AllEffects = default;
-    //Property for getting n setting alleffects
+    public LinearEvent[] m_AllLinearEvents = default;
 
-
-    //the currently running effects
-    List<LEM_BaseEffect> m_PlayingEffects = new List<LEM_BaseEffect>();
-
+  
 
     [Header("Initialization Checks")]
     public bool m_IsFinishedQueuing;
@@ -54,21 +57,20 @@ public class LinearEventsManager : MonoBehaviour
     //their effects are done
     void Update()
     {
-        for (int i = 0; i < m_PlayingEffects.Count; i++)
-        {
-            //If the current effect returns true,
-            if (m_PlayingEffects[i].TEM_Update())
-            {
-                //Get a copy of the last element
-                LEM_BaseEffect copy = m_PlayingEffects[0];
-                //Set the effect that you want to remove as the last effect to remove it
-                //and since [0] has been ran first, you dont need to worry about it running twice or none in this frame
-                m_PlayingEffects[i] = copy;
-                //Remove the first element
-                m_PlayingEffects.RemoveAt(0);
-            }
+        //for (int i = 0; i < m_PlayingEffects.Count; i++)
+        //{
+        //    //If the current effect returns true,
+        //    if (m_PlayingEffects[i].TEM_Update())
+        //    {
+        //        //Get a copy of the last element
+        //        LEM_BaseEffect copy = m_PlayingEffects[m_PlayingEffects.Count - 1];
+        //        //Set the effect that you want to remove as the last effect to remove it
+        //        m_PlayingEffects[i] = copy;
+        //        //Remove the first element
+        //        m_PlayingEffects.RemoveAt(m_PlayingEffects.Count - 1);
+        //    }
 
-        }
+        //}
     }
 
 
