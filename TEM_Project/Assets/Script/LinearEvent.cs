@@ -32,7 +32,7 @@ public class LinearEvent : MonoBehaviour
         while (currentEffect.m_NodeBaseData.m_NodeID != m_EndNodeData.m_NodeID)
         {
             effectsInUse.Add(currentEffect);
-            //currentEffect = m_AllEffectsDictionary[];
+            currentEffect = m_AllEffectsDictionary[];
         }
       
 
