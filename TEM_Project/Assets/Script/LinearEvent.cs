@@ -18,7 +18,7 @@ public class LinearEvent : MonoBehaviour
 
 
     public NodeBaseData m_StartNodeData = default;
-    public NodeBaseData m_EndNodeData = default;
+    //public NodeBaseData m_EndNodeData = default;
 
 
     //Removes any unconnected LEM effects from the m_AllEffectsDictionary
@@ -29,11 +29,7 @@ public class LinearEvent : MonoBehaviour
         LEM_BaseEffect currentEffect = m_AllEffectsDictionary[m_StartNodeData.m_NextPointNodeID];
         List<LEM_BaseEffect> effectsInUse = new List<LEM_BaseEffect>();
 
-        while (currentEffect.m_NodeBaseData.m_NodeID != m_EndNodeData.m_NodeID)
-        {
-            effectsInUse.Add(currentEffect);
-            //currentEffect = m_AllEffectsDictionary[];
-        }
+      
       
 
 

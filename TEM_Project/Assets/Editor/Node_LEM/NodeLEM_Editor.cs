@@ -181,6 +181,9 @@ public class NodeLEM_Editor : EditorWindow
         ResetEventVariables();
         s_CurrentNodeLastRecordedSelectState = null;
         s_EditingLinearEvent = null;
+        m_AllNodesInEditor = null;
+        m_AllEffectsNodeInEditor = null;
+        m_AllConnectionsDictionary = null;
         LEM_InspectorEditor.s_IsLoaded = false;
     }
 
@@ -930,6 +933,7 @@ public class NodeLEM_Editor : EditorWindow
         //Clear the dictionary of the currently editting linear event
         s_EditingLinearEvent.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
 
+        //This saves all events regardless of whether they are connected singularly, plurally or disconnected
         for (int i = 0; i < m_AllNodesInEditor.Count; i++)
         {
             lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
@@ -956,6 +960,9 @@ public class NodeLEM_Editor : EditorWindow
 
         #region Loading Events from Dictionary
 
+        if (s_EditingLinearEvent.m_AllEffectsDictionary == null)
+            return;
+
         string[] allEffectsDictionary = s_EditingLinearEvent.m_AllEffectsDictionary.Keys.ToArray();
 
         //Recreate all the nodes from the dictionary
@@ -972,16 +979,16 @@ public class NodeLEM_Editor : EditorWindow
         #endregion
         #region Loading Events From List
 
-        //Load all the nodes into collection first by recreating them
-        for (int i = 0; i < s_EditingLinearEvent.m_AllEffects.Length; i++)
-        {
-            RecreateEffectNode(s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_Position,
-                s_EditingLinearEvent.m_AllEffects[i].m_NodeEffectType,
-                s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID
-                , out BaseEffectNode newEffectNode);
+        ////Load all the nodes into collection first by recreating them
+        //for (int i = 0; i < s_EditingLinearEvent.m_AllEffects.Length; i++)
+        //{
+        //    RecreateEffectNode(s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_Position,
+        //        s_EditingLinearEvent.m_AllEffects[i].m_NodeEffectType,
+        //        s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID
+        //        , out BaseEffectNode newEffectNode);
 
-            newEffectNode.LoadFromLinearEvent(s_EditingLinearEvent.m_AllEffects[i]);
-        }
+        //    newEffectNode.LoadFromLinearEvent(s_EditingLinearEvent.m_AllEffects[i]);
+        //}
         #endregion
 
         //Do the same for start n end node only if they arent null (they likely wont because onenable runs first)
@@ -1029,30 +1036,30 @@ public class NodeLEM_Editor : EditorWindow
 
         #region Loading Connection From List
 
-        //Stitch their connnection back
-        for (int i = 0; i < s_EditingLinearEvent.m_AllEffects.Length; i++)
-        {
-            //if current effect has a m_NextPointNodeID and that the node this effect is assigned to doesnt have a connection on the outpoint,
-            if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID)
-                && !m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
-            {
-                ////If effectnode's out point is connected to the end,
-                //if (s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID == s_EndNode.NodeID)
-                //{
-                //    //Connect with end node
-                //    RecreateConnection(
-                //            s_EndNode.m_InPoint,
-                //             m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint
-                //             );
-                //    continue;
-                //}
+        ////Stitch their connnection back
+        //for (int i = 0; i < s_EditingLinearEvent.m_AllEffects.Length; i++)
+        //{
+        //    //if current effect has a m_NextPointNodeID and that the node this effect is assigned to doesnt have a connection on the outpoint,
+        //    if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID)
+        //        && !m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
+        //    {
+        //        ////If effectnode's out point is connected to the end,
+        //        //if (s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID == s_EndNode.NodeID)
+        //        //{
+        //        //    //Connect with end node
+        //        //    RecreateConnection(
+        //        //            s_EndNode.m_InPoint,
+        //        //             m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint
+        //        //             );
+        //        //    continue;
+        //        //}
 
-                RecreateConnection(
-                                m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID].m_InPoint,
-                                m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint
-                                );
-            }
-        }
+        //        RecreateConnection(
+        //                        m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NextPointNodeID].m_InPoint,
+        //                        m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffects[i].m_NodeBaseData.m_NodeID].m_OutPoint
+        //                        );
+        //    }
+        //}
 
         #endregion
 

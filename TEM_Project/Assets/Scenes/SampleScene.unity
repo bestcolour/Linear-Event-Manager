@@ -150,15 +150,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LinearEventName: 
-  m_AllEffects: []
+  m_AllEffects:
+  - {fileID: 331220837}
+  - {fileID: 746961716}
   m_StartNodeData:
-    m_Position: {x: 622.5, y: 72}
-    m_NodeID: 
-    m_NextPointNodeID: 
-  m_EndNodeData:
-    m_Position: {x: 396.95, y: 50}
-    m_NodeID: 
-    m_NextPointNodeID: 
+    m_Position: {x: 233.5, y: 50}
+    m_NodeID: fa41e749-c5ff-4783-83fc-128920aeb7e0
+    m_NextPointNodeID: a0032392-af9c-4ece-8874-8c12f862ea08
 --- !u!4 &22978523
 Transform:
   m_ObjectHideFlags: 0
@@ -239,6 +237,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &331220837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 358, y: 173}
+    m_NodeID: a0032392-af9c-4ece-8874-8c12f862ea08
+    m_NextPointNodeID: 
+  m_TargetObject: {fileID: 0}
 --- !u!1 &519876880
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,6 +437,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &746961716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 721, y: 405}
+    m_NodeID: b9950935-99e2-4489-be56-3bef8c2c9e03
+    m_NextPointNodeID: 
+  m_TargetObject: {fileID: 963194225}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,25 +584,6 @@ Transform:
   m_Father: {fileID: 2054473526}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1579646605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: DestroyGameObjectNode
-  m_Description: 
-  m_NodeBaseData:
-    m_Position: {x: 187, y: 239}
-    m_NodeID: eccb8813-35db-4a51-8e57-01672f379ec5
-    m_NextPointNodeID: 
-  m_TargetObject: {fileID: 0}
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -711,29 +728,6 @@ Transform:
   m_Father: {fileID: 2054473526}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1906644094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79cf55c551f33604695a8563340495f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: InstantiateGameObjectNode
-  m_Description: 
-  m_NodeBaseData:
-    m_Position: {x: 517, y: 343}
-    m_NodeID: 8ebb9a26-f6a6-441b-a942-8a6a85abd1e6
-    m_NextPointNodeID: 
-  m_TargetObject: {fileID: 0}
-  m_NumberOfTimes: 1
-  m_TargetPosition: {x: 0, y: 0, z: 0}
-  m_TargetRotation: {x: 0, y: 0, z: 0}
-  m_TargetScale: {x: 1, y: 1, z: 1}
 --- !u!1 &2054473524
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,16 +814,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LinearEventName: 
-  m_AllEffects:
-  - {fileID: 1579646605}
-  - {fileID: 1906644094}
+  m_AllEffects: []
   m_StartNodeData:
-    m_Position: {x: 233.5, y: 50}
-    m_NodeID: 1339e004-1919-4223-84ff-1b91b48c33a3
-    m_NextPointNodeID: 
-  m_EndNodeData:
-    m_Position: {x: 233.5, y: 50}
-    m_NodeID: b8310a8f-4c38-4fe7-8ee0-4e9d69dda158
+    m_Position: {x: 0, y: 0}
+    m_NodeID: 
     m_NextPointNodeID: 
 --- !u!4 &2127555589
 Transform:
