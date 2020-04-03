@@ -257,8 +257,7 @@ public abstract class Node
     //Returns only NodeBaseData (use for non effect nodes)
     public virtual NodeBaseData SaveNodeData()
     {
-        string[] connectedNodeIDs = new string[1] { m_OutPoint.GetConnectedNodeID(0) };
-        return new NodeBaseData(m_MidRect.position, NodeID, connectedNodeIDs /*, m_InPoint.m_ConnectedNodeID*/);
+        return new NodeBaseData(m_MidRect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
     }
 
     //Change values here

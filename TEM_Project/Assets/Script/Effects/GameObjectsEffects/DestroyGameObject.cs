@@ -14,6 +14,7 @@ namespace LEM_Effects
             m_TargetObject = targetObject;
         }
 
+
         public void UnPack(out GameObject targetObject)
         {
             targetObject = m_TargetObject;

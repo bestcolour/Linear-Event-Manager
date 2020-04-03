@@ -13,20 +13,19 @@ public class InstantiateGameObjectNode : BaseEffectNode
     public Vector3 m_TargetRotation = Vector3.zero;
     public Vector3 m_TargetScale = Vector3.one;
 
-    public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode)
+    public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
     {
-        base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode);
+        base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
 
-        //Override the rect size
-        m_Rect.height = 280f;
-        m_Rect.width = 275f;
+        //Override the rect size n pos
+        SetNodeRects(position, NodeTextureDimensions.BIG_MID_SIZE, NodeTextureDimensions.BIG_TOP_SIZE);
     }
 
     public override void Draw()
     {
         base.Draw();
 
-        Rect propertyRect = new Rect(m_Rect.x + 10, m_Rect.y + 100f, m_Rect.width - 20, 15f);
+        Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 100f, m_MidRect.width - 20, 15f);
 
         //Draw fields custom to this class
         m_TargetObject = (GameObject)EditorGUI.ObjectField(propertyRect, "Object to Instantiate", m_TargetObject, typeof(GameObject), true);
@@ -41,26 +40,19 @@ public class InstantiateGameObjectNode : BaseEffectNode
 
     }
 
-
-
-    public override void SaveNodeData()
+    public override LEM_BaseEffect CompileToBaseEffect()
     {
-        base.SaveNodeData();
+        InstantiateGameObject effect = ScriptableObject.CreateInstance<InstantiateGameObject>();
+        effect.m_Description = m_LemEffectDescription;
+        effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position,NodeID,m_OutPoint.GetConnectedNodeID(0));
+        effect.m_NodeEffectType = this.GetType().ToString();
+        effect.SetUp(targetObject: m_TargetObject,targetPosition: m_TargetPosition , targetRotation: m_TargetRotation , targetScale: m_TargetScale,numberOfTimes:m_NumberOfTimes);
+        return effect;
+    }
 
-        InstantiateGameObject baseEffectCopy = new InstantiateGameObject
-            (m_TargetObject,
-            m_NumberOfTimes,
-            m_TargetPosition,
-            m_TargetRotation,
-            m_TargetScale);
-
-        baseEffectCopy.m_Description = m_TemEffectDescription;
-        baseEffectCopy.m_NodeEffectType = this.GetType().ToString();
-        baseEffectCopy.m_NodeBaseData = m_NodeBaseDataSaveFile;
-
-        //record this in temp after all transfer of values or references
-        m_BaseEffectSaveFile = baseEffectCopy;
-
+    public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
+    {
+        base.LoadFromLinearEvent(effectToLoadFrom);
     }
 
 }

@@ -26,7 +26,7 @@ public class LinearEvent : MonoBehaviour
     {
         string[] allKeys = m_AllEffectsDictionary.Keys.ToArray();
 
-        //LEM_BaseEffect currentEffect = m_AllEffectsDictionary[m_StartNodeData.m_NextPointNodeID];
+        LEM_BaseEffect currentEffect = m_AllEffectsDictionary[m_StartNodeData.m_NextPointNodeID];
         List<LEM_BaseEffect> effectsInUse = new List<LEM_BaseEffect>();
 
       

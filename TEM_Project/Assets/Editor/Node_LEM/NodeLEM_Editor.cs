@@ -9,7 +9,7 @@ using System.Linq;
 public class NodeLEM_Editor : EditorWindow
 {
     public static NodeLEM_Editor instance = default;
-    public static LinearEvent s_EditingLinearEvent = default;
+    public static LinearEvent s_CurrentLE = default;
 
     //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
@@ -91,7 +91,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         OpenWindow();
 
-        s_EditingLinearEvent = linearEvent;
+        s_CurrentLE = linearEvent;
         instance.LoadFromLinearEvent();
     }
 
@@ -169,7 +169,7 @@ public class NodeLEM_Editor : EditorWindow
         ResetDrawingBezierCurve();
         ResetEventVariables();
         s_CurrentNodeLastRecordedSelectState = null;
-        s_EditingLinearEvent = null;
+        s_CurrentLE = null;
     }
 
     //Called when window is closed
@@ -180,7 +180,7 @@ public class NodeLEM_Editor : EditorWindow
         ResetDrawingBezierCurve();
         ResetEventVariables();
         s_CurrentNodeLastRecordedSelectState = null;
-        s_EditingLinearEvent = null;
+        s_CurrentLE = null;
         m_AllNodesInEditor = null;
         m_AllEffectsNodeInEditor = null;
         m_AllConnectionsDictionary = null;
@@ -462,7 +462,7 @@ public class NodeLEM_Editor : EditorWindow
                 ResetEventVariables();
                 break;
 
-           
+
 
             //If the user presses a keyboard keybutton
             case EventType.KeyUp:
@@ -931,22 +931,22 @@ public class NodeLEM_Editor : EditorWindow
         BaseEffectNode[] allEffectNodes = m_AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
 
         //Clear the dictionary of the currently editting linear event
-        s_EditingLinearEvent.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
+        s_CurrentLE.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
 
         //This saves all events regardless of whether they are connected singularly, plurally or disconnected
         for (int i = 0; i < m_AllNodesInEditor.Count; i++)
         {
             lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
-            
+
             //Populate the dictionary in the linear event
-            s_EditingLinearEvent.m_AllEffectsDictionary.Add(lemEffects[i].m_NodeBaseData.m_NodeID, lemEffects[i]);
+            s_CurrentLE.m_AllEffectsDictionary.Add(lemEffects[i].m_NodeBaseData.m_NodeID, lemEffects[i]);
         }
 
 
-        s_EditingLinearEvent.m_AllEffects = lemEffects;
+        s_CurrentLE.m_AllEffects = lemEffects;
 
         //Save start and end node data
-        s_EditingLinearEvent.m_StartNodeData = s_StartNode.SaveNodeData();
+        s_CurrentLE.m_StartNodeData = s_StartNode.SaveNodeData();
         //s_EditingLinearEvent.m_EndNodeData = s_EndNode.SaveNodeData();
 
         //Saving ends here
@@ -960,20 +960,21 @@ public class NodeLEM_Editor : EditorWindow
 
         #region Loading Events from Dictionary
 
-        if (s_EditingLinearEvent.m_AllEffectsDictionary == null)
+        if (s_CurrentLE.m_AllEffectsDictionary == null)
             return;
 
-        string[] allEffectsDictionary = s_EditingLinearEvent.m_AllEffectsDictionary.Keys.ToArray();
+        string[] allKeys = s_CurrentLE.m_AllEffectsDictionary.Keys.ToArray();
 
         //Recreate all the nodes from the dictionary
-        for (int i = 0; i < allEffectsDictionary.Length; i++)
+        for (int i = 0; i < allKeys.Length; i++)
         {
-            RecreateEffectNode(s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_Position,
-                s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeEffectType,
-                s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NodeID
+            RecreateEffectNode(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_Position,
+                s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeEffectType,
+                s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID
                 , out BaseEffectNode newEffectNode);
 
-            newEffectNode.LoadFromLinearEvent(s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]]);
+            //Load the new node with saved node values values
+            newEffectNode.LoadFromLinearEvent(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]]);
         }
 
         #endregion
@@ -993,10 +994,10 @@ public class NodeLEM_Editor : EditorWindow
 
         //Do the same for start n end node only if they arent null (they likely wont because onenable runs first)
         //and that there are records of saving them
-        if (s_StartNode != null && s_EditingLinearEvent.m_StartNodeData.m_NodeID != string.Empty)
+        if (s_StartNode != null && s_CurrentLE.m_StartNodeData.m_NodeID != string.Empty)
         {
             OnClickRemoveNode(s_StartNode);
-            RecreateBasicNode(s_EditingLinearEvent.m_StartNodeData.m_Position, "StartNode", s_EditingLinearEvent.m_StartNodeData.m_NodeID, out s_StartNode);
+            RecreateBasicNode(s_CurrentLE.m_StartNodeData.m_Position, "StartNode", s_CurrentLE.m_StartNodeData.m_NodeID, out s_StartNode);
         }
 
         //if (s_EndNode != null && s_EditingLinearEvent.m_EndNodeData.m_NodeID != string.Empty)
@@ -1009,29 +1010,64 @@ public class NodeLEM_Editor : EditorWindow
         #region Loading Connections From Dictionary
 
         //Stitch dictionary's their connnection back
-        for (int i = 0; i < allEffectsDictionary.Length; i++)
+        for (int i = 0; i < allKeys.Length; i++)
         {
-            //if current effect has a m_NextPointNodeID and that the node this effect is assigned to doesnt have a connection on the outpoint,
-            if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NextPointNodeID)
-                && !m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
-            {
-                ////If effectnode's out point is connected to the end,
-                //if (s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NextPointNodeID == s_EndNode.NodeID)
-                //{
-                //    //Connect with end node
-                //    RecreateConnection(
-                //            s_EndNode.m_InPoint,
-                //             m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NodeID].m_OutPoint
-                //             );
-                //    continue;
-                //}
 
-                RecreateConnection(
-                                m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NextPointNodeID].m_InPoint,
-                                m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NodeID].m_OutPoint
-                                );
+            ////if current effect has a m_NextPointNodeID and that the node this effect is assigned to doesnt have a connection on the outpoint,
+            //if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NextPointNodeID[0])
+            //    && !m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
+            //{
+            //    ////If effectnode's out point is connected to the end,
+            //    //if (s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NextPointNodeID == s_EndNode.NodeID)
+            //    //{
+            //    //    //Connect with end node
+            //    //    RecreateConnection(
+            //    //            s_EndNode.m_InPoint,
+            //    //             m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NodeID].m_OutPoint
+            //    //             );
+            //    //    continue;
+            //    //}
+
+            //    RecreateConnection(
+            //                    m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NextPointNodeID[0]].m_InPoint,
+            //                    m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NodeID].m_OutPoint
+            //                    );
+            //}
+
+            //If the an effect node that we just cr8ted has an outpoint that isnt connected,
+            if (!m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
+            {
+                //And if there is one next point node
+                if (s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.HasOnlyOneNextPointNode
+                    && !String.IsNullOrEmpty(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[0])
+                    )
+                {
+                    RecreateConnection(
+                                    m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[0]].m_InPoint,
+                                    m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint
+                                    );
+                }
+                //else if there is more than one next point node,
+                else if (s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.HasMultipleNextPointNodes)
+                {
+                    //Restich for those nodes
+                    for (int n = 0; n < s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs.Length; n++)
+                        //If the keys current next point id is not empty or null
+                        if (!String.IsNullOrEmpty(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[n]))
+                        {
+                            RecreateConnection(
+                            m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[n]].m_InPoint,
+                            m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint
+                            );
+                        }
+
+                }
+
+
             }
-        } 
+
+
+        }
         #endregion
 
         #region Loading Connection From List
@@ -1065,7 +1101,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Do the same for start and end nodes
         //if node has a m_NextPointNodeID and that the next node this node is assigned to doesnt have a connection on the outpoint,
-        if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_StartNodeData.m_NextPointNodeID)
+        if (!String.IsNullOrEmpty(s_CurrentLE.m_StartNodeData.m_NextPointsIDs[0])
             && !s_StartNode.m_OutPoint.IsConnected)
         {
 
@@ -1078,7 +1114,7 @@ public class NodeLEM_Editor : EditorWindow
 
             //Else just find the next node from the dictionary of all effects node
             RecreateConnection(
-                             m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_StartNodeData.m_NextPointNodeID].m_InPoint,
+                             m_AllEffectsNodeInEditor[s_CurrentLE.m_StartNodeData.m_NextPointsIDs[0]].m_InPoint,
                              s_StartNode.m_OutPoint
                             );
         }

@@ -44,7 +44,10 @@ public class InstantiateGameObjectNode : BaseEffectNode
     {
         InstantiateGameObject effect = ScriptableObject.CreateInstance<InstantiateGameObject>();
         effect.m_Description = m_LemEffectDescription;
-        effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position,NodeID,m_OutPoint.GetConnectedNodeID(0));
+
+        string[] connectedNodeIDs = new string[1] { m_OutPoint.GetConnectedNodeID(0) };
+        effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position,NodeID, connectedNodeIDs);
+
         effect.m_NodeEffectType = this.GetType().ToString();
         effect.SetUp(targetObject: m_TargetObject,targetPosition: m_TargetPosition , targetRotation: m_TargetRotation , targetScale: m_TargetScale,numberOfTimes:m_NumberOfTimes);
         return effect;
@@ -52,6 +55,13 @@ public class InstantiateGameObjectNode : BaseEffectNode
 
     public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
     {
+        InstantiateGameObject loadFrom = effectToLoadFrom as InstantiateGameObject;
+        loadFrom.UnPack(out GameObject targetObject, out int numberOfTimes, out Vector3 targetPosition, out Vector3 targetRotation, out Vector3 targetScale);
+        m_TargetObject = targetObject;
+        m_NumberOfTimes = numberOfTimes;
+        m_TargetPosition = targetPosition;
+        m_TargetRotation = targetRotation;
+        m_TargetScale = targetScale;
         base.LoadFromLinearEvent(effectToLoadFrom);
     }
 

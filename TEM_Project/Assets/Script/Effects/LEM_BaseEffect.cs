@@ -10,7 +10,7 @@ namespace LEM_Effects
 {
 
     [Serializable]
-    public class LEM_BaseEffect :ScriptableObject
+    public abstract class LEM_BaseEffect :ScriptableObject
     {
         //Records the node type this effect belongs to
         [ReadOnly] public string m_NodeEffectType = default;
@@ -37,6 +37,7 @@ namespace LEM_Effects
 
 
     }
+
 
 
 }

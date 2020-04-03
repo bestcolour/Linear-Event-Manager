@@ -15,7 +15,13 @@ public class DestroyGameObjectNode : BaseEffectNode
         SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
     }
 
- 
+    public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
+    {
+        DestroyGameObject loadFrom = effectToLoadFrom as DestroyGameObject;
+        loadFrom.UnPack(out m_TargetObject);
+
+        base.LoadFromLinearEvent(effectToLoadFrom);
+    }
 
     public override void Draw()
     {
@@ -35,20 +41,10 @@ public class DestroyGameObjectNode : BaseEffectNode
         DestroyGameObject myEffect = ScriptableObject.CreateInstance<DestroyGameObject>();
         myEffect.m_NodeEffectType = this.GetType().ToString();
         myEffect.m_Description = m_LemEffectDescription;
-
-        string[] connectedNodeIDs = new string[1] { m_OutPoint.GetConnectedNodeID(0) };
-        myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNodeIDs);
+        myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, m_OutPoint.GetConnectedNodeID(0)/*, m_InPoint.m_ConnectedNodeID*/);
         myEffect.SetUp(m_TargetObject);
         return myEffect;
 
-    }
-
-    public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
-    {
-        DestroyGameObject loadFrom = effectToLoadFrom as DestroyGameObject;
-        loadFrom.UnPack(out m_TargetObject);
-
-        base.LoadFromLinearEvent(effectToLoadFrom);
     }
 
 }

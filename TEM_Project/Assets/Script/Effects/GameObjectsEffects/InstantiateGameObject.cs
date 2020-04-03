@@ -29,11 +29,20 @@ public class InstantiateGameObject : LEM_BaseEffect
         m_TargetScale = targetScale;
     }
 
+    public void UnPack(out GameObject targetObject, out int numberOfTimes, out Vector3 targetPosition, out Vector3 targetRotation, out Vector3 targetScale)
+    {
+        targetObject = m_TargetObject;
+        numberOfTimes = m_NumberOfTimes;
+        targetPosition = m_TargetPosition;
+        targetRotation = m_TargetRotation;
+        targetScale = m_TargetScale;
+    }
+
     public override bool TEM_Update()
     {
         //Create a dummy variable outside of the loop so that we dont create 
         //a new var every loop (optimise)
-        GameObject instantiatedObject = default;
+        GameObject instantiatedObject;
 
         for (int i = 0; i < m_NumberOfTimes; i++)
         {
