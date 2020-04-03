@@ -10,7 +10,7 @@ public class LEMDictionary
     readonly static Dictionary<string, object> s_NodeTypesDictionary = new Dictionary<string, object>
     {
         { "StartNode",                          new StartNode() },
-        { "EndNode",                            new EndNode() },
+        //{ "EndNode",                            new EndNode() },
         { "InstantiateGameObjectNode",          new InstantiateGameObjectNode() },
         { "DestroyGameObjectNode",              new DestroyGameObjectNode() }
     };
