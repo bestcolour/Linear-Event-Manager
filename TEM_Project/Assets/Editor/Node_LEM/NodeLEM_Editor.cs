@@ -886,7 +886,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         //Up cast the connection pt so that we can reset the outpt's nextnode
         connectionToRemove.m_InPoint.RemoveConnectedNodeID(connectionToRemove.m_OutPoint.m_ParentNode.NodeID);
-        connectionToRemove.m_OutPoint.RemoveConnectedNodeID(null);
+        connectionToRemove.m_OutPoint.RemoveConnectedNodeID(connectionToRemove.m_InPoint.m_ParentNode.NodeID);
 
         //Reset the connections' in and out points to prevent the points to look unchanged
         TrySetConnectionPoint(connectionToRemove.m_InPoint);

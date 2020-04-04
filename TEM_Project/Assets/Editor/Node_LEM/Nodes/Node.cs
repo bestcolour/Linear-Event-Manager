@@ -32,6 +32,7 @@ public abstract class Node
 
     public InConnectionPoint m_InPoint = new InConnectionPoint();
     public OutConnectionPoint m_OutPoint = new OutConnectionPoint();
+    
 
     protected NodeSkinCollection m_NodeSkin = default;
     //Top skin will pull from a static cache
@@ -55,8 +56,8 @@ public abstract class Node
         this.d_OnDeselectNode = onDeSelectNode;
 
         //Initialise in and out points
-        m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint);
-        m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint);
+        m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint,ConnectionPointConstants.k_InPointOffset);
+        m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint, ConnectionPointConstants.k_OutPointOffset);
 
         m_MidSkinColour = midSkinColour;
     }
