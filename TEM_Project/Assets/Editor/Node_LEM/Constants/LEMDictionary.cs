@@ -12,7 +12,11 @@ public class LEMDictionary
         { "StartNode",                          new StartNode() },
         //{ "EndNode",                            new EndNode() },
         { "InstantiateGameObjectNode",          new InstantiateGameObjectNode() },
-        { "DestroyGameObjectNode",              new DestroyGameObjectNode() }
+        { "DestroyGameObjectNode",              new DestroyGameObjectNode() },
+        //{"RandomOutComeNode",                   new RandomOutComeNode() }
+
+
+
     };
 
     public static Dictionary<string, NodeSkinCollection> s_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();

@@ -37,6 +37,14 @@ public class BaseEffectNode : Node
 
     }
 
+    protected string[] TryToSaveConnectedNodeID()
+    {
+        //Returns true value of saved state
+        string[] connectedNodeIDs = m_OutPoint.IsConnected? new string[1] { m_OutPoint.GetConnectedNodeID(0) } : new string[0];
+
+        return connectedNodeIDs;
+    }
+
     public virtual LEM_BaseEffect CompileToBaseEffect()
     {
         return null;

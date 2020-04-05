@@ -61,9 +61,14 @@ public class NodeLEM_Editor : EditorWindow
         connectionPoint.m_Style = connectionPoint.IsConnected ? LEMStyleLibrary.s_ConnectionPointStyleSelected : LEMStyleLibrary.s_ConnectionPointStyleNormal;
     }
 
+    struct ConnectionPointState
+    {
+        public const int UNSELECTED = 0, SELECTED = 1;
+    }
+
     ConnectionPoint m_SelectedInPoint = default, m_SelectedOutPoint = default;
 
-    const float k_MinScale = 0.4f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.1f;
+    const float k_MinScale = 0.2f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.1f;
     static float s_CurrentScaleFactor = 1f;
     float ScaleFactor { get { return s_CurrentScaleFactor; } set { s_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
 
@@ -556,7 +561,6 @@ public class NodeLEM_Editor : EditorWindow
             () => CreateEffectNode(mousePosition, "InstantiateGameObjectNode"));
 
 
-
         //Show the menu
         genericMenu.ShowAsContext();
     }
@@ -742,12 +746,12 @@ public class NodeLEM_Editor : EditorWindow
             TrySetConnectionPoint(m_SelectedInPoint);
             m_SelectedInPoint = connectionPoint;
             //After dealing with old connectionpt skin,  sets the inpoint to selected skin
-            TrySetConnectionPointSkin(m_SelectedInPoint, 1);
+            TrySetConnectionPointSkin(m_SelectedInPoint, ConnectionPointState.SELECTED);
             return;
         }
 
         m_SelectedInPoint = connectionPoint;
-        TrySetConnectionPointSkin(m_SelectedInPoint, 1);
+        TrySetConnectionPointSkin(m_SelectedInPoint, ConnectionPointState.SELECTED);
 
         //If current selected outpoint is not null
         if (m_SelectedOutPoint != null)
@@ -788,13 +792,13 @@ public class NodeLEM_Editor : EditorWindow
         {
             TrySetConnectionPoint(m_SelectedOutPoint);
             m_SelectedOutPoint = connectionPoint;
-            TrySetConnectionPointSkin(m_SelectedOutPoint, 1);
+            TrySetConnectionPointSkin(m_SelectedOutPoint, ConnectionPointState.SELECTED);
             return;
         }
 
         m_SelectedOutPoint = connectionPoint;
         //TrySetConnectionPoint(m_SelectedOutPoint/*, true*/);
-        TrySetConnectionPointSkin(m_SelectedOutPoint, 1);
+        TrySetConnectionPointSkin(m_SelectedOutPoint, ConnectionPointState.SELECTED);
 
         if (m_SelectedInPoint != null)
         {
@@ -884,7 +888,6 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnClickRemoveConnection(Connection connectionToRemove)
     {
-        //Up cast the connection pt so that we can reset the outpt's nextnode
         connectionToRemove.m_InPoint.RemoveConnectedNodeID(connectionToRemove.m_OutPoint.m_ParentNode.NodeID);
         connectionToRemove.m_OutPoint.RemoveConnectedNodeID(connectionToRemove.m_InPoint.m_ParentNode.NodeID);
 
@@ -1013,6 +1016,7 @@ public class NodeLEM_Editor : EditorWindow
         for (int i = 0; i < allKeys.Length; i++)
         {
 
+            #region Trash
             ////if current effect has a m_NextPointNodeID and that the node this effect is assigned to doesnt have a connection on the outpoint,
             //if (!String.IsNullOrEmpty(s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NextPointNodeID[0])
             //    && !m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
@@ -1032,40 +1036,48 @@ public class NodeLEM_Editor : EditorWindow
             //                    m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NextPointNodeID[0]].m_InPoint,
             //                    m_AllEffectsNodeInEditor[s_EditingLinearEvent.m_AllEffectsDictionary[allEffectsDictionary[i]].m_NodeBaseData.m_NodeID].m_OutPoint
             //                    );
-            //}
+            //} 
+            #endregion
 
-            //If the an effect node that we just cr8ted has an outpoint that isnt connected,
-            if (!m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
+            //If this nodebase data doesnt even have one nextpoint node id, skip this loop
+            if (!s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.HasAtLeastOneNextPointNode)
+                continue;
+
+            //And if there is one next point node
+            if (s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.HasOnlyOneNextPointNode)
             {
-                //And if there is one next point node
-                if (s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.HasOnlyOneNextPointNode
-                    && !String.IsNullOrEmpty(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[0])
-                    )
+                if (!String.IsNullOrEmpty(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[0])
+                    &&
+                    !m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
                 {
                     RecreateConnection(
-                                    m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[0]].m_InPoint,
-                                    m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint
-                                    );
+                              m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[0]].m_InPoint,
+                              m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint
+                              );
                 }
-                //else if there is more than one next point node,
-                else if (s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.HasMultipleNextPointNodes)
-                {
-                    //Restich for those nodes
-                    for (int n = 0; n < s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs.Length; n++)
-                        //If the keys current next point id is not empty or null
-                        if (!String.IsNullOrEmpty(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[n]))
-                        {
-                            RecreateConnection(
-                            m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[n]].m_InPoint,
-                            m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint
-                            );
-                        }
-
-                }
-
 
             }
+            //else if there is more than one next point node,
+            else /*if (s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.HasMultipleNextPointNodes)*/
+            {
+                //that means that this effect node is a special node which has multiple outputs
 
+
+
+                //Restich for those nodes
+                for (int n = 0; n < s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs.Length; n++)
+                    //If the keys current next point id is not empty or null and the outpoint  isnt connected,
+                    if (!String.IsNullOrEmpty(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[n])
+                        &&
+                        !m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
+                    {
+                        RecreateConnection(
+                        m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NextPointsIDs[n]].m_InPoint,
+                        m_AllEffectsNodeInEditor[s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID].m_OutPoint
+                        );
+                    }
+
+            }
 
         }
         #endregion

@@ -23,8 +23,9 @@ public struct NodeBaseData
         m_NextPointsIDs = outPointID;
     }
 
-    public bool HasMultipleNextPointNodes => m_NextPointsIDs.Length > 1 ? true : false;
-    public bool HasOnlyOneNextPointNode => m_NextPointsIDs.Length == 1 ? true : false;
+    //public bool HasMultipleNextPointNodes => m_NextPointsIDs.Length > 1 ? true : false;
+    public bool HasOnlyOneNextPointNode => m_NextPointsIDs.Length == 1? true : false;
+    public bool HasAtLeastOneNextPointNode => m_NextPointsIDs.Length> 0? true : false;
 
 
 }

@@ -30,8 +30,8 @@ public class LEMStyleLibrary
         {"StartNode",                  new Color(0.11f, 0.937f, 0.11f) },
         //{"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
         { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
-        { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) }
-
+        { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) },
+         //{"RandomOutComeNode",         new Color(0.286f,0.992f,0.733f) }
 
 
 

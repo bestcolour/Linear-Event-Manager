@@ -15,11 +15,3 @@ public struct NodeTextureDimensions
     public static readonly Vector2 BIG_MID_SIZE = new Vector2(275,280);
     public static readonly Vector2 BIG_TOP_SIZE = new Vector2(275, 35);
 }
-
-public struct ConnectionPointConstants
-{
-    public static readonly Vector2 k_InPointOffset = new Vector2(10f, 7.5f);
-    public static readonly Vector2 k_OutPointOffset = new Vector2(30f, 7.5f);
-
-
-}

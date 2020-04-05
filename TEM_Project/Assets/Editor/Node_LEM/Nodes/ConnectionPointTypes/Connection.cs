@@ -16,8 +16,8 @@ public class Connection
 
     public Connection(ConnectionPoint inPoint, ConnectionPoint outPoint, Action<Connection> OnClickRemoveConnection)
     {
-        inPoint.AddConnectedNodeID(outPoint.m_ParentNode.NodeID);
-        outPoint.AddConnectedNodeID(inPoint.m_ParentNode.NodeID);
+        inPoint.SetOrAddConnectedNodeID(outPoint.m_ParentNode.NodeID);
+        outPoint.SetOrAddConnectedNodeID(inPoint.m_ParentNode.NodeID);
 
         this.m_InPoint = inPoint;
         this.m_OutPoint = outPoint;

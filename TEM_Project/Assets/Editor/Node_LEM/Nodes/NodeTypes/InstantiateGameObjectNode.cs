@@ -45,7 +45,8 @@ public class InstantiateGameObjectNode : BaseEffectNode
         InstantiateGameObject effect = ScriptableObject.CreateInstance<InstantiateGameObject>();
         effect.m_Description = m_LemEffectDescription;
 
-        string[] connectedNodeIDs = new string[1] { m_OutPoint.GetConnectedNodeID(0) };
+        string[] connectedNodeIDs = TryToSaveConnectedNodeID();
+        //string[] connectedNodeIDs = new string[1] { m_OutPoint.GetConnectedNodeID(0) };
         effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position,NodeID, connectedNodeIDs);
 
         effect.m_NodeEffectType = this.GetType().ToString();
