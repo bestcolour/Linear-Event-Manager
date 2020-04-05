@@ -24,15 +24,41 @@ public class LinearEvent : MonoBehaviour
     //Removes any unconnected LEM effects from the m_AllEffectsDictionary
     public void RemoveUnusedEvents()
     {
-        string[] allKeys = m_AllEffectsDictionary.Keys.ToArray();
+        //Check if start node is even connected to anything
+        if (m_StartNodeData.HasAtLeastOneNextPointNode)
+        {
+            LEM_BaseEffect currentEffect = m_AllEffectsDictionary[m_StartNodeData.m_NextPointsIDs[0]];
 
-        //LEM_BaseEffect currentEffect = m_AllEffectsDictionary[m_StartNodeData.m_NextPointNodeID];
-        List<LEM_BaseEffect> effectsInUse = new List<LEM_BaseEffect>();
+            List<LEM_BaseEffect> effectsInUse = new List<LEM_BaseEffect>();
 
-      
-      
+            while (currentEffect != null)
+            {
+                effectsInUse.Add(currentEffect);
 
+                //If this effect has at least one next node connected to, assign this to next point's node
+                if (currentEffect.m_NodeBaseData.HasAtLeastOneNextPointNode)
+                {
+                    currentEffect = m_AllEffectsDictionary[currentEffect.m_NodeBaseData.m_NextPointsIDs[0]];
+                    continue;
+                }
 
+                break;
+            }
+
+            m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
+            m_AllEffects = new LEM_BaseEffect[effectsInUse.Count];
+
+            for (int i = 0; i < effectsInUse.Count; i++)
+            {
+                //Repopulate the collections with the effects that are only in use
+                m_AllEffectsDictionary.Add(effectsInUse[i].m_NodeBaseData.m_NodeID, effectsInUse[i]);
+                m_AllEffects[i] = effectsInUse[i];
+            }
+        }
+        else
+        {
+            Debug.LogWarning("There is no effects connected to the start node thus there is no Events being used.");
+        }
 
     }
 

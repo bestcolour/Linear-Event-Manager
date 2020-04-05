@@ -3,7 +3,7 @@ using System;
 using LEM_Effects;
 
 [Serializable]
-public class InstantiateGameObject : LEM_BaseEffect
+public class InstantiateGameObject : LEM_BaseEffect, IEffectSavable<GameObject, int, Vector3, Vector3, Vector3>
 {
     [Tooltip("Object to instantiate. Usually the prefab of an object")]
     [SerializeField] GameObject m_TargetObject = default;

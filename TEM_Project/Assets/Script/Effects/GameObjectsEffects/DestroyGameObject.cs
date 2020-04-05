@@ -4,11 +4,12 @@ using System;
 namespace LEM_Effects
 {
     [Serializable]
-    public class DestroyGameObject : LEM_BaseEffect
+    public class DestroyGameObject : LEM_BaseEffect,IEffectSavable<GameObject>
     {
         [Tooltip("Object to destroy")]
         [SerializeField] GameObject m_TargetObject = default;
 
+        #region Important
         public void SetUp(GameObject targetObject)
         {
             m_TargetObject = targetObject;
@@ -19,6 +20,8 @@ namespace LEM_Effects
         {
             targetObject = m_TargetObject;
         }
+
+        #endregion
 
         public override bool TEM_Update()
         {

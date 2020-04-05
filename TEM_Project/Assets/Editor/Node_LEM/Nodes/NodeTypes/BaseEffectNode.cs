@@ -4,7 +4,7 @@ using LEM_Effects;
 using System;
 using System.Collections.Generic;
 
-public class BaseEffectNode : Node
+public abstract class BaseEffectNode : Node
 {
     //TEM effect related variables
     public string m_LemEffectDescription = default;
@@ -20,11 +20,7 @@ public class BaseEffectNode : Node
         m_Title = LEMDictionary.RemoveNodeWord(m_Title);
     }
 
-    //For overriding of Load
-    public virtual void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
-    {
-        m_LemEffectDescription = effectToLoadFrom.m_Description;
-    }
+    
 
     public override void Draw()
     {
@@ -37,18 +33,22 @@ public class BaseEffectNode : Node
 
     }
 
-    protected string[] TryToSaveConnectedNodeID()
-    {
-        //Returns true value of saved state
-        string[] connectedNodeIDs = m_OutPoint.IsConnected? new string[1] { m_OutPoint.GetConnectedNodeID(0) } : new string[0];
+ 
 
-        return connectedNodeIDs;
-    }
+    //public virtual LEM_BaseEffect CompileToBaseEffect()
+    //{
+    //    return null;
+    //}
 
-    public virtual LEM_BaseEffect CompileToBaseEffect()
-    {
-        return null;
-    }
+    //For overriding of Load
+    //public virtual void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
+    //{
+    //    m_LemEffectDescription = effectToLoadFrom.m_Description;
+    //}
 
+    public abstract void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom);
+
+    //For saving 
+    public abstract LEM_BaseEffect CompileToBaseEffect();
 
 }

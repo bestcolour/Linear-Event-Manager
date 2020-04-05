@@ -46,7 +46,6 @@ public class InstantiateGameObjectNode : BaseEffectNode
         effect.m_Description = m_LemEffectDescription;
 
         string[] connectedNodeIDs = TryToSaveConnectedNodeID();
-        //string[] connectedNodeIDs = new string[1] { m_OutPoint.GetConnectedNodeID(0) };
         effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position,NodeID, connectedNodeIDs);
 
         effect.m_NodeEffectType = this.GetType().ToString();
@@ -63,7 +62,10 @@ public class InstantiateGameObjectNode : BaseEffectNode
         m_TargetPosition = targetPosition;
         m_TargetRotation = targetRotation;
         m_TargetScale = targetScale;
-        base.LoadFromLinearEvent(effectToLoadFrom);
+
+
+        //Important
+        m_LemEffectDescription = effectToLoadFrom.m_Description;
     }
 
 }

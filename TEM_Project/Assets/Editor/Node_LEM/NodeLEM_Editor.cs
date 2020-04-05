@@ -19,7 +19,7 @@ public class NodeLEM_Editor : EditorWindow
     //RULE: INPOINT'S CONNECTED NODE ID FIRST THEN OUTPOINT CONNECTED NODE ID
     Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
 
-    Node s_StartNode = default; /*, s_EndNode = default;*/
+    Node s_StartNode = default; 
 
     #region Process Event Variables
 
@@ -88,8 +88,6 @@ public class NodeLEM_Editor : EditorWindow
 
         //Set the title of gui for the window to be TEM Node Editor
         editorWindow.titleContent = new GUIContent("TEM Node Editor");
-
-
     }
 
     public static void LoadNodeEditor(LinearEvent linearEvent)
@@ -99,11 +97,6 @@ public class NodeLEM_Editor : EditorWindow
         s_CurrentLE = linearEvent;
         instance.LoadFromLinearEvent();
     }
-
-    //public static void ClearUnusedEvents(LinearEvent linearEvent)
-    //{
-    //    s_EditingLinearEvent = linearEvent;
-    //}
 
     #region Initialisation
 
@@ -1110,6 +1103,13 @@ public class NodeLEM_Editor : EditorWindow
         //}
 
         #endregion
+
+     
+        //Dont stitch up start node if it isnt connected to at least one point
+        if (!s_CurrentLE.m_StartNodeData.HasAtLeastOneNextPointNode)
+        {
+            return;
+        }
 
         //Do the same for start and end nodes
         //if node has a m_NextPointNodeID and that the next node this node is assigned to doesnt have a connection on the outpoint,

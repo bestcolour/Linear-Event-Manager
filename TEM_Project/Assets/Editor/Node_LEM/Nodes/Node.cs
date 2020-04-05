@@ -254,10 +254,18 @@ public abstract class Node
 
     #endregion
 
+    protected string[] TryToSaveConnectedNodeID()
+    {
+        //Returns true value of saved state
+        string[] connectedNodeIDs = m_OutPoint.IsConnected ? new string[1] { m_OutPoint.GetConnectedNodeID(0) } : new string[0];
+
+        return connectedNodeIDs;
+    }
+
     //Returns only NodeBaseData (use for non effect nodes)
     public virtual NodeBaseData SaveNodeData()
     {
-        string[] connectedNodeIDs = new string[1] { m_OutPoint.GetConnectedNodeID(0) };
+        string[] connectedNodeIDs = TryToSaveConnectedNodeID();
         return new NodeBaseData(m_MidRect.position, NodeID, connectedNodeIDs /*, m_InPoint.m_ConnectedNodeID*/);
     }
 

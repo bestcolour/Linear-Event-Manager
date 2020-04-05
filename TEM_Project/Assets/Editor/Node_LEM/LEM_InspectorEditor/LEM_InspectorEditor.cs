@@ -26,6 +26,8 @@ public class LEM_InspectorEditor : Editor
         //Draw Rest of Default Inspector
         base.OnInspectorGUI();
 
+        DrawRemoveUnusedEventsButton(ref linearEvent);
+
     }
 
 
@@ -50,8 +52,7 @@ public class LEM_InspectorEditor : Editor
         //Creates a button to load the node editor
         if (GUILayout.Button("Remove Unused Events", GUILayout.Height(m_LineHeightSpace * 2)))
         {
-            NodeLEM_Editor.LoadNodeEditor(linearEvent);
-            s_IsLoaded = true;
+            linearEvent.RemoveUnusedEvents();
         }
     }
 

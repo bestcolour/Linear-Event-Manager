@@ -37,7 +37,6 @@ public class DestroyGameObjectNode : BaseEffectNode
         myEffect.m_Description = m_LemEffectDescription;
 
         string[] connectedNodeIDs = TryToSaveConnectedNodeID();
-        //string[] connectedNodeIDs = new string[1] { m_OutPoint.GetConnectedNodeID(0) };
         myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNodeIDs);
         myEffect.SetUp(m_TargetObject);
         return myEffect;
@@ -49,7 +48,8 @@ public class DestroyGameObjectNode : BaseEffectNode
         DestroyGameObject loadFrom = effectToLoadFrom as DestroyGameObject;
         loadFrom.UnPack(out m_TargetObject);
 
-        base.LoadFromLinearEvent(effectToLoadFrom);
+        //Important
+        m_LemEffectDescription = effectToLoadFrom.m_Description;
     }
 
 }
