@@ -40,6 +40,11 @@ public class NodeLEM_Editor : EditorWindow
     static readonly Color s_SelectionBoxColour = new Color(0.6f, 0.8f, 1f, .2f);
     static readonly Color s_SelectionBoxOutlineColour = new Color(0f, 0.298f, 0.6f, 1f);
 
+    //Search box variables
+    public static bool s_IsSearchBoxActive = false;
+
+
+    #region Connection Point Variables
     /// <summary>
     /// Sets the skin of a connection point without checking if it is connected. 
     /// </summary>
@@ -66,11 +71,16 @@ public class NodeLEM_Editor : EditorWindow
         public const int UNSELECTED = 0, SELECTED = 1;
     }
 
-    ConnectionPoint m_SelectedInPoint = default, m_SelectedOutPoint = default;
+    ConnectionPoint m_SelectedInPoint = default, m_SelectedOutPoint = default; 
+    #endregion
+
+    #region Zooming Variables
 
     const float k_MinScale = 0.2f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.1f;
     static float s_CurrentScaleFactor = 1f;
     float ScaleFactor { get { return s_CurrentScaleFactor; } set { s_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
+    #endregion
+
 
     #endregion
 
@@ -152,6 +162,7 @@ public class NodeLEM_Editor : EditorWindow
         m_InitialClickedPosition = null;
         s_SelectionBox = default;
         s_CurrentClickedNode = null;
+        s_IsSearchBoxActive = false;
         GUI.changed = true;
     }
 
@@ -214,6 +225,8 @@ public class NodeLEM_Editor : EditorWindow
         DrawSelectionBox(currMousePos);
 
         EditorZoomFeature.EndZoom();
+
+        DrawSearchBox();
 
         DrawSaveButton();
         DrawRefreshButton();
@@ -373,6 +386,14 @@ public class NodeLEM_Editor : EditorWindow
     }
 
 
+    void DrawSearchBox()
+    {
+        if (s_IsSearchBoxActive)
+        {
+
+        }
+    }
+
     #endregion
 
     //Checks what the current event is right now, and then execute code accordingly
@@ -402,13 +423,18 @@ public class NodeLEM_Editor : EditorWindow
                 //Check if the mouse button down is the right click button
                 if (e.button == 1)
                 {
+
                     //and if that the mouse is not clicking on any nodes currently
                     if (s_CurrentClickedNode == null || !s_CurrentClickedNode.IsSelected)
                     {
                         //Open a custom created that allows creation of more nodes
+                        m_InitialClickedPosition = currMousePosition;
+                        s_IsSearchBoxActive = true;
+
                         ProcessContextMenu(currMousePosition);
                         return;
                     }
+
 
                     //Else, open the node's context menu
                     ProcessNodeContextMenu();
