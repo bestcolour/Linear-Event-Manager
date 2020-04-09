@@ -81,6 +81,19 @@ public class NodeLEM_Editor : EditorWindow
     float ScaleFactor { get { return s_CurrentScaleFactor; } set { s_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
     #endregion
 
+    #region SearchBox
+    static LEM_SearchBox s_SearchBox = default;
+
+    void OnInputChange(string result)
+    {
+
+    }
+
+    void OnConfirm(string result)
+    {
+
+    } 
+    #endregion
 
     #endregion
 
@@ -134,6 +147,11 @@ public class NodeLEM_Editor : EditorWindow
             m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
         }
 
+        if(s_SearchBox == null)
+        {
+            s_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 100, 200);
+        }
+
         InitialiseStartEndNodes();
 
     }
@@ -157,12 +175,24 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Resets
 
+    void OnMouseUpReset()
+    {
+        ResetEventVariables();
+    }
+
+    void OnMouseDownResets()
+    {
+        s_IsSearchBoxActive = false;
+        TrySetConnectionPoint(m_SelectedInPoint);
+        TrySetConnectionPoint(m_SelectedOutPoint);
+        ResetDrawingBezierCurve();
+    }
+
     void ResetEventVariables()
     {
         m_InitialClickedPosition = null;
         s_SelectionBox = default;
         s_CurrentClickedNode = null;
-        s_IsSearchBoxActive = false;
         GUI.changed = true;
     }
 
@@ -196,10 +226,6 @@ public class NodeLEM_Editor : EditorWindow
         LEM_InspectorEditor.s_IsLoaded = false;
     }
 
-    //void ClearUnusedEvents()
-    //{
-
-    //}
 
     #endregion
 
@@ -225,12 +251,11 @@ public class NodeLEM_Editor : EditorWindow
         DrawSelectionBox(currMousePos);
 
         EditorZoomFeature.EndZoom();
-
         DrawSearchBox();
+
 
         DrawSaveButton();
         DrawRefreshButton();
-
 
 
 
@@ -390,7 +415,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         if (s_IsSearchBoxActive)
         {
-
+            s_SearchBox.Draw(ScaleFactor);
         }
     }
 
@@ -428,10 +453,13 @@ public class NodeLEM_Editor : EditorWindow
                     if (s_CurrentClickedNode == null || !s_CurrentClickedNode.IsSelected)
                     {
                         //Open a custom created that allows creation of more nodes
-                        m_InitialClickedPosition = currMousePosition;
+                        //m_InitialClickedPosition = currMousePosition;
+                        s_SearchBox.Position = currMousePosition;
                         s_IsSearchBoxActive = true;
 
-                        ProcessContextMenu(currMousePosition);
+                        e.Use();
+                        //GUI.changed = true;
+                        //ProcessContextMenu(currMousePosition);
                         return;
                     }
 
@@ -445,7 +473,7 @@ public class NodeLEM_Editor : EditorWindow
                     //Set current clicked node to be the first to be updated
                     ReOrderSelectedNode(s_CurrentClickedNode, m_AllNodesInEditor.Count - 1);
 
-                    //If mouse indeed clicks on a node,
+                    //If mouse indeed doesnt clicks on a node,
                     if (s_CurrentClickedNode == null)
                     {
                         //Set initial position for drawing selection box
@@ -453,10 +481,7 @@ public class NodeLEM_Editor : EditorWindow
                         {
                             m_InitialClickedPosition = currMousePosition;
 
-
-                            TrySetConnectionPoint(m_SelectedInPoint);
-                            TrySetConnectionPoint(m_SelectedOutPoint);
-                            ResetDrawingBezierCurve();
+                            OnMouseDownResets();
                         }
 
                     }
@@ -482,8 +507,7 @@ public class NodeLEM_Editor : EditorWindow
 
             //If user releases the mouse
             case EventType.MouseUp:
-
-                ResetEventVariables();
+                OnMouseUpReset();
                 break;
 
 

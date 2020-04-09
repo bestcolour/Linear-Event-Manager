@@ -265,7 +265,7 @@ MonoBehaviour:
   m_MinSize: {x: 511, y: 272}
   m_MaxSize: {x: 14006, y: 10022}
   vertical: 0
-  controlID: 117
+  controlID: 128
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -347,7 +347,7 @@ MonoBehaviour:
   m_MinSize: {x: 277, y: 294}
   m_MaxSize: {x: 4002, y: 8044}
   vertical: 1
-  controlID: 123
+  controlID: 134
 --- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -538,8 +538,8 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 26300000
-      m_LastClickedID: 12326
+      m_SelectedIDs: 72300000
+      m_LastClickedID: 12402
       m_ExpandedIDs: 6afbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
@@ -728,19 +728,19 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Script
+    - Assets/Editor/Testing
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Script
+  - Assets/Editor/Testing
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 182}
-    m_SelectedIDs: 962f0000
-    m_LastClickedID: 12182
+    scrollPos: {x: 0, y: 143}
+    m_SelectedIDs: 382f0000
+    m_LastClickedID: 12088
     m_ExpandedIDs: 00000000e62c0000042d0000382d0000fc2e00002e2f0000502f0000882f0000962f000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -853,7 +853,7 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 12326
+  m_LastSelectedObjectID: 12402
 --- !u!114 &24
 MonoBehaviour:
   m_ObjectHideFlags: 52
