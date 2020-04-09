@@ -19,7 +19,7 @@ public class NodeLEM_Editor : EditorWindow
     //RULE: INPOINT'S CONNECTED NODE ID FIRST THEN OUTPOINT CONNECTED NODE ID
     Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
 
-    Node s_StartNode = default; 
+    Node s_StartNode = default;
 
     #region Process Event Variables
 
@@ -42,7 +42,6 @@ public class NodeLEM_Editor : EditorWindow
 
     //Search box variables
     public static bool s_IsSearchBoxActive = false;
-
 
     #region Connection Point Variables
     /// <summary>
@@ -71,7 +70,7 @@ public class NodeLEM_Editor : EditorWindow
         public const int UNSELECTED = 0, SELECTED = 1;
     }
 
-    ConnectionPoint m_SelectedInPoint = default, m_SelectedOutPoint = default; 
+    ConnectionPoint m_SelectedInPoint = default, m_SelectedOutPoint = default;
     #endregion
 
     #region Zooming Variables
@@ -86,13 +85,29 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnInputChange(string result)
     {
+        s_SearchBox.ClearResults();
+
+        //if (String.IsNullOrEmpty(result))
+        //    return;
+
+        string currentNodeType = default;
+
+        for (int i = 0; i < LEMDictionary.s_NodeTypeKeys.Length; i++)
+        {
+            currentNodeType = LEMDictionary.s_NodeTypeKeys[i];
+
+            if (String.IsNullOrEmpty(result) || currentNodeType.CaseInsensitiveContains(result))
+            {
+                s_SearchBox.AddResult(currentNodeType);
+            }
+        }
 
     }
 
-    void OnConfirm(string result)
+    void OnConfirm(string result,Vector2 mousePos)
     {
-
-    } 
+        CreateEffectNode(mousePos* 1/ScaleFactor, result);
+    }
     #endregion
 
     #endregion
@@ -128,6 +143,7 @@ public class NodeLEM_Editor : EditorWindow
         instance = this;
 
         LEMStyleLibrary.LoadLibrary();
+        LEMDictionary.LoadDictionary();
 
         InitialiseSkin();
 
@@ -147,9 +163,9 @@ public class NodeLEM_Editor : EditorWindow
             m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
         }
 
-        if(s_SearchBox == null)
+        if (s_SearchBox == null)
         {
-            s_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 100, 200);
+            s_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
         }
 
         InitialiseStartEndNodes();
@@ -174,19 +190,6 @@ public class NodeLEM_Editor : EditorWindow
     #endregion
 
     #region Resets
-
-    void OnMouseUpReset()
-    {
-        ResetEventVariables();
-    }
-
-    void OnMouseDownResets()
-    {
-        s_IsSearchBoxActive = false;
-        TrySetConnectionPoint(m_SelectedInPoint);
-        TrySetConnectionPoint(m_SelectedOutPoint);
-        ResetDrawingBezierCurve();
-    }
 
     void ResetEventVariables()
     {
@@ -251,7 +254,7 @@ public class NodeLEM_Editor : EditorWindow
         DrawSelectionBox(currMousePos);
 
         EditorZoomFeature.EndZoom();
-        DrawSearchBox();
+        DrawSearchBox(currentEvent);
 
 
         DrawSaveButton();
@@ -411,11 +414,11 @@ public class NodeLEM_Editor : EditorWindow
     }
 
 
-    void DrawSearchBox()
+    void DrawSearchBox(Event e)
     {
         if (s_IsSearchBoxActive)
         {
-            s_SearchBox.Draw(ScaleFactor);
+            s_SearchBox.HandleSearchBox(e);
         }
     }
 
@@ -454,11 +457,11 @@ public class NodeLEM_Editor : EditorWindow
                     {
                         //Open a custom created that allows creation of more nodes
                         //m_InitialClickedPosition = currMousePosition;
-                        s_SearchBox.Position = currMousePosition;
+                        s_SearchBox.Position = currMousePosition * ScaleFactor;
                         s_IsSearchBoxActive = true;
+                        s_SearchBox.TriggerOnInputOnStart();
 
                         e.Use();
-                        //GUI.changed = true;
                         //ProcessContextMenu(currMousePosition);
                         return;
                     }
@@ -481,10 +484,13 @@ public class NodeLEM_Editor : EditorWindow
                         {
                             m_InitialClickedPosition = currMousePosition;
 
-                            OnMouseDownResets();
+                            TrySetConnectionPoint(m_SelectedInPoint);
+                            TrySetConnectionPoint(m_SelectedOutPoint);
+                            ResetDrawingBezierCurve();
                         }
 
                     }
+                    s_IsSearchBoxActive = false;
 
                 }
 
@@ -507,7 +513,8 @@ public class NodeLEM_Editor : EditorWindow
 
             //If user releases the mouse
             case EventType.MouseUp:
-                OnMouseUpReset();
+                ResetEventVariables();
+
                 break;
 
 
@@ -1154,7 +1161,7 @@ public class NodeLEM_Editor : EditorWindow
 
         #endregion
 
-     
+
         //Dont stitch up start node if it isnt connected to at least one point
         if (!s_CurrentLE.m_StartNodeData.HasAtLeastOneNextPointNode)
         {

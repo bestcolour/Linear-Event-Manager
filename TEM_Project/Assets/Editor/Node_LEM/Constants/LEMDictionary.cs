@@ -4,8 +4,26 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-public class LEMDictionary 
+public class LEMDictionary
 {
+    public static void LoadDictionary()
+    {
+        List<string> temp = s_NodeTypesDictionary.Keys.ToList();
+
+        //Remove startnode
+        string stringToReplace = temp[temp.Count - 1];
+        temp[0] = stringToReplace;
+        temp.RemoveAt(temp.Count - 1);
+
+        //Sort everything into alphabetical order
+        temp.Sort();
+
+
+        s_NodeTypeKeys = temp.ToArray();
+
+    }
+
+
     //This is a method to bypass the insanity of making a Dictionary that keeps the Generic T as its TValue
     readonly static Dictionary<string, object> s_NodeTypesDictionary = new Dictionary<string, object>
     {
@@ -15,12 +33,10 @@ public class LEMDictionary
         { "DestroyGameObjectNode",              new DestroyGameObjectNode() },
         //{"RandomOutComeNode",                   new RandomOutComeNode() }
 
-
-
     };
 
     public static Dictionary<string, NodeSkinCollection> s_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
-  
+
 
     //Return a object prefab to instantiate
     public static object GetNodeObject(string nodeObjectType)
@@ -32,10 +48,7 @@ public class LEMDictionary
         return instantiatedObject;
     }
 
-    public static string[] GetNodeTypeKeys()
-    {
-       return s_NodeTypesDictionary.Keys.ToArray();
-    }
+    public static string[] s_NodeTypeKeys = default;
 
     public static string RemoveNodeWord(string nodeTypeName)
     {
