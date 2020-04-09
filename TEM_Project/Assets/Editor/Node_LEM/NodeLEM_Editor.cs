@@ -90,23 +90,32 @@ public class NodeLEM_Editor : EditorWindow
         //if (String.IsNullOrEmpty(result))
         //    return;
 
-        string currentNodeType = default;
+        string currentNodeType;
 
+        //If searchbox is drawn for the first time 
+        if (String.IsNullOrEmpty(result))
+        {
+            for (int i = 0; i < LEMDictionary.s_NodeTypeKeys.Length; i++)
+            {
+                currentNodeType = LEMDictionary.s_NodeTypeKeys[i];
+                s_SearchBox.AddResult(currentNodeType);
+            }
+            return;
+        }
+
+        //Else if result isnt empty or null when search box is right clicked to be drawn
         for (int i = 0; i < LEMDictionary.s_NodeTypeKeys.Length; i++)
         {
             currentNodeType = LEMDictionary.s_NodeTypeKeys[i];
 
-            if (String.IsNullOrEmpty(result) || currentNodeType.CaseInsensitiveContains(result))
-            {
+            if (currentNodeType.CaseInsensitiveContains(result))
                 s_SearchBox.AddResult(currentNodeType);
-            }
         }
-
     }
 
-    void OnConfirm(string result,Vector2 mousePos)
+    void OnConfirm(string result, Vector2 mousePos)
     {
-        CreateEffectNode(mousePos* 1/ScaleFactor, result);
+        CreateEffectNode(mousePos * 1 / ScaleFactor, result);
     }
     #endregion
 

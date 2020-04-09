@@ -32,6 +32,25 @@ public class LEMDictionary
         { "InstantiateGameObjectNode",          new InstantiateGameObjectNode() },
         { "DestroyGameObjectNode",              new DestroyGameObjectNode() },
         //{"RandomOutComeNode",                   new RandomOutComeNode() }
+        { "DestroyGameObjectNode1",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode2",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode3",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode4",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode5",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode6",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode7",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode8",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode9",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode10",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode11",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode12",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode13",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode14",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode15",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode16",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode17",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode18",              new DestroyGameObjectNode() },
+        { "DestroyGameObjectNode19",              new DestroyGameObjectNode() },
 
     };
 

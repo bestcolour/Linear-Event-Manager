@@ -54,8 +54,6 @@ public class LEM_SearchBox
         m_SearchField.downOrUpArrowKeyPressed += SearchField_downOrUpArrowKeyPressed;
     }
 
-
-
     public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2> OnConfirm, int maxResults, float width, float height)
     {
         d_OnInputChange = OnInputChange;
@@ -93,7 +91,7 @@ public class LEM_SearchBox
     //Trigger this only once when the search box appears when user right clicks
     public void TriggerOnInputOnStart()
     {
-        d_OnInputChange.Invoke("");
+        d_OnInputChange.Invoke(m_CurrentStringInSearchBar);
     }
 
     //Miniature process event encapsulated in a function for callback
