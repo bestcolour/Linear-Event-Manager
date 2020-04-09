@@ -418,26 +418,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &858585019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: DestroyGameObjectNode
-  m_Description: 
-  m_NodeBaseData:
-    m_Position: {x: 335, y: 466}
-    m_NodeID: 56f8331a-ec1e-4252-a687-c172f5deb195
-    m_NextPointsIDs:
-    - c2432492-9b96-4ce5-8cfb-646347a433bc
-  m_TargetObject: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,25 +546,6 @@ Transform:
   m_Father: {fileID: 2054473526}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1166423325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: DestroyGameObjectNode
-  m_Description: 
-  m_NodeBaseData:
-    m_Position: {x: 402, y: 133}
-    m_NodeID: c2432492-9b96-4ce5-8cfb-646347a433bc
-    m_NextPointsIDs: []
-  m_TargetObject: {fileID: 0}
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,30 +746,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2100676736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79cf55c551f33604695a8563340495f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: InstantiateGameObjectNode
-  m_Description: 
-  m_NodeBaseData:
-    m_Position: {x: 26, y: 287}
-    m_NodeID: a5332fa1-395d-4830-9419-2ff223f9d16e
-    m_NextPointsIDs:
-    - 56f8331a-ec1e-4252-a687-c172f5deb195
-  m_TargetObject: {fileID: 0}
-  m_NumberOfTimes: 1
-  m_TargetPosition: {x: 0, y: 0, z: 0}
-  m_TargetRotation: {x: 0, y: 0, z: 0}
-  m_TargetScale: {x: 1, y: 1, z: 1}
 --- !u!1 &2127555587
 GameObject:
   m_ObjectHideFlags: 0
@@ -838,16 +775,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e497938d38cb74492560adb572c903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LinearEventName: ddd
-  m_AllEffects:
-  - {fileID: 2100676736}
-  - {fileID: 858585019}
-  - {fileID: 1166423325}
+  m_LinearEventName: 
+  m_AllEffects: []
   m_StartNodeData:
-    m_Position: {x: 233, y: 50}
-    m_NodeID: cbf4fdd8-c3ed-438d-82a6-9ccbdc37d18d
-    m_NextPointsIDs:
-    - a5332fa1-395d-4830-9419-2ff223f9d16e
+    m_Position: {x: 0, y: 0}
+    m_NodeID: 
+    m_NextPointsIDs: []
 --- !u!4 &2127555589
 Transform:
   m_ObjectHideFlags: 0

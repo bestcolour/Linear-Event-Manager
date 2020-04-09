@@ -40,8 +40,7 @@ public class NodeLEM_Editor : EditorWindow
     static readonly Color s_SelectionBoxColour = new Color(0.6f, 0.8f, 1f, .2f);
     static readonly Color s_SelectionBoxOutlineColour = new Color(0f, 0.298f, 0.6f, 1f);
 
-    //Search box variables
-    public static bool s_IsSearchBoxActive = false;
+   
 
     #region Connection Point Variables
     /// <summary>
@@ -75,12 +74,15 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Zooming Variables
 
-    const float k_MinScale = 0.2f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.1f;
+    const float k_MinScale = 0.2f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.05f;
     static float s_CurrentScaleFactor = 1f;
     float ScaleFactor { get { return s_CurrentScaleFactor; } set { s_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
     #endregion
 
     #region SearchBox
+    //Search box variables
+    public static bool s_IsSearchBoxActive = false;
+
     static LEM_SearchBox s_SearchBox = default;
 
     void OnInputChange(string result)
@@ -115,7 +117,7 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnConfirm(string result, Vector2 mousePos)
     {
-        CreateEffectNode(mousePos * 1 / ScaleFactor, result);
+        instance.CreateEffectNode(mousePos * 1 / ScaleFactor, result);
     }
     #endregion
 
@@ -143,12 +145,14 @@ public class NodeLEM_Editor : EditorWindow
 
         s_CurrentLE = linearEvent;
         instance.LoadFromLinearEvent();
+
     }
 
     #region Initialisation
 
     void OnEnable()
     {
+        
         instance = this;
 
         LEMStyleLibrary.LoadLibrary();
@@ -221,6 +225,7 @@ public class NodeLEM_Editor : EditorWindow
         ResetEventVariables();
         s_CurrentNodeLastRecordedSelectState = null;
         s_CurrentLE = null;
+        s_IsSearchBoxActive = false;
     }
 
     //Called when window is closed
@@ -236,6 +241,7 @@ public class NodeLEM_Editor : EditorWindow
         m_AllEffectsNodeInEditor = null;
         m_AllConnectionsDictionary = null;
         LEM_InspectorEditor.s_IsLoaded = false;
+        s_IsSearchBoxActive = false;
     }
 
 

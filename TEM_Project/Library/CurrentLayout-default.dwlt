@@ -538,8 +538,8 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 2a300000
-      m_LastClickedID: 12330
+      m_SelectedIDs: 76300000
+      m_LastClickedID: 12406
       m_ExpandedIDs: 6afbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
@@ -739,8 +739,8 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 143}
-    m_SelectedIDs: 3a2f0000
-    m_LastClickedID: 12090
+    m_SelectedIDs: 3c2f0000
+    m_LastClickedID: 12092
     m_ExpandedIDs: 00000000ea2c0000082d00003c2d0000002f0000322f0000542f00008c2f00009a2f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -794,8 +794,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 28300000
-    m_LastClickedInstanceID: 12328
+    m_SelectedInstanceIDs: 2a300000
+    m_LastClickedInstanceID: 12330
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c62300001ecfffff282f00009a310000e632000000000000fe670000ce400000f8330000d8310000ba3f0000
     m_RenameOverlay:
@@ -853,7 +853,7 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 12330
+  m_LastSelectedObjectID: 12406
 --- !u!114 &24
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1247,7 +1247,7 @@ MonoBehaviour:
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 0
+  m_LastVerticalScrollValue: 96
 --- !u!114 &29
 MonoBehaviour:
   m_ObjectHideFlags: 52
