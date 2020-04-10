@@ -583,7 +583,7 @@ public class NodeLEM_Editor : EditorWindow
                     //    OnClickRemoveNode(m_AllSelectedNodes[0]);
                     //}
 
-                    s_CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.ToArray()));
+                    s_CommandInvoker.InvokeCommand(new DeleteNodeCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(),x => (BaseEffectNode)x)));
                     //Skip everything else and repaint
                     e.Use();
                 }
@@ -829,7 +829,7 @@ public class NodeLEM_Editor : EditorWindow
         newlyCreatedNode = newNode;
     }
 
-    void DeleteNodes(Node[] nodesToBeDeleted)
+    void DeleteNodes(BaseEffectNode[] nodesToBeDeleted)
     {
         //if (m_AllSelectedNodes.Contains(s_EndNode))
         //{
@@ -1024,7 +1024,11 @@ public class NodeLEM_Editor : EditorWindow
         //Remove node from selected collection if it is inside
         RemoveNodeFromSelectedCollection(nodeToRemove);
         //If there isnt any connection collection, that means prolly that there is no connection drawn at all in the very beginning
-        AllNodesInEditor.Remove(nodeToRemove);
+        //AllNodesInEditor.Remove(nodeToRemove);
+
+        //O(n) operation only, inother words same as list.Remove( )
+        int indexOfNodeToRemove = AllNodesInEditor.FindIndex(x => x.NodeID == nodeToRemove.NodeID);
+        AllNodesInEditor.UnOrderlyRemoveAt(indexOfNodeToRemove);
 
         if (AllEffectsNodeInEditor.ContainsKey(nodeToRemove.NodeID))
             AllEffectsNodeInEditor.Remove(nodeToRemove.NodeID);
@@ -1147,7 +1151,7 @@ public class NodeLEM_Editor : EditorWindow
                 s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
 
             //Load the new node with saved node values values
-            newEffectNode.LoadFromLinearEvent(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]]);
+            newEffectNode.LoadFromBaseEffect(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]]);
         }
 
         #endregion

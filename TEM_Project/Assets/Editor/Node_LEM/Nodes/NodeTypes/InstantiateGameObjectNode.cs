@@ -53,7 +53,7 @@ public class InstantiateGameObjectNode : BaseEffectNode
         return effect;
     }
 
-    public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
+    public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
     {
         InstantiateGameObject loadFrom = effectToLoadFrom as InstantiateGameObject;
         loadFrom.UnPack(out GameObject targetObject, out int numberOfTimes, out Vector3 targetPosition, out Vector3 targetRotation, out Vector3 targetScale);

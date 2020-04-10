@@ -12,13 +12,11 @@ public class NodeCommandInvoker
     #region Command Delegates Definitions
     public delegate BaseEffectNode CreateEffectNode(Vector2 nodePos, string nodeType);
     public delegate BaseEffectNode ReCreateEffectNode(Vector2 nodePos, string nodeType, string idToSet);
-    public delegate void DeleteNodes(Node[] nodesToBeDeleted);
+    public delegate void DeleteNodes(BaseEffectNode[] nodesToBeDeleted);
 
     #endregion
 
 
-    //Queue<INodeCommand> m_CommandQueue = new Queue<INodeCommand>();
-    //List<INodeCommand> m_CommandHistory = new List<INodeCommand>();
     INodeCommand[] m_CommandHistory = null;
 
     int m_CurrentCounter = 0;
@@ -27,7 +25,6 @@ public class NodeCommandInvoker
     {
         get => m_CurrentCounter;
         set { m_CurrentCounter = MathfExtensions.CycleInt(value,m_MaxActionSize); }
-        //set { m_CurrentCounter = Mathf.Clamp(value, 0,m_MaxActionSize); }
     }
 
     //For Node commands to get and use 

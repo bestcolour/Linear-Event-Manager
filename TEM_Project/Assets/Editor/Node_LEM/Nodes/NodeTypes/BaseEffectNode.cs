@@ -46,7 +46,7 @@ public abstract class BaseEffectNode : Node
     //    m_LemEffectDescription = effectToLoadFrom.m_Description;
     //}
 
-    public abstract void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom);
+    public abstract void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom);
 
     //For saving 
     public abstract LEM_BaseEffect CompileToBaseEffect();

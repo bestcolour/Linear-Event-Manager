@@ -43,7 +43,7 @@ public class DestroyGameObjectNode : BaseEffectNode
 
     }
 
-    public override void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
+    public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
     {
         DestroyGameObject loadFrom = effectToLoadFrom as DestroyGameObject;
         loadFrom.UnPack(out m_TargetObject);
