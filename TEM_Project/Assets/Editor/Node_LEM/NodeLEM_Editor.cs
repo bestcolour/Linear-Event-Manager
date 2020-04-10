@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using System;
 using LEM_Effects;
 using System.Linq;
@@ -40,7 +41,15 @@ public class NodeLEM_Editor : EditorWindow
     static readonly Color s_SelectionBoxColour = new Color(0.6f, 0.8f, 1f, .2f);
     static readonly Color s_SelectionBoxOutlineColour = new Color(0f, 0.298f, 0.6f, 1f);
 
-   
+    //Deleting Checks Property
+    //static bool s_IsOnTypableControl => GUIUtility.GetControlID(FocusType.Keyboard) != 0;
+    //bool IsOnTypableControl()
+    //{
+    //    int i = GUIUtility.GetControlID(FocusType.Passive);
+    //    Debug.Log(i);
+    //    return (i != 0);
+    //}
+
 
     #region Connection Point Variables
     /// <summary>
@@ -89,9 +98,6 @@ public class NodeLEM_Editor : EditorWindow
     {
         s_SearchBox.ClearResults();
 
-        //if (String.IsNullOrEmpty(result))
-        //    return;
-
         string currentNodeType;
 
         //If searchbox is drawn for the first time 
@@ -117,14 +123,16 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnConfirm(string result, Vector2 mousePos)
     {
-        instance.CreateEffectNode(mousePos * 1 / ScaleFactor, result);
+        mousePos *= 1 / ScaleFactor;
+        //instance.CreateEffectNode(mousePos * 1 / ScaleFactor, result);
+        s_CommandInvoker.InvokeCommand(new CreateNodeCommand(mousePos, result));
     }
     #endregion
 
     #endregion
 
 
-    //NodeCommandInvoker m_CommandInvoker = default;
+    static NodeCommandInvoker s_CommandInvoker = default;
 
     static Texture2D s_EditorBackGroundTexture = default;
 
@@ -160,11 +168,10 @@ public class NodeLEM_Editor : EditorWindow
 
         InitialiseSkin();
 
-        //Creates instance of invoker
-        //if (m_CommandInvoker == null)
-        //{
-        //    m_CommandInvoker = new NodeCommandInvoker();
-        //}
+        if (s_CommandInvoker == null)
+        {
+            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode,RecreateEffectNode,DeleteNodes);
+        }
 
         if (m_AllNodesInEditor == null)
         {
@@ -460,6 +467,7 @@ public class NodeLEM_Editor : EditorWindow
 
             case EventType.MouseDown:
 
+
                 //Set the currenly clicked node
                 s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
 
@@ -543,21 +551,24 @@ public class NodeLEM_Editor : EditorWindow
                     //If delete key or backspace key is pressed,
                     case KeyCode.Delete:
 
-                        //Remove start and end node 
-                        if (m_AllSelectedNodes.Contains(s_StartNode))
-                        {
-                            s_StartNode.DeselectNode();
-                        }
-
-                        //if (m_AllSelectedNodes.Contains(s_EndNode))
+                        ////Remove start and end node 
+                        //if (m_AllSelectedNodes.Contains(s_StartNode))
                         //{
-                        //    s_EndNode.DeselectNode();
+                        //    s_StartNode.DeselectNode();
                         //}
 
-                        while (s_HaveMultipleNodeSelected)
-                        {
-                            OnClickRemoveNode(m_AllSelectedNodes[0]);
-                        }
+                        ////if (m_AllSelectedNodes.Contains(s_EndNode))
+                        ////{
+                        ////    s_EndNode.DeselectNode();
+                        ////}
+
+                        //while (s_HaveMultipleNodeSelected)
+                        //{
+                        //    OnClickRemoveNode(m_AllSelectedNodes[0]);
+                        //}
+
+                        s_CommandInvoker.InvokeCommand(new DeleteNodeCommand());
+
 
                         //Skip everything else and repaint
                         e.Use();
@@ -568,7 +579,7 @@ public class NodeLEM_Editor : EditorWindow
 
                         TrySetConnectionPoint(m_SelectedInPoint);
                         TrySetConnectionPoint(m_SelectedOutPoint);
-
+                        s_IsSearchBoxActive = false;
                         ResetDrawingBezierCurve();
                         break;
 
@@ -613,22 +624,22 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Node Editor Events Functions
 
-    #region Creating Node Types
-    //When you right click in the editor window, you open a menu, this code handles that
-    void ProcessContextMenu(Vector2 mousePosition)
-    {
-        //Create and add a new item into the menu, giving it a label of "Add a TEM node"
-        GenericMenu genericMenu = new GenericMenu();
-        //While also delegating that item's function to be OnClickAddNode
-        genericMenu.AddItem(new GUIContent("Add Destroy GameObject node"), false,
-            () => CreateEffectNode(mousePosition, "DestroyGameObjectNode"));
-        genericMenu.AddItem(new GUIContent("Add Instantiate GameObject node"), false,
-            () => CreateEffectNode(mousePosition, "InstantiateGameObjectNode"));
+    #region Creating and Deleting Node Types
+    ////When you right click in the editor window, you open a menu, this code handles that
+    //void ProcessContextMenu(Vector2 mousePosition)
+    //{
+    //    //Create and add a new item into the menu, giving it a label of "Add a TEM node"
+    //    GenericMenu genericMenu = new GenericMenu();
+    //    //While also delegating that item's function to be OnClickAddNode
+    //    genericMenu.AddItem(new GUIContent("Add Destroy GameObject node"), false,
+    //        () => CreateEffectNode(mousePosition, "DestroyGameObjectNode"));
+    //    genericMenu.AddItem(new GUIContent("Add Instantiate GameObject node"), false,
+    //        () => CreateEffectNode(mousePosition, "InstantiateGameObjectNode"));
 
 
-        //Show the menu
-        genericMenu.ShowAsContext();
-    }
+    //    //Show the menu
+    //    genericMenu.ShowAsContext();
+    //}
 
 
     //This is used for when you wanna create a new node
@@ -658,7 +669,7 @@ public class NodeLEM_Editor : EditorWindow
         m_AllEffectsNodeInEditor.Add(newEffectNode.NodeID, newEffectNode);
     }
 
-    //This is used for loading from a linear event
+    //This is used for loading and probably undoing/redoing from a linear event
     void RecreateEffectNode(Vector2 positionToSet, string nameOfNodeType, string idToSet, out BaseEffectNode effectNode)
     {
         BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
@@ -686,6 +697,7 @@ public class NodeLEM_Editor : EditorWindow
         effectNode = newEffectNode;
     }
 
+    //These two functions are mainly used for creating and loading start node
     void CreateBasicNode(Vector2 mousePosition, string nameOfNodeType, out Node newBasicNode)
     {
         Node basicNode = LEMDictionary.GetNodeObject(nameOfNodeType) as Node;
@@ -739,6 +751,32 @@ public class NodeLEM_Editor : EditorWindow
         newlyCreatedNode = newNode;
     }
 
+    void DeleteNodes(out Node[] nodesToBeDeleted)
+    {
+
+        //Remove start and end node 
+        if (m_AllSelectedNodes.Contains(s_StartNode))
+        {
+            s_StartNode.DeselectNode();
+        }
+
+        //if (m_AllSelectedNodes.Contains(s_EndNode))
+        //{
+        //    s_EndNode.DeselectNode();
+        //}
+
+
+        nodesToBeDeleted = new Node[m_AllSelectedNodes.Count];
+
+        int i = 0;
+
+        while (s_HaveMultipleNodeSelected)
+        {
+            nodesToBeDeleted[i] = m_AllSelectedNodes[0];
+            OnClickRemoveNode(m_AllSelectedNodes[0]);
+            i++;
+        }
+    }
 
     #endregion
 
