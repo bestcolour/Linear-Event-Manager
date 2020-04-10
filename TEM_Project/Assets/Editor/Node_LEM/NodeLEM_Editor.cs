@@ -26,8 +26,10 @@ public class NodeLEM_Editor : EditorWindow
 
     List<Node> m_AllSelectedNodes = new List<Node>();
 
-    public static Node s_CurrentClickedNode = null;
-    public static bool? s_CurrentNodeLastRecordedSelectState = null;
+    static Node s_CurrentClickedNode = null;
+    public static Node CurrentClickedNode => s_CurrentClickedNode;
+    public static bool? CurrentNodeLastRecordedSelectState { get; set; }
+
     //Check if there is multiple nodes selected
     public static bool s_HaveMultipleNodeSelected => (instance.m_AllSelectedNodes.Count > 0);
 
@@ -40,15 +42,6 @@ public class NodeLEM_Editor : EditorWindow
     public static Rect s_SelectionBox = default;
     static readonly Color s_SelectionBoxColour = new Color(0.6f, 0.8f, 1f, .2f);
     static readonly Color s_SelectionBoxOutlineColour = new Color(0f, 0.298f, 0.6f, 1f);
-
-    //Deleting Checks Property
-    //static bool s_IsOnTypableControl => GUIUtility.GetControlID(FocusType.Keyboard) != 0;
-    //bool IsOnTypableControl()
-    //{
-    //    int i = GUIUtility.GetControlID(FocusType.Passive);
-    //    Debug.Log(i);
-    //    return (i != 0);
-    //}
 
 
     #region Connection Point Variables
@@ -160,7 +153,7 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnEnable()
     {
-        
+
         instance = this;
 
         LEMStyleLibrary.LoadLibrary();
@@ -170,7 +163,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (s_CommandInvoker == null)
         {
-            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode,RecreateEffectNode,DeleteNodes);
+            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode, RecreateEffectNode, DeleteNodes);
         }
 
         if (m_AllNodesInEditor == null)
@@ -181,6 +174,16 @@ public class NodeLEM_Editor : EditorWindow
         if (m_AllEffectsNodeInEditor == default)
         {
             m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
+        }
+
+        if(m_AllConnectionsDictionary == null)
+        {
+            m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
+        }
+
+        if(m_AllSelectedNodes == null)
+        {
+            m_AllSelectedNodes = new List<Node>();
         }
 
         if (s_SearchBox == null)
@@ -230,7 +233,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         ResetDrawingBezierCurve();
         ResetEventVariables();
-        s_CurrentNodeLastRecordedSelectState = null;
+        CurrentNodeLastRecordedSelectState = null;
         s_CurrentLE = null;
         s_IsSearchBoxActive = false;
     }
@@ -242,7 +245,7 @@ public class NodeLEM_Editor : EditorWindow
         //s_EndNode = null;
         ResetDrawingBezierCurve();
         ResetEventVariables();
-        s_CurrentNodeLastRecordedSelectState = null;
+        CurrentNodeLastRecordedSelectState = null;
         s_CurrentLE = null;
         m_AllNodesInEditor = null;
         m_AllEffectsNodeInEditor = null;
@@ -467,7 +470,6 @@ public class NodeLEM_Editor : EditorWindow
 
             case EventType.MouseDown:
 
-
                 //Set the currenly clicked node
                 s_CurrentClickedNode = m_AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
 
@@ -505,15 +507,22 @@ public class NodeLEM_Editor : EditorWindow
                         //Set initial position for drawing selection box
                         if (!e.alt)
                         {
+                            //Reset everything
                             m_InitialClickedPosition = currMousePosition;
 
                             TrySetConnectionPoint(m_SelectedInPoint);
                             TrySetConnectionPoint(m_SelectedOutPoint);
                             ResetDrawingBezierCurve();
+
                         }
 
                     }
-                    s_IsSearchBoxActive = false;
+
+                    //Remove focus on the controls when user clicks on something regardless if it is a node or not because apparently this doesnt get
+                    //called when i click on input/text fields
+                    GUI.FocusControl(null);
+
+                   s_IsSearchBoxActive = false;
 
                 }
 
@@ -545,46 +554,37 @@ public class NodeLEM_Editor : EditorWindow
             //If the user presses a keyboard keybutton
             case EventType.KeyUp:
 
-                //Check the keycode type
-                switch (e.keyCode)
+                if (e.keyCode == KeyCode.Delete)
                 {
-                    //If delete key or backspace key is pressed,
-                    case KeyCode.Delete:
+                    ////Remove start and end node 
+                    //if (m_AllSelectedNodes.Contains(s_StartNode))
+                    //{
+                    //    s_StartNode.DeselectNode();
+                    //}
 
-                        ////Remove start and end node 
-                        //if (m_AllSelectedNodes.Contains(s_StartNode))
-                        //{
-                        //    s_StartNode.DeselectNode();
-                        //}
+                    ////if (m_AllSelectedNodes.Contains(s_EndNode))
+                    ////{
+                    ////    s_EndNode.DeselectNode();
+                    ////}
 
-                        ////if (m_AllSelectedNodes.Contains(s_EndNode))
-                        ////{
-                        ////    s_EndNode.DeselectNode();
-                        ////}
-
-                        //while (s_HaveMultipleNodeSelected)
-                        //{
-                        //    OnClickRemoveNode(m_AllSelectedNodes[0]);
-                        //}
-
-                        s_CommandInvoker.InvokeCommand(new DeleteNodeCommand());
-
-
-                        //Skip everything else and repaint
-                        e.Use();
-
-                        break;
-
-                    case KeyCode.Escape:
-
-                        TrySetConnectionPoint(m_SelectedInPoint);
-                        TrySetConnectionPoint(m_SelectedOutPoint);
-                        s_IsSearchBoxActive = false;
-                        ResetDrawingBezierCurve();
-                        break;
-
-
+                    //while (s_HaveMultipleNodeSelected)
+                    //{
+                    //    OnClickRemoveNode(m_AllSelectedNodes[0]);
+                    //}
+                    GUI.FocusControl(null);
+                    s_CommandInvoker.InvokeCommand(new DeleteNodeCommand());
+                    //Skip everything else and repaint
+                    e.Use();
                 }
+                else if (e.keyCode == KeyCode.Escape)
+                {
+
+                    TrySetConnectionPoint(m_SelectedInPoint);
+                    TrySetConnectionPoint(m_SelectedOutPoint);
+                    s_IsSearchBoxActive = false;
+                    ResetDrawingBezierCurve();
+                }
+
 
                 break;
 

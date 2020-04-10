@@ -104,7 +104,7 @@ public abstract class Node
     public bool HandleMouseDown(Event e)
     {
         //Check if mouseposition is within the bounds of the node's rect body
-        Node currentClickedNode = NodeLEM_Editor.s_CurrentClickedNode;
+        Node currentClickedNode = NodeLEM_Editor.CurrentClickedNode;
 
         //Check if it is the left mousebutton that was pressed
         if (e.button == 0)
@@ -115,7 +115,7 @@ public abstract class Node
                 if (currentClickedNode == this)
                 {
                     //Record the state of the current node last recorded
-                    NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState = currentClickedNode.m_IsSelected;
+                    NodeLEM_Editor.CurrentNodeLastRecordedSelectState = currentClickedNode.m_IsSelected;
 
                     //if node has not been selected
                     if (!m_IsSelected)
@@ -139,6 +139,8 @@ public abstract class Node
                 }
 
 
+               
+
                 //else if mouse doesnt overlapp this node
                 //If this node is selected
                 if (m_IsSelected)
@@ -151,25 +153,26 @@ public abstract class Node
 
                     //Deselect if this node is selected but there isnt multiple selected nodes
                     // or if there is no node clicked
-                    if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState == false)
+                    if (currentClickedNode.m_IsSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
                     {
                         DeselectNode();
                         return true;
                     }
                     //when there is another node clicked in the window,
                     //as well as having multiple nodes selected
-                    else if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState == true)
+                    else if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
                     {
                         m_IsDragged = true;
                     }
 
                 }
 
+              
                 return false;
             }
 
             //Record the state of the current node last recorded
-            NodeLEM_Editor.s_CurrentNodeLastRecordedSelectState = null;
+            NodeLEM_Editor.CurrentNodeLastRecordedSelectState = null;
 
             if (!e.alt)
             {
