@@ -24,7 +24,7 @@ public class NodeLEM_Editor : EditorWindow
     Dictionary<Tuple<string, string>, Connection> AllConnectionsDictionary => instance.m_AllConnectionsDictionary;
 
     Node s_StartNode = default;
-    Node StartNode { get { return instance.s_StartNode; }set{ instance.s_StartNode = value; } }
+    Node StartNode { get { return instance.s_StartNode; } set { instance.s_StartNode = value; } }
 
     #region Process Event Variables
 
@@ -128,9 +128,12 @@ public class NodeLEM_Editor : EditorWindow
 
     #endregion
 
+    #region NodeInvoker
 
     static NodeCommandInvoker s_CommandInvoker = default;
+    bool m_IsStartedDragging = default;
 
+    #endregion
     static Texture2D s_EditorBackGroundTexture = default;
 
 
@@ -225,6 +228,7 @@ public class NodeLEM_Editor : EditorWindow
     void ResetEventVariables()
     {
         m_InitialClickedPosition = null;
+        m_IsStartedDragging = false;
         s_SelectionBox = default;
         s_CurrentClickedNode = null;
         GUI.changed = true;
@@ -548,12 +552,21 @@ public class NodeLEM_Editor : EditorWindow
                         OnDrag(e.delta);
                         GUI.changed = true;
                     }
+                    //If user is currently planning to drag a node and wasnt draggin the previous paint,
+                    else if (s_CurrentClickedNode != null && !m_IsStartedDragging)
+                    {
+                        m_IsStartedDragging = true;
+                        s_CommandInvoker.InvokeCommand(new MoveNodeCommand(m_AllSelectedNodes.ToArray()));
+
+
+                    }
                 }
 
                 break;
 
             //If user releases the mouse
             case EventType.MouseUp:
+
                 ResetEventVariables();
 
                 break;
@@ -562,6 +575,12 @@ public class NodeLEM_Editor : EditorWindow
 
             //If the user presses a keyboard keybutton
             case EventType.KeyUp:
+
+                //Dont do any commands when u r dragging
+                if (m_IsStartedDragging)
+                {
+                    return;
+                }
 
                 if (e.keyCode == KeyCode.Delete)
                 {
@@ -583,7 +602,7 @@ public class NodeLEM_Editor : EditorWindow
                     //    OnClickRemoveNode(m_AllSelectedNodes[0]);
                     //}
 
-                    s_CommandInvoker.InvokeCommand(new DeleteNodeCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(),x => (BaseEffectNode)x)));
+                    s_CommandInvoker.InvokeCommand(new DeleteNodeCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
                     //Skip everything else and repaint
                     e.Use();
                 }
@@ -597,13 +616,13 @@ public class NodeLEM_Editor : EditorWindow
                 }
                 else if (e.control && e.keyCode == KeyCode.Q)
                 {
-                   
+
                     s_CommandInvoker.UndoCommand();
                     e.Use();
                 }
                 else if (e.control && e.keyCode == KeyCode.W)
                 {
-                  
+
                     s_CommandInvoker.RedoCommand();
                     e.Use();
                 }

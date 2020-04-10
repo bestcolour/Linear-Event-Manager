@@ -27,14 +27,11 @@ public class CreateNodeCommand : INodeCommand
     public void Execute()
     {
         m_BaseEffectNode = NodeCommandInvoker.d_CreateEffectNode?.Invoke(m_Position, m_NodeType);
-        Debug.Log("CreateNodeCommand: Node ID when created : " + m_BaseEffectNode.NodeID);
     }
 
     //Basically delete but we need to save its current state b4 deleting
     public void Undo()
     {
-        Debug.Log("CreateNodeCommand: Node ID before deleting : " + m_BaseEffectNode.NodeID);
-
         //Saving
         m_NodeEffect = m_BaseEffectNode.CompileToBaseEffect();
 
@@ -46,8 +43,6 @@ public class CreateNodeCommand : INodeCommand
 
     public void Redo()
     {
-        Debug.Log("CreateNodeCommand: Node ID before recreating : " + m_NodeEffect.m_NodeBaseData.m_NodeID);
-
         //Recreate a node from the baseEffect save file we saved before deleting in the undoing func
         m_BaseEffectNode = NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(
                m_NodeEffect.m_NodeBaseData.m_Position,
@@ -73,24 +68,16 @@ public class DeleteNodeCommand : INodeCommand
         m_DeletedNodes = deletedNodes;
 
         m_NodesEffects = new LEM_BaseEffect[deletedNodes.Length];
-
-     
-
     }
 
     #region Interface Implementations
 
     public void Execute()
     {
-
-
-
         //Save before deleting the node
         for (int i = 0; i < m_NodesEffects.Length; i++)
         {
             m_NodesEffects[i] = m_DeletedNodes[i].CompileToBaseEffect();
-            Debug.Log("DeleteNodeCommand: Node ID before deletion : " + m_DeletedNodes[i].NodeID);
-
         }
 
         //Delete the nodes
@@ -102,18 +89,14 @@ public class DeleteNodeCommand : INodeCommand
         //Recreate the nodes 
         for (int i = 0; i < m_DeletedNodes.Length; i++)
         {
-            Debug.Log("DeleteNodeCommand: Node ID before recreation : " + m_NodesEffects[i].m_NodeBaseData.m_NodeID);
-
-
             //Repoulate the deleted nodes
-            m_DeletedNodes[i] =  NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(
+            m_DeletedNodes[i] = NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(
                 m_NodesEffects[i].m_NodeBaseData.m_Position,
                 m_NodesEffects[i].m_NodeEffectType,
                 m_NodesEffects[i].m_NodeBaseData.m_NodeID);
 
             //Unpack all the data into the node
             m_DeletedNodes[i].LoadFromBaseEffect(m_NodesEffects[i]);
-
         }
     }
 
@@ -122,7 +105,69 @@ public class DeleteNodeCommand : INodeCommand
         Execute();
     }
     #endregion
-
 }
 
+
+public class MoveNodeCommand : INodeCommand
+{
+    Node[] m_NodesMoved = default;
+
+    Vector2[] m_PreviousTopRectPositions = default;
+    Vector2[] m_PreviousMidRectPositions = default;
+    Vector2[] m_PreviousTotalRectPositions = default;
+
+    //i need prev pos
+    //and the nodes that are moving
+    public MoveNodeCommand(Node[] nodesMoved)
+    {
+        m_NodesMoved = nodesMoved;
+
+        m_PreviousTopRectPositions = new Vector2[m_NodesMoved.Length];
+        m_PreviousMidRectPositions = new Vector2[m_NodesMoved.Length];
+        m_PreviousTotalRectPositions = new Vector2[m_NodesMoved.Length];
+
+        for (int i = 0; i < m_NodesMoved.Length; i++)
+        {
+            m_PreviousTopRectPositions[i] = m_NodesMoved[i].m_TopRect.position;
+            m_PreviousMidRectPositions[i] = m_NodesMoved[i].m_MidRect.position;
+            m_PreviousTotalRectPositions[i] = m_NodesMoved[i].m_TotalRect.position;
+        }
+
+
+        ////Populate previous positions
+        //m_PreviousTopRectPositions = m_NodesMoved.Select(x => x.m_TopRect.position).ToArray();
+        //m_PreviousMidRectPositions = m_NodesMoved.Select(x => x.m_MidRect.position).ToArray();
+        //m_PreviousTotalRectPositions = m_NodesMoved.Select(x => x.m_TotalRect.position).ToArray();
+
+    }
+
+    public void Execute() { }
+
+    public void Undo()
+    {
+        Vector2 currentNodePosition;
+        //Revert all the node's positions to the prev positions but before that, save that position in a local var to reassign to prev pos 
+        for (int i = 0; i < m_NodesMoved.Length; i++)
+        {
+            currentNodePosition = m_NodesMoved[i].m_TopRect.position;
+            m_NodesMoved[i].m_TopRect.position = m_PreviousTopRectPositions[i];
+            m_PreviousTopRectPositions[i] = currentNodePosition;
+
+            currentNodePosition = m_NodesMoved[i].m_MidRect.position;
+            m_NodesMoved[i].m_MidRect.position = m_PreviousMidRectPositions[i];
+            m_PreviousMidRectPositions[i] = currentNodePosition;
+
+            currentNodePosition = m_NodesMoved[i].m_TotalRect.position;
+            m_NodesMoved[i].m_TotalRect.position = m_PreviousTotalRectPositions[i];
+            m_PreviousTotalRectPositions[i] = currentNodePosition;
+        }
+    }
+
+    public void Redo()
+    {
+        Undo();
+    }
+
+
+}
 

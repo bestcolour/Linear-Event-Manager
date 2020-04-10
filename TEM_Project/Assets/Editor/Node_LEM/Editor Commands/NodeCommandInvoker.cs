@@ -37,7 +37,7 @@ public class NodeCommandInvoker
     #region Construction
     public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, DeleteNodes deleteNodes)
     {
-        m_MaxActionSize = 5;
+        m_MaxActionSize = 10;
         m_CommandHistory = new INodeCommand[m_MaxActionSize];
         d_CreateEffectNode = createEffectNode;
         d_ReCreateEffectNode = recreateEffectNode;
