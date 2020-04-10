@@ -18,12 +18,16 @@ public class NodeCommandInvoker
 
 
     //Queue<INodeCommand> m_CommandQueue = new Queue<INodeCommand>();
-    List<INodeCommand> m_CommandHistory = new List<INodeCommand>();
-    int m_Counter = 0;
+    //List<INodeCommand> m_CommandHistory = new List<INodeCommand>();
+    INodeCommand[] m_CommandHistory = null;
+
+    int m_CurrentCounter = 0;
+    int m_MaxActionSize = default;
     int Counter
     {
-        get => m_Counter;
-        set { m_Counter = Mathf.Clamp(value, 0, int.MaxValue); }
+        get => m_CurrentCounter;
+        set { m_CurrentCounter = MathfExtensions.CycleInt(value,m_MaxActionSize); }
+        //set { m_CurrentCounter = Mathf.Clamp(value, 0,m_MaxActionSize); }
     }
 
     //For Node commands to get and use 
@@ -33,50 +37,69 @@ public class NodeCommandInvoker
     public static DeleteNodes d_DeleteNodes = null;
 
 
+    #region Construction
     public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, DeleteNodes deleteNodes)
     {
+        m_MaxActionSize = 5;
+        m_CommandHistory = new INodeCommand[m_MaxActionSize];
         d_CreateEffectNode = createEffectNode;
         d_ReCreateEffectNode = recreateEffectNode;
         d_DeleteNodes = deleteNodes;
     }
 
+    public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, DeleteNodes deleteNodes)
+    {
+        m_MaxActionSize = actionSize ;
+        m_CommandHistory = new INodeCommand[actionSize];
+        d_CreateEffectNode = createEffectNode;
+        d_ReCreateEffectNode = recreateEffectNode;
+        d_DeleteNodes = deleteNodes;
+    }
+
+    #endregion
+
 
     public void InvokeCommand(INodeCommand commandToAdd)
     {
         //Adds command into a queue
-        //m_CommandQueue.Enqueue(commandToAdd);
         commandToAdd.Execute();
-        m_CommandHistory.Add(commandToAdd);
-        Debug.Log(Counter);
-        Counter ++ ;
-        Debug.Log("Added a command! Current history size is " + Counter);
+        m_CommandHistory[Counter] = commandToAdd;
+        //Debug.Log("Current Counter is : " + Counter + " and Counter after Adding : " + (Counter + 1));
+        //Clear the next counter so that redo or undo wont overshoot as null will act as a stopper
+        //thus in actual fact when i put 100 max action size, only 99 of them will be actual actions
+        Counter++;
+        m_CommandHistory[Counter] = null;
     }
 
     public void UndoCommand()
     {
-        Debug.Log("Undoing Command " + " Counter before minus is : " + Counter);
+        //Minus first to get a cycled index (check property definition)
         Counter--;
-        Debug.Log("Undoing Command " + " Counter after minus is : " + Counter);
-        m_CommandHistory[Counter].Undo();
-        Undo.PerformRedo();
+        if (m_CommandHistory[Counter] != null)
+        {
+            m_CommandHistory[Counter].Undo();
+        }
+        else
+        {
+            Counter++;
+            Debug.Log("Undo has reached its limit!");
+        }
 
     }
 
     public void RedoCommand()
     {
-        //Debug.Log("Redoing Command " + " Counter after miniusing is : " + Counter);
-
-        m_CommandHistory[Counter].Redo();
-
-        //If counter is not at the maximum element the invoker has kept track,
-        if (Counter != m_CommandHistory.Count - 1)
+        //If max redo hasnt been reached (that means user has hit the top of the history)
+        if (m_CommandHistory[Counter] != null)
         {
+            m_CommandHistory[Counter].Redo();
             Counter++;
         }
+        else
+        {
+            Debug.Log("Redo has reached its limit!");
+        }
 
-        //Debug.Log("Redoing Command " + " Counter after miniusing is : " + Counter);
-
-        Undo.PerformUndo();
     }
 
 }

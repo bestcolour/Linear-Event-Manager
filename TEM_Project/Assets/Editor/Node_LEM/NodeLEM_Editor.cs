@@ -142,6 +142,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Set the title of gui for the window to be TEM Node Editor
         editorWindow.titleContent = new GUIContent("TEM Node Editor");
+
     }
 
     public static void LoadNodeEditor(LinearEvent linearEvent)
@@ -594,13 +595,13 @@ public class NodeLEM_Editor : EditorWindow
                     s_IsSearchBoxActive = false;
                     ResetDrawingBezierCurve();
                 }
-                else if (e.control && e.keyCode == KeyCode.Z)
+                else if (e.control && e.keyCode == KeyCode.Q)
                 {
                    
                     s_CommandInvoker.UndoCommand();
                     e.Use();
                 }
-                else if (e.control && e.keyCode == KeyCode.Y)
+                else if (e.control && e.keyCode == KeyCode.W)
                 {
                   
                     s_CommandInvoker.RedoCommand();
