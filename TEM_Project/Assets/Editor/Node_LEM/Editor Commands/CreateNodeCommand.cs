@@ -51,6 +51,10 @@ public class CreateNodeCommand : INodeCommand
 
         //Unpack all the data into the node
         m_BaseEffectNode.LoadFromBaseEffect(m_NodeEffect);
+
+        //Restitch the connections
+        NodeCommandInvoker.d_RestitchConnections(m_NodeEffect);
+
     }
     #endregion
 
@@ -97,6 +101,12 @@ public class DeleteNodeCommand : INodeCommand
 
             //Unpack all the data into the node
             m_DeletedNodes[i].LoadFromBaseEffect(m_NodesEffects[i]);
+        }
+
+        //Restitch the nodes' connections ONLY after all the nodes hv been recreated
+        for (int i = 0; i < m_DeletedNodes.Length; i++)
+        {
+            NodeCommandInvoker.d_RestitchConnections(m_NodesEffects[i]);
         }
     }
 

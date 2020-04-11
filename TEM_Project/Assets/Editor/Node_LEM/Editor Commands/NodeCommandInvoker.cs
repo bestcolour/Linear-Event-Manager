@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using LEM_Effects;
 
 //This is the guy where u call the commands 
 // he will keep track of what commands u called and then record it.
@@ -12,6 +13,7 @@ public class NodeCommandInvoker
     #region Command Delegates Definitions
     public delegate BaseEffectNode CreateEffectNode(Vector2 nodePos, string nodeType);
     public delegate BaseEffectNode ReCreateEffectNode(Vector2 nodePos, string nodeType, string idToSet);
+    public delegate void RestitchConnections(LEM_BaseEffect currentEffect);
     public delegate void DeleteNodes(BaseEffectNode[] nodesToBeDeleted);
     public delegate void MoveNodes(string[] nodeIDsMoved,ref Vector2[] previousTopRectPositions,ref Vector2[] previousMidRectPositions,ref Vector2[] previousTotalRectPositions);
 
@@ -32,27 +34,30 @@ public class NodeCommandInvoker
     //im putting these commands here because nodecommand invoker has a connection to the nodelem editor during its intiialisation
     public static CreateEffectNode d_CreateEffectNode = null;
     public static ReCreateEffectNode d_ReCreateEffectNode = null;
+    public static RestitchConnections d_RestitchConnections = null;
     public static DeleteNodes d_DeleteNodes = null;
     public static MoveNodes d_MoveNodes = null;
 
 
     #region Construction
-    public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, DeleteNodes deleteNodes, MoveNodes moveNodes)
+    public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes)
     {
         m_MaxActionSize = 10;
         m_CommandHistory = new INodeCommand[m_MaxActionSize];
         d_CreateEffectNode = createEffectNode;
         d_ReCreateEffectNode = recreateEffectNode;
+        d_RestitchConnections = restitchConnections;
         d_DeleteNodes = deleteNodes;
         d_MoveNodes = moveNodes;
     }
 
-    public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, DeleteNodes deleteNodes, MoveNodes moveNodes)
+    public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes)
     {
         m_MaxActionSize = actionSize;
         m_CommandHistory = new INodeCommand[actionSize];
         d_CreateEffectNode = createEffectNode;
         d_ReCreateEffectNode = recreateEffectNode;
+        d_RestitchConnections = restitchConnections;
         d_DeleteNodes = deleteNodes;
         d_MoveNodes = moveNodes;
     }
