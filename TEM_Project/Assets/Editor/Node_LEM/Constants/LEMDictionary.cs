@@ -11,7 +11,7 @@ public class LEMDictionary
         List<string> temp = s_NodeTypesDictionary.Keys.ToList();
 
         //Remove startnode
-        temp.UnOrderlyRemoveAt(0);
+        temp.RemoveEfficiently(0);
         //Sort everything into alphabetical order
         temp.Sort();
 

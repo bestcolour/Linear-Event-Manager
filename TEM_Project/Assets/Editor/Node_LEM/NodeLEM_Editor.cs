@@ -171,7 +171,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (s_CommandInvoker == null)
         {
-            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode, RecreateEffectNode, DeleteNodes);
+            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode, RecreateEffectNode, DeleteNodes,MoveNodes);
         }
 
         if (m_AllNodesInEditor == null)
@@ -511,9 +511,6 @@ public class NodeLEM_Editor : EditorWindow
 
                 else if (e.button == 0)
                 {
-                    //Set current clicked node to be the first to be updated
-                    ReOrderSelectedNode(s_CurrentClickedNode, AllNodesInEditor.Count - 1);
-
                     //If mouse indeed doesnt clicks on a node,
                     if (s_CurrentClickedNode == null)
                     {
@@ -528,7 +525,11 @@ public class NodeLEM_Editor : EditorWindow
                             ResetDrawingBezierCurve();
 
                         }
-
+                    }
+                    //Else if current clicked node isnt null
+                    else
+                    {
+                        AllNodesInEditor.RearrangeElement(s_CurrentClickedNode, AllNodesInEditor.Count - 1);
                     }
 
                     //Remove focus on the controls when user clicks on something regardless if it is a node or not because apparently this doesnt get
@@ -738,6 +739,7 @@ public class NodeLEM_Editor : EditorWindow
         AllEffectsNodeInEditor.Add(newEffectNode.NodeID, newEffectNode);
         return newEffectNode;
     }
+
     //This is used for loading and probably undoing/redoing from a linear event
     BaseEffectNode RecreateEffectNode(Vector2 positionToSet, string nameOfNodeType, string idToSet)
     {
@@ -856,11 +858,7 @@ public class NodeLEM_Editor : EditorWindow
         //}
 
         for (int i = 0; i < nodesToBeDeleted.Length; i++)
-        {
-
             OnClickRemoveNode(nodesToBeDeleted[i]);
-        }
-
     }
 
     #endregion
@@ -908,21 +906,86 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    void ReOrderSelectedNode(Node nodeToReorder, int index)
+    void MoveNodes(string[] nodeIDsMoved,ref Vector2[] previousTopRectPositions,ref Vector2[] previousMidRectPositions,ref Vector2[] previousTotalRectPositions)
     {
-        //If all selected doesnt contain this node, reorder it
-        if (AllNodesInEditor.Contains(nodeToReorder))
+        Vector2 currentNodePosition;
+
+        //Firstly, check if there is start node in the nodeidsmoved
+        #region Start Node Revert to avoid O(n^2) operation
+
+        int startNodeInt = 0;
+        while (startNodeInt < nodeIDsMoved.Length)
         {
-            //Copy the current element u wanna replace at to the last index of the list
-            AllNodesInEditor.Add(AllNodesInEditor[index]);
+            if (nodeIDsMoved[startNodeInt] == StartNode.NodeID)
+                break;
 
-            //Remove that node that just moved
-            AllNodesInEditor.Remove(nodeToReorder);
+            startNodeInt++;
+        }
 
-            //Set that node to that index
-            AllNodesInEditor[index] = nodeToReorder;
+        //if startNodeInt is not Length of nodeIDsMoved, that means startNodeint is found inside nodeIDsMoved
+        if (startNodeInt != nodeIDsMoved.Length)
+        {
+            //Do revert/redo movenode command (they r basically the same)
+            currentNodePosition = StartNode.m_TopRect.position;
+            StartNode.m_TopRect.position = previousTopRectPositions[startNodeInt];
+            previousTopRectPositions[startNodeInt] = currentNodePosition;
+
+            currentNodePosition = StartNode.m_MidRect.position;
+            StartNode.m_MidRect.position = previousMidRectPositions[startNodeInt];
+            previousMidRectPositions[startNodeInt] = currentNodePosition;
+
+            currentNodePosition = StartNode.m_TotalRect.position;
+            StartNode.m_TotalRect.position = previousTotalRectPositions[startNodeInt];
+            previousTotalRectPositions[startNodeInt] = currentNodePosition;
+
+        }
+        else
+        {
+            //If startnode isnt in the array of moved nodes,
+            startNodeInt = -1;
+        }
+
+        #endregion
+
+      
+
+        //All thats left are effect nodes so we can just use the dictionary to get the nodes instead of using AllNodesInEditor.Find()
+        //Revert all the node's positions to the prev positions but before that, save that position in a local var to reassign to prev pos 
+        for (int i = 0; i < nodeIDsMoved.Length; i++)
+        {
+            //Skip startnode id 
+            if (i == startNodeInt)
+                continue;
+
+            currentNodePosition = AllEffectsNodeInEditor[nodeIDsMoved[i]].m_TopRect.position;
+            AllEffectsNodeInEditor[nodeIDsMoved[i]].m_TopRect.position = previousTopRectPositions[i];
+            previousTopRectPositions[i] = currentNodePosition;
+
+            currentNodePosition = AllEffectsNodeInEditor[nodeIDsMoved[i]].m_MidRect.position;
+            AllEffectsNodeInEditor[nodeIDsMoved[i]].m_MidRect.position = previousMidRectPositions[i];
+            previousMidRectPositions[i] = currentNodePosition;
+
+            currentNodePosition = AllEffectsNodeInEditor[nodeIDsMoved[i]].m_TotalRect.position;
+            AllEffectsNodeInEditor[nodeIDsMoved[i]].m_TotalRect.position = previousTotalRectPositions[i];
+            previousTotalRectPositions[i] = currentNodePosition;
         }
     }
+
+    //void ReOrderSelectedNode(Node nodeToReorder, int index)
+    //{
+    //    //If all selected doesnt contain this node, reorder it
+    //    if (AllNodesInEditor.Contains(nodeToReorder))
+    //    {
+    //        //Copy the current element u wanna replace at to the last index of the list
+    //        AllNodesInEditor.Add(AllNodesInEditor[index]);
+
+    //        //Remove that node that just moved
+    //        AllNodesInEditor.Remove(nodeToReorder);
+
+    //        //Set that node to that index
+    //        AllNodesInEditor[index] = nodeToReorder;
+    //    }
+    //}
 
     #region Delegates
 
@@ -942,32 +1005,32 @@ public class NodeLEM_Editor : EditorWindow
         TrySetConnectionPointSkin(m_SelectedInPoint, ConnectionPointState.SELECTED);
 
         //If current selected outpoint is not null
-        if (m_SelectedOutPoint != null)
+        if (m_SelectedOutPoint == null)
+            return;
+
+        //Check if selected in point node is same as selected out point npde
+        //Another thing to check is if the selected inpoint's connected node is equal to selected output node. If it is then dont bother connecting
+        if (m_SelectedOutPoint.m_ParentNode != m_SelectedInPoint.m_ParentNode &&
+            m_SelectedOutPoint.GetConnectedNodeID(0) != m_SelectedInPoint.m_ParentNode.NodeID)
         {
-            //Check if selected in point node is same as selected out point npde
-            //Another thing to check is if the selected inpoint's connected node is equal to selected output node. If it is then dont bother connecting
-            if (m_SelectedOutPoint.m_ParentNode != m_SelectedInPoint.m_ParentNode &&
-                m_SelectedOutPoint.GetConnectedNodeID(0) != m_SelectedInPoint.m_ParentNode.NodeID)
+            //Remove the old connection if outpoint has an old connection
+            if (m_SelectedOutPoint.IsConnected)
             {
-                //Remove the old connection if outpoint has an old connection
-                if (m_SelectedOutPoint.IsConnected)
-                {
-                    OnClickRemoveConnection(AllConnectionsDictionary
-                          [new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
-                          );
-                }
-
-                CreateConnection();
-                ResetDrawingBezierCurve();
+                OnClickRemoveConnection(AllConnectionsDictionary
+                      [new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
+                      );
             }
-            else
-            {
-                //Reset both points' style to normal
-                TrySetConnectionPoint(m_SelectedInPoint);
-                TrySetConnectionPoint(m_SelectedOutPoint);
 
-                ResetDrawingBezierCurve();
-            }
+            CreateConnection();
+            ResetDrawingBezierCurve();
+        }
+        else
+        {
+            //Reset both points' style to normal
+            TrySetConnectionPoint(m_SelectedInPoint);
+            TrySetConnectionPoint(m_SelectedOutPoint);
+
+            ResetDrawingBezierCurve();
         }
 
     }
@@ -988,35 +1051,34 @@ public class NodeLEM_Editor : EditorWindow
         //TrySetConnectionPoint(m_SelectedOutPoint/*, true*/);
         TrySetConnectionPointSkin(m_SelectedOutPoint, ConnectionPointState.SELECTED);
 
-        if (m_SelectedInPoint != null)
+        if (m_SelectedInPoint == null)
+            return;
+
+        //Check if selected in point node is same as selected out point npde
+        //In this case we dont want them to be the same cause its stupid to 
+        //have connection with the same node
+        if (m_SelectedOutPoint.m_ParentNode != m_SelectedInPoint.m_ParentNode &&
+            m_SelectedOutPoint.GetConnectedNodeID(0) != m_SelectedInPoint.m_ParentNode.NodeID)
         {
-
-            //Check if selected in point node is same as selected out point npde
-            //In this case we dont want them to be the same cause its stupid to 
-            //have connection with the same node
-            if (m_SelectedOutPoint.m_ParentNode != m_SelectedInPoint.m_ParentNode &&
-                m_SelectedOutPoint.GetConnectedNodeID(0) != m_SelectedInPoint.m_ParentNode.NodeID)
+            //Remove the old connection if outpoint has an old connection
+            if (m_SelectedOutPoint.IsConnected)
             {
-                //Remove the old connection if outpoint has an old connection
-                if (m_SelectedOutPoint.IsConnected)
-                {
-                    OnClickRemoveConnection(
-                       AllConnectionsDictionary[new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
-                       );
-                }
-
-                CreateConnection();
-                ResetDrawingBezierCurve();
+                OnClickRemoveConnection(
+                   AllConnectionsDictionary[new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
+                   );
             }
-            //Else just reset
-            else
-            {
-                //Reset both points' style to normal
-                TrySetConnectionPoint(m_SelectedInPoint);
-                TrySetConnectionPoint(m_SelectedOutPoint);
-                ResetDrawingBezierCurve();
 
-            }
+            CreateConnection();
+            ResetDrawingBezierCurve();
+        }
+        //Else just reset
+        else
+        {
+            //Reset both points' style to normal
+            TrySetConnectionPoint(m_SelectedInPoint);
+            TrySetConnectionPoint(m_SelectedOutPoint);
+            ResetDrawingBezierCurve();
+
         }
     }
 
@@ -1042,12 +1104,11 @@ public class NodeLEM_Editor : EditorWindow
 
         //Remove node from selected collection if it is inside
         RemoveNodeFromSelectedCollection(nodeToRemove);
-        //If there isnt any connection collection, that means prolly that there is no connection drawn at all in the very beginning
-        //AllNodesInEditor.Remove(nodeToRemove);
 
         //O(n) operation only, inother words same as list.Remove( )
+        //Need nodeid to be checked cause Node references are lost during command invoker
         int indexOfNodeToRemove = AllNodesInEditor.FindIndex(x => x.NodeID == nodeToRemove.NodeID);
-        AllNodesInEditor.UnOrderlyRemoveAt(indexOfNodeToRemove);
+        AllNodesInEditor.RemoveEfficiently(indexOfNodeToRemove);
 
         if (AllEffectsNodeInEditor.ContainsKey(nodeToRemove.NodeID))
             AllEffectsNodeInEditor.Remove(nodeToRemove.NodeID);

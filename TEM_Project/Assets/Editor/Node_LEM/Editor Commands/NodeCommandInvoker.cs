@@ -13,6 +13,7 @@ public class NodeCommandInvoker
     public delegate BaseEffectNode CreateEffectNode(Vector2 nodePos, string nodeType);
     public delegate BaseEffectNode ReCreateEffectNode(Vector2 nodePos, string nodeType, string idToSet);
     public delegate void DeleteNodes(BaseEffectNode[] nodesToBeDeleted);
+    public delegate void MoveNodes(string[] nodeIDsMoved,ref Vector2[] previousTopRectPositions,ref Vector2[] previousMidRectPositions,ref Vector2[] previousTotalRectPositions);
 
     #endregion
 
@@ -24,7 +25,7 @@ public class NodeCommandInvoker
     int Counter
     {
         get => m_CurrentCounter;
-        set { m_CurrentCounter = MathfExtensions.CycleInt(value,m_MaxActionSize); }
+        set { m_CurrentCounter = MathfExtensions.CycleInt(value, m_MaxActionSize); }
     }
 
     //For Node commands to get and use 
@@ -32,25 +33,28 @@ public class NodeCommandInvoker
     public static CreateEffectNode d_CreateEffectNode = null;
     public static ReCreateEffectNode d_ReCreateEffectNode = null;
     public static DeleteNodes d_DeleteNodes = null;
+    public static MoveNodes d_MoveNodes = null;
 
 
     #region Construction
-    public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, DeleteNodes deleteNodes)
+    public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, DeleteNodes deleteNodes, MoveNodes moveNodes)
     {
         m_MaxActionSize = 10;
         m_CommandHistory = new INodeCommand[m_MaxActionSize];
         d_CreateEffectNode = createEffectNode;
         d_ReCreateEffectNode = recreateEffectNode;
         d_DeleteNodes = deleteNodes;
+        d_MoveNodes = moveNodes;
     }
 
-    public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, DeleteNodes deleteNodes)
+    public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, DeleteNodes deleteNodes, MoveNodes moveNodes)
     {
-        m_MaxActionSize = actionSize ;
+        m_MaxActionSize = actionSize;
         m_CommandHistory = new INodeCommand[actionSize];
         d_CreateEffectNode = createEffectNode;
         d_ReCreateEffectNode = recreateEffectNode;
         d_DeleteNodes = deleteNodes;
+        d_MoveNodes = moveNodes;
     }
 
     #endregion
