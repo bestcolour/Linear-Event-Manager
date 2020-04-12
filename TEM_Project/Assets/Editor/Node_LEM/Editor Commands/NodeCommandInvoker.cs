@@ -16,7 +16,8 @@ public class NodeCommandInvoker
     public delegate void RestitchConnections(LEM_BaseEffect currentEffect);
     public delegate void DeleteNodes(BaseEffectNode[] nodesToBeDeleted);
     public delegate void MoveNodes(string[] nodeIDsMoved,ref Vector2[] previousTopRectPositions,ref Vector2[] previousMidRectPositions,ref Vector2[] previousTotalRectPositions);
-
+    public delegate void CreateConnection(string inPointNodeID,string outPointNodeID);
+    public delegate void RemoveConnection(string inPointNodeID, string outPointNodeID);
     #endregion
 
 
@@ -37,10 +38,14 @@ public class NodeCommandInvoker
     public static RestitchConnections d_RestitchConnections = null;
     public static DeleteNodes d_DeleteNodes = null;
     public static MoveNodes d_MoveNodes = null;
+    public static CreateConnection d_CreateConnection = null;
+    public static RemoveConnection d_RemoveConnection = null;
 
 
     #region Construction
-    public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes)
+    public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode,
+        RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes, 
+        CreateConnection createConnection,RemoveConnection removeConnection)
     {
         m_MaxActionSize = 10;
         m_CommandHistory = new INodeCommand[m_MaxActionSize];
@@ -49,9 +54,13 @@ public class NodeCommandInvoker
         d_RestitchConnections = restitchConnections;
         d_DeleteNodes = deleteNodes;
         d_MoveNodes = moveNodes;
+        d_CreateConnection = createConnection;
+        d_RemoveConnection = removeConnection;
     }
 
-    public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes)
+    public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode,
+        RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes, 
+        CreateConnection createConnection, RemoveConnection removeConnection)
     {
         m_MaxActionSize = actionSize;
         m_CommandHistory = new INodeCommand[actionSize];
@@ -60,6 +69,8 @@ public class NodeCommandInvoker
         d_RestitchConnections = restitchConnections;
         d_DeleteNodes = deleteNodes;
         d_MoveNodes = moveNodes;
+        d_CreateConnection = createConnection;
+        d_RemoveConnection = removeConnection;
     }
 
     #endregion

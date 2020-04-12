@@ -1,7 +1,8 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using System;
 using LEM_Effects;
 using System.Linq;
@@ -11,12 +12,9 @@ public class NodeLEM_Editor : EditorWindow
     public static NodeLEM_Editor instance = default;
     public static LinearEvent s_CurrentLE = default;
 
-    //For saving
+    //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
     List<Node> AllNodesInEditor => instance.m_AllNodesInEditor;
-
-    //OrderedDictionary m_AllNodesInEditor = new OrderedDictionary();
-    //OrderedDictionary AllNodesInEditor => instance.m_AllNodesInEditor;
 
     Dictionary<string, BaseEffectNode> m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
     Dictionary<string, BaseEffectNode> AllEffectsNodeInEditor => instance.m_AllEffectsNodeInEditor;
@@ -173,12 +171,11 @@ public class NodeLEM_Editor : EditorWindow
 
         if (s_CommandInvoker == null)
         {
-            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode, RecreateEffectNode,AttemptToRestichConnections, DeleteNodes, MoveNodes);
+            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode, RecreateEffectNode, AttemptToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, AttemptToRemoveConnection);
         }
 
         if (m_AllNodesInEditor == null)
         {
-            //m_AllNodesInEditor = new OrderedDictionary();
             m_AllNodesInEditor = new List<Node>();
         }
 
@@ -731,7 +728,7 @@ public class NodeLEM_Editor : EditorWindow
             OnClickInPoint,
             OnClickOutPoint,
             AddNodeToSelectedCollection,
-            RemoveNodeFromSelectedCollection,
+            AttemptToRemoveNodeFromSelectedCollection,
             LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
             );
 
@@ -759,7 +756,7 @@ public class NodeLEM_Editor : EditorWindow
             OnClickInPoint,
             OnClickOutPoint,
             AddNodeToSelectedCollection,
-            RemoveNodeFromSelectedCollection,
+            AttemptToRemoveNodeFromSelectedCollection,
             LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
             );
 
@@ -815,7 +812,7 @@ public class NodeLEM_Editor : EditorWindow
             OnClickInPoint,
             OnClickOutPoint,
             AddNodeToSelectedCollection,
-            RemoveNodeFromSelectedCollection,
+            AttemptToRemoveNodeFromSelectedCollection,
             LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
             );
 
@@ -842,7 +839,7 @@ public class NodeLEM_Editor : EditorWindow
             OnClickInPoint,
             OnClickOutPoint,
             AddNodeToSelectedCollection,
-            RemoveNodeFromSelectedCollection,
+            AttemptToRemoveNodeFromSelectedCollection,
             LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
             );
 
@@ -986,7 +983,7 @@ public class NodeLEM_Editor : EditorWindow
                 &&
                 !AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
             {
-                RecreateConnection(
+                CreateConnection(
                           AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NextPointsIDs[0]].m_InPoint,
                           AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].m_OutPoint
                           );
@@ -1003,7 +1000,7 @@ public class NodeLEM_Editor : EditorWindow
                     &&
                     !AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
                 {
-                    RecreateConnection(
+                    CreateConnection(
                     AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NextPointsIDs[n]].m_InPoint,
                     AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].m_OutPoint
                     );
@@ -1011,6 +1008,8 @@ public class NodeLEM_Editor : EditorWindow
 
         }
     }
+
+
 
     #region Delegates
 
@@ -1046,7 +1045,9 @@ public class NodeLEM_Editor : EditorWindow
                       );
             }
 
-            CreateConnection();
+            //CreateConnection();
+            s_CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID));
+
             ResetDrawingBezierCurve();
         }
         else
@@ -1093,7 +1094,9 @@ public class NodeLEM_Editor : EditorWindow
                    );
             }
 
-            CreateConnection();
+            //CreateConnection();
+            s_CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID));
+
             ResetDrawingBezierCurve();
         }
         //Else just reset
@@ -1111,14 +1114,16 @@ public class NodeLEM_Editor : EditorWindow
     {
         //Check if there is any connections to be removed from this node
 
-        if (AllConnectionsDictionary.TryGetValue(
-            new Tuple<string, string>(nodeToRemove.m_OutPoint.GetConnectedNodeID(0),
-            nodeToRemove.NodeID),
-            out Connection connectionToRemove))
-        {
-            //Remove any connections that is connected to the node's outpoint
-            OnClickRemoveConnection(connectionToRemove);
-        }
+        AttemptToRemoveConnection(nodeToRemove.m_OutPoint.GetConnectedNodeID(0), nodeToRemove.NodeID);
+
+        //if (AllConnectionsDictionary.TryGetValue(
+        //    new Tuple<string, string>(nodeToRemove.m_OutPoint.GetConnectedNodeID(0),
+        //    nodeToRemove.NodeID),
+        //    out Connection connectionToRemove))
+        //{
+        //    //Remove any connections that is connected to the node's outpoint
+        //    OnClickRemoveConnection(connectionToRemove);
+        //}
 
         //Remove any and allconnections connected to the node's inpoint
         string[] allNodesConnectedToInPoint = nodeToRemove.m_InPoint.GetAllConnectedNodeIDs();
@@ -1128,7 +1133,7 @@ public class NodeLEM_Editor : EditorWindow
         }
 
         //Remove node from selected collection if it is inside
-        RemoveNodeFromSelectedCollection(nodeToRemove);
+        AttemptToRemoveNodeFromSelectedCollection(nodeToRemove);
 
         //O(n) operation only, inother words same as list.Remove( )
         //Need nodeid to be checked cause Node references are lost during command invoker
@@ -1139,24 +1144,57 @@ public class NodeLEM_Editor : EditorWindow
             AllEffectsNodeInEditor.Remove(nodeToRemove.NodeID);
     }
 
-    //Used for clicking on points
-    void CreateConnection()
-    {
-        //Add connection to dual key dictionary
-        AllConnectionsDictionary.Add(
-            new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID),
-            new Connection(m_SelectedInPoint, m_SelectedOutPoint, OnClickRemoveConnection)
-            );
+    ////Used for clicking on points
+    //void CreateConnection()
+    //{
+    //    //Add connection to dual key dictionary
+    //    AllConnectionsDictionary.Add(
+    //        new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID),
+    //        new Connection(m_SelectedInPoint, m_SelectedOutPoint, OnClickRemoveConnection)
+    //        );
 
-        TrySetConnectionPoint(m_SelectedInPoint);
-        TrySetConnectionPoint(m_SelectedOutPoint);
-    }
+    //    TrySetConnectionPoint(m_SelectedInPoint);
+    //    TrySetConnectionPoint(m_SelectedOutPoint);
+    //}
 
-    void RecreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
+    void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
     {
         //Add connection to dual key dictionary
         AllConnectionsDictionary.Add(
             new Tuple<string, string>(inPoint.m_ParentNode.NodeID, outPoint.m_ParentNode.NodeID),
+            new Connection(inPoint, outPoint, OnClickRemoveConnection)
+            );
+
+        TrySetConnectionPoint(inPoint);
+        TrySetConnectionPoint(outPoint);
+    }
+
+    void CreateConnection(string inPointNodeID, string outPointNodeID)
+    {
+        ConnectionPoint inPoint = default;
+        ConnectionPoint outPoint = default;
+
+        //Assign the inpoint n outpoint by first checking if either one of them are start nodes
+        if (inPointNodeID == StartNode.NodeID)
+        {
+            inPoint = StartNode.m_InPoint;
+            outPoint = AllEffectsNodeInEditor[outPointNodeID].m_OutPoint;
+        }
+        else if (outPointNodeID == StartNode.NodeID)
+        {
+            outPoint = StartNode.m_OutPoint;
+            inPoint = AllEffectsNodeInEditor[inPointNodeID].m_InPoint;
+        }
+        //Else if both em arent start nodes that means both of em are effecNodes
+        else
+        {
+            outPoint = AllEffectsNodeInEditor[outPointNodeID].m_OutPoint;
+            inPoint = AllEffectsNodeInEditor[inPointNodeID].m_InPoint;
+        }
+
+        //Add connection to dual key dictionary
+        AllConnectionsDictionary.Add(
+            new Tuple<string, string>(inPointNodeID, outPointNodeID),
             new Connection(inPoint, outPoint, OnClickRemoveConnection)
             );
 
@@ -1180,6 +1218,18 @@ public class NodeLEM_Editor : EditorWindow
             );
     }
 
+    void AttemptToRemoveConnection(string inPointNodeID, string outPointNodeID)
+    {
+        if (AllConnectionsDictionary.TryGetValue(
+           new Tuple<string, string>(inPointNodeID,
+           outPointNodeID),
+           out Connection connectionToRemove))
+        {
+            //Remove any connections that is connected to the node's outpoint
+            OnClickRemoveConnection(connectionToRemove);
+        }
+    }
+
     void AddNodeToSelectedCollection(Node nodeToAdd)
     {
         //If all selected doesnt contain this node, add it
@@ -1187,7 +1237,7 @@ public class NodeLEM_Editor : EditorWindow
             m_AllSelectedNodes.Add(nodeToAdd);
     }
 
-    void RemoveNodeFromSelectedCollection(Node nodeToRemove)
+    void AttemptToRemoveNodeFromSelectedCollection(Node nodeToRemove)
     {
         //If all selected doesnt contain this node, add it
         if (m_AllSelectedNodes.Contains(nodeToRemove))
@@ -1414,7 +1464,7 @@ public class NodeLEM_Editor : EditorWindow
             //}
 
             //Else just find the next node from the dictionary of all effects node
-            RecreateConnection(
+            CreateConnection(
                              AllEffectsNodeInEditor[s_CurrentLE.m_StartNodeData.m_NextPointsIDs[0]].m_InPoint,
                              StartNode.m_OutPoint
                             );

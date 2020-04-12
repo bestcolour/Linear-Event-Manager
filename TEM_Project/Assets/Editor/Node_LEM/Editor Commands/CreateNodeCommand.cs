@@ -117,71 +117,6 @@ public class DeleteNodeCommand : INodeCommand
     #endregion
 }
 
-
-//public class MoveNodeCommand : INodeCommand
-//{
-//    Node[] m_NodesMoved = default;
-
-//    Vector2[] m_PreviousTopRectPositions = default;
-//    Vector2[] m_PreviousMidRectPositions = default;
-//    Vector2[] m_PreviousTotalRectPositions = default;
-
-//    //i need prev pos
-//    //and the nodes that are moving
-//    public MoveNodeCommand(Node[] nodesMoved)
-//    {
-//        m_NodesMoved = nodesMoved;
-
-//        m_PreviousTopRectPositions = new Vector2[m_NodesMoved.Length];
-//        m_PreviousMidRectPositions = new Vector2[m_NodesMoved.Length];
-//        m_PreviousTotalRectPositions = new Vector2[m_NodesMoved.Length];
-
-//        for (int i = 0; i < m_NodesMoved.Length; i++)
-//        {
-//            m_PreviousTopRectPositions[i] = m_NodesMoved[i].m_TopRect.position;
-//            m_PreviousMidRectPositions[i] = m_NodesMoved[i].m_MidRect.position;
-//            m_PreviousTotalRectPositions[i] = m_NodesMoved[i].m_TotalRect.position;
-//        }
-
-
-//        ////Populate previous positions
-//        //m_PreviousTopRectPositions = m_NodesMoved.Select(x => x.m_TopRect.position).ToArray();
-//        //m_PreviousMidRectPositions = m_NodesMoved.Select(x => x.m_MidRect.position).ToArray();
-//        //m_PreviousTotalRectPositions = m_NodesMoved.Select(x => x.m_TotalRect.position).ToArray();
-
-//    }
-
-//    public void Execute() { }
-
-//    public void Undo()
-//    {
-//        Vector2 currentNodePosition;
-//        //Revert all the node's positions to the prev positions but before that, save that position in a local var to reassign to prev pos 
-//        for (int i = 0; i < m_NodesMoved.Length; i++)
-//        {
-//            currentNodePosition = m_NodesMoved[i].m_TopRect.position;
-//            m_NodesMoved[i].m_TopRect.position = m_PreviousTopRectPositions[i];
-//            m_PreviousTopRectPositions[i] = currentNodePosition;
-
-//            currentNodePosition = m_NodesMoved[i].m_MidRect.position;
-//            m_NodesMoved[i].m_MidRect.position = m_PreviousMidRectPositions[i];
-//            m_PreviousMidRectPositions[i] = currentNodePosition;
-
-//            currentNodePosition = m_NodesMoved[i].m_TotalRect.position;
-//            m_NodesMoved[i].m_TotalRect.position = m_PreviousTotalRectPositions[i];
-//            m_PreviousTotalRectPositions[i] = currentNodePosition;
-//        }
-//    }
-
-//    public void Redo()
-//    {
-//        Undo();
-//    }
-
-
-//}
-
-
 public class MoveNodeCommand : INodeCommand
 {
     string[] m_NodeIDsMoved = default;
@@ -210,11 +145,6 @@ public class MoveNodeCommand : INodeCommand
             m_PreviousTotalRectPositions[i] = nodesMoved[i].m_TotalRect.position;
         }
 
-        ////Populate previous positions
-        //m_PreviousTopRectPositions = m_NodesMoved.Select(x => x.m_TopRect.position).ToArray();
-        //m_PreviousMidRectPositions = m_NodesMoved.Select(x => x.m_MidRect.position).ToArray();
-        //m_PreviousTotalRectPositions = m_NodesMoved.Select(x => x.m_TotalRect.position).ToArray();
-
     }
 
     public void Execute() { }
@@ -222,23 +152,6 @@ public class MoveNodeCommand : INodeCommand
     public void Undo()
     {
         NodeCommandInvoker.d_MoveNodes(m_NodeIDsMoved, ref m_PreviousTopRectPositions, ref m_PreviousMidRectPositions, ref m_PreviousTotalRectPositions);
-
-        //Vector2 currentNodePosition;
-        ////Revert all the node's positions to the prev positions but before that, save that position in a local var to reassign to prev pos 
-        //for (int i = 0; i < m_NodesMoved.Length; i++)
-        //{
-        //    currentNodePosition = m_NodesMoved[i].m_TopRect.position;
-        //    m_NodesMoved[i].m_TopRect.position = m_PreviousTopRectPositions[i];
-        //    m_PreviousTopRectPositions[i] = currentNodePosition;
-
-        //    currentNodePosition = m_NodesMoved[i].m_MidRect.position;
-        //    m_NodesMoved[i].m_MidRect.position = m_PreviousMidRectPositions[i];
-        //    m_PreviousMidRectPositions[i] = currentNodePosition;
-
-        //    currentNodePosition = m_NodesMoved[i].m_TotalRect.position;
-        //    m_NodesMoved[i].m_TotalRect.position = m_PreviousTotalRectPositions[i];
-        //    m_PreviousTotalRectPositions[i] = currentNodePosition;
-        //}
     }
 
     public void Redo()
@@ -249,3 +162,32 @@ public class MoveNodeCommand : INodeCommand
 
 }
 
+public class CreateConnectionCommand : INodeCommand
+{
+    string m_InPointNodeID = default;
+    string m_OutPointNodeID= default;
+
+
+    public CreateConnectionCommand(string inPointNodeID,string outPointNodeID)
+    {
+        m_InPointNodeID = inPointNodeID;
+        m_OutPointNodeID = outPointNodeID;
+    }
+
+    public void Execute()
+    {
+        NodeCommandInvoker.d_CreateConnection(m_InPointNodeID,m_OutPointNodeID);
+    }
+
+    public void Undo()
+    {
+        NodeCommandInvoker.d_RemoveConnection(m_InPointNodeID, m_OutPointNodeID);
+    }
+
+    public void Redo()
+    {
+        NodeCommandInvoker.d_CreateConnection(m_InPointNodeID,m_OutPointNodeID);
+    }
+
+   
+}
