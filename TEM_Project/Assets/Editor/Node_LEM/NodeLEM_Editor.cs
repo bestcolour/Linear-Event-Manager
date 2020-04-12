@@ -610,7 +610,8 @@ public class NodeLEM_Editor : EditorWindow
                     //Paste
                     else if(e.keyCode == KeyCode.V)
                     {
-
+                        s_CommandInvoker.InvokeCommand(new PasteCommand());
+                        e.Use();
                     }
                 }
 

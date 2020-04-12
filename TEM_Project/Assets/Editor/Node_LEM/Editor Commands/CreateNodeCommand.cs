@@ -192,27 +192,110 @@ public class CreateConnectionCommand : INodeCommand
 
 public class PasteCommand : INodeCommand
 {
+    static readonly Vector2 s_PasteOffset = new Vector2(5f,5f);
+
+    LEM_BaseEffect[] m_PastedEffects = default;
+
+    BaseEffectNode[] m_PastedNodes = default;
+
 
     public PasteCommand()
     {
+        m_PastedEffects = new LEM_BaseEffect[NodeCommandInvoker.s_ClipBoard.Count];
+        m_PastedNodes = new BaseEffectNode[NodeCommandInvoker.s_ClipBoard.Count];
+
+
+        //Copy pasted effects
         for (int i = 0; i < NodeCommandInvoker.s_ClipBoard.Count; i++)
         {
-            NodeCommandInvoker.s_ClipBoard[i].;
+            m_PastedEffects[i] = NodeCommandInvoker.s_ClipBoard[i];
         }
     }
 
     public void Execute()
     {
-        throw new NotImplementedException();
-    }
+        //all of these needs to be done in a certain order
 
-    public void Redo()
-    {
-        throw new NotImplementedException();
+        //Create new nodes
+        for (int i = 0; i < m_PastedEffects.Length; i++)
+        {
+            //Create a duplicate node with a new node id
+            m_PastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(nodePos:m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType);
+        }
+
+
+        //After cr8ting new nodes, settle their new node id identity issues (new node id means their current NodeID and ConnectedNodeID are wrong)
+        for (int i = 0; i < m_PastedEffects.Length; i++)
+        {
+            //If this effect's node doesnt have at least one next node connected
+            if (!m_PastedEffects[i].m_NodeBaseData.HasAtLeastOneNextPointNode)
+            {
+                continue;
+            }
+
+            //Since there is only one output for now
+            string[] dummy = new string[m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs.Length];
+
+            //Populate dummy here but i cant think of a way to avoid a O(n^2) situation
+            //the best i can think of is to change this into a O(n log n) situation by using a list which removes its elements as it checks each elements so that we can narrow down our search list
+            if (m_PastedEffects[i].m_NodeBaseData.HasOnlyOneNextPointNode)
+            {
+                for (int i = 0; i < m_PastedEffects.Length; i++)
+                {
+
+                }
+            }
+
+
+            m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs = dummy;
+
+
+
+        }
+
+        for (int i = 0; i < m_PastedEffects.Length; i++)
+        {
+            //Reassign Effects' nodeid to a new one cause we just created a new effect node
+            m_PastedEffects[i].m_NodeBaseData.m_NodeID = m_PastedNodes[i].NodeID;
+
+        }
+
+        //Restitch after all the node identity crisis has been settled
+        //Then copy over all the lemEffect related data after all the reseting and stuff
+        for (int i = 0; i < m_PastedEffects.Length; i++)
+        {
+            NodeCommandInvoker.d_RestitchConnections(m_PastedEffects[i]);
+
+            m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
+        }
+
     }
 
     public void Undo()
     {
-        throw new NotImplementedException();
+        //Save before deleting the node
+        for (int i = 0; i < m_PastedEffects.Length; i++)
+        {
+            m_PastedEffects[i] = m_PastedNodes[i].CompileToBaseEffect();
+        }
+
+        //Delete the nodes
+        NodeCommandInvoker.d_DeleteNodes?.Invoke(m_PastedNodes);
     }
+
+    public void Redo()
+    {
+        //Create new nodes
+        for (int i = 0; i < m_PastedEffects.Length; i++)
+        {
+            //Create a duplicate node with a new node id
+            m_PastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType);
+
+            //Then copy over all the lemEffect related data
+            m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
+        }
+
+    }
+
+
 }
