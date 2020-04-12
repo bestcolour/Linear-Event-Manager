@@ -1,7 +1,8 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using System;
 using LEM_Effects;
 using System.Linq;
@@ -11,12 +12,9 @@ public class NodeLEM_Editor : EditorWindow
     public static NodeLEM_Editor instance = default;
     public static LinearEvent s_CurrentLE = default;
 
-    //For saving
+    //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
     List<Node> AllNodesInEditor => instance.m_AllNodesInEditor;
-
-    //OrderedDictionary m_AllNodesInEditor = new OrderedDictionary();
-    //OrderedDictionary AllNodesInEditor => instance.m_AllNodesInEditor;
 
     Dictionary<string, BaseEffectNode> m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
     Dictionary<string, BaseEffectNode> AllEffectsNodeInEditor => instance.m_AllEffectsNodeInEditor;
@@ -178,7 +176,6 @@ public class NodeLEM_Editor : EditorWindow
 
         if (m_AllNodesInEditor == null)
         {
-            //m_AllNodesInEditor = new OrderedDictionary();
             m_AllNodesInEditor = new List<Node>();
         }
 
