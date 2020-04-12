@@ -23,6 +23,9 @@ public class NodeCommandInvoker
 
     INodeCommand[] m_CommandHistory = null;
 
+    //Copy feature
+    public static List<LEM_BaseEffect> s_ClipBoard = new List<LEM_BaseEffect>();
+
     int m_CurrentCounter = 0;
     int m_MaxActionSize = default;
     int Counter
@@ -117,6 +120,17 @@ public class NodeCommandInvoker
             Debug.Log("Redo has reached its limit!");
         }
 
+    }
+
+    public void CopyToClipBoard(BaseEffectNode[] copiedEffectNodes)
+    {
+        s_ClipBoard.Clear();
+
+        for (int i = 0; i < copiedEffectNodes.Length; i++)
+        {
+            //Save to clipboard
+            s_ClipBoard.Add(copiedEffectNodes[i].CompileToBaseEffect());
+        }
     }
 
 }

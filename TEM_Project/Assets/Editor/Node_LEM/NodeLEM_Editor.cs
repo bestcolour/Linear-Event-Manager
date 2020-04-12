@@ -131,7 +131,7 @@ public class NodeLEM_Editor : EditorWindow
     #region NodeInvoker
 
     static NodeCommandInvoker s_CommandInvoker = default;
-    bool m_IsStartedDragging = default;
+    bool m_IsDragging = default;
 
     #endregion
     static Texture2D s_EditorBackGroundTexture = default;
@@ -225,7 +225,7 @@ public class NodeLEM_Editor : EditorWindow
     void ResetEventVariables()
     {
         m_InitialClickedPosition = null;
-        m_IsStartedDragging = false;
+        m_IsDragging = false;
         s_SelectionBox = default;
         s_CurrentClickedNode = null;
         GUI.changed = true;
@@ -535,9 +535,9 @@ public class NodeLEM_Editor : EditorWindow
                         GUI.changed = true;
                     }
                     //If user is currently planning to drag a node and wasnt draggin the previous paint,
-                    else if (s_CurrentClickedNode != null && !m_IsStartedDragging)
+                    else if (s_CurrentClickedNode != null && !m_IsDragging)
                     {
-                        m_IsStartedDragging = true;
+                        m_IsDragging = true;
                         s_CommandInvoker.InvokeCommand(new MoveNodeCommand(m_AllSelectedNodes.ToArray()));
                     }
                 }
@@ -555,7 +555,7 @@ public class NodeLEM_Editor : EditorWindow
             case EventType.KeyUp:
 
                 //Dont do any commands when u r dragging
-                if (m_IsStartedDragging)
+                if (m_IsDragging)
                     return;
 
                 if (e.keyCode == KeyCode.Delete)
@@ -580,18 +580,40 @@ public class NodeLEM_Editor : EditorWindow
                     s_IsSearchBoxActive = false;
                     ResetDrawingBezierCurve();
                 }
-                else if (e.control && e.keyCode == KeyCode.Q)
+                //Else if control is held down,
+                else if (e.control)
                 {
+                    //Undo
+                    if(e.keyCode == KeyCode.Q)
+                    {
+                        s_CommandInvoker.UndoCommand();
+                        e.Use();
+                    }
+                    //Redo
+                    else if (e.keyCode == KeyCode.W)
+                    {
+                        s_CommandInvoker.RedoCommand();
+                        e.Use();
+                    }
+                    //Copy
+                    else if(e.keyCode == KeyCode.C)
+                    {
+                        //Remove start and end node 
+                        if (m_AllSelectedNodes.Contains(StartNode))
+                        {
+                            StartNode.DeselectNode();
+                        }
 
-                    s_CommandInvoker.UndoCommand();
-                    e.Use();
-                }
-                else if (e.control && e.keyCode == KeyCode.W)
-                {
+                        s_CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                        e.Use();
+                    }
+                    //Paste
+                    else if(e.keyCode == KeyCode.V)
+                    {
 
-                    s_CommandInvoker.RedoCommand();
-                    e.Use();
+                    }
                 }
+
                 break;
         }
     }

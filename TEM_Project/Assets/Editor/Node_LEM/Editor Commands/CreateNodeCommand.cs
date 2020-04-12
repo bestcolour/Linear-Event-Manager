@@ -188,6 +188,31 @@ public class CreateConnectionCommand : INodeCommand
     {
         NodeCommandInvoker.d_CreateConnection(m_InPointNodeID,m_OutPointNodeID);
     }
+}
 
-   
+public class PasteCommand : INodeCommand
+{
+
+    public PasteCommand()
+    {
+        for (int i = 0; i < NodeCommandInvoker.s_ClipBoard.Count; i++)
+        {
+            NodeCommandInvoker.s_ClipBoard[i].;
+        }
+    }
+
+    public void Execute()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Redo()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Undo()
+    {
+        throw new NotImplementedException();
+    }
 }
