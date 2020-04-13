@@ -46,9 +46,9 @@ public class InstantiateGameObjectNode : BaseEffectNode
         effect.m_Description = m_LemEffectDescription;
 
         string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
-        string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
+        //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
 
-        effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position,NodeID, connectedNextPointNodeIDs, connectedPrevPointNodeIDs);
+        effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position,NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
 
         effect.m_NodeEffectType = this.GetType().ToString();
 

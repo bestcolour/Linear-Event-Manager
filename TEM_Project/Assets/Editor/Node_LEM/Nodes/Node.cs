@@ -265,22 +265,22 @@ public abstract class Node
         return connectedNodeIDs;
     }
 
-    protected string[] TryToSavePrevPointNodeID()
-    {
-        //Returns true value of saved state
-        string[] connectedNodeIDs = m_InPoint.IsConnected ? m_InPoint.GetAllConnectedNodeIDs() : new string[0];
+    //protected string[] TryToSavePrevPointNodeID()
+    //{
+    //    //Returns true value of saved state
+    //    string[] connectedNodeIDs = m_InPoint.IsConnected ? m_InPoint.GetAllConnectedNodeIDs() : new string[0];
 
-        return connectedNodeIDs;
-    }
+    //    return connectedNodeIDs;
+    //}
 
 
     //Returns only NodeBaseData (use for non effect nodes)
     public virtual NodeBaseData SaveNodeData()
     {
         string[] connectedNextNodeIDs = TryToSaveNextPointNodeID();
-        string[] connectedPrevNodeIDs = TryToSavePrevPointNodeID();
+        //string[] connectedPrevNodeIDs = TryToSavePrevPointNodeID();
 
-        return new NodeBaseData(m_MidRect.position, NodeID, connectedNextNodeIDs, connectedPrevNodeIDs);
+        return new NodeBaseData(m_MidRect.position, NodeID, connectedNextNodeIDs/*, connectedPrevNodeIDs*/);
     }
 
     //Change values here

@@ -607,6 +607,18 @@ public class NodeLEM_Editor : EditorWindow
                         s_CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
                         e.Use();
                     }
+                    //Cut
+                    else if (e.keyCode == KeyCode.X)
+                    {
+                        //Remove start and end node 
+                        if (m_AllSelectedNodes.Contains(StartNode))
+                        {
+                            StartNode.DeselectNode();
+                        }
+
+                        s_CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+                        e.Use();
+                    }
                     //Paste
                     else if(e.keyCode == KeyCode.V)
                     {

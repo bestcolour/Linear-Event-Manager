@@ -778,8 +778,8 @@ MonoBehaviour:
   m_LinearEventName: 
   m_AllEffects: []
   m_StartNodeData:
-    m_Position: {x: 0, y: 0}
-    m_NodeID: 
+    m_Position: {x: 35.777687, y: -138.88895}
+    m_NodeID: a12dcc72-0909-4421-bbaa-90b689e0cd16
     m_NextPointsIDs: []
 --- !u!4 &2127555589
 Transform:

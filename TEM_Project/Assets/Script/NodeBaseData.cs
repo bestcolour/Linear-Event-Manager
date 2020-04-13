@@ -12,19 +12,19 @@ public struct NodeBaseData
     public string m_NodeID;
     [ReadOnly]
     public string[] m_NextPointsIDs;
-    [ReadOnly]
-    public string[] m_PrevPointNodeID;
+    //[ReadOnly]
+    //public string[] m_PrevPointNodeID;
 
-    public NodeBaseData(Vector2 position, string nodeID, string[] outPointID, string[] prevNodeID)
+    public NodeBaseData(Vector2 position, string nodeID, string[] outPointID/*, string[] prevNodeID*/)
     {
         m_Position = position;
         m_NodeID = nodeID;
-        m_PrevPointNodeID = prevNodeID;
+        //m_PrevPointNodeID = prevNodeID;
         m_NextPointsIDs = outPointID;
     }
 
-    public bool HasOnlyOnePrevPointNode => m_PrevPointNodeID.Length == 1 ? true : false;
-    public bool HasAtLeastOnePrevPointNode => m_PrevPointNodeID.Length > 0 ? true : false;
+    //public bool HasOnlyOnePrevPointNode => m_PrevPointNodeID.Length == 1 ? true : false;
+    //public bool HasAtLeastOnePrevPointNode => m_PrevPointNodeID.Length > 0 ? true : false;
 
     public bool HasOnlyOneNextPointNode => m_NextPointsIDs.Length == 1? true : false;
     public bool HasAtLeastOneNextPointNode => m_NextPointsIDs.Length> 0? true : false;

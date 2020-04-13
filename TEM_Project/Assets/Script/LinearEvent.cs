@@ -18,7 +18,6 @@ public class LinearEvent : MonoBehaviour
 
 
     public NodeBaseData m_StartNodeData = default;
-    //public NodeBaseData m_EndNodeData = default;
 
 
     //Removes any unconnected LEM effects from the m_AllEffectsDictionary
