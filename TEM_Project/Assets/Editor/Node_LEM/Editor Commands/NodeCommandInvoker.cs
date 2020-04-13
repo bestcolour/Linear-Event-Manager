@@ -18,6 +18,7 @@ public class NodeCommandInvoker
     public delegate void MoveNodes(string[] nodeIDsMoved, ref Vector2[] previousTopRectPositions, ref Vector2[] previousMidRectPositions, ref Vector2[] previousTotalRectPositions);
     public delegate void CreateConnection(string inPointNodeID, string outPointNodeID);
     public delegate void RemoveConnection(string inPointNodeID, string outPointNodeID);
+    public delegate void DeselectAllNodes();
     #endregion
 
 
@@ -43,12 +44,13 @@ public class NodeCommandInvoker
     public static MoveNodes d_MoveNodes = null;
     public static CreateConnection d_CreateConnection = null;
     public static RemoveConnection d_RemoveConnection = null;
+    public static DeselectAllNodes d_DeselectAllNodes = null;
 
 
     #region Construction
     public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode,
         RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes,
-        CreateConnection createConnection, RemoveConnection removeConnection)
+        CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes)
     {
         m_MaxActionSize = 10;
         m_CommandHistory = new INodeCommand[m_MaxActionSize];
@@ -59,11 +61,12 @@ public class NodeCommandInvoker
         d_MoveNodes = moveNodes;
         d_CreateConnection = createConnection;
         d_RemoveConnection = removeConnection;
+        d_DeselectAllNodes = deselectAllNodes;
     }
 
     public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode,
         RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes,
-        CreateConnection createConnection, RemoveConnection removeConnection)
+        CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes)
     {
         m_MaxActionSize = actionSize;
         m_CommandHistory = new INodeCommand[actionSize];
@@ -74,6 +77,7 @@ public class NodeCommandInvoker
         d_MoveNodes = moveNodes;
         d_CreateConnection = createConnection;
         d_RemoveConnection = removeConnection;
+        d_DeselectAllNodes = deselectAllNodes;
     }
 
     #endregion

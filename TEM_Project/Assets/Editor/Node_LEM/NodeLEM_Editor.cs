@@ -122,8 +122,8 @@ public class NodeLEM_Editor : EditorWindow
     {
         mousePos *= 1 / ScaleFactor;
         //instance.CreateEffectNode(mousePos * 1 / ScaleFactor, result);
-        m_IsSearchBoxActive = false;
         s_CommandInvoker.InvokeCommand(new CreateNodeCommand(mousePos, result));
+        instance.m_IsSearchBoxActive = false;
     }
     #endregion
 
@@ -150,14 +150,7 @@ public class NodeLEM_Editor : EditorWindow
 
     public static void LoadNodeEditor(LinearEvent linearEvent)
     {
-        //If there isnt a window alrdy,
-        if(instance == null)
-        {
-            OpenWindow();
-        }
-
-        //After Opening window, (GetWindow will trigger OnEnable)
-        instance.ResetWindow();
+        OpenWindow();
 
         s_CurrentLE = linearEvent;
         instance.LoadFromLinearEvent();
@@ -168,6 +161,7 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnEnable()
     {
+
         instance = this;
 
         LEMStyleLibrary.LoadLibrary();
@@ -177,33 +171,36 @@ public class NodeLEM_Editor : EditorWindow
 
         if (s_CommandInvoker == null)
         {
-            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection);
+            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes);
         }
 
-        //if (m_AllNodesInEditor == null)
-        //{
-        //    m_AllNodesInEditor = new List<Node>();
-        //}
+        if (m_AllNodesInEditor == null)
+        {
+            m_AllNodesInEditor = new List<Node>();
+        }
 
-        //if (m_AllEffectsNodeInEditor == default)
-        //{
-        //    m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
-        //}
+        if (m_AllEffectsNodeInEditor == default)
+        {
+            m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
+        }
 
-        //if (m_AllConnectionsDictionary == null)
-        //{
-        //    m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
-        //}
+        if (m_AllConnectionsDictionary == null)
+        {
+            m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
+        }
 
-        //if (m_AllSelectedNodes == null)
-        //{
-        //    m_AllSelectedNodes = new List<Node>();
-        //}
+        if (m_AllSelectedNodes == null)
+        {
+            m_AllSelectedNodes = new List<Node>();
+        }
 
         if (s_SearchBox == null)
         {
             s_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
         }
+
+        InitialiseStartEndNodes();
+
     }
 
     void InitialiseSkin()
@@ -242,46 +239,30 @@ public class NodeLEM_Editor : EditorWindow
         m_SelectedInPoint = null;
     }
 
-    void ResetWindow()
-    {
-        //Clear all these
-        m_AllNodesInEditor = new List<Node>();
-        m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
-        m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
-        m_IsSearchBoxActive = false;
-
-        //Statics
-        CurrentNodeLastRecordedSelectState = null;
-        //s_CurrentLE = null;
-        //s_CommandInvoker = null;
-        StartNode = null;
-
-        InitialiseStartEndNodes();
-    }
-
-
-    void OnWindowClose()
+    void OnDisable()
     {
         ResetDrawingBezierCurve();
         ResetEventVariables();
-
-        instance = null;
-
-        LEM_InspectorEditor.s_IsLoaded = false;
+        CurrentNodeLastRecordedSelectState = null;
+        s_CurrentLE = null;
+        m_IsSearchBoxActive = false;
     }
 
     //Called when window is closed
     private void OnDestroy()
     {
-        Debug.Log("OnDestroy");
-        OnWindowClose();
+        StartNode = null;
+        ResetDrawingBezierCurve();
+        ResetEventVariables();
+        CurrentNodeLastRecordedSelectState = null;
+        s_CurrentLE = null;
+        m_AllNodesInEditor = null;
+        m_AllEffectsNodeInEditor = null;
+        m_AllConnectionsDictionary = null;
+        LEM_InspectorEditor.s_IsLoaded = false;
+        m_IsSearchBoxActive = false;
+        s_CommandInvoker = null;
     }
-
-    private void OnLostFocus()
-    {
-        Debug.Log("OnLostFocus");
-    }
-
 
 
     #endregion
@@ -451,8 +432,7 @@ public class NodeLEM_Editor : EditorWindow
         if (GUI.Button(new Rect(position.width - 215f, 0, 100f, 50f), "Refresh"))
         {
             LEMStyleLibrary.LoadLibrary();
-            //OnDisable();
-            ResetWindow();
+            OnDisable();
             OnEnable();
         }
     }
@@ -1161,8 +1141,18 @@ public class NodeLEM_Editor : EditorWindow
 
     void TryToRemoveNodeFromSelectedCollection(Node nodeToRemove)
     {
+        //If all selected doesnt contain this node, add it
         m_AllSelectedNodes.Remove(nodeToRemove);
     }
+
+    void DeselectAllNodes()
+    {
+        for (int i = 0; i < AllNodesInEditor.Count; i++)
+        {
+            AllNodesInEditor[i].DeselectNode();
+        }
+    }
+
 
     #endregion
 
@@ -1263,8 +1253,6 @@ public class NodeLEM_Editor : EditorWindow
                             );
         }
 
-        //Draw the changest
-        GUI.changed = true;
     }
 
     #endregion

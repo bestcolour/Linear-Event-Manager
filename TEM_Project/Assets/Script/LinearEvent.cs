@@ -35,6 +35,7 @@ public class LinearEvent : MonoBehaviour
             while (currentEffect != null)
             {
                 effectsInUse.Add(currentEffect);
+
                 //For now ill use this to keep track of what is useful
                 numberEffectsRemoved++;
 
@@ -62,6 +63,7 @@ public class LinearEvent : MonoBehaviour
             }
 
             Debug.Log("Successfully removed " + numberEffectsRemoved + " unused effects");
+
         }
         else
         {

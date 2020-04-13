@@ -22,7 +22,6 @@ public class CreateNodeCommand : INodeCommand
     }
 
 
-    #region Interface Implementations
 
     public void Execute()
     {
@@ -56,7 +55,6 @@ public class CreateNodeCommand : INodeCommand
         NodeCommandInvoker.d_RestitchConnections(m_NodeEffect);
 
     }
-    #endregion
 
 }
 
@@ -74,7 +72,6 @@ public class DeleteNodeCommand : INodeCommand
         m_NodesEffects = new LEM_BaseEffect[deletedNodes.Length];
     }
 
-    #region Interface Implementations
 
     public void Execute()
     {
@@ -114,7 +111,6 @@ public class DeleteNodeCommand : INodeCommand
     {
         Execute();
     }
-    #endregion
 }
 
 public class MoveNodeCommand : INodeCommand
@@ -287,7 +283,8 @@ public class PasteCommand : INodeCommand
         }
 
         #endregion
-
+        //Deselect all nodes 
+        NodeCommandInvoker.d_DeselectAllNodes();
 
         //Restitch after all the node identity crisis has been settled
         //Then copy over all the lemEffect related data after all the reseting and stuff
@@ -295,7 +292,9 @@ public class PasteCommand : INodeCommand
         {
             NodeCommandInvoker.d_RestitchConnections(m_PastedEffects[i]);
 
+            m_PastedNodes[i].SelectNode();
             m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
+
         }
 
     }
