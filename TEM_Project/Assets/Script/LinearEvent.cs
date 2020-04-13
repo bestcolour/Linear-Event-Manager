@@ -26,6 +26,8 @@ public class LinearEvent : MonoBehaviour
         //Check if start node is even connected to anything
         if (m_StartNodeData.HasAtLeastOneNextPointNode)
         {
+            int numberEffectsRemoved = 0;
+
             LEM_BaseEffect currentEffect = m_AllEffectsDictionary[m_StartNodeData.m_NextPointsIDs[0]];
 
             List<LEM_BaseEffect> effectsInUse = new List<LEM_BaseEffect>();
@@ -33,6 +35,8 @@ public class LinearEvent : MonoBehaviour
             while (currentEffect != null)
             {
                 effectsInUse.Add(currentEffect);
+                //For now ill use this to keep track of what is useful
+                numberEffectsRemoved++;
 
                 //If this effect has at least one next node connected to, assign this to next point's node
                 if (currentEffect.m_NodeBaseData.HasAtLeastOneNextPointNode)
@@ -44,6 +48,9 @@ public class LinearEvent : MonoBehaviour
                 break;
             }
 
+            //Now do simple math
+            numberEffectsRemoved = m_AllEffectsDictionary.Count - numberEffectsRemoved;
+
             m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
             m_AllEffects = new LEM_BaseEffect[effectsInUse.Count];
 
@@ -53,6 +60,8 @@ public class LinearEvent : MonoBehaviour
                 m_AllEffectsDictionary.Add(effectsInUse[i].m_NodeBaseData.m_NodeID, effectsInUse[i]);
                 m_AllEffects[i] = effectsInUse[i];
             }
+
+            Debug.Log("Successfully removed " + numberEffectsRemoved + " unused effects");
         }
         else
         {

@@ -255,6 +255,17 @@ public abstract class Node
         //m_NodeSkin.textureToRender = m_NodeSkin.m_NodeBackground;
     }
 
+    public void SelectNode()
+    {
+
+        m_IsDragged = true;
+
+        //Invoke onselect delegate
+        d_OnSelectNode?.Invoke(this);
+
+        m_IsSelected = true;
+    }
+
     #endregion
 
     protected string[] TryToSaveNextPointNodeID()

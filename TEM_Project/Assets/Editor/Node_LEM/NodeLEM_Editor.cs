@@ -80,14 +80,14 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Zooming Variables
 
-    const float k_MinScale = 0.2f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.05f;
+    const float k_MinScale = 0.15f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.05f;
     static float s_CurrentScaleFactor = 1f;
     float ScaleFactor { get { return s_CurrentScaleFactor; } set { s_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
     #endregion
 
     #region SearchBox
     //Search box variables
-    public static bool s_IsSearchBoxActive = false;
+    bool m_IsSearchBoxActive = false;
 
     static LEM_SearchBox s_SearchBox = default;
 
@@ -122,6 +122,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         mousePos *= 1 / ScaleFactor;
         //instance.CreateEffectNode(mousePos * 1 / ScaleFactor, result);
+        m_IsSearchBoxActive = false;
         s_CommandInvoker.InvokeCommand(new CreateNodeCommand(mousePos, result));
     }
     #endregion
@@ -149,7 +150,14 @@ public class NodeLEM_Editor : EditorWindow
 
     public static void LoadNodeEditor(LinearEvent linearEvent)
     {
-        OpenWindow();
+        //If there isnt a window alrdy,
+        if(instance == null)
+        {
+            OpenWindow();
+        }
+
+        //After Opening window, (GetWindow will trigger OnEnable)
+        instance.ResetWindow();
 
         s_CurrentLE = linearEvent;
         instance.LoadFromLinearEvent();
@@ -160,7 +168,6 @@ public class NodeLEM_Editor : EditorWindow
 
     void OnEnable()
     {
-
         instance = this;
 
         LEMStyleLibrary.LoadLibrary();
@@ -173,33 +180,30 @@ public class NodeLEM_Editor : EditorWindow
             s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection);
         }
 
-        if (m_AllNodesInEditor == null)
-        {
-            m_AllNodesInEditor = new List<Node>();
-        }
+        //if (m_AllNodesInEditor == null)
+        //{
+        //    m_AllNodesInEditor = new List<Node>();
+        //}
 
-        if (m_AllEffectsNodeInEditor == default)
-        {
-            m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
-        }
+        //if (m_AllEffectsNodeInEditor == default)
+        //{
+        //    m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
+        //}
 
-        if (m_AllConnectionsDictionary == null)
-        {
-            m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
-        }
+        //if (m_AllConnectionsDictionary == null)
+        //{
+        //    m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
+        //}
 
-        if (m_AllSelectedNodes == null)
-        {
-            m_AllSelectedNodes = new List<Node>();
-        }
+        //if (m_AllSelectedNodes == null)
+        //{
+        //    m_AllSelectedNodes = new List<Node>();
+        //}
 
         if (s_SearchBox == null)
         {
             s_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
         }
-
-        InitialiseStartEndNodes();
-
     }
 
     void InitialiseSkin()
@@ -238,30 +242,46 @@ public class NodeLEM_Editor : EditorWindow
         m_SelectedInPoint = null;
     }
 
-    void OnDisable()
+    void ResetWindow()
+    {
+        //Clear all these
+        m_AllNodesInEditor = new List<Node>();
+        m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
+        m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
+        m_IsSearchBoxActive = false;
+
+        //Statics
+        CurrentNodeLastRecordedSelectState = null;
+        //s_CurrentLE = null;
+        //s_CommandInvoker = null;
+        StartNode = null;
+
+        InitialiseStartEndNodes();
+    }
+
+
+    void OnWindowClose()
     {
         ResetDrawingBezierCurve();
         ResetEventVariables();
-        CurrentNodeLastRecordedSelectState = null;
-        s_CurrentLE = null;
-        s_IsSearchBoxActive = false;
+
+        instance = null;
+
+        LEM_InspectorEditor.s_IsLoaded = false;
     }
 
     //Called when window is closed
     private void OnDestroy()
     {
-        StartNode = null;
-        ResetDrawingBezierCurve();
-        ResetEventVariables();
-        CurrentNodeLastRecordedSelectState = null;
-        s_CurrentLE = null;
-        m_AllNodesInEditor = null;
-        m_AllEffectsNodeInEditor = null;
-        m_AllConnectionsDictionary = null;
-        LEM_InspectorEditor.s_IsLoaded = false;
-        s_IsSearchBoxActive = false;
-        s_CommandInvoker = null;
+        Debug.Log("OnDestroy");
+        OnWindowClose();
     }
+
+    private void OnLostFocus()
+    {
+        Debug.Log("OnLostFocus");
+    }
+
 
 
     #endregion
@@ -431,14 +451,15 @@ public class NodeLEM_Editor : EditorWindow
         if (GUI.Button(new Rect(position.width - 215f, 0, 100f, 50f), "Refresh"))
         {
             LEMStyleLibrary.LoadLibrary();
-            OnDisable();
+            //OnDisable();
+            ResetWindow();
             OnEnable();
         }
     }
 
     void HandleSearchBox(Event e)
     {
-        if (s_IsSearchBoxActive)
+        if (m_IsSearchBoxActive)
             s_SearchBox.HandleSearchBox(e);
     }
 
@@ -477,7 +498,7 @@ public class NodeLEM_Editor : EditorWindow
                     {
                         //Open a custom created that allows creation of more nodes
                         s_SearchBox.Position = currMousePosition * ScaleFactor;
-                        s_IsSearchBoxActive = true;
+                        m_IsSearchBoxActive = true;
                         s_SearchBox.TriggerOnInputOnStart();
 
                         e.Use();
@@ -517,7 +538,7 @@ public class NodeLEM_Editor : EditorWindow
                     //called when i click on input/text fields
                     GUI.FocusControl(null);
 
-                    s_IsSearchBoxActive = false;
+                    m_IsSearchBoxActive = false;
 
                 }
 
@@ -577,14 +598,14 @@ public class NodeLEM_Editor : EditorWindow
 
                     TrySetConnectionPoint(m_SelectedInPoint);
                     TrySetConnectionPoint(m_SelectedOutPoint);
-                    s_IsSearchBoxActive = false;
+                    m_IsSearchBoxActive = false;
                     ResetDrawingBezierCurve();
                 }
                 //Else if control is held down,
                 else if (e.control)
                 {
                     //Undo
-                    if(e.keyCode == KeyCode.Q)
+                    if (e.keyCode == KeyCode.Q)
                     {
                         s_CommandInvoker.UndoCommand();
                         e.Use();
@@ -596,7 +617,7 @@ public class NodeLEM_Editor : EditorWindow
                         e.Use();
                     }
                     //Copy
-                    else if(e.keyCode == KeyCode.C)
+                    else if (e.keyCode == KeyCode.C)
                     {
                         //Remove start and end node 
                         if (m_AllSelectedNodes.Contains(StartNode))
@@ -620,9 +641,21 @@ public class NodeLEM_Editor : EditorWindow
                         e.Use();
                     }
                     //Paste
-                    else if(e.keyCode == KeyCode.V)
+                    else if (e.keyCode == KeyCode.V)
                     {
                         s_CommandInvoker.InvokeCommand(new PasteCommand());
+                        e.Use();
+                    }
+                    //Select all
+                    else if (e.keyCode == KeyCode.A)
+                    {
+                        m_AllSelectedNodes.Clear();
+
+                        for (int i = 0; i < m_AllNodesInEditor.Count; i++)
+                        {
+                            m_AllNodesInEditor[i].SelectNode();
+                        }
+
                         e.Use();
                     }
                 }
@@ -1128,9 +1161,7 @@ public class NodeLEM_Editor : EditorWindow
 
     void TryToRemoveNodeFromSelectedCollection(Node nodeToRemove)
     {
-        //If all selected doesnt contain this node, add it
-        if (m_AllSelectedNodes.Contains(nodeToRemove))
-            m_AllSelectedNodes.Remove(nodeToRemove);
+        m_AllSelectedNodes.Remove(nodeToRemove);
     }
 
     #endregion
@@ -1232,6 +1263,8 @@ public class NodeLEM_Editor : EditorWindow
                             );
         }
 
+        //Draw the changest
+        GUI.changed = true;
     }
 
     #endregion
