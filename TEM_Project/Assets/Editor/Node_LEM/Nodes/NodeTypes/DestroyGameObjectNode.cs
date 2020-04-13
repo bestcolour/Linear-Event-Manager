@@ -36,8 +36,10 @@ public class DestroyGameObjectNode : BaseEffectNode
         myEffect.m_NodeEffectType = this.GetType().ToString();
         myEffect.m_Description = m_LemEffectDescription;
 
-        string[] connectedNodeIDs = TryToSaveConnectedNodeID();
-        myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNodeIDs);
+        string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
+        string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
+
+        myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs, connectedPrevPointNodeIDs);
         myEffect.SetUp(m_TargetObject);
         return myEffect;
 

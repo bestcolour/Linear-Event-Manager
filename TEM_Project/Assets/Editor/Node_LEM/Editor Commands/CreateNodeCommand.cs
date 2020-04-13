@@ -165,10 +165,10 @@ public class MoveNodeCommand : INodeCommand
 public class CreateConnectionCommand : INodeCommand
 {
     string m_InPointNodeID = default;
-    string m_OutPointNodeID= default;
+    string m_OutPointNodeID = default;
 
 
-    public CreateConnectionCommand(string inPointNodeID,string outPointNodeID)
+    public CreateConnectionCommand(string inPointNodeID, string outPointNodeID)
     {
         m_InPointNodeID = inPointNodeID;
         m_OutPointNodeID = outPointNodeID;
@@ -176,7 +176,7 @@ public class CreateConnectionCommand : INodeCommand
 
     public void Execute()
     {
-        NodeCommandInvoker.d_CreateConnection(m_InPointNodeID,m_OutPointNodeID);
+        NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID);
     }
 
     public void Undo()
@@ -186,13 +186,13 @@ public class CreateConnectionCommand : INodeCommand
 
     public void Redo()
     {
-        NodeCommandInvoker.d_CreateConnection(m_InPointNodeID,m_OutPointNodeID);
+        NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID);
     }
 }
 
 public class PasteCommand : INodeCommand
 {
-    static readonly Vector2 s_PasteOffset = new Vector2(5f,5f);
+    static readonly Vector2 s_PasteOffset = new Vector2(5f, 5f);
 
     LEM_BaseEffect[] m_PastedEffects = default;
 
@@ -220,9 +220,12 @@ public class PasteCommand : INodeCommand
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
             //Create a duplicate node with a new node id
-            m_PastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(nodePos:m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType);
+            m_PastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType);
         }
 
+        #region Identity Crisis Management 
+
+        //SINCE lem_baseeffects are references, if i change pastedEffect's list elements values, the m_PastedEffects's elements' values also change too
 
         //After cr8ting new nodes, settle their new node id identity issues (new node id means their current NodeID and ConnectedNodeID are wrong)
         for (int i = 0; i < m_PastedEffects.Length; i++)
@@ -234,31 +237,57 @@ public class PasteCommand : INodeCommand
             }
 
             //Since there is only one output for now
-            string[] dummy = new string[m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs.Length];
+            string[] dummy = m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs;
 
             //Populate dummy here but i cant think of a way to avoid a O(n^2) situation
             //the best i can think of is to change this into a O(n log n) situation by using a list which removes its elements as it checks each elements so that we can narrow down our search list
             if (m_PastedEffects[i].m_NodeBaseData.HasOnlyOneNextPointNode)
             {
-                for (int i = 0; i < m_PastedEffects.Length; i++)
-                {
+                //Find the effect which has the old id but dont update the effect's NodeID but instead, update ur current effect which has the OutPoint Connection
+                int effectIndexWhichHasOldID = Array.FindIndex(m_PastedEffects, x => x.m_NodeBaseData.m_NodeID == dummy[0]);
 
+                //If no such effect is found in the clipboard (that means the connected node isnt selected when user copied)
+                if(effectIndexWhichHasOldID < 0)
+                {
+                    dummy = new string[0];
+                }
+                else
+                {
+                    dummy[0] = m_PastedNodes[effectIndexWhichHasOldID].NodeID;
+                }
+            }
+            //Else if there are multiple nextpoint nodes
+            else
+            {
+                for (int l = 0; l < dummy.Length; l++)
+                {
+                    int effectIndexWhichHasOldID = Array.FindIndex(m_PastedEffects, x => x.m_NodeBaseData.m_NodeID == dummy[l]);
+
+                    //If no such effect is found in the clipboard (that means the connected node isnt selected when user copied)
+                    if (effectIndexWhichHasOldID < 0)
+                    {
+                        dummy[l] = null;
+                    }
+                    else
+                    {
+                        dummy[l] = m_PastedNodes[effectIndexWhichHasOldID].NodeID;
+                    }
                 }
             }
 
-
+            //Reset if dummy is empty
             m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs = dummy;
-
-
-
+            m_PastedEffects[i].m_NodeBaseData.ResetNextPointsIDsIfEmpty();
         }
 
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
             //Reassign Effects' nodeid to a new one cause we just created a new effect node
             m_PastedEffects[i].m_NodeBaseData.m_NodeID = m_PastedNodes[i].NodeID;
-
         }
+
+        #endregion
+
 
         //Restitch after all the node identity crisis has been settled
         //Then copy over all the lemEffect related data after all the reseting and stuff

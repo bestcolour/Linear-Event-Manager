@@ -45,10 +45,15 @@ public class InstantiateGameObjectNode : BaseEffectNode
         InstantiateGameObject effect = ScriptableObject.CreateInstance<InstantiateGameObject>();
         effect.m_Description = m_LemEffectDescription;
 
-        string[] connectedNodeIDs = TryToSaveConnectedNodeID();
-        effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position,NodeID, connectedNodeIDs);
+        string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
+        string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
+
+        effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position,NodeID, connectedNextPointNodeIDs, connectedPrevPointNodeIDs);
 
         effect.m_NodeEffectType = this.GetType().ToString();
+
+        //Effect saving
+
         effect.SetUp(targetObject: m_TargetObject,targetPosition: m_TargetPosition , targetRotation: m_TargetRotation , targetScale: m_TargetScale,numberOfTimes:m_NumberOfTimes);
         return effect;
     }
