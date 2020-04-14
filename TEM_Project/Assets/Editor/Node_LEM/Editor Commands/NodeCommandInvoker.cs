@@ -28,7 +28,7 @@ public class NodeCommandInvoker
     public static List<LEM_BaseEffect> s_ClipBoard = new List<LEM_BaseEffect>();
 
     int m_CurrentCounter = 0;
-    int m_MaxActionSize = default;
+    int m_MaxActionSize = 10;
     int Counter
     {
         get => m_CurrentCounter;
@@ -47,12 +47,12 @@ public class NodeCommandInvoker
     public static DeselectAllNodes d_DeselectAllNodes = null;
 
 
-    #region Construction
+    #region Construction and Resets
     public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode,
         RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes,
         CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes)
     {
-        m_MaxActionSize = 10;
+        //m_MaxActionSize = 100;
         m_CommandHistory = new INodeCommand[m_MaxActionSize];
         d_CreateEffectNode = createEffectNode;
         d_ReCreateEffectNode = recreateEffectNode;
@@ -78,6 +78,16 @@ public class NodeCommandInvoker
         d_CreateConnection = createConnection;
         d_RemoveConnection = removeConnection;
         d_DeselectAllNodes = deselectAllNodes;
+    }
+
+    public void ResetHistory()
+    {
+        m_CommandHistory = new INodeCommand[m_MaxActionSize];
+    }
+
+    public void ResetHistory(int newHistorySize)
+    {
+        m_CommandHistory = new INodeCommand[newHistorySize];
     }
 
     #endregion

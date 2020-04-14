@@ -6,7 +6,6 @@ using UnityEditor.IMGUI.Controls;
 
 public class LEM_SearchBox
 {
-    SearchField m_SearchField = new SearchField();
     //Constants
     const float k_LineHeight = 18f,
         k_SearchFieldYOffset = 20f,
@@ -16,19 +15,17 @@ public class LEM_SearchBox
         k_ResultHeight = 18f
         ;
 
-    static readonly GUIStyle k_OddResultStyle = new GUIStyle("CN EntryBackOdd");
-    static readonly GUIStyle k_EvenResultStyle = new GUIStyle("CN EntryBackEven");
-    static readonly GUIStyle k_ResultLabelStyle = new GUIStyle(EditorStyles.label)
-    {
-        alignment = TextAnchor.MiddleLeft,
-        richText = true
-    };
+    static GUIStyle k_OddResultStyle   = default;
+    static GUIStyle k_EvenResultStyle  = default;
+    static GUIStyle k_ResultLabelStyle = default;
 
     //Delegates
     Action<string> d_OnInputChange = null;
     Action<string, Vector2> d_OnConfirm = null;
 
     //Variables
+    SearchField m_SearchField = new SearchField();
+
     int m_MaxResults = 5;
     int m_CurrSelectedResultIndex = -1;
 
@@ -46,6 +43,8 @@ public class LEM_SearchBox
     #region Constructors
     public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2> OnConfirm, int maxResults)
     {
+        InitialiseStyles();
+
         d_OnInputChange = OnInputChange;
         d_OnConfirm = OnConfirm;
         m_MaxResults = maxResults;
@@ -56,7 +55,9 @@ public class LEM_SearchBox
 
     public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2> OnConfirm, int maxResults, float width, float height)
     {
-        d_OnInputChange = OnInputChange;
+        InitialiseStyles();
+
+         d_OnInputChange = OnInputChange;
         d_OnConfirm = OnConfirm;
         m_MaxResults = maxResults;
         m_Width = width;
@@ -66,6 +67,24 @@ public class LEM_SearchBox
         m_CurrSelectedResultIndex = -1;
         m_SearchField.downOrUpArrowKeyPressed += SearchField_downOrUpArrowKeyPressed;
 
+    }
+
+    void InitialiseStyles()
+    {
+        if (k_OddResultStyle == default)
+        {
+            k_OddResultStyle = new GUIStyle("CN EntryBackOdd");
+        }
+
+        if (k_EvenResultStyle == default)
+        {
+            k_EvenResultStyle = new GUIStyle("CN EntryBackEven");
+        }
+
+        if (k_ResultLabelStyle == default)
+        {
+            k_ResultLabelStyle = new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleLeft, richText = true };
+        }
     }
 
     #endregion

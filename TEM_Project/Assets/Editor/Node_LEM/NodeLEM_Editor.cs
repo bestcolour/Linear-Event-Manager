@@ -12,6 +12,7 @@ public class NodeLEM_Editor : EditorWindow
     public static NodeLEM_Editor instance = default;
     public static LinearEvent s_CurrentLE = default;
 
+
     //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
     List<Node> AllNodesInEditor => instance.m_AllNodesInEditor;
@@ -30,8 +31,8 @@ public class NodeLEM_Editor : EditorWindow
 
     List<Node> m_AllSelectedNodes = new List<Node>();
 
-    static Node s_CurrentClickedNode = null;
-    public static Node CurrentClickedNode => s_CurrentClickedNode;
+    Node s_CurrentClickedNode = null;
+    public static Node CurrentClickedNode => instance.s_CurrentClickedNode;
     public static bool? CurrentNodeLastRecordedSelectState { get; set; }
 
     //Check if there is multiple nodes selected
@@ -89,11 +90,11 @@ public class NodeLEM_Editor : EditorWindow
     //Search box variables
     bool m_IsSearchBoxActive = false;
 
-    static LEM_SearchBox s_SearchBox = default;
+    LEM_SearchBox m_SearchBox = default;
 
     void OnInputChange(string result)
     {
-        s_SearchBox.ClearResults();
+        m_SearchBox.ClearResults();
 
         string currentNodeType;
 
@@ -103,7 +104,7 @@ public class NodeLEM_Editor : EditorWindow
             for (int i = 0; i < LEMDictionary.s_NodeTypeKeys.Length; i++)
             {
                 currentNodeType = LEMDictionary.s_NodeTypeKeys[i];
-                s_SearchBox.AddResult(currentNodeType);
+                m_SearchBox.AddResult(currentNodeType);
             }
             return;
         }
@@ -114,7 +115,7 @@ public class NodeLEM_Editor : EditorWindow
             currentNodeType = LEMDictionary.s_NodeTypeKeys[i];
 
             if (currentNodeType.CaseInsensitiveContains(result))
-                s_SearchBox.AddResult(currentNodeType);
+                m_SearchBox.AddResult(currentNodeType);
         }
     }
 
@@ -122,7 +123,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         mousePos *= 1 / ScaleFactor;
         //instance.CreateEffectNode(mousePos * 1 / ScaleFactor, result);
-        s_CommandInvoker.InvokeCommand(new CreateNodeCommand(mousePos, result));
+        CommandInvoker.InvokeCommand(new CreateNodeCommand(mousePos, result));
         instance.m_IsSearchBoxActive = false;
     }
     #endregion
@@ -131,16 +132,17 @@ public class NodeLEM_Editor : EditorWindow
 
     #region NodeInvoker
 
-    static NodeCommandInvoker s_CommandInvoker = default;
+    NodeCommandInvoker m_CommandInvoker = default;
+    static NodeCommandInvoker CommandInvoker => instance.m_CommandInvoker;
     bool m_IsDragging = default;
 
     #endregion
-    static Texture2D s_EditorBackGroundTexture = default;
+    Texture2D m_EditorBackGroundTexture = default;
 
 
     public static void OpenWindow()
     {
-        //Get window 
+        //Get window and this will trigger OnEnable
         NodeLEM_Editor editorWindow = GetWindow<NodeLEM_Editor>();
 
         //Set the title of gui for the window to be TEM Node Editor
@@ -150,64 +152,71 @@ public class NodeLEM_Editor : EditorWindow
 
     public static void LoadNodeEditor(LinearEvent linearEvent)
     {
-        OpenWindow();
+        //If this is the first time you are opening the window, or if u have previously closed the window and you wish to reopen it
+        if (instance == null)
+            OpenWindow();
+        else
+            //Clear everything 
+            instance.ResetEditor();
 
+        //Regardless, just initialise strt end nodes
+        instance.InitialiseStartEndNodes();
         s_CurrentLE = linearEvent;
         instance.LoadFromLinearEvent();
-
     }
 
     #region Initialisation
 
+    //To be called on the very first time of pressing "LoadNodeEditor"? 
+    //This is also called when you hv the window docked in ur panels but u dont give focus on it and u just upen ur project
     void OnEnable()
     {
+        Debug.Log("On enable function runs here");
 
+        //Call these only once in the flow of usage until the window is closed
         instance = this;
+
+
+
 
         LEMStyleLibrary.LoadLibrary();
         LEMDictionary.LoadDictionary();
 
-        InitialiseSkin();
+        instance.m_EditorBackGroundTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+        instance.m_EditorBackGroundTexture.SetPixel(0, 0, new Color(0.227f, 0.216f, 0.212f));
+        instance.m_EditorBackGroundTexture.Apply();
 
-        if (s_CommandInvoker == null)
+        if (instance.m_CommandInvoker == null)
         {
-            s_CommandInvoker = new NodeCommandInvoker(CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes);
+            instance.m_CommandInvoker = new NodeCommandInvoker(100,CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes);
         }
 
-        if (m_AllNodesInEditor == null)
+        if (instance.m_AllNodesInEditor == null)
         {
-            m_AllNodesInEditor = new List<Node>();
+            instance.m_AllNodesInEditor = new List<Node>();
         }
 
-        if (m_AllEffectsNodeInEditor == default)
+        if (instance.m_AllEffectsNodeInEditor == default)
         {
-            m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
+            instance.m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
         }
 
-        if (m_AllConnectionsDictionary == null)
+        if (instance.m_AllConnectionsDictionary == null)
         {
-            m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
+            instance.m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
         }
 
-        if (m_AllSelectedNodes == null)
+        if (instance.m_AllSelectedNodes == null)
         {
-            m_AllSelectedNodes = new List<Node>();
+            instance.m_AllSelectedNodes = new List<Node>();
         }
 
-        if (s_SearchBox == null)
+        if (instance.m_SearchBox == null)
         {
-            s_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
+            instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
         }
 
-        InitialiseStartEndNodes();
 
-    }
-
-    void InitialiseSkin()
-    {
-        s_EditorBackGroundTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-        s_EditorBackGroundTexture.SetPixel(0, 0, new Color(0.227f, 0.216f, 0.212f));
-        s_EditorBackGroundTexture.Apply();
     }
 
     void InitialiseStartEndNodes()
@@ -225,8 +234,8 @@ public class NodeLEM_Editor : EditorWindow
 
     void ResetEventVariables()
     {
-        m_InitialClickedPosition = null;
-        m_IsDragging = false;
+        instance.m_InitialClickedPosition = null;
+        instance.m_IsDragging = false;
         s_SelectionBox = default;
         s_CurrentClickedNode = null;
         GUI.changed = true;
@@ -235,33 +244,40 @@ public class NodeLEM_Editor : EditorWindow
     void ResetDrawingBezierCurve()
     {
         //Reset bezierline drawing
-        m_SelectedOutPoint = null;
-        m_SelectedInPoint = null;
+        instance.m_SelectedOutPoint = null;
+        instance.m_SelectedInPoint = null;
     }
 
-    void OnDisable()
-    {
-        ResetDrawingBezierCurve();
-        ResetEventVariables();
-        CurrentNodeLastRecordedSelectState = null;
-        s_CurrentLE = null;
-        m_IsSearchBoxActive = false;
-    }
-
-    //Called when window is closed
-    private void OnDestroy()
+    void ResetEditor()
     {
         StartNode = null;
         ResetDrawingBezierCurve();
         ResetEventVariables();
         CurrentNodeLastRecordedSelectState = null;
         s_CurrentLE = null;
-        m_AllNodesInEditor = null;
-        m_AllEffectsNodeInEditor = null;
-        m_AllConnectionsDictionary = null;
-        LEM_InspectorEditor.s_IsLoaded = false;
         m_IsSearchBoxActive = false;
-        s_CommandInvoker = null;
+
+
+        m_AllNodesInEditor = new List<Node>() ;
+        m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
+        m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
+        m_CommandInvoker.ResetHistory();
+    }
+
+    //Called when window is closed
+    void OnDestroy()
+    {
+        StartNode = null;
+        ResetDrawingBezierCurve();
+        ResetEventVariables();
+        CurrentNodeLastRecordedSelectState = null;
+        s_CurrentLE = null;
+        instance.m_AllNodesInEditor = null;
+        instance.m_AllEffectsNodeInEditor = null;
+        instance.m_AllConnectionsDictionary = null;
+        //LEM_InspectorEditor.s_IsLoaded = false;
+        instance.m_IsSearchBoxActive = false;
+        instance.m_CommandInvoker = null;
     }
 
 
@@ -272,7 +288,7 @@ public class NodeLEM_Editor : EditorWindow
         Event currentEvent = Event.current;
 
         //Draw background of for the window
-        GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), s_EditorBackGroundTexture, ScaleMode.StretchToFill);
+        GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), m_EditorBackGroundTexture, ScaleMode.StretchToFill);
 
 
         DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
@@ -293,7 +309,7 @@ public class NodeLEM_Editor : EditorWindow
 
 
         DrawSaveButton();
-        DrawRefreshButton();
+        //DrawRefreshButton();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
         ProcessEvents(currentEvent, currMousePos);
@@ -426,21 +442,21 @@ public class NodeLEM_Editor : EditorWindow
             SaveToLinearEvent();
     }
 
-    //Creation use only
-    void DrawRefreshButton()
-    {
-        if (GUI.Button(new Rect(position.width - 215f, 0, 100f, 50f), "Refresh"))
-        {
-            LEMStyleLibrary.LoadLibrary();
-            OnDisable();
-            OnEnable();
-        }
-    }
+    ////Creation use only
+    //void DrawRefreshButton()
+    //{
+    //    if (GUI.Button(new Rect(position.width - 215f, 0, 100f, 50f), "Refresh"))
+    //    {
+    //        LEMStyleLibrary.LoadLibrary();
+    //        ResetEditor();
+    //        OnEnable();
+    //    }
+    //}
 
     void HandleSearchBox(Event e)
     {
         if (m_IsSearchBoxActive)
-            s_SearchBox.HandleSearchBox(e);
+            m_SearchBox.HandleSearchBox(e);
     }
 
     #endregion
@@ -477,9 +493,9 @@ public class NodeLEM_Editor : EditorWindow
                     if (s_CurrentClickedNode == null || !s_CurrentClickedNode.IsSelected)
                     {
                         //Open a custom created that allows creation of more nodes
-                        s_SearchBox.Position = currMousePosition * ScaleFactor;
+                        m_SearchBox.Position = currMousePosition * ScaleFactor;
                         m_IsSearchBoxActive = true;
-                        s_SearchBox.TriggerOnInputOnStart();
+                        m_SearchBox.TriggerOnInputOnStart();
 
                         e.Use();
                         //ProcessContextMenu(currMousePosition);
@@ -539,7 +555,7 @@ public class NodeLEM_Editor : EditorWindow
                     else if (s_CurrentClickedNode != null && !m_IsDragging)
                     {
                         m_IsDragging = true;
-                        s_CommandInvoker.InvokeCommand(new MoveNodeCommand(m_AllSelectedNodes.ToArray()));
+                        CommandInvoker.InvokeCommand(new MoveNodeCommand(m_AllSelectedNodes.ToArray()));
                     }
                 }
 
@@ -569,7 +585,7 @@ public class NodeLEM_Editor : EditorWindow
                         StartNode.DeselectNode();
                     }
 
-                    s_CommandInvoker.InvokeCommand(new DeleteNodeCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+                    CommandInvoker.InvokeCommand(new DeleteNodeCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
                     //Skip everything else and repaint
                     e.Use();
                 }
@@ -587,13 +603,13 @@ public class NodeLEM_Editor : EditorWindow
                     //Undo
                     if (e.keyCode == KeyCode.Q)
                     {
-                        s_CommandInvoker.UndoCommand();
+                        CommandInvoker.UndoCommand();
                         e.Use();
                     }
                     //Redo
                     else if (e.keyCode == KeyCode.W)
                     {
-                        s_CommandInvoker.RedoCommand();
+                        CommandInvoker.RedoCommand();
                         e.Use();
                     }
                     //Copy
@@ -605,7 +621,7 @@ public class NodeLEM_Editor : EditorWindow
                             StartNode.DeselectNode();
                         }
 
-                        s_CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                        CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
                         e.Use();
                     }
                     //Cut
@@ -617,13 +633,13 @@ public class NodeLEM_Editor : EditorWindow
                             StartNode.DeselectNode();
                         }
 
-                        s_CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+                        CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
                         e.Use();
                     }
                     //Paste
                     else if (e.keyCode == KeyCode.V)
                     {
-                        s_CommandInvoker.InvokeCommand(new PasteCommand());
+                        CommandInvoker.InvokeCommand(new PasteCommand());
                         e.Use();
                     }
                     //Select all
@@ -969,7 +985,7 @@ public class NodeLEM_Editor : EditorWindow
                       );
             }
 
-            s_CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID));
+            CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID));
 
             ResetDrawingBezierCurve();
         }
@@ -1017,7 +1033,7 @@ public class NodeLEM_Editor : EditorWindow
                    );
             }
 
-            s_CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID));
+            CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID));
 
             ResetDrawingBezierCurve();
         }
@@ -1194,8 +1210,10 @@ public class NodeLEM_Editor : EditorWindow
     {
         #region Loading Events from Dictionary
 
-        if (s_CurrentLE.m_AllEffectsDictionary == null)
+        //Dont do any thing if there is no effects in the dicitionary
+        if (!s_CurrentLE.CheckAllEffectsDictionary())
             return;
+
 
         string[] allKeys = s_CurrentLE.m_AllEffectsDictionary.Keys.ToArray();
 
