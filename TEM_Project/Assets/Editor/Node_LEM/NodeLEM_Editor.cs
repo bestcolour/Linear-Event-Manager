@@ -128,6 +128,14 @@ public class NodeLEM_Editor : EditorWindow
     }
     #endregion
 
+    //#region Loading Progress
+    //ProgressWindow m_ProgressBar = new ProgressWindow();
+    //ProgressWindow ProgressBar => instance.m_ProgressBar;
+    ////bool m_IsLoading = false;
+
+
+    //#endregion
+
     #endregion
 
     #region NodeInvoker
@@ -137,6 +145,7 @@ public class NodeLEM_Editor : EditorWindow
     bool m_IsDragging = default;
 
     #endregion
+
     Texture2D m_EditorBackGroundTexture = default;
 
 
@@ -171,12 +180,9 @@ public class NodeLEM_Editor : EditorWindow
     //This is also called when you hv the window docked in ur panels but u dont give focus on it and u just upen ur project
     void OnEnable()
     {
-        Debug.Log("On enable function runs here");
 
         //Call these only once in the flow of usage until the window is closed
         instance = this;
-
-
 
 
         LEMStyleLibrary.LoadLibrary();
@@ -188,7 +194,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (instance.m_CommandInvoker == null)
         {
-            instance.m_CommandInvoker = new NodeCommandInvoker(100,CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes);
+            instance.m_CommandInvoker = new NodeCommandInvoker(100, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes);
         }
 
         if (instance.m_AllNodesInEditor == null)
@@ -216,6 +222,10 @@ public class NodeLEM_Editor : EditorWindow
             instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
         }
 
+        //if(instance.m_ProgressBar == null)
+        //{
+        //    instance.m_ProgressBar = new ProgressWindow();
+        //}
 
     }
 
@@ -248,6 +258,7 @@ public class NodeLEM_Editor : EditorWindow
         instance.m_SelectedInPoint = null;
     }
 
+    //Time taken: Instant
     void ResetEditor()
     {
         StartNode = null;
@@ -258,10 +269,11 @@ public class NodeLEM_Editor : EditorWindow
         m_IsSearchBoxActive = false;
 
 
-        m_AllNodesInEditor = new List<Node>() ;
+        m_AllNodesInEditor = new List<Node>();
         m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
         m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
         m_CommandInvoker.ResetHistory();
+
     }
 
     //Called when window is closed
@@ -286,6 +298,7 @@ public class NodeLEM_Editor : EditorWindow
     void OnGUI()
     {
         Event currentEvent = Event.current;
+
 
         //Draw background of for the window
         GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), m_EditorBackGroundTexture, ScaleMode.StretchToFill);
@@ -441,6 +454,15 @@ public class NodeLEM_Editor : EditorWindow
         if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), "Save Effects"))
             SaveToLinearEvent();
     }
+
+    //void DrawProgressBar()
+    //{
+    //    if (m_IsLoading)
+    //    {
+    //        m_ProgressBar.Draw();
+    //        GUI.changed = true;
+    //    }
+    //}
 
     ////Creation use only
     //void DrawRefreshButton()
@@ -1180,6 +1202,10 @@ public class NodeLEM_Editor : EditorWindow
         AllNodesInEditor.Remove(StartNode);
 
         //Saving starts here
+        s_CurrentLE.m_ProgressBar.Progress = 0f;
+        s_CurrentLE.m_ProgressBar.TitleString = "Saving Nodes";
+        s_CurrentLE.m_isLoading = true;
+
         LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllNodesInEditor.Count];
         BaseEffectNode[] allEffectNodes = AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
 
@@ -1193,6 +1219,10 @@ public class NodeLEM_Editor : EditorWindow
 
             //Populate the dictionary in the linear event
             s_CurrentLE.m_AllEffectsDictionary.Add(lemEffects[i].m_NodeBaseData.m_NodeID, lemEffects[i]);
+
+            //Update tthe progress bar
+            s_CurrentLE.m_ProgressBar.InformationString = "Saving " + lemEffects[i].m_NodeEffectType + ": " + lemEffects[i].m_NodeBaseData.m_NodeID;
+            s_CurrentLE.m_ProgressBar.Progress = i / AllNodesInEditor.Count - 0.01f;
         }
 
 
@@ -1204,6 +1234,7 @@ public class NodeLEM_Editor : EditorWindow
         //Saving ends here
         AllNodesInEditor.Add(StartNode);
 
+        s_CurrentLE.m_isLoading = false;
     }
 
     void LoadFromLinearEvent()
@@ -1212,7 +1243,10 @@ public class NodeLEM_Editor : EditorWindow
 
         //Dont do any thing if there is no effects in the dicitionary
         if (!s_CurrentLE.CheckAllEffectsDictionary())
+        {
+            Repaint();
             return;
+        }
 
 
         string[] allKeys = s_CurrentLE.m_AllEffectsDictionary.Keys.ToArray();
@@ -1254,23 +1288,23 @@ public class NodeLEM_Editor : EditorWindow
         #endregion
 
         //Dont stitch up start node if it isnt connected to at least one point
-        if (!s_CurrentLE.m_StartNodeData.HasAtLeastOneNextPointNode)
+        if (s_CurrentLE.m_StartNodeData.HasAtLeastOneNextPointNode)
         {
-            return;
+            //Do the same for start and end nodes
+            //if node has a m_NextPointNodeID and that the next node this node is assigned to doesnt have a connection on the outpoint,
+            if (!String.IsNullOrEmpty(s_CurrentLE.m_StartNodeData.m_NextPointsIDs[0])
+                && !StartNode.m_OutPoint.IsConnected)
+            {
+                //Else just find the next node from the dictionary of all effects node
+                CreateConnection(
+                                 AllEffectsNodeInEditor[s_CurrentLE.m_StartNodeData.m_NextPointsIDs[0]].m_InPoint,
+                                 StartNode.m_OutPoint
+                                );
+            }
         }
 
-        //Do the same for start and end nodes
-        //if node has a m_NextPointNodeID and that the next node this node is assigned to doesnt have a connection on the outpoint,
-        if (!String.IsNullOrEmpty(s_CurrentLE.m_StartNodeData.m_NextPointsIDs[0])
-            && !StartNode.m_OutPoint.IsConnected)
-        {
-            //Else just find the next node from the dictionary of all effects node
-            CreateConnection(
-                             AllEffectsNodeInEditor[s_CurrentLE.m_StartNodeData.m_NextPointsIDs[0]].m_InPoint,
-                             StartNode.m_OutPoint
-                            );
-        }
 
+        Repaint();
     }
 
     #endregion

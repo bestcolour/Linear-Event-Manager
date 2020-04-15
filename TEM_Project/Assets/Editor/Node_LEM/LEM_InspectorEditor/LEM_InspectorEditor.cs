@@ -29,7 +29,7 @@ public class LEM_InspectorEditor : Editor
         DrawRemoveUnusedEventsButton(ref linearEvent);
 
     }
-
+    
 
     void DrawLoadButton(ref LinearEvent linearEvent)
     {

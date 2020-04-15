@@ -16,6 +16,20 @@ public class LinearEvent : MonoBehaviour
 
     public Dictionary<string, LEM_BaseEffect> m_AllEffectsDictionary = default;
 
+    public NodeBaseData m_StartNodeData = default;
+
+    public ProgressBar m_ProgressBar = new ProgressBar();
+    public bool m_isLoading = default;
+
+    void OnGUI()
+    {
+        if (m_isLoading)
+        {
+            Debug.Log("dd");
+            m_isLoading = m_ProgressBar.Draw();
+        }
+    }
+
     //Ok since whenever u change ur script, unity will recompile and all values will be set to its initialisers (that means m_AllEffectsDictionary will be reseted to null)
     //hence removing all saved progress EXCEPT FOR SERIALIZED VALUES WHICH MEANS THAT M_ALLEFFECTS is unaffected
     public bool CheckAllEffectsDictionary()
@@ -36,9 +50,6 @@ public class LinearEvent : MonoBehaviour
 
         return false;
     }
-
-    public NodeBaseData m_StartNodeData = default;
-
 
     //Removes any unconnected LEM effects from the m_AllEffectsDictionary
     public void RemoveUnusedEvents()
@@ -96,7 +107,13 @@ public class LinearEvent : MonoBehaviour
 
     }
 
-}
+    //public void UpdateProgressBar(float progress,string titleString = "",string informationString = "")
+    //{
+    //    m_ProgressBar.Progress = progress;
+    //    m_ProgressBar.TitleString = titleString;
+    //    m_ProgressBar.InformationString = informationString;
+    //}
 
+}
 
 
