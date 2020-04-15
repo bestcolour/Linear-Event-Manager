@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.IMGUI.Controls;
 using System;
 using LEM_Effects;
 using System.Linq;
@@ -128,13 +127,13 @@ public class NodeLEM_Editor : EditorWindow
     }
     #endregion
 
-    //#region Loading Progress
-    //ProgressWindow m_ProgressBar = new ProgressWindow();
-    //ProgressWindow ProgressBar => instance.m_ProgressBar;
-    ////bool m_IsLoading = false;
+    #region Loading Progress
+    ProgressBar m_ProgressBar = new ProgressBar();
+    ProgressBar ProgressBarLoader => instance.m_ProgressBar;
+    bool m_IsLoading = false;
 
 
-    //#endregion
+    #endregion
 
     #endregion
 
@@ -176,14 +175,15 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Initialisation
 
+
+
     //To be called on the very first time of pressing "LoadNodeEditor"? 
     //This is also called when you hv the window docked in ur panels but u dont give focus on it and u just upen ur project
     void OnEnable()
     {
-
+        Debug.Log("Enabling on ");
         //Call these only once in the flow of usage until the window is closed
         instance = this;
-
 
         LEMStyleLibrary.LoadLibrary();
         LEMDictionary.LoadDictionary();
@@ -222,10 +222,10 @@ public class NodeLEM_Editor : EditorWindow
             instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
         }
 
-        //if(instance.m_ProgressBar == null)
-        //{
-        //    instance.m_ProgressBar = new ProgressWindow();
-        //}
+        if (instance.m_ProgressBar == null)
+        {
+            instance.m_ProgressBar = new ProgressBar();
+        }
 
     }
 
@@ -298,7 +298,7 @@ public class NodeLEM_Editor : EditorWindow
     void OnGUI()
     {
         Event currentEvent = Event.current;
-
+        Debug.Log("GUI");
 
         //Draw background of for the window
         GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), m_EditorBackGroundTexture, ScaleMode.StretchToFill);
@@ -322,6 +322,7 @@ public class NodeLEM_Editor : EditorWindow
 
 
         DrawSaveButton();
+        DrawProgressBar();
         //DrawRefreshButton();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
@@ -451,18 +452,22 @@ public class NodeLEM_Editor : EditorWindow
 
     void DrawSaveButton()
     {
-        if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), "Save Effects"))
-            SaveToLinearEvent();
+        if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), "Save Effects") && !m_IsLoading)
+        {
+            EditorApplication.update += SaveToLinearEvent;
+            //s_CurrentLE.StartCoroutine(SaveToLinearEvent());
+        }
     }
 
-    //void DrawProgressBar()
-    //{
-    //    if (m_IsLoading)
-    //    {
-    //        m_ProgressBar.Draw();
-    //        GUI.changed = true;
-    //    }
-    //}
+    void DrawProgressBar()
+    {
+        if (m_IsLoading)
+        {
+            //Invert the bool value so since this function returns true only when either the bar is over or cancel button is pressed
+            m_IsLoading = !m_ProgressBar.Draw();
+            GUI.changed = true;
+        }
+    }
 
     ////Creation use only
     //void DrawRefreshButton()
@@ -479,6 +484,7 @@ public class NodeLEM_Editor : EditorWindow
     {
         if (m_IsSearchBoxActive)
             m_SearchBox.HandleSearchBox(e);
+
     }
 
     #endregion
@@ -1197,32 +1203,40 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Saving and Loading
 
-    void SaveToLinearEvent()
+    void  SaveToLinearEvent()
     {
         AllNodesInEditor.Remove(StartNode);
 
         //Saving starts here
-        s_CurrentLE.m_ProgressBar.Progress = 0f;
-        s_CurrentLE.m_ProgressBar.TitleString = "Saving Nodes";
-        s_CurrentLE.m_isLoading = true;
+        ProgressBarLoader.Progress = 0f;
+        ProgressBarLoader.TitleString = "Saving Nodes";
+        m_IsLoading = true;
 
         LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllNodesInEditor.Count];
         BaseEffectNode[] allEffectNodes = AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
 
         //Clear the dictionary of the currently editting linear event
         s_CurrentLE.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
+        float intToFloatConverter = AllNodesInEditor.Count;
 
         //This saves all events regardless of whether they are connected singularly, plurally or disconnected
         for (int i = 0; i < AllNodesInEditor.Count; i++)
         {
+            //if for cancel button was pressed, exit from this coroutine
+            if (!m_IsLoading)
+            {
+                AllNodesInEditor.Add(StartNode);
+                Repaint();
+            }
+
             lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
 
             //Populate the dictionary in the linear event
             s_CurrentLE.m_AllEffectsDictionary.Add(lemEffects[i].m_NodeBaseData.m_NodeID, lemEffects[i]);
 
             //Update tthe progress bar
-            s_CurrentLE.m_ProgressBar.InformationString = "Saving " + lemEffects[i].m_NodeEffectType + ": " + lemEffects[i].m_NodeBaseData.m_NodeID;
-            s_CurrentLE.m_ProgressBar.Progress = i / AllNodesInEditor.Count - 0.01f;
+            ProgressBarLoader.InformationString = "Saving " + lemEffects[i].m_NodeEffectType + ": " + lemEffects[i].m_NodeBaseData.m_NodeID;
+            ProgressBarLoader.Progress = i / intToFloatConverter;
         }
 
 
@@ -1234,8 +1248,64 @@ public class NodeLEM_Editor : EditorWindow
         //Saving ends here
         AllNodesInEditor.Add(StartNode);
 
-        s_CurrentLE.m_isLoading = false;
+        //Finished loading
+        ProgressBarLoader.Progress = 1.0f;
+        Repaint();
+        EditorApplication.update -= SaveToLinearEvent;
     }
+
+    //IEnumerator SaveToLinearEvent()
+    //{
+    //    AllNodesInEditor.Remove(StartNode);
+
+    //    //Saving starts here
+    //    ProgressBarLoader.Progress = 0f;
+    //    ProgressBarLoader.TitleString = "Saving Nodes";
+    //    m_IsLoading = true;
+
+    //    LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllNodesInEditor.Count];
+    //    BaseEffectNode[] allEffectNodes = AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
+
+    //    //Clear the dictionary of the currently editting linear event
+    //    s_CurrentLE.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
+    //    float intToFloatConverter = AllNodesInEditor.Count;
+
+    //    //This saves all events regardless of whether they are connected singularly, plurally or disconnected
+    //    for (int i = 0; i < AllNodesInEditor.Count; i++)
+    //    {
+    //        //if for cancel button was pressed, exit from this coroutine
+    //        if (!m_IsLoading)
+    //        {
+    //            AllNodesInEditor.Add(StartNode);
+    //            Repaint();
+    //            yield break;
+    //        }
+
+    //        lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
+
+    //        //Populate the dictionary in the linear event
+    //        s_CurrentLE.m_AllEffectsDictionary.Add(lemEffects[i].m_NodeBaseData.m_NodeID, lemEffects[i]);
+
+    //        //Update tthe progress bar
+    //        ProgressBarLoader.InformationString = "Saving " + lemEffects[i].m_NodeEffectType + ": " + lemEffects[i].m_NodeBaseData.m_NodeID;
+    //        ProgressBarLoader.Progress = i / intToFloatConverter;
+
+    //            yield return new WaitForEndOfFrame();
+    //    }
+
+
+    //    s_CurrentLE.m_AllEffects = lemEffects;
+
+    //    //Save start and end node data
+    //    s_CurrentLE.m_StartNodeData = StartNode.SaveNodeData();
+
+    //    //Saving ends here
+    //    AllNodesInEditor.Add(StartNode);
+
+    //    //Finished loading
+    //    ProgressBarLoader.Progress = 1.0f;
+    //    Repaint();
+    //}
 
     void LoadFromLinearEvent()
     {

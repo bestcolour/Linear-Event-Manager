@@ -33,17 +33,23 @@ public class ProgressBar
         m_Information = infoOfProgressBar;
     }
 
-    //Returns true if user clicks on cancel button
+    //Returns true if user clicks on cancel button or operation is over
     public bool Draw()
     {
         if (m_Progress < 1.0f)
         {
-            return EditorUtility.DisplayCancelableProgressBar(m_Title, m_Information, m_Progress);
+            if (EditorUtility.DisplayCancelableProgressBar(m_Title, m_Information, m_Progress))
+            {
+                EditorUtility.ClearProgressBar();
+                return true;
+            }
+
+            return false;
         }
         else
         {
             EditorUtility.ClearProgressBar();
-            return false;
+            return true;
         }
     }
 
