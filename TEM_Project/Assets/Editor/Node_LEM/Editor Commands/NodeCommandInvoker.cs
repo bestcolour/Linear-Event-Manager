@@ -45,12 +45,13 @@ public class NodeCommandInvoker
     public static CreateConnection d_CreateConnection = null;
     public static RemoveConnection d_RemoveConnection = null;
     public static DeselectAllNodes d_DeselectAllNodes = null;
+    public static Action d_OnCommand = null;
 
 
     #region Construction and Resets
     public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode,
         RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes,
-        CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes)
+        CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes,Action onCommand)
     {
         //m_MaxActionSize = 100;
         m_CommandHistory = new INodeCommand[m_MaxActionSize];
@@ -62,11 +63,12 @@ public class NodeCommandInvoker
         d_CreateConnection = createConnection;
         d_RemoveConnection = removeConnection;
         d_DeselectAllNodes = deselectAllNodes;
+        d_OnCommand = onCommand;
     }
 
     public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode,
         RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes,
-        CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes)
+        CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes,Action onCommand)
     {
         m_MaxActionSize = actionSize;
         m_CommandHistory = new INodeCommand[actionSize];
@@ -78,6 +80,7 @@ public class NodeCommandInvoker
         d_CreateConnection = createConnection;
         d_RemoveConnection = removeConnection;
         d_DeselectAllNodes = deselectAllNodes;
+        d_OnCommand = onCommand;
     }
 
     public void ResetHistory()
@@ -103,6 +106,8 @@ public class NodeCommandInvoker
         //thus in actual fact when i put 100 max action size, only 99 of them will be actual actions
         Counter++;
         m_CommandHistory[Counter] = null;
+
+        d_OnCommand?.Invoke();
     }
 
     public void UndoCommand()
@@ -119,6 +124,8 @@ public class NodeCommandInvoker
             Debug.Log("Undo has reached its limit!");
         }
 
+        d_OnCommand?.Invoke();
+
     }
 
     public void RedoCommand()
@@ -134,6 +141,7 @@ public class NodeCommandInvoker
             Debug.Log("Redo has reached its limit!");
         }
 
+        d_OnCommand?.Invoke();
     }
 
     public void CopyToClipBoard(BaseEffectNode[] copiedEffectNodes)

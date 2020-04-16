@@ -22,8 +22,8 @@ public class NodeLEM_Editor : EditorWindow
     Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
     Dictionary<Tuple<string, string>, Connection> AllConnectionsDictionary => instance.m_AllConnectionsDictionary;
 
-    Node s_StartNode = default;
-    Node StartNode { get { return instance.s_StartNode; } set { instance.s_StartNode = value; } }
+    Node m_StartNode = default;
+    Node StartNode { get { return instance.m_StartNode; } set { instance.m_StartNode = value; } }
 
     #region Process Event Variables
 
@@ -127,8 +127,19 @@ public class NodeLEM_Editor : EditorWindow
     #endregion
 
     #region Loading States
-    bool m_IsLoading = false;
+    struct EDITORSTATE
+    {
+        //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
+        //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
+        public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
+        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects";
+    }
+
+    int m_EditorState = EDITORSTATE.UNLOADED;
+    //int EditorState => m_EditorState;
+
     Action d_OnGUI = null;
+    SaveWindow m_SaveWindow = default;
 
     #endregion
 
@@ -158,6 +169,7 @@ public class NodeLEM_Editor : EditorWindow
         editorWindow.titleContent = new GUIContent("TEM Node Editor");
 
         editorWindow.d_OnGUI = editorWindow.Initialise;
+
     }
 
     //Form of intialisation from pressing Open Window
@@ -169,6 +181,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Set the title of gui for the window to be TEM Node Editor
         editorWindow.titleContent = new GUIContent("TEM Node Editor");
+
     }
 
 
@@ -177,6 +190,7 @@ public class NodeLEM_Editor : EditorWindow
         //If this window is opened on project launch or smth (basically u dint press "LoadNodes" button to enter window
         if (s_CurrentLE == null)
         {
+            m_EditorState = EDITORSTATE.UNLOADED;
             d_OnGUI = EmptyEditorUpdate;
         }
 
@@ -185,14 +199,26 @@ public class NodeLEM_Editor : EditorWindow
     public static void LoadNodeEditor(LinearEvent linearEvent)
     {
         //This will be a key identifier for whether LoadNodeEditor button was pressed
+        LinearEvent prevLE = s_CurrentLE;
         s_CurrentLE = linearEvent;
 
         //If this is the first time you are opening the window, or if u have previously closed the window and you wish to reopen it
         if (instance == null)
             InitialiseWindow();
         else
-            //Clear everything 
-            instance.ResetEditor();
+        {
+            //Close the save window if there is one open
+            instance.m_SaveWindow?.Close();
+            
+            //Save the prev lienarevent
+            s_CurrentLE = prevLE;
+            instance.SaveToLinearEvent();
+
+            //Load the new one
+            s_CurrentLE = linearEvent;
+            instance.ResetandLoadEditor();
+        }
+
     }
 
 
@@ -212,7 +238,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (instance.m_CommandInvoker == null)
         {
-            instance.m_CommandInvoker = new NodeCommandInvoker(100, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes);
+            instance.m_CommandInvoker = new NodeCommandInvoker(100, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
         }
 
         if (instance.m_AllNodesInEditor == null)
@@ -246,6 +272,8 @@ public class NodeLEM_Editor : EditorWindow
 
         //After finishing all the intialisation and loading of linearevent,
         d_OnGUI = UpdateGUI;
+
+        instance.m_EditorState = EDITORSTATE.SAVED;
     }
 
     void InitialiseStartEndNodes()
@@ -278,7 +306,7 @@ public class NodeLEM_Editor : EditorWindow
     }
 
     //Time taken: Instant
-    void ResetEditor()
+    void ResetandLoadEditor()
     {
         StartNode = null;
         ResetDrawingBezierCurve();
@@ -299,28 +327,84 @@ public class NodeLEM_Editor : EditorWindow
 
         //After finishing all the intialisation and loading of linearevent,
         d_OnGUI = UpdateGUI;
+
+        m_EditorState = EDITORSTATE.SAVED;
     }
 
     //Called when window is closed
     void OnDestroy()
     {
-        StartNode = null;
-        ResetDrawingBezierCurve();
-        ResetEventVariables();
-        CurrentNodeLastRecordedSelectState = null;
-        s_CurrentLE = null;
-        instance.m_AllNodesInEditor = null;
-        instance.m_AllEffectsNodeInEditor = null;
-        instance.m_AllConnectionsDictionary = null;
-        //LEM_InspectorEditor.s_IsLoaded = false;
-        instance.m_IsSearchBoxActive = false;
-        instance.m_CommandInvoker = null;
+        //StartNode = null;
+        //ResetDrawingBezierCurve();
+        //ResetEventVariables();
+        //CurrentNodeLastRecordedSelectState = null;
+        //s_CurrentLE = null;
+        //instance.m_AllNodesInEditor = null;
+        //instance.m_AllEffectsNodeInEditor = null;
+        //instance.m_AllConnectionsDictionary = null;
+        ////LEM_InspectorEditor.s_IsLoaded = false;
+        //instance.m_IsSearchBoxActive = false;
+        //instance.m_CommandInvoker = null;
+
+
+        //Before closing the window, save the le if it wasnt saved
+        if (instance != null && m_EditorState == EDITORSTATE.LOADED && m_SaveWindow!=null)
+        {
+            //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
+            m_SaveWindow.Close();
+            SaveToLinearEvent();
+        }
+
     }
 
+    //IEnumerator OnCloseWindowCo(NodeLEM_Editor instance)
+    //{
+
+
+    //    //While editor is still in closing state,
+    //    while (m_EditorState == EDITORSTATE.CLOSING)
+    //    {
+    //        //If cancel button was pressed 
+    //        if (m_EditorState == EDITORSTATE.LOADED)
+    //        {
+    //            break;
+    //        }
+
+    //        yield return null;
+    //    }
+    //Display window if you want to save or not
+    //    SaveWindow.OpenWindow(
+    //        () => { SaveToLinearEvent(); m_EditorState = EDITORSTATE.CLOSED; },
+
+    //                () => { m_EditorState = EDITORSTATE.CLOSED; },
+
+    //                () => { m_EditorState = EDITORSTATE.LOADED; }
+
+    //                );
+
+    //            while (true)
+    //            {
+    //                //If cancel button was pressed then allow windows return
+    //                if (m_EditorState == EDITORSTATE.LOADED)
+    //                {
+    //                    //Rescue content
+    //                    NodeLEM_Editor rescuedWindow = Instantiate(instance);
+    //rescuedWindow.Show();
+    //                    LoadNodeEditor(s_CurrentLE);
+    //                    return;
+    //                }
+    //                else if (m_EditorState == EDITORSTATE.CLOSED)
+    //                {
+    //                    break;
+    //                }
+
+    //            }
+
+    //}
 
     #endregion
 
-    #region Updates
+    #region Updates and Events
     void EmptyEditorUpdate()
     {
         Rect propertyRect = new Rect(10f, 10f, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight);
@@ -382,6 +466,15 @@ public class NodeLEM_Editor : EditorWindow
     void OnGUI()
     {
         d_OnGUI?.Invoke();
+    }
+
+    private void OnLostFocus()
+    {
+        if (m_EditorState == EDITORSTATE.LOADED)
+        {
+            //Display window if you want to save or not
+            m_SaveWindow = SaveWindow.OpenWindow(SaveToLinearEvent, null, null);
+        }
     }
 
     #endregion
@@ -502,12 +595,37 @@ public class NodeLEM_Editor : EditorWindow
 
     void DrawSaveButton()
     {
-        if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), "Save Effects") && !m_IsLoading)
+        //Prevents double clicking on saving
+        if (m_EditorState != EDITORSTATE.SAVING)
         {
-            m_IsLoading = true;
-            SaveToLinearEvent();
-            m_IsLoading = false;
+            if(m_EditorState == EDITORSTATE.LOADED)
+            {
+                if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), EDITORSTATE.LOADED_STRING))
+                {
+                    m_EditorState = EDITORSTATE.SAVING;
+                    SaveToLinearEvent();
+                    m_EditorState = EDITORSTATE.SAVED;
+                }
+            }
+            //else if m_EditorState == EditorState.Saved cause for Unloaded to occur u have no linear event 
+            //but that means save button wont even be drawn due to it not belonging in the same delegate
+            else
+            {
+                bool wasEnabled = GUI.enabled;
+                GUI.enabled = false;
+                GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), EDITORSTATE.SAVED_STRING);
+                GUI.enabled = wasEnabled;
+
+                //if ()
+                //{
+                    //m_EditorState = EDITORSTATE.SAVING;
+                    //SaveToLinearEvent();
+                    //m_EditorState = EDITORSTATE.SAVED;
+                //}
+            }
+           
         }
+
     }
 
 
@@ -722,6 +840,12 @@ public class NodeLEM_Editor : EditorWindow
                             m_AllNodesInEditor[i].SelectNode();
                         }
 
+                        e.Use();
+                    }
+                    //Save
+                    else if (e.keyCode == KeyCode.S)
+                    {
+                        SaveToLinearEvent();
                         e.Use();
                     }
                 }
@@ -1247,6 +1371,8 @@ public class NodeLEM_Editor : EditorWindow
 
     void SaveToLinearEvent()
     {
+        m_EditorState = EDITORSTATE.SAVING;
+
         AllNodesInEditor.Remove(StartNode);
 
         LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllNodesInEditor.Count];
@@ -1277,10 +1403,13 @@ public class NodeLEM_Editor : EditorWindow
 
         //Finished loading
         Repaint();
+
+        m_EditorState = EDITORSTATE.SAVED;
     }
 
     void LoadFromLinearEvent()
     {
+        m_EditorState = EDITORSTATE.LOADING;
         #region Loading Events from Dictionary
 
         //Dont do any thing if there is no effects in the dicitionary
@@ -1346,6 +1475,7 @@ public class NodeLEM_Editor : EditorWindow
         }
 
         Repaint();
+        m_EditorState = EDITORSTATE.LOADED;
     }
 
     #endregion
