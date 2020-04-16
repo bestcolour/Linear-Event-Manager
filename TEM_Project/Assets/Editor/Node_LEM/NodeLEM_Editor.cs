@@ -126,7 +126,7 @@ public class NodeLEM_Editor : EditorWindow
     }
     #endregion
 
-    #region Loading
+    #region Loading States
     bool m_IsLoading = false;
     Action d_OnGUI = null;
 
@@ -145,7 +145,11 @@ public class NodeLEM_Editor : EditorWindow
     Texture2D m_EditorBackGroundTexture = default;
 
 
-    public static void OpenWindow()
+
+    #region Initialisation
+
+    //Form of intialisation from pressing Load Linear Event
+    public static void InitialiseWindow()
     {
         //Get window and this will trigger OnEnable
         NodeLEM_Editor editorWindow = GetWindow<NodeLEM_Editor>();
@@ -156,20 +160,40 @@ public class NodeLEM_Editor : EditorWindow
         editorWindow.d_OnGUI = editorWindow.Initialise;
     }
 
+    //Form of intialisation from pressing Open Window
+    [MenuItem("Window/Lem Node Editor")]
+    public static void OpenWindow()
+    {
+        //Get window and this will trigger OnEnable
+        NodeLEM_Editor editorWindow = GetWindow<NodeLEM_Editor>();
+
+        //Set the title of gui for the window to be TEM Node Editor
+        editorWindow.titleContent = new GUIContent("TEM Node Editor");
+    }
+
+
+    void OnEnable()
+    {
+        //If this window is opened on project launch or smth (basically u dint press "LoadNodes" button to enter window
+        if (s_CurrentLE == null)
+        {
+            d_OnGUI = EmptyEditorUpdate;
+        }
+
+    }
+
     public static void LoadNodeEditor(LinearEvent linearEvent)
     {
+        //This will be a key identifier for whether LoadNodeEditor button was pressed
         s_CurrentLE = linearEvent;
 
         //If this is the first time you are opening the window, or if u have previously closed the window and you wish to reopen it
         if (instance == null)
-            OpenWindow();
+            InitialiseWindow();
         else
             //Clear everything 
             instance.ResetEditor();
     }
-
-    #region Initialisation
-
 
 
     //To be called on the very first time of pressing "LoadNodeEditor"? 
@@ -296,6 +320,25 @@ public class NodeLEM_Editor : EditorWindow
 
     #endregion
 
+    #region Updates
+    void EmptyEditorUpdate()
+    {
+        Rect propertyRect = new Rect(10f, 10f, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight);
+        GUI.Label(propertyRect, "There is no Linear Event Loaded, please choose one");
+
+        propertyRect.y += EditorGUIUtility.singleLineHeight * 2f;
+        propertyRect.height *= 1.75f;
+        propertyRect.width *= 0.9f;
+
+        s_CurrentLE = (LinearEvent)EditorGUI.ObjectField(propertyRect, s_CurrentLE, typeof(LinearEvent), true);
+
+        //Then once Current Linear Event is selected,
+        if (s_CurrentLE != null)
+        {
+            LoadNodeEditor(s_CurrentLE);
+        }
+    }
+
     void UpdateGUI()
     {
         Event currentEvent = Event.current;
@@ -340,6 +383,8 @@ public class NodeLEM_Editor : EditorWindow
     {
         d_OnGUI?.Invoke();
     }
+
+    #endregion
 
     #region Draw Functions
 
@@ -1200,7 +1245,7 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Saving and Loading
 
-    void  SaveToLinearEvent()
+    void SaveToLinearEvent()
     {
         AllNodesInEditor.Remove(StartNode);
 
