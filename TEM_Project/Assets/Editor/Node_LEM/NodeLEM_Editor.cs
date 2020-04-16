@@ -11,7 +11,6 @@ public class NodeLEM_Editor : EditorWindow
     public static NodeLEM_Editor instance = default;
     public static LinearEvent s_CurrentLE = default;
 
-
     //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
     List<Node> AllNodesInEditor => instance.m_AllNodesInEditor;
@@ -129,6 +128,7 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Loading
     bool m_IsLoading = false;
+    Action d_OnGUI = null;
 
     #endregion
 
@@ -153,21 +153,19 @@ public class NodeLEM_Editor : EditorWindow
         //Set the title of gui for the window to be TEM Node Editor
         editorWindow.titleContent = new GUIContent("TEM Node Editor");
 
+        editorWindow.d_OnGUI = editorWindow.Initialise;
     }
 
     public static void LoadNodeEditor(LinearEvent linearEvent)
     {
+        s_CurrentLE = linearEvent;
+
         //If this is the first time you are opening the window, or if u have previously closed the window and you wish to reopen it
         if (instance == null)
             OpenWindow();
         else
             //Clear everything 
             instance.ResetEditor();
-
-        //Regardless, just initialise strt end nodes
-        instance.InitialiseStartEndNodes();
-        s_CurrentLE = linearEvent;
-        instance.LoadFromLinearEvent();
     }
 
     #region Initialisation
@@ -176,9 +174,8 @@ public class NodeLEM_Editor : EditorWindow
 
     //To be called on the very first time of pressing "LoadNodeEditor"? 
     //This is also called when you hv the window docked in ur panels but u dont give focus on it and u just upen ur project
-    void OnEnable()
+    void Initialise()
     {
-        Debug.Log("Enabling on ");
         //Call these only once in the flow of usage until the window is closed
         instance = this;
 
@@ -219,6 +216,12 @@ public class NodeLEM_Editor : EditorWindow
             instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
         }
 
+        //Regardless, just initialise strt end nodes
+        instance.InitialiseStartEndNodes();
+        instance.LoadFromLinearEvent();
+
+        //After finishing all the intialisation and loading of linearevent,
+        d_OnGUI = UpdateGUI;
     }
 
     void InitialiseStartEndNodes()
@@ -257,7 +260,6 @@ public class NodeLEM_Editor : EditorWindow
         ResetDrawingBezierCurve();
         ResetEventVariables();
         CurrentNodeLastRecordedSelectState = null;
-        s_CurrentLE = null;
         m_IsSearchBoxActive = false;
 
 
@@ -266,6 +268,13 @@ public class NodeLEM_Editor : EditorWindow
         m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
         m_CommandInvoker.ResetHistory();
 
+
+        //Regardless, just initialise strt end nodes
+        instance.InitialiseStartEndNodes();
+        instance.LoadFromLinearEvent();
+
+        //After finishing all the intialisation and loading of linearevent,
+        d_OnGUI = UpdateGUI;
     }
 
     //Called when window is closed
@@ -287,7 +296,7 @@ public class NodeLEM_Editor : EditorWindow
 
     #endregion
 
-    void OnGUI()
+    void UpdateGUI()
     {
         Event currentEvent = Event.current;
 
@@ -324,6 +333,12 @@ public class NodeLEM_Editor : EditorWindow
         {
             Repaint();
         }
+
+    }
+
+    void OnGUI()
+    {
+        d_OnGUI?.Invoke();
     }
 
     #region Draw Functions
@@ -1284,7 +1299,6 @@ public class NodeLEM_Editor : EditorWindow
                                 );
             }
         }
-
 
         Repaint();
     }

@@ -52,7 +52,6 @@ public class LinearEventsManager : MonoBehaviour
     }
 
 
-
     //Update loop will be where all the effects will be called and then removed if 
     //their effects are done
     void Update()
