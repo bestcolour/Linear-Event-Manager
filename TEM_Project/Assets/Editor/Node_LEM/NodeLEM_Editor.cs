@@ -29,6 +29,7 @@ public class NodeLEM_Editor : EditorWindow
     #region Process Event Variables
 
     List<Node> m_AllSelectedNodes = new List<Node>();
+    List<Node> AllSelectedNodes => instance.m_AllSelectedNodes;
 
     Node s_CurrentClickedNode = null;
     public static Node CurrentClickedNode => instance.s_CurrentClickedNode;
@@ -133,11 +134,10 @@ public class NodeLEM_Editor : EditorWindow
         //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
         //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
         public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
-        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects";
+        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects \n (Crlt + S)";
     }
 
     int m_EditorState = EDITORSTATE.UNLOADED;
-    //int EditorState => m_EditorState;
 
     Action d_OnGUI = null;
     SaveWindow m_SaveWindow = default;
@@ -151,6 +151,7 @@ public class NodeLEM_Editor : EditorWindow
     NodeCommandInvoker m_CommandInvoker = default;
     static NodeCommandInvoker CommandInvoker => instance.m_CommandInvoker;
     bool m_IsDragging = default;
+    public static int s_MaxActions = 100;
 
     #endregion
 
@@ -247,7 +248,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (instance.m_CommandInvoker == null)
         {
-            instance.m_CommandInvoker = new NodeCommandInvoker(100, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
+            instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
         }
 
         if (instance.m_AllNodesInEditor == null)
@@ -370,7 +371,7 @@ public class NodeLEM_Editor : EditorWindow
         EditorApplication.playModeStateChanged -= LoadAfterExitingPlayMode;
         EditorApplication.quitting -= SaveToLinearEvent;
 
-        EditorPrefs.SetString("linearEventScenePath","");
+        EditorPrefs.SetString("linearEventScenePath", "");
 
         s_CurrentLE = null;
     }
@@ -443,10 +444,13 @@ public class NodeLEM_Editor : EditorWindow
 
     void UpdateGUI()
     {
+        Rect dummyRect = Rect.zero;
         Event currentEvent = Event.current;
 
         //Draw background of for the window
-        GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), m_EditorBackGroundTexture, ScaleMode.StretchToFill);
+        dummyRect.width = maxSize.x;
+        dummyRect.height = maxSize.y;
+        GUI.DrawTexture(dummyRect, m_EditorBackGroundTexture, ScaleMode.StretchToFill);
 
 
         DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
@@ -465,8 +469,11 @@ public class NodeLEM_Editor : EditorWindow
         EditorZoomFeature.EndZoom();
         HandleSearchBox(currentEvent);
 
-
-        DrawSaveButton();
+        dummyRect.x = position.width - 100f;
+        dummyRect.width = 100f;
+        dummyRect.height = 50f;
+        DrawSaveButton(ref dummyRect);
+        HandleCurrentLinearEvent(ref dummyRect, currentEvent);
         //DrawRefreshButton();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
@@ -611,14 +618,14 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
-    void DrawSaveButton()
+    void DrawSaveButton(ref Rect propertyRect)
     {
         //Prevents double clicking on saving
         if (m_EditorState != EDITORSTATE.SAVING)
         {
             if (m_EditorState == EDITORSTATE.LOADED)
             {
-                if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), EDITORSTATE.LOADED_STRING))
+                if (GUI.Button(propertyRect, EDITORSTATE.LOADED_STRING))
                 {
                     m_EditorState = EDITORSTATE.SAVING;
                     SaveToLinearEvent();
@@ -631,7 +638,7 @@ public class NodeLEM_Editor : EditorWindow
             {
                 bool wasEnabled = GUI.enabled;
                 GUI.enabled = false;
-                GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), EDITORSTATE.SAVED_STRING);
+                GUI.Button(propertyRect, EDITORSTATE.SAVED_STRING);
                 GUI.enabled = wasEnabled;
 
                 //if ()
@@ -644,6 +651,24 @@ public class NodeLEM_Editor : EditorWindow
 
         }
 
+    }
+
+    void HandleCurrentLinearEvent(ref Rect propertyRect, Event currentEvent)
+    {
+        string label = "Linear Event : " + s_CurrentLE.name;
+        propertyRect.size = GUI.skin.label.CalcSize(new GUIContent(label, "The Linear Event you are currently editting"));
+        propertyRect.x = 0;
+        propertyRect.y = 0;
+
+        LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+        GUI.skin.label.normal.textColor = Color.yellow;
+        GUI.Label(propertyRect, label);
+        GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+        //If current event type is a mouse click and mouse click is within the propertyrect,
+        if (currentEvent.type == EventType.MouseDown && propertyRect.Contains(currentEvent.mousePosition))
+        {
+            EditorGUIUtility.PingObject(s_CurrentLE);
+        }
     }
 
 
@@ -1028,16 +1053,37 @@ public class NodeLEM_Editor : EditorWindow
         GenericMenu genericMenu = new GenericMenu();
 
         //Add remove node function to the context menu option
-        genericMenu.AddItem(new GUIContent("Remove node"), false,
-            //Remove all the selected nodes 
-            delegate
-            {
-                //Remove all the nodes that are selected until there are none left
-                while (s_HaveMultipleNodeSelected)
-                {
-                    OnClickRemoveNode(m_AllSelectedNodes[0]);
-                }
-            });
+        //Remove all the selected nodes 
+        //Remove all the nodes that are selected until there are none left
+        genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
+        genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
+        genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
+        {
+            if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+            CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
+        });
+
+        genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate
+        {
+            //Remove start and end node 
+            if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+            CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+            Repaint();
+        });
+        genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
+        genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
+        {
+            AllSelectedNodes.Clear();
+            for (int i = 0; i < AllNodesInEditor.Count; i++)
+                AllNodesInEditor[i].SelectNode();
+            Repaint();
+        });
+
+        //genericMenu.AddItem(new GUIContent("Save   (Crlt + S)"), false, delegate { SaveToLinearEvent(); Repaint(); });
+        genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate { while (s_HaveMultipleNodeSelected) { OnClickRemoveNode(m_AllSelectedNodes[0]); } });
+
+
+
 
         //Display the editted made menu
         genericMenu.ShowAsContext();
