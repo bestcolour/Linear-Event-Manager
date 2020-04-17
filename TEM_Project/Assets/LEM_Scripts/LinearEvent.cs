@@ -19,7 +19,7 @@ public class LinearEvent : MonoBehaviour
 
     public NodeBaseData m_StartNodeData = default;
 
-    public IEnumerator m_SaveEnumerator = default;
+    //public IEnumerator m_SaveEnumerator = default;
 
     //public ProgressBar m_ProgressBar = new ProgressBar();
     //public bool m_isLoading = default;
@@ -110,10 +110,7 @@ public class LinearEvent : MonoBehaviour
 
     }
 
-    //public void StartSaving(IEnumerator coroutine)
-    //{
-    //    StartCoroutine(coroutine);
-    //}
+ 
 
 }
 

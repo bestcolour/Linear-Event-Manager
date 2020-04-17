@@ -5,6 +5,7 @@ using UnityEditor;
 using System;
 using LEM_Effects;
 using System.Linq;
+using UnityEditor.SceneManagement;
 
 public class NodeLEM_Editor : EditorWindow
 {
@@ -194,6 +195,14 @@ public class NodeLEM_Editor : EditorWindow
             d_OnGUI = EmptyEditorUpdate;
         }
 
+
+        //Well regardless of it being empty or not, ensure that node editor saves before reloading assembly
+        AssemblyReloadEvents.beforeAssemblyReload += SaveToLinearEvent;
+        //Due to beforeAssemblyReload being called when player enters play mode but doesnt save values, this needs to be added
+        EditorApplication.playModeStateChanged += SaveBeforeEnterPlayMode;
+        EditorApplication.playModeStateChanged += LoadAfterExitingPlayMode;
+        EditorApplication.quitting += SaveToLinearEvent;
+
     }
 
     public static void LoadNodeEditor(LinearEvent linearEvent)
@@ -209,7 +218,7 @@ public class NodeLEM_Editor : EditorWindow
         {
             //Close the save window if there is one open
             instance.m_SaveWindow?.Close();
-            
+
             //Save the prev lienarevent
             s_CurrentLE = prevLE;
             instance.SaveToLinearEvent();
@@ -348,13 +357,22 @@ public class NodeLEM_Editor : EditorWindow
 
 
         //Before closing the window, save the le if it wasnt saved
-        if (instance != null && m_EditorState == EDITORSTATE.LOADED && m_SaveWindow!=null)
+        if (instance != null && m_EditorState == EDITORSTATE.LOADED && m_SaveWindow != null)
         {
             //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
             m_SaveWindow.Close();
             SaveToLinearEvent();
         }
 
+        //Unsubscribe b4 closing window
+        AssemblyReloadEvents.beforeAssemblyReload -= SaveToLinearEvent;
+        EditorApplication.playModeStateChanged -= SaveBeforeEnterPlayMode;
+        EditorApplication.playModeStateChanged -= LoadAfterExitingPlayMode;
+        EditorApplication.quitting -= SaveToLinearEvent;
+
+        EditorPrefs.SetString("linearEventScenePath","");
+
+        s_CurrentLE = null;
     }
 
     //IEnumerator OnCloseWindowCo(NodeLEM_Editor instance)
@@ -598,7 +616,7 @@ public class NodeLEM_Editor : EditorWindow
         //Prevents double clicking on saving
         if (m_EditorState != EDITORSTATE.SAVING)
         {
-            if(m_EditorState == EDITORSTATE.LOADED)
+            if (m_EditorState == EDITORSTATE.LOADED)
             {
                 if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), EDITORSTATE.LOADED_STRING))
                 {
@@ -618,12 +636,12 @@ public class NodeLEM_Editor : EditorWindow
 
                 //if ()
                 //{
-                    //m_EditorState = EDITORSTATE.SAVING;
-                    //SaveToLinearEvent();
-                    //m_EditorState = EDITORSTATE.SAVED;
+                //m_EditorState = EDITORSTATE.SAVING;
+                //SaveToLinearEvent();
+                //m_EditorState = EDITORSTATE.SAVED;
                 //}
             }
-           
+
         }
 
     }
@@ -1369,8 +1387,32 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Saving and Loading
 
+    //To be called before user presses "Play Button"
+    void SaveBeforeEnterPlayMode(PlayModeStateChange state)
+    {
+        if (state != PlayModeStateChange.ExitingEditMode)
+            return;
+
+        SaveToLinearEvent();
+
+
+        if (instance == null || s_CurrentLE == null)
+            return;
+
+        //Save string path of current LE to editor pref
+        //string sceneAssetBasePath = EditorSceneManager.GetActiveScene().path;
+        string linearEventScenePath = s_CurrentLE.transform.GetGameObjectPath();
+
+        //EditorPrefs.SetString("sceneAssetBasePath", sceneAssetBasePath);
+        EditorPrefs.SetString("linearEventScenePath", linearEventScenePath);
+    }
+
+    //To be called when player presses "Save button" or when assembly reloads every time a script changes (when play mode is entered this will get called also but it doesnt save the values to the LE)
     void SaveToLinearEvent()
     {
+        if (instance == null || m_EditorState == EDITORSTATE.SAVED || s_CurrentLE == null)
+            return;
+
         m_EditorState = EDITORSTATE.SAVING;
 
         AllNodesInEditor.Remove(StartNode);
@@ -1407,8 +1449,29 @@ public class NodeLEM_Editor : EditorWindow
         m_EditorState = EDITORSTATE.SAVED;
     }
 
+    void LoadAfterExitingPlayMode(PlayModeStateChange state)
+    {
+        if (state != PlayModeStateChange.EnteredEditMode)
+            return;
+
+        //Get string paths from editorprefs
+        //string sceneAssetBasePath = EditorPrefs.GetString("sceneAssetBasePath");
+        string linearEventPath = EditorPrefs.GetString("linearEventScenePath");
+
+        if (string.IsNullOrEmpty(linearEventPath))
+            return;
+
+        //EditorSceneManager.GetActiveScene().GetRootGameObjects();
+        LinearEvent prevLE = GameObject.Find(linearEventPath).GetComponent<LinearEvent>();
+
+        NodeLEM_Editor.LoadNodeEditor(prevLE);
+    }
+
     void LoadFromLinearEvent()
     {
+        if (instance == null || s_CurrentLE == null)
+            return;
+
         m_EditorState = EDITORSTATE.LOADING;
         #region Loading Events from Dictionary
 
