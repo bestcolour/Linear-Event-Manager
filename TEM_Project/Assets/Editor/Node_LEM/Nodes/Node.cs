@@ -42,7 +42,7 @@ public abstract class Node
 
     public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
         Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint
-        , Action<Node> onSelectNode, Action<Node> onDeSelectNode,Color midSkinColour )
+        , Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
     {
         m_TopRect = new Rect();
 
@@ -85,12 +85,12 @@ public abstract class Node
         LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
 
         //Draw the top of the node
-        GUI.color =LEMStyleLibrary.s_CurrentTopTextureColour;
-        GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground,ScaleMode.StretchToFill);
+        GUI.color = LEMStyleLibrary.s_CurrentTopTextureColour;
+        GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground, ScaleMode.StretchToFill);
 
         //Draw the node midskin with its colour
         GUI.color = m_MidSkinColour;
-        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground,ScaleMode.StretchToFill);
+        GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
         GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
         //Draw the in out points as well
@@ -138,9 +138,6 @@ public abstract class Node
                     return false;
                 }
 
-
-               
-
                 //else if mouse doesnt overlapp this node
                 //If this node is selected
                 if (m_IsSelected)
@@ -167,7 +164,7 @@ public abstract class Node
 
                 }
 
-              
+
                 return false;
             }
 
@@ -184,14 +181,14 @@ public abstract class Node
         return false;
     }
 
-    public bool HandleMouseUp(Event e)
+    public bool HandleMouseUp()
     {
         //Reset draggin bool
         m_IsDragged = false;
         return false;
     }
 
-    public bool HandleMouseDrag(Event e,Vector2 dragDelta)
+    public bool HandleMouseDrag(Event e, Vector2 dragDelta)
     {
         if (e.button == 0)
         {
@@ -252,6 +249,7 @@ public abstract class Node
     {
         d_OnDeselectNode?.Invoke(this);
         m_IsSelected = false;
+        m_IsDragged = false;
         //m_NodeSkin.textureToRender = m_NodeSkin.m_NodeBackground;
     }
 

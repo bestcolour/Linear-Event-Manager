@@ -317,7 +317,7 @@ public class PasteCommand : INodeCommand
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
             //Create a duplicate node with a new node id
-            m_PastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType);
+            m_PastedNodes[i] = NodeCommandInvoker.d_ReCreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType, m_PastedEffects[i].m_NodeBaseData.m_NodeID);
 
             //Then copy over all the lemEffect related data
             m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);

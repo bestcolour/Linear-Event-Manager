@@ -140,7 +140,7 @@ public class NodeLEM_Editor : EditorWindow
     int m_EditorState = EDITORSTATE.UNLOADED;
 
     Action d_OnGUI = null;
-    SaveWindow m_SaveWindow = default;
+    //SaveWindow m_SaveWindow = default;
 
     #endregion
 
@@ -217,8 +217,8 @@ public class NodeLEM_Editor : EditorWindow
             InitialiseWindow();
         else
         {
-            //Close the save window if there is one open
-            instance.m_SaveWindow?.Close();
+            ////Close the save window if there is one open
+            //instance.m_SaveWindow?.Close();
 
             //Save the prev lienarevent
             s_CurrentLE = prevLE;
@@ -358,10 +358,10 @@ public class NodeLEM_Editor : EditorWindow
 
 
         //Before closing the window, save the le if it wasnt saved
-        if (instance != null && m_EditorState == EDITORSTATE.LOADED && m_SaveWindow != null)
+        if (instance != null && m_EditorState == EDITORSTATE.LOADED /*&& m_SaveWindow != null*/)
         {
             //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
-            m_SaveWindow.Close();
+            //m_SaveWindow.Close();
             SaveToLinearEvent();
         }
 
@@ -441,7 +441,7 @@ public class NodeLEM_Editor : EditorWindow
             LoadNodeEditor(s_CurrentLE);
         }
     }
-
+    
     void UpdateGUI()
     {
         Rect dummyRect = Rect.zero;
@@ -472,13 +472,13 @@ public class NodeLEM_Editor : EditorWindow
         dummyRect.x = position.width - 100f;
         dummyRect.width = 100f;
         dummyRect.height = 50f;
-        DrawSaveButton(ref dummyRect);
-        HandleCurrentLinearEvent(ref dummyRect, currentEvent);
+        DrawSaveButton( dummyRect);
+        HandleCurrentLinearEventLabel( dummyRect, currentEvent);
         //DrawRefreshButton();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
         ProcessEvents(currentEvent, currMousePos);
-        ProcessNodeEvents(currentEvent);
+        ProcessNodeEvents( currentEvent);
 
         //If there is any value change in the gui,repaint it
         if (GUI.changed)
@@ -497,8 +497,9 @@ public class NodeLEM_Editor : EditorWindow
     {
         if (m_EditorState == EDITORSTATE.LOADED)
         {
-            //Display window if you want to save or not
-            m_SaveWindow = SaveWindow.OpenWindow(SaveToLinearEvent, null, null);
+            SaveToLinearEvent();
+            ////Display window if you want to save or not
+            //m_SaveWindow = SaveWindow.OpenWindow(SaveToLinearEvent, null, null);
         }
     }
 
@@ -618,7 +619,7 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
-    void DrawSaveButton(ref Rect propertyRect)
+    void DrawSaveButton( Rect propertyRect)
     {
         //Prevents double clicking on saving
         if (m_EditorState != EDITORSTATE.SAVING)
@@ -653,7 +654,7 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    void HandleCurrentLinearEvent(ref Rect propertyRect, Event currentEvent)
+    void HandleCurrentLinearEventLabel( Rect propertyRect, Event currentEvent)
     {
         string label = "Linear Event : " + s_CurrentLE.name;
         propertyRect.size = GUI.skin.label.CalcSize(new GUIContent(label, "The Linear Event you are currently editting"));
@@ -752,6 +753,8 @@ public class NodeLEM_Editor : EditorWindow
                             TrySetConnectionPoint(m_SelectedInPoint);
                             TrySetConnectionPoint(m_SelectedOutPoint);
                             ResetDrawingBezierCurve();
+
+                            //Reset selection event
 
                         }
                     }
@@ -897,7 +900,7 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
-    void ProcessNodeEvents(Event e)
+    void ProcessNodeEvents( Event e)
     {
         //Check current event once and then tell all the nodes to handle that event so they dont have to check
         switch (e.type)
@@ -905,13 +908,13 @@ public class NodeLEM_Editor : EditorWindow
             case EventType.MouseDown:
 
                 for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
-                    if (AllNodesInEditor[i].HandleMouseDown(e))
+                    if (AllNodesInEditor[i].HandleMouseDown( e))
                         GUI.changed = true;
                 break;
 
             case EventType.MouseUp:
                 for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
-                    if (AllNodesInEditor[i].HandleMouseUp(e))
+                    if (AllNodesInEditor[i].HandleMouseUp())
                         GUI.changed = true;
                 break;
 
@@ -919,7 +922,7 @@ public class NodeLEM_Editor : EditorWindow
                 Vector2 convertedDelta = e.delta / ScaleFactor;
 
                 for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
-                    if (AllNodesInEditor[i].HandleMouseDrag(e, convertedDelta))
+                    if (AllNodesInEditor[i].HandleMouseDrag( e, convertedDelta))
                         GUI.changed = true;
                 break;
 
@@ -937,6 +940,8 @@ public class NodeLEM_Editor : EditorWindow
         //Get the respective skin from the collection of nodeskin
         NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
 
+        newEffectNode.GenerateNodeID();
+
         //Initialise the new node 
         newEffectNode.Initialise
             (mousePosition,
@@ -949,7 +954,6 @@ public class NodeLEM_Editor : EditorWindow
             LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
             );
 
-        newEffectNode.GenerateNodeID();
 
         //Add the node into collection in editor
         AllNodesInEditor.Add(newEffectNode);

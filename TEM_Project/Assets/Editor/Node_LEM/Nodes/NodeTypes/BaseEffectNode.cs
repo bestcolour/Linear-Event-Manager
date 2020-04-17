@@ -20,7 +20,7 @@ public abstract class BaseEffectNode : Node
         m_Title = LEMDictionary.RemoveNodeWord(m_Title);
     }
 
-    
+
 
     public override void Draw()
     {
@@ -28,12 +28,23 @@ public abstract class BaseEffectNode : Node
         GUI.Label(new Rect(m_MidRect.x + 10, m_MidRect.y + 35, m_MidRect.width, 30f), "Description", LEMStyleLibrary.s_NodeParagraphStyle);
         GUI.Label(m_TopRect, m_Title, LEMStyleLibrary.s_NodeHeaderStyle);
 
+        #region Debugging Visuals
+        //Debugging
+        LEMStyleLibrary.s_GUIPreviousColour = LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor;
+        LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = Color.red;
+        m_TopRect.y -= 30f;
+        GUI.Label(m_TopRect, NodeID, LEMStyleLibrary.s_NodeHeaderStyle);
+        LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+        m_TopRect.y += 30f; 
+        #endregion
+
+
         //Draw the description text field
         m_LemEffectDescription = EditorGUI.TextArea(new Rect(m_MidRect.x + 10f, m_MidRect.y + 50f, m_MidRect.width - 20f, 40f), m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
 
     }
 
- 
+
 
     //public virtual LEM_BaseEffect CompileToBaseEffect()
     //{
