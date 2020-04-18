@@ -31,11 +31,15 @@ public abstract class BaseEffectNode : Node
         #region Debugging Visuals
         //Debugging
         LEMStyleLibrary.s_GUIPreviousColour = LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor;
-        LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = Color.red;
+        LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = Color.magenta;
         m_TopRect.y -= 30f;
-        GUI.Label(m_TopRect, NodeID, LEMStyleLibrary.s_NodeHeaderStyle);
+        GUI.Label(m_TopRect, "NodeID : " +NodeID, LEMStyleLibrary.s_NodeHeaderStyle);
+        m_TopRect.y -= 15f;
+        GUI.Label(m_TopRect, "OutPoint : " + m_OutPoint.GetConnectedNodeID(0), LEMStyleLibrary.s_NodeHeaderStyle);
+        m_TopRect.y -= 15f;
+        GUI.Label(m_TopRect, "InPoint : " + m_InPoint.GetConnectedNodeID(0), LEMStyleLibrary.s_NodeHeaderStyle);
         LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
-        m_TopRect.y += 30f; 
+        m_TopRect.y += 60; 
         #endregion
 
 

@@ -8,6 +8,11 @@ using LEM_Effects;
 // he will keep track of what commands u called and then record it.
 // so if you want to undo ur commands, this guys is also the place 
 // where u undo
+public struct NodeCommandType
+{
+    public const int CREATENODE = 0, DELETE = 1, MOVE = 2, CREATECONNECTION = 3, CUT = 4, PASTE = 5, CUTPASTE = 6;
+}
+
 public class NodeCommandInvoker
 {
     #region Command Delegates Definitions
@@ -28,12 +33,16 @@ public class NodeCommandInvoker
     public static List<LEM_BaseEffect> s_ClipBoard = new List<LEM_BaseEffect>();
 
     int m_CurrentCounter = 0;
-    int m_MaxActionSize = 10;
+    int m_MaxActionSize = 100;
     int Counter
     {
         get => m_CurrentCounter;
         set { m_CurrentCounter = MathfExtensions.CycleInt(value, m_MaxActionSize); }
     }
+
+    //To keep track if user has cut nodes but never pasted em
+    public bool m_HasCutButNotCutPaste = false;
+    //public int PreviousCommandType => m_CommandHistory[MathfExtensions.CycleInt(Counter - 1, m_MaxActionSize)].CommandType;
 
     //For Node commands to get and use 
     //im putting these commands here because nodecommand invoker has a connection to the nodelem editor during its intiialisation
@@ -98,6 +107,16 @@ public class NodeCommandInvoker
 
     public void InvokeCommand(INodeCommand commandToAdd)
     {
+        //Check if currently user is cutting to prepare for next Paste to be a CutPaste
+        if(commandToAdd.CommandType == NodeCommandType.CUT)
+        {
+            m_HasCutButNotCutPaste = true;
+        }
+        else if(commandToAdd.CommandType == NodeCommandType.CUTPASTE)
+        {
+            m_HasCutButNotCutPaste = false;
+        }
+
         //Adds command into a queue
         commandToAdd.Execute();
         m_CommandHistory[Counter] = commandToAdd;
@@ -147,6 +166,8 @@ public class NodeCommandInvoker
     public void CopyToClipBoard(BaseEffectNode[] copiedEffectNodes)
     {
         s_ClipBoard.Clear();
+        //Reset
+        m_HasCutButNotCutPaste = false;
 
         for (int i = 0; i < copiedEffectNodes.Length; i++)
         {

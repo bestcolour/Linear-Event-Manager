@@ -441,7 +441,7 @@ public class NodeLEM_Editor : EditorWindow
             LoadNodeEditor(s_CurrentLE);
         }
     }
-    
+
     void UpdateGUI()
     {
         Rect dummyRect = Rect.zero;
@@ -472,13 +472,15 @@ public class NodeLEM_Editor : EditorWindow
         dummyRect.x = position.width - 100f;
         dummyRect.width = 100f;
         dummyRect.height = 50f;
-        DrawSaveButton( dummyRect);
-        HandleCurrentLinearEventLabel( dummyRect, currentEvent);
+        DrawSaveButton(dummyRect);
+        HandleCurrentLinearEventLabel(dummyRect, currentEvent);
         //DrawRefreshButton();
+
+        DrawDebugLists();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
         ProcessEvents(currentEvent, currMousePos);
-        ProcessNodeEvents( currentEvent);
+        ProcessNodeEvents(currentEvent);
 
         //If there is any value change in the gui,repaint it
         if (GUI.changed)
@@ -487,6 +489,8 @@ public class NodeLEM_Editor : EditorWindow
         }
 
     }
+
+   
 
     void OnGUI()
     {
@@ -619,7 +623,7 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
-    void DrawSaveButton( Rect propertyRect)
+    void DrawSaveButton(Rect propertyRect)
     {
         //Prevents double clicking on saving
         if (m_EditorState != EDITORSTATE.SAVING)
@@ -654,7 +658,7 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    void HandleCurrentLinearEventLabel( Rect propertyRect, Event currentEvent)
+    void HandleCurrentLinearEventLabel(Rect propertyRect, Event currentEvent)
     {
         string label = "Linear Event : " + s_CurrentLE.name;
         propertyRect.size = GUI.skin.label.CalcSize(new GUIContent(label, "The Linear Event you are currently editting"));
@@ -672,6 +676,49 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
+    private void DrawDebugLists()
+    {
+        //Copy previous colour and set the color red
+        LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+        GUI.skin.label.normal.textColor = Color.red;
+
+        Rect propertyRect = Rect.zero;
+        propertyRect.y += EditorGUIUtility.singleLineHeight;
+        propertyRect.height += EditorGUIUtility.singleLineHeight;
+        propertyRect.width += EditorGUIUtility.currentViewWidth;
+
+        #region All Nodes In Editor Debug
+
+        GUI.Label(propertyRect, "All Nodes in Editor");
+        propertyRect.y += EditorGUIUtility.singleLineHeight;
+
+        for (int i = 0; i < AllNodesInEditor.Count; i++)
+        {
+            GUI.Label(propertyRect, i + ") " + AllNodesInEditor[i].NodeID);
+            propertyRect.y += EditorGUIUtility.singleLineHeight;
+        }
+
+        #endregion
+
+        propertyRect.y += EditorGUIUtility.singleLineHeight;
+
+        GUI.skin.label.normal.textColor = Color.cyan;
+        Tuple<string,string>[] inPointID_outPointID =  AllConnectionsDictionary.Keys.ToArray();
+
+        GUI.Label(propertyRect, "All Connections");
+        propertyRect.y += EditorGUIUtility.singleLineHeight;
+
+        for (int i = 0; i < inPointID_outPointID.Length; i++)
+        {
+            GUI.Label(propertyRect, i + ") " + inPointID_outPointID[i]);
+            propertyRect.y += EditorGUIUtility.singleLineHeight;
+        }
+
+
+        GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+
+
+    }
 
     ////Creation use only
     //void DrawRefreshButton()
@@ -838,13 +885,15 @@ public class NodeLEM_Editor : EditorWindow
                     if (e.keyCode == KeyCode.Q)
                     {
                         CommandInvoker.UndoCommand();
-                        e.Use();
+                        //e.Use();
+                        GUI.changed = true;
                     }
                     //Redo
                     else if (e.keyCode == KeyCode.W)
                     {
                         CommandInvoker.RedoCommand();
-                        e.Use();
+                        //e.Use();
+                        GUI.changed = true;
                     }
                     //Copy
                     else if (e.keyCode == KeyCode.C)
@@ -868,13 +917,30 @@ public class NodeLEM_Editor : EditorWindow
                         }
 
                         CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
-                        e.Use();
+                        //e.Use();
+                        GUI.changed = true;
                     }
                     //Paste
                     else if (e.keyCode == KeyCode.V)
                     {
-                        CommandInvoker.InvokeCommand(new PasteCommand());
-                        e.Use();
+
+                        //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+                        if (NodeCommandInvoker.s_ClipBoard.Count > 0)
+                        {
+                            //If player had cut 
+                            if (CommandInvoker.m_HasCutButNotCutPaste)
+                            {
+                                CommandInvoker.InvokeCommand(new CutPasteCommand());
+                                GUI.changed = true;
+                                return;
+                            }
+
+                            CommandInvoker.InvokeCommand(new PasteCommand());
+                            //e.Use();
+                            GUI.changed = true;
+                        }
+                       
+                       
                     }
                     //Select all
                     else if (e.keyCode == KeyCode.A)
@@ -886,7 +952,9 @@ public class NodeLEM_Editor : EditorWindow
                             m_AllNodesInEditor[i].SelectNode();
                         }
 
-                        e.Use();
+                        //e.Use();
+                        GUI.changed = true;
+
                     }
                     //Save
                     else if (e.keyCode == KeyCode.S)
@@ -900,7 +968,7 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
-    void ProcessNodeEvents( Event e)
+    void ProcessNodeEvents(Event e)
     {
         //Check current event once and then tell all the nodes to handle that event so they dont have to check
         switch (e.type)
@@ -908,7 +976,7 @@ public class NodeLEM_Editor : EditorWindow
             case EventType.MouseDown:
 
                 for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
-                    if (AllNodesInEditor[i].HandleMouseDown( e))
+                    if (AllNodesInEditor[i].HandleMouseDown(e))
                         GUI.changed = true;
                 break;
 
@@ -922,7 +990,7 @@ public class NodeLEM_Editor : EditorWindow
                 Vector2 convertedDelta = e.delta / ScaleFactor;
 
                 for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
-                    if (AllNodesInEditor[i].HandleMouseDrag( e, convertedDelta))
+                    if (AllNodesInEditor[i].HandleMouseDrag(e, convertedDelta))
                         GUI.changed = true;
                 break;
 
@@ -1480,11 +1548,11 @@ public class NodeLEM_Editor : EditorWindow
             lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
 
             //Populate the dictionary in the linear event
-            s_CurrentLE.m_AllEffectsDictionary.Add(lemEffects[i].m_NodeBaseData.m_NodeID, lemEffects[i]);
+            //s_CurrentLE.m_AllEffectsDictionary.Add(lemEffects[i].m_NodeBaseData.m_NodeID, lemEffects[i]);
 
         }
 
-
+        //Save to serializable array of effects
         s_CurrentLE.m_AllEffects = lemEffects;
 
         //Save start and end node data

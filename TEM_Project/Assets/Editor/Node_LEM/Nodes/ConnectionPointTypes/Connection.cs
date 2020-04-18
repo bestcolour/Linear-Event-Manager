@@ -37,6 +37,25 @@ public class Connection
             2f
         );
 
+        #region Debugging Values
+
+        //Copy previous colour and set the color red
+        LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+        GUI.skin.label.normal.textColor = Color.yellow;
+
+
+        Rect propertyRect = new Rect((m_InPoint.m_Rect.position + m_OutPoint.m_Rect.position ) * 0.5f, new Vector2(EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight));
+        propertyRect.x -= 150f;
+        propertyRect.y -= EditorGUIUtility.singleLineHeight;
+        GUI.Label(propertyRect, "InPoint : " + m_InPoint.m_ParentNode.NodeID);
+
+        propertyRect.y -= EditorGUIUtility.singleLineHeight;
+        GUI.Label(propertyRect, "OutPoint : " + m_OutPoint.m_ParentNode.NodeID);
+
+        GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+        #endregion
+
+
         //Create a button inbetween the inpoint and outpoint in a default rotation
         //and then set this button to be the button to removeconnection
         if (Handles.Button((m_InPoint.m_Rect.center + m_OutPoint.m_Rect.center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))

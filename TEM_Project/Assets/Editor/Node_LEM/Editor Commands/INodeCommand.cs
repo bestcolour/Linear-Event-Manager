@@ -17,4 +17,6 @@ public interface INodeCommand
     void Undo();
     void Redo();
 
+    int CommandType { get; }
+
 }
