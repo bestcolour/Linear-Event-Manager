@@ -122,7 +122,6 @@ public class NodeLEM_Editor : EditorWindow
     void OnConfirm(string result, Vector2 mousePos)
     {
         mousePos *= 1 / ScaleFactor;
-        //instance.CreateEffectNode(mousePos * 1 / ScaleFactor, result);
         CommandInvoker.InvokeCommand(new CreateNodeCommand(mousePos, result));
         instance.m_IsSearchBoxActive = false;
     }
@@ -140,7 +139,6 @@ public class NodeLEM_Editor : EditorWindow
     int m_EditorState = EDITORSTATE.UNLOADED;
 
     Action d_OnGUI = null;
-    //SaveWindow m_SaveWindow = default;
 
     #endregion
 
@@ -217,9 +215,6 @@ public class NodeLEM_Editor : EditorWindow
             InitialiseWindow();
         else
         {
-            ////Close the save window if there is one open
-            //instance.m_SaveWindow?.Close();
-
             //Save the prev lienarevent
             s_CurrentLE = prevLE;
             instance.SaveToLinearEvent();
@@ -344,24 +339,10 @@ public class NodeLEM_Editor : EditorWindow
     //Called when window is closed
     void OnDestroy()
     {
-        //StartNode = null;
-        //ResetDrawingBezierCurve();
-        //ResetEventVariables();
-        //CurrentNodeLastRecordedSelectState = null;
-        //s_CurrentLE = null;
-        //instance.m_AllNodesInEditor = null;
-        //instance.m_AllEffectsNodeInEditor = null;
-        //instance.m_AllConnectionsDictionary = null;
-        ////LEM_InspectorEditor.s_IsLoaded = false;
-        //instance.m_IsSearchBoxActive = false;
-        //instance.m_CommandInvoker = null;
-
-
         //Before closing the window, save the le if it wasnt saved
         if (instance != null && m_EditorState == EDITORSTATE.LOADED /*&& m_SaveWindow != null*/)
         {
             //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
-            //m_SaveWindow.Close();
             SaveToLinearEvent();
         }
 
@@ -375,51 +356,6 @@ public class NodeLEM_Editor : EditorWindow
 
         s_CurrentLE = null;
     }
-
-    //IEnumerator OnCloseWindowCo(NodeLEM_Editor instance)
-    //{
-
-
-    //    //While editor is still in closing state,
-    //    while (m_EditorState == EDITORSTATE.CLOSING)
-    //    {
-    //        //If cancel button was pressed 
-    //        if (m_EditorState == EDITORSTATE.LOADED)
-    //        {
-    //            break;
-    //        }
-
-    //        yield return null;
-    //    }
-    //Display window if you want to save or not
-    //    SaveWindow.OpenWindow(
-    //        () => { SaveToLinearEvent(); m_EditorState = EDITORSTATE.CLOSED; },
-
-    //                () => { m_EditorState = EDITORSTATE.CLOSED; },
-
-    //                () => { m_EditorState = EDITORSTATE.LOADED; }
-
-    //                );
-
-    //            while (true)
-    //            {
-    //                //If cancel button was pressed then allow windows return
-    //                if (m_EditorState == EDITORSTATE.LOADED)
-    //                {
-    //                    //Rescue content
-    //                    NodeLEM_Editor rescuedWindow = Instantiate(instance);
-    //rescuedWindow.Show();
-    //                    LoadNodeEditor(s_CurrentLE);
-    //                    return;
-    //                }
-    //                else if (m_EditorState == EDITORSTATE.CLOSED)
-    //                {
-    //                    break;
-    //                }
-
-    //            }
-
-    //}
 
     #endregion
 
@@ -474,7 +410,6 @@ public class NodeLEM_Editor : EditorWindow
         dummyRect.height = 50f;
         DrawSaveButton(dummyRect);
         HandleCurrentLinearEventLabel(dummyRect, currentEvent);
-        //DrawRefreshButton();
 
         //DrawDebugLists();
 
@@ -502,8 +437,6 @@ public class NodeLEM_Editor : EditorWindow
         if (m_EditorState == EDITORSTATE.LOADED)
         {
             SaveToLinearEvent();
-            ////Display window if you want to save or not
-            //m_SaveWindow = SaveWindow.OpenWindow(SaveToLinearEvent, null, null);
         }
     }
 
@@ -645,13 +578,6 @@ public class NodeLEM_Editor : EditorWindow
                 GUI.enabled = false;
                 GUI.Button(propertyRect, EDITORSTATE.SAVED_STRING);
                 GUI.enabled = wasEnabled;
-
-                //if ()
-                //{
-                //m_EditorState = EDITORSTATE.SAVING;
-                //SaveToLinearEvent();
-                //m_EditorState = EDITORSTATE.SAVED;
-                //}
             }
 
         }
@@ -720,17 +646,6 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    ////Creation use only
-    //void DrawRefreshButton()
-    //{
-    //    if (GUI.Button(new Rect(position.width - 215f, 0, 100f, 50f), "Refresh"))
-    //    {
-    //        LEMStyleLibrary.LoadLibrary();
-    //        ResetEditor();
-    //        OnEnable();
-    //    }
-    //}
-
     void HandleSearchBox(Event e)
     {
         if (m_IsSearchBoxActive)
@@ -777,7 +692,6 @@ public class NodeLEM_Editor : EditorWindow
                         m_SearchBox.TriggerOnInputOnStart();
 
                         e.Use();
-                        //ProcessContextMenu(currMousePosition);
                         return;
                     }
 
@@ -885,14 +799,12 @@ public class NodeLEM_Editor : EditorWindow
                     if (e.keyCode == KeyCode.Q)
                     {
                         CommandInvoker.UndoCommand();
-                        //e.Use();
                         GUI.changed = true;
                     }
                     //Redo
                     else if (e.keyCode == KeyCode.W)
                     {
                         CommandInvoker.RedoCommand();
-                        //e.Use();
                         GUI.changed = true;
                     }
                     //Copy
@@ -937,7 +849,6 @@ public class NodeLEM_Editor : EditorWindow
                             }
 
                             CommandInvoker.InvokeCommand(new PasteCommand());
-                            //e.Use();
                             GUI.changed = true;
                         }
 
@@ -953,7 +864,6 @@ public class NodeLEM_Editor : EditorWindow
                             m_AllNodesInEditor[i].SelectNode();
                         }
 
-                        //e.Use();
                         GUI.changed = true;
 
                     }
@@ -1112,12 +1022,6 @@ public class NodeLEM_Editor : EditorWindow
         newlyCreatedNode = newNode;
     }
 
-    //void DeleteNodes(BaseEffectNode[] nodesToBeDeleted)
-    //{
-    //    for (int i = 0; i < nodesToBeDeleted.Length; i++)
-    //        OnClickRemoveNode(nodesToBeDeleted[i]);
-    //}
-
     void DeleteNodes(NodeBaseData[] nodesToBeDeleted)
     {
         for (int i = 0; i < nodesToBeDeleted.Length; i++)
@@ -1148,7 +1052,6 @@ public class NodeLEM_Editor : EditorWindow
             //Remove start and end node 
             if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
             CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
-            //CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
             Repaint();
         });
         genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
@@ -1160,7 +1063,6 @@ public class NodeLEM_Editor : EditorWindow
             Repaint();
         });
 
-        //genericMenu.AddItem(new GUIContent("Save   (Crlt + S)"), false, delegate { SaveToLinearEvent(); Repaint(); });
         genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate {
             GUI.FocusControl(null);
 
@@ -1172,9 +1074,6 @@ public class NodeLEM_Editor : EditorWindow
 
             CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x=>x.NodeID).ToArray()));
         });
-
-
-
 
         //Display the editted made menu
         genericMenu.ShowAsContext();
@@ -1603,10 +1502,6 @@ public class NodeLEM_Editor : EditorWindow
         for (int i = 0; i < AllNodesInEditor.Count; i++)
         {
             lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
-
-            //Populate the dictionary in the linear event
-            //s_CurrentLE.m_AllEffectsDictionary.Add(lemEffects[i].m_NodeBaseData.m_NodeID, lemEffects[i]);
-
         }
 
         //Save to serializable array of effects
@@ -1636,7 +1531,6 @@ public class NodeLEM_Editor : EditorWindow
         if (string.IsNullOrEmpty(linearEventPath))
             return;
 
-        //EditorSceneManager.GetActiveScene().GetRootGameObjects();
         LinearEvent prevLE = GameObject.Find(linearEventPath).GetComponent<LinearEvent>();
 
         NodeLEM_Editor.LoadNodeEditor(prevLE);
