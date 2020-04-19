@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -88,5 +88,29 @@ public static class ListExtensions
         list[knownElementInt2] = knownElement1;
 
     }
+
+
+    /// <summary>
+    /// Finds an element in the reverse order.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    /// <param name="match"></param>
+    /// <returns></returns>
+    public static T FindFromLastIndex<T>(this List<T> list,Predicate<T> match)
+    {
+        for (int i = list.Count-1; i >= 0; i--)
+        {
+            //If current list element matches predicate's descripttion
+            if (match(list[i]))
+            {
+                return list[i];
+            }
+        }
+
+        return default;
+    }
+
+
 
 }

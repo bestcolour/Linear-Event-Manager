@@ -243,7 +243,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (instance.m_CommandInvoker == null)
         {
-            instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, CompileNodeToEffect,MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
+            instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, CompileNodeToEffect, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
         }
 
         if (instance.m_AllNodesInEditor == null)
@@ -677,7 +677,8 @@ public class NodeLEM_Editor : EditorWindow
             case EventType.MouseDown:
 
                 //Set the currenly clicked node
-                s_CurrentClickedNode = AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
+                //s_CurrentClickedNode = AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
+                s_CurrentClickedNode = AllNodesInEditor.FindFromLastIndex(x => x.m_TotalRect.Contains(currMousePosition));
 
                 //Check if the mouse button down is the right click button
                 if (e.button == 1)
@@ -705,7 +706,7 @@ public class NodeLEM_Editor : EditorWindow
                     //If mouse indeed doesnt clicks on a node,
                     if (s_CurrentClickedNode == null)
                     {
-                        //Set initial position for drawing selection box
+                        //Set initial position for drawing selection box if alt is not pressed
                         if (!e.alt)
                         {
                             //Reset everything
@@ -714,10 +715,8 @@ public class NodeLEM_Editor : EditorWindow
                             TrySetConnectionPoint(m_SelectedInPoint);
                             TrySetConnectionPoint(m_SelectedOutPoint);
                             ResetDrawingBezierCurve();
-
-                            //Reset selection event
-
                         }
+
                     }
                     //Else if current clicked node isnt null
                     else
@@ -744,7 +743,8 @@ public class NodeLEM_Editor : EditorWindow
                     if (e.alt && m_InitialClickedPosition == null && s_CurrentClickedNode == null)
                     {
                         OnDrag(e.delta);
-                        GUI.changed = true;
+                        //GUI.changed = true;
+                        e.Use();
                     }
                     //If user is currently planning to drag a node and wasnt draggin the previous paint,
                     else if (s_CurrentClickedNode != null && !m_IsDragging)
@@ -780,7 +780,7 @@ public class NodeLEM_Editor : EditorWindow
                         StartNode.DeselectNode();
                     }
 
-                    CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x=>x.NodeID).ToArray()));
+                    CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
                     //Skip everything else and repaint
                     e.Use();
                 }
@@ -829,7 +829,7 @@ public class NodeLEM_Editor : EditorWindow
                         }
 
                         //CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
-                        CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x=>x.NodeID).ToArray()));
+                        CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
                         //e.Use();
                         GUI.changed = true;
                     }
@@ -1063,7 +1063,8 @@ public class NodeLEM_Editor : EditorWindow
             Repaint();
         });
 
-        genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate {
+        genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate
+        {
             GUI.FocusControl(null);
 
             //Remove start and end node 
@@ -1072,7 +1073,7 @@ public class NodeLEM_Editor : EditorWindow
                 StartNode.DeselectNode();
             }
 
-            CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x=>x.NodeID).ToArray()));
+            CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
         });
 
         //Display the editted made menu
@@ -1091,12 +1092,9 @@ public class NodeLEM_Editor : EditorWindow
         delta /= ScaleFactor;
 
         //Update all the node's positions as well
-        if (AllNodesInEditor != null)
+        for (int i = 0; i < AllNodesInEditor.Count; i++)
         {
-            for (int i = 0; i < AllNodesInEditor.Count; i++)
-            {
-                AllNodesInEditor[i].Drag(delta);
-            }
+            AllNodesInEditor[i].Drag(delta);
         }
 
     }
