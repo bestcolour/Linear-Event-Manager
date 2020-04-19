@@ -412,6 +412,45 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &883783169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 208.28581, y: 601.2859}
+    m_NodeID: f5412179-7509-41b0-9781-89385dac163d
+    m_NextPointsIDs: []
+  m_TargetObject: {fileID: 0}
+--- !u!114 &929680198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 429.28574, y: 424.4285}
+    m_NodeID: aa4b53c0-5226-4d98-acb3-ef249217bc02
+    m_NextPointsIDs:
+    - ce21a685-9da0-4819-a0b5-5cbecc7341e3
+  m_TargetObject: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,6 +577,65 @@ Transform:
   m_Father: {fileID: 2054473526}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1119288860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 1011.85706, y: 480.5714}
+    m_NodeID: ce21a685-9da0-4819-a0b5-5cbecc7341e3
+    m_NextPointsIDs: []
+  m_TargetObject: {fileID: 0}
+--- !u!114 &1451404816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 115, y: 694.4286}
+    m_NodeID: 5025f20e-181a-4617-82d7-34c50ffa50a7
+    m_NextPointsIDs:
+    - 340fcc8f-327f-4cd9-a48e-9da81ee053d9
+  m_TargetObject: {fileID: 0}
+--- !u!114 &1530782590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: -10.000017, y: 575.1427}
+    m_NodeID: bff9bec5-17c6-4e79-b022-198e28166408
+    m_NextPointsIDs:
+    - f5412179-7509-41b0-9781-89385dac163d
+  m_TargetObject: {fileID: 0}
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,6 +776,44 @@ Transform:
   m_Father: {fileID: 2054473526}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2032703147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 987.5713, y: 106.2857}
+    m_NodeID: df49570b-dacc-4809-a943-892d019f7ecf
+    m_NextPointsIDs: []
+  m_TargetObject: {fileID: 0}
+--- !u!114 &2040094296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 521.8571, y: 677.71423}
+    m_NodeID: 340fcc8f-327f-4cd9-a48e-9da81ee053d9
+    m_NextPointsIDs: []
+  m_TargetObject: {fileID: 0}
 --- !u!1 &2054473524
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,6 +862,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2069139074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_NodeBaseData:
+    m_Position: {x: 569.2855, y: 97.28573}
+    m_NodeID: 19fee1e2-5b49-4da3-a4b1-089c2802d918
+    m_NextPointsIDs:
+    - df49570b-dacc-4809-a943-892d019f7ecf
+  m_TargetObject: {fileID: 0}
 --- !u!1 &2127555587
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,10 +912,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LinearEventName: 
-  m_AllEffects: []
+  m_AllEffects:
+  - {fileID: 2032703147}
+  - {fileID: 883783169}
+  - {fileID: 1530782590}
+  - {fileID: 2040094296}
+  - {fileID: 1451404816}
+  - {fileID: 1119288860}
+  - {fileID: 2069139074}
+  - {fileID: 929680198}
   m_StartNodeData:
-    m_Position: {x: 440, y: 50}
-    m_NodeID: fa40bdd1-347b-46e0-8730-4a7e556b3bcd
+    m_Position: {x: 521, y: 50}
+    m_NodeID: c31339f2-94c0-475a-8c43-5f72019e4dc3
     m_NextPointsIDs: []
 --- !u!4 &2127555589
 Transform:

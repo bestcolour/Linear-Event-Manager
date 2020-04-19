@@ -23,6 +23,14 @@ public struct NodeBaseData
         m_NextPointsIDs = outPointID;
     }
 
+    public NodeBaseData(NodeBaseData nodeBaseData)
+    {
+        m_Position = nodeBaseData.m_Position;
+        m_NodeID = nodeBaseData.m_NodeID;
+        //m_PrevPointNodeID = prevNodeID;
+        m_NextPointsIDs = nodeBaseData.m_NextPointsIDs;
+    }
+
     //public bool HasOnlyOnePrevPointNode => m_PrevPointNodeID.Length == 1 ? true : false;
     //public bool HasAtLeastOnePrevPointNode => m_PrevPointNodeID.Length > 0 ? true : false;
 

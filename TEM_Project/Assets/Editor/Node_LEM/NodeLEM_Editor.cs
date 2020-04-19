@@ -248,7 +248,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (instance.m_CommandInvoker == null)
         {
-            instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
+            instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, CompileNodeToEffect,MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
         }
 
         if (instance.m_AllNodesInEditor == null)
@@ -448,9 +448,9 @@ public class NodeLEM_Editor : EditorWindow
         Event currentEvent = Event.current;
 
         //Draw background of for the window
-        dummyRect.width = maxSize.x;
-        dummyRect.height = maxSize.y;
-        GUI.DrawTexture(dummyRect, m_EditorBackGroundTexture, ScaleMode.StretchToFill);
+        //dummyRect.width = maxSize.x;
+        //dummyRect.height = maxSize.y;
+        //GUI.DrawTexture(dummyRect, m_EditorBackGroundTexture, ScaleMode.StretchToFill);
 
 
         DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
@@ -476,7 +476,7 @@ public class NodeLEM_Editor : EditorWindow
         HandleCurrentLinearEventLabel(dummyRect, currentEvent);
         //DrawRefreshButton();
 
-        DrawDebugLists();
+        //DrawDebugLists();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
         ProcessEvents(currentEvent, currMousePos);
@@ -490,7 +490,7 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-   
+
 
     void OnGUI()
     {
@@ -703,7 +703,7 @@ public class NodeLEM_Editor : EditorWindow
         propertyRect.y += EditorGUIUtility.singleLineHeight;
 
         GUI.skin.label.normal.textColor = Color.cyan;
-        Tuple<string,string>[] inPointID_outPointID =  AllConnectionsDictionary.Keys.ToArray();
+        Tuple<string, string>[] inPointID_outPointID = AllConnectionsDictionary.Keys.ToArray();
 
         GUI.Label(propertyRect, "All Connections");
         propertyRect.y += EditorGUIUtility.singleLineHeight;
@@ -866,7 +866,7 @@ public class NodeLEM_Editor : EditorWindow
                         StartNode.DeselectNode();
                     }
 
-                    CommandInvoker.InvokeCommand(new DeleteNodeCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+                    CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x=>x.NodeID).ToArray()));
                     //Skip everything else and repaint
                     e.Use();
                 }
@@ -916,7 +916,8 @@ public class NodeLEM_Editor : EditorWindow
                             StartNode.DeselectNode();
                         }
 
-                        CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+                        //CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+                        CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x=>x.NodeID).ToArray()));
                         //e.Use();
                         GUI.changed = true;
                     }
@@ -939,8 +940,8 @@ public class NodeLEM_Editor : EditorWindow
                             //e.Use();
                             GUI.changed = true;
                         }
-                       
-                       
+
+
                     }
                     //Select all
                     else if (e.keyCode == KeyCode.A)
@@ -1111,11 +1112,18 @@ public class NodeLEM_Editor : EditorWindow
         newlyCreatedNode = newNode;
     }
 
-    void DeleteNodes(BaseEffectNode[] nodesToBeDeleted)
+    //void DeleteNodes(BaseEffectNode[] nodesToBeDeleted)
+    //{
+    //    for (int i = 0; i < nodesToBeDeleted.Length; i++)
+    //        OnClickRemoveNode(nodesToBeDeleted[i]);
+    //}
+
+    void DeleteNodes(NodeBaseData[] nodesToBeDeleted)
     {
         for (int i = 0; i < nodesToBeDeleted.Length; i++)
             OnClickRemoveNode(nodesToBeDeleted[i]);
     }
+
 
     #endregion
 
@@ -1139,7 +1147,8 @@ public class NodeLEM_Editor : EditorWindow
         {
             //Remove start and end node 
             if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-            CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+            //CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
             Repaint();
         });
         genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
@@ -1152,7 +1161,17 @@ public class NodeLEM_Editor : EditorWindow
         });
 
         //genericMenu.AddItem(new GUIContent("Save   (Crlt + S)"), false, delegate { SaveToLinearEvent(); Repaint(); });
-        genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate { while (s_HaveMultipleNodeSelected) { OnClickRemoveNode(m_AllSelectedNodes[0]); } });
+        genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate {
+            GUI.FocusControl(null);
+
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x=>x.NodeID).ToArray()));
+        });
 
 
 
@@ -1403,6 +1422,36 @@ public class NodeLEM_Editor : EditorWindow
             AllEffectsNodeInEditor.Remove(nodeToRemove.NodeID);
     }
 
+    //Second form of remove node function where it uses lem_Baseeffects instead of nodes cause nodes' referrecnes arent the same during command invokaton
+    void OnClickRemoveNode(NodeBaseData nB)
+    {
+        //Check if there is any connections to be removed from this node's outpoint
+
+        if (nB.HasAtLeastOneNextPointNode)
+            TryToRemoveConnection(nB.m_NextPointsIDs[0], nB.m_NodeID);
+
+        //Remove any and allconnections connected to the node's inpoint
+        string[] allNodesConnectedToInPoint = AllEffectsNodeInEditor[nB.m_NodeID].m_InPoint.GetAllConnectedNodeIDs();
+
+        //List<Node> nodesConnectedToInpoint = AllNodesInEditor.FindAll(node => node.m_OutPoint.IsConnected && node.m_OutPoint.GetConnectedNodeID(0) == nB.m_NodeID);
+
+        for (int i = 0; i < allNodesConnectedToInPoint.Length; i++)
+        {
+            OnClickRemoveConnection(AllConnectionsDictionary[new Tuple<string, string>(nB.m_NodeID, allNodesConnectedToInPoint[i])]);
+        }
+
+        //Remove node from selected collection if it is inside
+        TryToRemoveNodeFromSelectedCollection(nB.m_NodeID);
+
+        //O(n) operation only, inother words same as list.Remove( )
+        //Need nodeid to be checked cause Node references are lost during command invoker
+        int indexOfNodeToRemove = AllNodesInEditor.FindIndex(x => x.NodeID == nB.m_NodeID);
+        AllNodesInEditor.RemoveEfficiently(indexOfNodeToRemove);
+
+        if (AllEffectsNodeInEditor.ContainsKey(nB.m_NodeID))
+            AllEffectsNodeInEditor.Remove(nB.m_NodeID);
+    }
+
     //Use this if you know exactly what nodes to connect
     void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
     {
@@ -1489,6 +1538,14 @@ public class NodeLEM_Editor : EditorWindow
     {
         //If all selected doesnt contain this node, add it
         m_AllSelectedNodes.Remove(nodeToRemove);
+    }
+
+    void TryToRemoveNodeFromSelectedCollection(string id)
+    {
+        //If all selected doesnt contain this node, add it
+        int removeAt = m_AllSelectedNodes.FindIndex(node => node.NodeID == id);
+        if (removeAt >= 0)
+            m_AllSelectedNodes.RemoveEfficiently(removeAt);
     }
 
     void DeselectAllNodes()
@@ -1657,6 +1714,11 @@ public class NodeLEM_Editor : EditorWindow
 
         Repaint();
         m_EditorState = EDITORSTATE.LOADED;
+    }
+
+    LEM_BaseEffect CompileNodeToEffect(string nodeID)
+    {
+        return AllEffectsNodeInEditor[nodeID].CompileToBaseEffect();
     }
 
     #endregion

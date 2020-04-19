@@ -39,20 +39,20 @@ public class Connection
 
         #region Debugging Values
 
-        //Copy previous colour and set the color red
-        LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
-        GUI.skin.label.normal.textColor = Color.yellow;
+        ////Copy previous colour and set the color red
+        //LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+        //GUI.skin.label.normal.textColor = Color.yellow;
 
 
-        Rect propertyRect = new Rect((m_InPoint.m_Rect.position + m_OutPoint.m_Rect.position ) * 0.5f, new Vector2(EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight));
-        propertyRect.x -= 150f;
-        propertyRect.y -= EditorGUIUtility.singleLineHeight;
-        GUI.Label(propertyRect, "InPoint : " + m_InPoint.m_ParentNode.NodeID);
+        //Rect propertyRect = new Rect((m_InPoint.m_Rect.position + m_OutPoint.m_Rect.position ) * 0.5f, new Vector2(EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight));
+        //propertyRect.x -= 150f;
+        //propertyRect.y -= EditorGUIUtility.singleLineHeight;
+        //GUI.Label(propertyRect, "InPoint : " + m_InPoint.m_ParentNode.NodeID);
 
-        propertyRect.y -= EditorGUIUtility.singleLineHeight;
-        GUI.Label(propertyRect, "OutPoint : " + m_OutPoint.m_ParentNode.NodeID);
+        //propertyRect.y -= EditorGUIUtility.singleLineHeight;
+        //GUI.Label(propertyRect, "OutPoint : " + m_OutPoint.m_ParentNode.NodeID);
 
-        GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+        //GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
         #endregion
 
 

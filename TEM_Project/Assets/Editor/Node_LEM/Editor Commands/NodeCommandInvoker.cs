@@ -19,7 +19,9 @@ public class NodeCommandInvoker
     public delegate BaseEffectNode CreateEffectNode(Vector2 nodePos, string nodeType);
     public delegate BaseEffectNode ReCreateEffectNode(Vector2 nodePos, string nodeType, string idToSet);
     public delegate void RestitchConnections(LEM_BaseEffect currentEffect);
-    public delegate void DeleteNodes(BaseEffectNode[] nodesToBeDeleted);
+    //public delegate void DeleteNodes(BaseEffectNode[] nodesToBeDeleted);
+    public delegate void DeleteNodes(NodeBaseData[] nodeBases);
+    public delegate LEM_BaseEffect CompileNodeEffect(string nodeID);
     public delegate void MoveNodes(string[] nodeIDsMoved, ref Vector2[] previousTopRectPositions, ref Vector2[] previousMidRectPositions, ref Vector2[] previousTotalRectPositions);
     public delegate void CreateConnection(string inPointNodeID, string outPointNodeID);
     public delegate void RemoveConnection(string inPointNodeID, string outPointNodeID);
@@ -49,7 +51,9 @@ public class NodeCommandInvoker
     public static CreateEffectNode d_CreateEffectNode = null;
     public static ReCreateEffectNode d_ReCreateEffectNode = null;
     public static RestitchConnections d_RestitchConnections = null;
-    public static DeleteNodes d_DeleteNodes = null;
+    //public static DeleteNodes d_DeleteNodes = null;
+    public static DeleteNodes d_DeleteNodesWithNodeBase = null;
+    public static CompileNodeEffect d_CompileNodeEffect = null;
     public static MoveNodes d_MoveNodes = null;
     public static CreateConnection d_CreateConnection = null;
     public static RemoveConnection d_RemoveConnection = null;
@@ -59,7 +63,7 @@ public class NodeCommandInvoker
 
     #region Construction and Resets
     public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode,
-        RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes,
+        RestitchConnections restitchConnections,DeleteNodes deleteNodesWithNodeBase,CompileNodeEffect compileNodeEffect, MoveNodes moveNodes,
         CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes,Action onCommand)
     {
         //m_MaxActionSize = 100;
@@ -67,7 +71,9 @@ public class NodeCommandInvoker
         d_CreateEffectNode = createEffectNode;
         d_ReCreateEffectNode = recreateEffectNode;
         d_RestitchConnections = restitchConnections;
-        d_DeleteNodes = deleteNodes;
+        //d_DeleteNodes = deleteNodes;
+        d_CompileNodeEffect = compileNodeEffect;
+        d_DeleteNodesWithNodeBase = deleteNodesWithNodeBase;
         d_MoveNodes = moveNodes;
         d_CreateConnection = createConnection;
         d_RemoveConnection = removeConnection;
@@ -76,15 +82,18 @@ public class NodeCommandInvoker
     }
 
     public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode,
-        RestitchConnections restitchConnections, DeleteNodes deleteNodes, MoveNodes moveNodes,
-        CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes,Action onCommand)
+      RestitchConnections restitchConnections, DeleteNodes deleteNodesWithNodeBase, CompileNodeEffect compileNodeEffect, MoveNodes moveNodes,
+      CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes, Action onCommand)
     {
         m_MaxActionSize = actionSize;
         m_CommandHistory = new INodeCommand[actionSize];
+
         d_CreateEffectNode = createEffectNode;
         d_ReCreateEffectNode = recreateEffectNode;
         d_RestitchConnections = restitchConnections;
-        d_DeleteNodes = deleteNodes;
+        //d_DeleteNodes = deleteNodes;
+        d_CompileNodeEffect = compileNodeEffect;
+        d_DeleteNodesWithNodeBase = deleteNodesWithNodeBase;
         d_MoveNodes = moveNodes;
         d_CreateConnection = createConnection;
         d_RemoveConnection = removeConnection;
