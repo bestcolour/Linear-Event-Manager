@@ -242,7 +242,7 @@ public class PasteCommand : INodeCommand
 
     public void Execute()
     {
-        
+
 
         //all of these needs to be done in a certain order
         BaseEffectNode[] pastedNodes = new BaseEffectNode[m_PastedEffects.Length];
@@ -321,7 +321,7 @@ public class PasteCommand : INodeCommand
             m_PastedEffects[i].m_NodeBaseData.ResetNextPointsIDsIfEmpty();
         }
 
-       
+
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
             //Reassign Effects' nodeid to a new one cause we just created a new effect node
@@ -366,6 +366,8 @@ public class PasteCommand : INodeCommand
 
     public void Redo()
     {
+        BaseEffectNode effNode;
+
         //Create new nodes
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
@@ -379,10 +381,13 @@ public class PasteCommand : INodeCommand
             //m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
 
             //Create a duplicate node with a new node id and load
-            NodeCommandInvoker.d_ReCreateEffectNode
+            effNode = NodeCommandInvoker.d_ReCreateEffectNode
                    (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset,
                    nodeType: m_PastedEffects[i].m_NodeEffectType,
-                   m_PastedEffects[i].m_NodeBaseData.m_NodeID).LoadFromBaseEffect(m_PastedEffects[i]);
+                   m_PastedEffects[i].m_NodeBaseData.m_NodeID);
+
+            effNode.LoadFromBaseEffect(m_PastedEffects[i]);
+            effNode.SelectNode();
         }
 
         //Restitch after all the node identity crisis has been settled
@@ -468,6 +473,8 @@ public class CutPasteCommand : INodeCommand
 
     public void Redo()
     {
+        BaseEffectNode effNode;
+
         //Create new nodes
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
@@ -478,11 +485,14 @@ public class CutPasteCommand : INodeCommand
             //m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
 
             //Create a duplicate node with a new node id
-            NodeCommandInvoker.d_ReCreateEffectNode
+            effNode = NodeCommandInvoker.d_ReCreateEffectNode
                 (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + PasteCommand.s_PasteOffset,
                 nodeType: m_PastedEffects[i].m_NodeEffectType,
-                m_PastedEffects[i].m_NodeBaseData.m_NodeID).
-                LoadFromBaseEffect(m_PastedEffects[i]);
+                m_PastedEffects[i].m_NodeBaseData.m_NodeID);
+
+            effNode.LoadFromBaseEffect(m_PastedEffects[i]);
+
+            effNode.SelectNode();
 
         }
 

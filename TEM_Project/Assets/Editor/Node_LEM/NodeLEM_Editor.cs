@@ -448,9 +448,9 @@ public class NodeLEM_Editor : EditorWindow
         Event currentEvent = Event.current;
 
         //Draw background of for the window
-        //dummyRect.width = maxSize.x;
-        //dummyRect.height = maxSize.y;
-        //GUI.DrawTexture(dummyRect, m_EditorBackGroundTexture, ScaleMode.StretchToFill);
+        dummyRect.width = maxSize.x;
+        dummyRect.height = maxSize.y;
+        GUI.DrawTexture(dummyRect, m_EditorBackGroundTexture, ScaleMode.StretchToFill);
 
 
         DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
@@ -921,8 +921,8 @@ public class NodeLEM_Editor : EditorWindow
                         //e.Use();
                         GUI.changed = true;
                     }
-                    //Paste
-                    else if (e.keyCode == KeyCode.V)
+                    //Paste only when there is no foccus on anyother keyboard demanding control,
+                    else if (e.keyCode == KeyCode.V && GUIUtility.keyboardControl == 0)
                     {
 
                         //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
