@@ -109,8 +109,10 @@ public class LEMStyleLibrary
 
         s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
         s_NodeTextInputStyle.fontSize = 10;
+        s_NodeTextInputStyle.wordWrap = true;
 
         s_NodeParagraphStyle.fontSize = 10;
+
 
         s_StartEndStyle.fontSize = 20;
         s_StartEndStyle.alignment = TextAnchor.MiddleCenter;

@@ -9,6 +9,11 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
+    public enum UpdateCycle
+    {
+        Update, FixedUpdate, LateUpdate
+    }
+
     [Serializable]
     public abstract class LEM_BaseEffect : ScriptableObject
     {
@@ -17,6 +22,9 @@ namespace LEM_Effects
 
         [Tooltip("Write a summary about what this event does if you want to"), TextArea(3, 5)]
         public string m_Description = default;
+
+        [Tooltip("Which Update Cycle Effect is In")]
+        public UpdateCycle m_UpdateCycle = default;
 
         [Tooltip("Stores basic node data. This is applicable for effect nodes as well"), Header("Node Data")]
         public NodeBaseData m_NodeBaseData = default;

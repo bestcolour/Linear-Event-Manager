@@ -4,6 +4,8 @@ using LEM_Effects;
 using System;
 using System.Collections.Generic;
 
+
+
 public abstract class BaseEffectNode : Node
 {
     //TEM effect related variables
@@ -11,6 +13,7 @@ public abstract class BaseEffectNode : Node
     //public LEM_BaseEffect m_BaseEffectSaveFile = default;
     public string m_Title = default;
 
+    public UpdateCycle m_UpdateCycle = default;
 
     public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
     {
@@ -25,7 +28,10 @@ public abstract class BaseEffectNode : Node
     public override void Draw()
     {
         base.Draw();
-        GUI.Label(new Rect(m_MidRect.x + 10, m_MidRect.y + 35, m_MidRect.width, 30f), "Description", LEMStyleLibrary.s_NodeParagraphStyle);
+
+        Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 35, m_MidRect.width, 30f);
+
+        GUI.Label(propertyRect, "Description", LEMStyleLibrary.s_NodeParagraphStyle);
         GUI.Label(m_TopRect, m_Title, LEMStyleLibrary.s_NodeHeaderStyle);
 
         #region Debugging Visuals
@@ -44,7 +50,19 @@ public abstract class BaseEffectNode : Node
 
 
         //Draw the description text field
-        m_LemEffectDescription = EditorGUI.TextArea(new Rect(m_MidRect.x + 10f, m_MidRect.y + 50f, m_MidRect.width - 20f, 40f), m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
+        propertyRect.y += 15f;
+        propertyRect.width -= 20f;
+        propertyRect.height = 25f;
+        //m_LemEffectDescription = EditorGUI.TextArea(propertyRect, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
+        m_LemEffectDescription = EditorGUI.TextField(propertyRect, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
+
+        //Draw UpdateCycle enum
+
+        propertyRect.y += 32.5f;
+        GUI.Label(propertyRect, "Update Cycle", LEMStyleLibrary.s_NodeParagraphStyle);
+        propertyRect.x += 85f;
+        propertyRect.width = 80f;
+        m_UpdateCycle = (UpdateCycle)EditorGUI.EnumPopup(propertyRect, m_UpdateCycle);
 
     }
 

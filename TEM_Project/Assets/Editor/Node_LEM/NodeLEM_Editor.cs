@@ -5,7 +5,6 @@ using UnityEditor;
 using System;
 using LEM_Effects;
 using System.Linq;
-using UnityEditor.SceneManagement;
 
 public class NodeLEM_Editor : EditorWindow
 {
@@ -25,6 +24,8 @@ public class NodeLEM_Editor : EditorWindow
 
     Node m_StartNode = default;
     Node StartNode { get { return instance.m_StartNode; } set { instance.m_StartNode = value; } }
+
+    Action d_OnGUI = null;
 
     #region Process Event Variables
 
@@ -125,6 +126,8 @@ public class NodeLEM_Editor : EditorWindow
         CommandInvoker.InvokeCommand(new CreateNodeCommand(mousePos, result));
         instance.m_IsSearchBoxActive = false;
     }
+
+    GenericMenu m_NodeContextMenu = default;
     #endregion
 
     #region Loading States
@@ -137,8 +140,6 @@ public class NodeLEM_Editor : EditorWindow
     }
 
     int m_EditorState = EDITORSTATE.UNLOADED;
-
-    Action d_OnGUI = null;
 
     #endregion
 
@@ -154,7 +155,7 @@ public class NodeLEM_Editor : EditorWindow
     #endregion
 
     Texture2D m_EditorBackGroundTexture = default;
-
+    Texture2D EditorBackGroundTexture => instance.m_EditorBackGroundTexture;
 
 
     #region Initialisation
@@ -271,6 +272,11 @@ public class NodeLEM_Editor : EditorWindow
             instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 250, 325);
         }
 
+        if(instance.m_NodeContextMenu == null)
+        {
+            SetupProcessNodeContextMenu();
+        }
+
         //Regardless, just initialise strt end nodes
         instance.InitialiseStartEndNodes();
         instance.LoadFromLinearEvent();
@@ -360,6 +366,8 @@ public class NodeLEM_Editor : EditorWindow
     #endregion
 
     #region Updates and Events
+
+
     void EmptyEditorUpdate()
     {
         Rect propertyRect = new Rect(10f, 10f, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight);
@@ -386,7 +394,7 @@ public class NodeLEM_Editor : EditorWindow
         //Draw background of for the window
         dummyRect.width = maxSize.x;
         dummyRect.height = maxSize.y;
-        GUI.DrawTexture(dummyRect, m_EditorBackGroundTexture, ScaleMode.StretchToFill);
+        GUI.DrawTexture(dummyRect, EditorBackGroundTexture, ScaleMode.StretchToFill);
 
 
         DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
@@ -405,10 +413,9 @@ public class NodeLEM_Editor : EditorWindow
         EditorZoomFeature.EndZoom();
         bool isMouseInSearchBox= HandleSearchBox(currentEvent);
 
-        dummyRect.x = position.width - 100f;
-        dummyRect.width = 100f;
-        dummyRect.height = 50f;
-        DrawSaveButton(dummyRect);
+      
+
+        DrawToolButtons(dummyRect);
         HandleCurrentLinearEventLabel(dummyRect, currentEvent);
 
         //DrawDebugLists();
@@ -556,8 +563,16 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
-    void DrawSaveButton(Rect propertyRect)
+    void DrawToolButtons(Rect propertyRect)
     {
+        //Align button to the right of the screen
+        propertyRect.x = position.width - 100f;
+        propertyRect.y = 0f;
+        propertyRect.width = 100f;
+        propertyRect.height = 50f;
+
+        #region Drawing Save Button
+
         //Prevents double clicking on saving
         if (m_EditorState != EDITORSTATE.SAVING)
         {
@@ -580,6 +595,94 @@ public class NodeLEM_Editor : EditorWindow
                 GUI.enabled = wasEnabled;
             }
 
+        }
+        #endregion
+
+        Event e = Event.current;
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Paste"))
+        {
+            //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+            if (NodeCommandInvoker.s_ClipBoard.Count > 0)
+            {
+                //If player had cut 
+                if (CommandInvoker.m_HasCutButNotCutPaste)
+                {
+                    CommandInvoker.InvokeCommand(new CutPasteCommand());
+                    GUI.changed = true;
+                    return;
+                }
+
+                CommandInvoker.InvokeCommand(new PasteCommand());
+                GUI.changed = true;
+            }
+
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Copy"))
+        {
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+            e.Use();
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Cut"))
+        {
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            //CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+            //e.Use();
+            GUI.changed = true;
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Delete"))
+        {
+            GUI.FocusControl(null);
+
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+            //Skip everything else and repaint
+            e.Use();
+
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Redo"))
+        {
+            CommandInvoker.RedoCommand();
+            GUI.changed = true;
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Undo"))
+        {
+            CommandInvoker.UndoCommand();
+            GUI.changed = true;
         }
 
     }
@@ -704,7 +807,8 @@ public class NodeLEM_Editor : EditorWindow
 
 
                     //Else, open the node's context menu
-                    ProcessNodeContextMenu();
+                    //ProcessNodeContextMenu();
+                    m_NodeContextMenu.ShowAsContext();
                 }
 
                 else if (e.button == 0)
@@ -1037,7 +1141,7 @@ public class NodeLEM_Editor : EditorWindow
 
     #endregion
 
-    void ProcessNodeContextMenu()
+    void SetupProcessNodeContextMenu()
     {
         //and then add an button option with the name "Remove node"
         GenericMenu genericMenu = new GenericMenu();
@@ -1083,8 +1187,57 @@ public class NodeLEM_Editor : EditorWindow
         });
 
         //Display the editted made menu
-        genericMenu.ShowAsContext();
+        instance.m_NodeContextMenu = genericMenu;
     }
+
+    //void ProcessNodeContextMenu()
+    //{
+    //    //and then add an button option with the name "Remove node"
+    //    GenericMenu genericMenu = new GenericMenu();
+
+    //    //Add remove node function to the context menu option
+    //    //Remove all the selected nodes 
+    //    //Remove all the nodes that are selected until there are none left
+    //    genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
+    //    genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
+    //    genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
+    //    {
+    //        if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+    //        CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
+    //    });
+
+    //    genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate
+    //    {
+    //        //Remove start and end node 
+    //        if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+    //        CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+    //        Repaint();
+    //    });
+    //    genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
+    //    genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
+    //    {
+    //        AllSelectedNodes.Clear();
+    //        for (int i = 0; i < AllNodesInEditor.Count; i++)
+    //            AllNodesInEditor[i].SelectNode();
+    //        Repaint();
+    //    });
+
+    //    genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate
+    //    {
+    //        GUI.FocusControl(null);
+
+    //        //Remove start and end node 
+    //        if (m_AllSelectedNodes.Contains(StartNode))
+    //        {
+    //            StartNode.DeselectNode();
+    //        }
+
+    //        CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+    //    });
+
+    //    //Display the editted made menu
+    //    genericMenu.ShowAsContext();
+    //}
 
     //Drags the window canvas (think like animator window)
     void OnDrag(Vector2 delta)

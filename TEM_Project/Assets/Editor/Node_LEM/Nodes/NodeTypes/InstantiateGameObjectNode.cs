@@ -25,7 +25,7 @@ public class InstantiateGameObjectNode : BaseEffectNode
     {
         base.Draw();
 
-        Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 100f, m_MidRect.width - 20, 15f);
+        Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 110f, m_MidRect.width - 20, 15f);
 
         //Draw fields custom to this class
         m_TargetObject = (GameObject)EditorGUI.ObjectField(propertyRect, "Object to Instantiate", m_TargetObject, typeof(GameObject), true);
@@ -44,6 +44,7 @@ public class InstantiateGameObjectNode : BaseEffectNode
     {
         InstantiateGameObject effect = ScriptableObject.CreateInstance<InstantiateGameObject>();
         effect.m_Description = m_LemEffectDescription;
+        effect.m_UpdateCycle = m_UpdateCycle;
 
         string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
         //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
@@ -71,6 +72,9 @@ public class InstantiateGameObjectNode : BaseEffectNode
 
         //Important
         m_LemEffectDescription = effectToLoadFrom.m_Description;
+        m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+
+
     }
 
 }

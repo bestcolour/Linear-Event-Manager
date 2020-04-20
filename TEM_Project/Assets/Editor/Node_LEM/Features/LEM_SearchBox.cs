@@ -136,6 +136,8 @@ public class LEM_SearchBox
     public bool HandleSearchBox(Event e)
     {
         bool isInSearchBox = false;
+
+        //Rect starts at the mosue position and have dimension of width and height
         Rect rect = new Rect(m_PositionToDrawAt.x, m_PositionToDrawAt.y, m_Width, m_Height);
 
         if (rect.Contains(e.mousePosition))

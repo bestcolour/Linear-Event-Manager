@@ -22,7 +22,7 @@ public class DestroyGameObjectNode : BaseEffectNode
         base.Draw();
 
         //Draw a object field for inputting  the gameobject to destroy
-        Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 100f, m_MidRect.width - 20, 20f);
+        Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 110f, m_MidRect.width - 20, 20f);
         GUI.Label(propertyRect, "Object To Destroy");
         propertyRect.y += 20f;
         propertyRect.height = 25f;
@@ -35,6 +35,8 @@ public class DestroyGameObjectNode : BaseEffectNode
         DestroyGameObject myEffect = ScriptableObject.CreateInstance<DestroyGameObject>();
         myEffect.m_NodeEffectType = this.GetType().ToString();
         myEffect.m_Description = m_LemEffectDescription;
+        myEffect.m_UpdateCycle = m_UpdateCycle;
+
 
         string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
         //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
@@ -52,6 +54,8 @@ public class DestroyGameObjectNode : BaseEffectNode
 
         //Important
         m_LemEffectDescription = effectToLoadFrom.m_Description;
+        m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+
     }
 
 }
