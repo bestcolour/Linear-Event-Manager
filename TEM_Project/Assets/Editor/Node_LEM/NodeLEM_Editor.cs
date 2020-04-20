@@ -268,7 +268,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (instance.m_SearchBox == null)
         {
-            instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
+            instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 250, 325);
         }
 
         //Regardless, just initialise strt end nodes
@@ -403,7 +403,7 @@ public class NodeLEM_Editor : EditorWindow
         DrawSelectionBox(currMousePos);
 
         EditorZoomFeature.EndZoom();
-        HandleSearchBox(currentEvent);
+        bool isMouseInSearchBox= HandleSearchBox(currentEvent);
 
         dummyRect.x = position.width - 100f;
         dummyRect.width = 100f;
@@ -414,7 +414,7 @@ public class NodeLEM_Editor : EditorWindow
         //DrawDebugLists();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
-        ProcessEvents(currentEvent, currMousePos);
+        ProcessEvents(currentEvent, currMousePos, isMouseInSearchBox);
         ProcessNodeEvents(currentEvent);
 
         //If there is any value change in the gui,repaint it
@@ -646,32 +646,38 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    void HandleSearchBox(Event e)
+    bool HandleSearchBox(Event e)
     {
         if (m_IsSearchBoxActive)
-            m_SearchBox.HandleSearchBox(e);
+            return m_SearchBox.HandleSearchBox(e);
 
+        return false;
     }
 
     #endregion
 
     //Checks what the current event is right now, and then execute code accordingly
-    void ProcessEvents(Event e, Vector2 currMousePosition)
+    void ProcessEvents(Event e, Vector2 currMousePosition,bool isMouseInSearchBox)
     {
         m_AmountOfMouseDragThisUpdate = Vector2.zero;
         switch (e.type)
         {
             case EventType.ScrollWheel:
-                int signOfChange = 0;
-                float changeRate = 0f;
 
-                signOfChange = e.delta.y > 0 ? -1 : 1;
-                //If alt key is pressed,
-                changeRate = e.alt ? k_SlowScaleChangeRate : k_ScaleChangeRate;
+                if (!isMouseInSearchBox)
+                {
+                    int signOfChange = 0;
+                    float changeRate = 0f;
 
-                ScaleFactor += signOfChange * changeRate;
+                    signOfChange = e.delta.y > 0 ? -1 : 1;
+                    //If alt key is pressed,
+                    changeRate = e.alt ? k_SlowScaleChangeRate : k_ScaleChangeRate;
 
-                e.Use();
+                    ScaleFactor += signOfChange * changeRate;
+
+                    e.Use();
+                }
+               
                 break;
 
             case EventType.MouseDown:

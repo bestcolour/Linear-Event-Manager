@@ -5,6 +5,10 @@
 
 //public class ZoomTestWindow : EditorWindow
 //{
+
+//    // The position on of the scrolling viewport
+//    public Vector2 scrollPosition = Vector2.zero;
+
 //    [MenuItem("Window/Zoom Test")]
 //    private static void Init()
 //    {
@@ -86,13 +90,47 @@
 
 //    public void OnGUI()
 //    {
-//        HandleEvents();
+//        Event e = Event.current;
+//        //HandleEvents();
 
 //        // The zoom area clipping is sometimes not fully confined to the passed in rectangle. At certain
 //        // zoom levels you will get a line of pixels rendered outside of the passed in area because of
 //        // floating point imprecision in the scaling. Therefore, it is recommended to draw the zoom
 //        // area first and then draw everything else so that there is no undesired overlap.
-//        DrawZoomArea();
-//        DrawNonZoomArea();
+//        //DrawZoomArea();
+//        //DrawNonZoomArea();
+
+
+//        // An absolute-positioned example: We make a scrollview that has a really large client
+//        // rect and put it in a small rect on the screen.
+//        scrollPosition = GUI.BeginScrollView(new Rect(10, 300, 220, 180), scrollPosition, new Rect(0, 0, 200, 200));
+//        GUIStyle currentResultStyle = new GUIStyle("CN EntryBackOdd");
+//        // Make four buttons - one in each corner. The coordinate system is defined
+//        // by the last parameter to BeginScrollView.
+//        GUI.Button(new Rect(0, 0, 100, 20), "Top-left");
+
+//        //Rect for style
+//        Rect rectForStyle = new Rect(0, 50, 100, 20);
+//        if (e.type == EventType.Repaint)
+//        {
+//            currentResultStyle.Draw(rectForStyle, false, false, false, false);
+//        }
+
+//        if (rectForStyle.Contains(e.mousePosition))
+//        {
+
+//            if (e.type == EventType.MouseDown)
+//            {
+//                Debug.Log("Hehe");
+//            }
+//        }
+
+//        GUI.Button(new Rect(110, 0, 100, 20), "Top-right");
+//        GUI.Button(new Rect(0, 180, 100, 20), "Bottom-left");
+//        GUI.Button(new Rect(110, 180, 100, 20), "Bottom-right");
+
+//        // End the scroll view that we began above.
+//        GUI.EndScrollView();
+
 //    }
 //}
