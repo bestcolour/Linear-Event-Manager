@@ -11,7 +11,6 @@ public class NodeLEM_Editor : EditorWindow
     public static NodeLEM_Editor instance = default;
     public static LinearEvent s_CurrentLE = default;
 
-
     //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
     List<Node> AllNodesInEditor => instance.m_AllNodesInEditor;
@@ -23,12 +22,15 @@ public class NodeLEM_Editor : EditorWindow
     Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
     Dictionary<Tuple<string, string>, Connection> AllConnectionsDictionary => instance.m_AllConnectionsDictionary;
 
-    Node s_StartNode = default;
-    Node StartNode { get { return instance.s_StartNode; } set { instance.s_StartNode = value; } }
+    Node m_StartNode = default;
+    Node StartNode { get { return instance.m_StartNode; } set { instance.m_StartNode = value; } }
+
+    Action d_OnGUI = null;
 
     #region Process Event Variables
 
     List<Node> m_AllSelectedNodes = new List<Node>();
+    List<Node> AllSelectedNodes => instance.m_AllSelectedNodes;
 
     Node s_CurrentClickedNode = null;
     public static Node CurrentClickedNode => instance.s_CurrentClickedNode;
@@ -121,14 +123,23 @@ public class NodeLEM_Editor : EditorWindow
     void OnConfirm(string result, Vector2 mousePos)
     {
         mousePos *= 1 / ScaleFactor;
-        //instance.CreateEffectNode(mousePos * 1 / ScaleFactor, result);
         CommandInvoker.InvokeCommand(new CreateNodeCommand(mousePos, result));
         instance.m_IsSearchBoxActive = false;
     }
+
+    GenericMenu m_NodeContextMenu = default;
     #endregion
 
-    #region Loading
-    bool m_IsLoading = false;
+    #region Loading States
+    struct EDITORSTATE
+    {
+        //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
+        //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
+        public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
+        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects \n (Crlt + S)";
+    }
+
+    int m_EditorState = EDITORSTATE.UNLOADED;
 
     #endregion
 
@@ -139,12 +150,31 @@ public class NodeLEM_Editor : EditorWindow
     NodeCommandInvoker m_CommandInvoker = default;
     static NodeCommandInvoker CommandInvoker => instance.m_CommandInvoker;
     bool m_IsDragging = default;
+    public static int s_MaxActions = 100;
 
     #endregion
 
     Texture2D m_EditorBackGroundTexture = default;
+    Texture2D EditorBackGroundTexture => instance.m_EditorBackGroundTexture;
 
 
+    #region Initialisation
+
+    //Form of intialisation from pressing Load Linear Event
+    public static void InitialiseWindow()
+    {
+        //Get window and this will trigger OnEnable
+        NodeLEM_Editor editorWindow = GetWindow<NodeLEM_Editor>();
+
+        //Set the title of gui for the window to be TEM Node Editor
+        editorWindow.titleContent = new GUIContent("TEM Node Editor");
+
+        editorWindow.d_OnGUI = editorWindow.Initialise;
+
+    }
+
+    //Form of intialisation from pressing Open Window
+    [MenuItem("Window/Lem Node Editor")]
     public static void OpenWindow()
     {
         //Get window and this will trigger OnEnable
@@ -155,30 +185,53 @@ public class NodeLEM_Editor : EditorWindow
 
     }
 
-    public static void LoadNodeEditor(LinearEvent linearEvent)
-    {
-        //If this is the first time you are opening the window, or if u have previously closed the window and you wish to reopen it
-        if (instance == null)
-            OpenWindow();
-        else
-            //Clear everything 
-            instance.ResetEditor();
 
-        //Regardless, just initialise strt end nodes
-        instance.InitialiseStartEndNodes();
-        s_CurrentLE = linearEvent;
-        instance.LoadFromLinearEvent();
+    void OnEnable()
+    {
+        //If this window is opened on project launch or smth (basically u dint press "LoadNodes" button to enter window
+        if (s_CurrentLE == null)
+        {
+            m_EditorState = EDITORSTATE.UNLOADED;
+            d_OnGUI = EmptyEditorUpdate;
+        }
+
+
+        //Well regardless of it being empty or not, ensure that node editor saves before reloading assembly
+        AssemblyReloadEvents.beforeAssemblyReload += SaveToLinearEvent;
+        //Due to beforeAssemblyReload being called when player enters play mode but doesnt save values, this needs to be added
+        EditorApplication.playModeStateChanged += SaveBeforeEnterPlayMode;
+        EditorApplication.playModeStateChanged += LoadAfterExitingPlayMode;
+        EditorApplication.quitting += SaveToLinearEvent;
+
     }
 
-    #region Initialisation
+    public static void LoadNodeEditor(LinearEvent linearEvent)
+    {
+        //This will be a key identifier for whether LoadNodeEditor button was pressed
+        LinearEvent prevLE = s_CurrentLE;
+        s_CurrentLE = linearEvent;
 
+        //If this is the first time you are opening the window, or if u have previously closed the window and you wish to reopen it
+        if (instance == null)
+            InitialiseWindow();
+        else
+        {
+            //Save the prev lienarevent
+            s_CurrentLE = prevLE;
+            instance.SaveToLinearEvent();
+
+            //Load the new one
+            s_CurrentLE = linearEvent;
+            instance.ResetandLoadEditor();
+        }
+
+    }
 
 
     //To be called on the very first time of pressing "LoadNodeEditor"? 
     //This is also called when you hv the window docked in ur panels but u dont give focus on it and u just upen ur project
-    void OnEnable()
+    void Initialise()
     {
-        Debug.Log("Enabling on ");
         //Call these only once in the flow of usage until the window is closed
         instance = this;
 
@@ -191,7 +244,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (instance.m_CommandInvoker == null)
         {
-            instance.m_CommandInvoker = new NodeCommandInvoker(100, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes);
+            instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, CompileNodeToEffect, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
         }
 
         if (instance.m_AllNodesInEditor == null)
@@ -216,9 +269,22 @@ public class NodeLEM_Editor : EditorWindow
 
         if (instance.m_SearchBox == null)
         {
-            instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 15, 250, 325);
+            instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 250, 325);
         }
 
+        if(instance.m_NodeContextMenu == null)
+        {
+            SetupProcessNodeContextMenu();
+        }
+
+        //Regardless, just initialise strt end nodes
+        instance.InitialiseStartEndNodes();
+        instance.LoadFromLinearEvent();
+
+        //After finishing all the intialisation and loading of linearevent,
+        d_OnGUI = UpdateGUI;
+
+        instance.m_EditorState = EDITORSTATE.SAVED;
     }
 
     void InitialiseStartEndNodes()
@@ -251,13 +317,12 @@ public class NodeLEM_Editor : EditorWindow
     }
 
     //Time taken: Instant
-    void ResetEditor()
+    void ResetandLoadEditor()
     {
         StartNode = null;
         ResetDrawingBezierCurve();
         ResetEventVariables();
         CurrentNodeLastRecordedSelectState = null;
-        s_CurrentLE = null;
         m_IsSearchBoxActive = false;
 
 
@@ -266,33 +331,70 @@ public class NodeLEM_Editor : EditorWindow
         m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
         m_CommandInvoker.ResetHistory();
 
+
+        //Regardless, just initialise strt end nodes
+        instance.InitialiseStartEndNodes();
+        instance.LoadFromLinearEvent();
+
+        //After finishing all the intialisation and loading of linearevent,
+        d_OnGUI = UpdateGUI;
+
+        m_EditorState = EDITORSTATE.SAVED;
     }
 
     //Called when window is closed
     void OnDestroy()
     {
-        StartNode = null;
-        ResetDrawingBezierCurve();
-        ResetEventVariables();
-        CurrentNodeLastRecordedSelectState = null;
-        s_CurrentLE = null;
-        instance.m_AllNodesInEditor = null;
-        instance.m_AllEffectsNodeInEditor = null;
-        instance.m_AllConnectionsDictionary = null;
-        //LEM_InspectorEditor.s_IsLoaded = false;
-        instance.m_IsSearchBoxActive = false;
-        instance.m_CommandInvoker = null;
-    }
+        //Before closing the window, save the le if it wasnt saved
+        if (instance != null && m_EditorState == EDITORSTATE.LOADED /*&& m_SaveWindow != null*/)
+        {
+            //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
+            SaveToLinearEvent();
+        }
 
+        //Unsubscribe b4 closing window
+        AssemblyReloadEvents.beforeAssemblyReload -= SaveToLinearEvent;
+        EditorApplication.playModeStateChanged -= SaveBeforeEnterPlayMode;
+        EditorApplication.playModeStateChanged -= LoadAfterExitingPlayMode;
+        EditorApplication.quitting -= SaveToLinearEvent;
+
+        EditorPrefs.SetString("linearEventScenePath", "");
+
+        s_CurrentLE = null;
+    }
 
     #endregion
 
-    void OnGUI()
+    #region Updates and Events
+
+
+    void EmptyEditorUpdate()
     {
+        Rect propertyRect = new Rect(10f, 10f, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight);
+        GUI.Label(propertyRect, "There is no Linear Event Loaded, please choose one");
+
+        propertyRect.y += EditorGUIUtility.singleLineHeight * 2f;
+        propertyRect.height *= 1.75f;
+        propertyRect.width *= 0.9f;
+
+        s_CurrentLE = (LinearEvent)EditorGUI.ObjectField(propertyRect, s_CurrentLE, typeof(LinearEvent), true);
+
+        //Then once Current Linear Event is selected,
+        if (s_CurrentLE != null)
+        {
+            LoadNodeEditor(s_CurrentLE);
+        }
+    }
+
+    void UpdateGUI()
+    {
+        Rect dummyRect = Rect.zero;
         Event currentEvent = Event.current;
 
         //Draw background of for the window
-        GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), m_EditorBackGroundTexture, ScaleMode.StretchToFill);
+        dummyRect.width = maxSize.x;
+        dummyRect.height = maxSize.y;
+        GUI.DrawTexture(dummyRect, EditorBackGroundTexture, ScaleMode.StretchToFill);
 
 
         DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
@@ -309,14 +411,17 @@ public class NodeLEM_Editor : EditorWindow
         DrawSelectionBox(currMousePos);
 
         EditorZoomFeature.EndZoom();
-        HandleSearchBox(currentEvent);
+        bool isMouseInSearchBox= HandleSearchBox(currentEvent);
 
+      
 
-        DrawSaveButton();
-        //DrawRefreshButton();
+        DrawToolButtons(dummyRect);
+        HandleCurrentLinearEventLabel(dummyRect, currentEvent);
+
+        //DrawDebugLists();
 
         //Then process the events that occured from unity's events (events are like clicks,drag etc)
-        ProcessEvents(currentEvent, currMousePos);
+        ProcessEvents(currentEvent, currMousePos, isMouseInSearchBox);
         ProcessNodeEvents(currentEvent);
 
         //If there is any value change in the gui,repaint it
@@ -324,7 +429,25 @@ public class NodeLEM_Editor : EditorWindow
         {
             Repaint();
         }
+
     }
+
+
+
+    void OnGUI()
+    {
+        d_OnGUI?.Invoke();
+    }
+
+    private void OnLostFocus()
+    {
+        if (m_EditorState == EDITORSTATE.LOADED)
+        {
+            SaveToLinearEvent();
+        }
+    }
+
+    #endregion
 
     #region Draw Functions
 
@@ -440,60 +563,231 @@ public class NodeLEM_Editor : EditorWindow
         }
     }
 
-    void DrawSaveButton()
+    void DrawToolButtons(Rect propertyRect)
     {
-        if (GUI.Button(new Rect(position.width - 100f, 0, 100f, 50f), "Save Effects") && !m_IsLoading)
+        //Align button to the right of the screen
+        propertyRect.x = position.width - 100f;
+        propertyRect.y = 0f;
+        propertyRect.width = 100f;
+        propertyRect.height = 50f;
+
+        #region Drawing Save Button
+
+        //Prevents double clicking on saving
+        if (m_EditorState != EDITORSTATE.SAVING)
         {
-            m_IsLoading = true;
-            SaveToLinearEvent();
-            m_IsLoading = false;
+            if (m_EditorState == EDITORSTATE.LOADED)
+            {
+                if (GUI.Button(propertyRect, EDITORSTATE.LOADED_STRING))
+                {
+                    m_EditorState = EDITORSTATE.SAVING;
+                    SaveToLinearEvent();
+                    m_EditorState = EDITORSTATE.SAVED;
+                }
+            }
+            //else if m_EditorState == EditorState.Saved cause for Unloaded to occur u have no linear event 
+            //but that means save button wont even be drawn due to it not belonging in the same delegate
+            else
+            {
+                bool wasEnabled = GUI.enabled;
+                GUI.enabled = false;
+                GUI.Button(propertyRect, EDITORSTATE.SAVED_STRING);
+                GUI.enabled = wasEnabled;
+            }
+
+        }
+        #endregion
+
+        Event e = Event.current;
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Paste"))
+        {
+            //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+            if (NodeCommandInvoker.s_ClipBoard.Count > 0)
+            {
+                //If player had cut 
+                if (CommandInvoker.m_HasCutButNotCutPaste)
+                {
+                    CommandInvoker.InvokeCommand(new CutPasteCommand());
+                    GUI.changed = true;
+                    return;
+                }
+
+                CommandInvoker.InvokeCommand(new PasteCommand());
+                GUI.changed = true;
+            }
+
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Copy"))
+        {
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+            e.Use();
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Cut"))
+        {
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            //CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+            //e.Use();
+            GUI.changed = true;
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Delete"))
+        {
+            GUI.FocusControl(null);
+
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+            //Skip everything else and repaint
+            e.Use();
+
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Redo"))
+        {
+            CommandInvoker.RedoCommand();
+            GUI.changed = true;
+        }
+
+        propertyRect.x -= 100f;
+
+        if (GUI.Button(propertyRect, "Undo"))
+        {
+            CommandInvoker.UndoCommand();
+            GUI.changed = true;
+        }
+
+    }
+
+    void HandleCurrentLinearEventLabel(Rect propertyRect, Event currentEvent)
+    {
+        string label = "Linear Event : " + s_CurrentLE.name;
+        propertyRect.size = GUI.skin.label.CalcSize(new GUIContent(label, "The Linear Event you are currently editting"));
+        propertyRect.x = 0;
+        propertyRect.y = 0;
+
+        LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+        GUI.skin.label.normal.textColor = Color.yellow;
+        GUI.Label(propertyRect, label);
+        GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+        //If current event type is a mouse click and mouse click is within the propertyrect,
+        if (currentEvent.type == EventType.MouseDown && propertyRect.Contains(currentEvent.mousePosition))
+        {
+            EditorGUIUtility.PingObject(s_CurrentLE);
         }
     }
 
+    private void DrawDebugLists()
+    {
+        //Copy previous colour and set the color red
+        LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+        GUI.skin.label.normal.textColor = Color.red;
 
-    ////Creation use only
-    //void DrawRefreshButton()
-    //{
-    //    if (GUI.Button(new Rect(position.width - 215f, 0, 100f, 50f), "Refresh"))
-    //    {
-    //        LEMStyleLibrary.LoadLibrary();
-    //        ResetEditor();
-    //        OnEnable();
-    //    }
-    //}
+        Rect propertyRect = Rect.zero;
+        propertyRect.y += EditorGUIUtility.singleLineHeight;
+        propertyRect.height += EditorGUIUtility.singleLineHeight;
+        propertyRect.width += EditorGUIUtility.currentViewWidth;
 
-    void HandleSearchBox(Event e)
+        #region All Nodes In Editor Debug
+
+        GUI.Label(propertyRect, "All Nodes in Editor");
+        propertyRect.y += EditorGUIUtility.singleLineHeight;
+
+        for (int i = 0; i < AllNodesInEditor.Count; i++)
+        {
+            GUI.Label(propertyRect, i + ") " + AllNodesInEditor[i].NodeID);
+            propertyRect.y += EditorGUIUtility.singleLineHeight;
+        }
+
+        #endregion
+
+        propertyRect.y += EditorGUIUtility.singleLineHeight;
+
+        GUI.skin.label.normal.textColor = Color.cyan;
+        Tuple<string, string>[] inPointID_outPointID = AllConnectionsDictionary.Keys.ToArray();
+
+        GUI.Label(propertyRect, "All Connections");
+        propertyRect.y += EditorGUIUtility.singleLineHeight;
+
+        for (int i = 0; i < inPointID_outPointID.Length; i++)
+        {
+            GUI.Label(propertyRect, i + ") " + inPointID_outPointID[i]);
+            propertyRect.y += EditorGUIUtility.singleLineHeight;
+        }
+
+
+        GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+
+
+    }
+
+    bool HandleSearchBox(Event e)
     {
         if (m_IsSearchBoxActive)
-            m_SearchBox.HandleSearchBox(e);
+            return m_SearchBox.HandleSearchBox(e);
 
+        return false;
     }
 
     #endregion
 
     //Checks what the current event is right now, and then execute code accordingly
-    void ProcessEvents(Event e, Vector2 currMousePosition)
+    void ProcessEvents(Event e, Vector2 currMousePosition,bool isMouseInSearchBox)
     {
         m_AmountOfMouseDragThisUpdate = Vector2.zero;
         switch (e.type)
         {
             case EventType.ScrollWheel:
-                int signOfChange = 0;
-                float changeRate = 0f;
 
-                signOfChange = e.delta.y > 0 ? -1 : 1;
-                //If alt key is pressed,
-                changeRate = e.alt ? k_SlowScaleChangeRate : k_ScaleChangeRate;
+                if (!isMouseInSearchBox)
+                {
+                    int signOfChange = 0;
+                    float changeRate = 0f;
 
-                ScaleFactor += signOfChange * changeRate;
+                    signOfChange = e.delta.y > 0 ? -1 : 1;
+                    //If alt key is pressed,
+                    changeRate = e.alt ? k_SlowScaleChangeRate : k_ScaleChangeRate;
 
-                e.Use();
+                    ScaleFactor += signOfChange * changeRate;
+
+                    e.Use();
+                }
+               
                 break;
 
             case EventType.MouseDown:
 
                 //Set the currenly clicked node
-                s_CurrentClickedNode = AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
+                //s_CurrentClickedNode = AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
+                s_CurrentClickedNode = AllNodesInEditor.FindFromLastIndex(x => x.m_TotalRect.Contains(currMousePosition));
 
                 //Check if the mouse button down is the right click button
                 if (e.button == 1)
@@ -508,13 +802,13 @@ public class NodeLEM_Editor : EditorWindow
                         m_SearchBox.TriggerOnInputOnStart();
 
                         e.Use();
-                        //ProcessContextMenu(currMousePosition);
                         return;
                     }
 
 
                     //Else, open the node's context menu
-                    ProcessNodeContextMenu();
+                    //ProcessNodeContextMenu();
+                    m_NodeContextMenu.ShowAsContext();
                 }
 
                 else if (e.button == 0)
@@ -522,7 +816,7 @@ public class NodeLEM_Editor : EditorWindow
                     //If mouse indeed doesnt clicks on a node,
                     if (s_CurrentClickedNode == null)
                     {
-                        //Set initial position for drawing selection box
+                        //Set initial position for drawing selection box if alt is not pressed
                         if (!e.alt)
                         {
                             //Reset everything
@@ -531,8 +825,8 @@ public class NodeLEM_Editor : EditorWindow
                             TrySetConnectionPoint(m_SelectedInPoint);
                             TrySetConnectionPoint(m_SelectedOutPoint);
                             ResetDrawingBezierCurve();
-
                         }
+
                     }
                     //Else if current clicked node isnt null
                     else
@@ -559,7 +853,8 @@ public class NodeLEM_Editor : EditorWindow
                     if (e.alt && m_InitialClickedPosition == null && s_CurrentClickedNode == null)
                     {
                         OnDrag(e.delta);
-                        GUI.changed = true;
+                        //GUI.changed = true;
+                        e.Use();
                     }
                     //If user is currently planning to drag a node and wasnt draggin the previous paint,
                     else if (s_CurrentClickedNode != null && !m_IsDragging)
@@ -595,7 +890,7 @@ public class NodeLEM_Editor : EditorWindow
                         StartNode.DeselectNode();
                     }
 
-                    CommandInvoker.InvokeCommand(new DeleteNodeCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+                    CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
                     //Skip everything else and repaint
                     e.Use();
                 }
@@ -614,13 +909,13 @@ public class NodeLEM_Editor : EditorWindow
                     if (e.keyCode == KeyCode.Q)
                     {
                         CommandInvoker.UndoCommand();
-                        e.Use();
+                        GUI.changed = true;
                     }
                     //Redo
                     else if (e.keyCode == KeyCode.W)
                     {
                         CommandInvoker.RedoCommand();
-                        e.Use();
+                        GUI.changed = true;
                     }
                     //Copy
                     else if (e.keyCode == KeyCode.C)
@@ -643,14 +938,31 @@ public class NodeLEM_Editor : EditorWindow
                             StartNode.DeselectNode();
                         }
 
-                        CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
-                        e.Use();
+                        //CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
+                        CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                        //e.Use();
+                        GUI.changed = true;
                     }
-                    //Paste
-                    else if (e.keyCode == KeyCode.V)
+                    //Paste only when there is no foccus on anyother keyboard demanding control,
+                    else if (e.keyCode == KeyCode.V && GUIUtility.keyboardControl == 0)
                     {
-                        CommandInvoker.InvokeCommand(new PasteCommand());
-                        e.Use();
+
+                        //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+                        if (NodeCommandInvoker.s_ClipBoard.Count > 0)
+                        {
+                            //If player had cut 
+                            if (CommandInvoker.m_HasCutButNotCutPaste)
+                            {
+                                CommandInvoker.InvokeCommand(new CutPasteCommand());
+                                GUI.changed = true;
+                                return;
+                            }
+
+                            CommandInvoker.InvokeCommand(new PasteCommand());
+                            GUI.changed = true;
+                        }
+
+
                     }
                     //Select all
                     else if (e.keyCode == KeyCode.A)
@@ -662,6 +974,13 @@ public class NodeLEM_Editor : EditorWindow
                             m_AllNodesInEditor[i].SelectNode();
                         }
 
+                        GUI.changed = true;
+
+                    }
+                    //Save
+                    else if (e.keyCode == KeyCode.S)
+                    {
+                        SaveToLinearEvent();
                         e.Use();
                     }
                 }
@@ -684,7 +1003,7 @@ public class NodeLEM_Editor : EditorWindow
 
             case EventType.MouseUp:
                 for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
-                    if (AllNodesInEditor[i].HandleMouseUp(e))
+                    if (AllNodesInEditor[i].HandleMouseUp())
                         GUI.changed = true;
                 break;
 
@@ -710,6 +1029,8 @@ public class NodeLEM_Editor : EditorWindow
         //Get the respective skin from the collection of nodeskin
         NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
 
+        newEffectNode.GenerateNodeID();
+
         //Initialise the new node 
         newEffectNode.Initialise
             (mousePosition,
@@ -722,7 +1043,6 @@ public class NodeLEM_Editor : EditorWindow
             LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
             );
 
-        newEffectNode.GenerateNodeID();
 
         //Add the node into collection in editor
         AllNodesInEditor.Add(newEffectNode);
@@ -812,34 +1132,112 @@ public class NodeLEM_Editor : EditorWindow
         newlyCreatedNode = newNode;
     }
 
-    void DeleteNodes(BaseEffectNode[] nodesToBeDeleted)
+    void DeleteNodes(NodeBaseData[] nodesToBeDeleted)
     {
         for (int i = 0; i < nodesToBeDeleted.Length; i++)
             OnClickRemoveNode(nodesToBeDeleted[i]);
     }
 
+
     #endregion
 
-    void ProcessNodeContextMenu()
+    void SetupProcessNodeContextMenu()
     {
         //and then add an button option with the name "Remove node"
         GenericMenu genericMenu = new GenericMenu();
 
         //Add remove node function to the context menu option
-        genericMenu.AddItem(new GUIContent("Remove node"), false,
-            //Remove all the selected nodes 
-            delegate
+        //Remove all the selected nodes 
+        //Remove all the nodes that are selected until there are none left
+        genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
+        genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
+        genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
+        {
+            if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+            CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
+        });
+
+        genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate
+        {
+            //Remove start and end node 
+            if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+            Repaint();
+        });
+        genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
+        genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
+        {
+            AllSelectedNodes.Clear();
+            for (int i = 0; i < AllNodesInEditor.Count; i++)
+                AllNodesInEditor[i].SelectNode();
+            Repaint();
+        });
+
+        genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate
+        {
+            GUI.FocusControl(null);
+
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
             {
-                //Remove all the nodes that are selected until there are none left
-                while (s_HaveMultipleNodeSelected)
-                {
-                    OnClickRemoveNode(m_AllSelectedNodes[0]);
-                }
-            });
+                StartNode.DeselectNode();
+            }
+
+            CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+        });
 
         //Display the editted made menu
-        genericMenu.ShowAsContext();
+        instance.m_NodeContextMenu = genericMenu;
     }
+
+    //void ProcessNodeContextMenu()
+    //{
+    //    //and then add an button option with the name "Remove node"
+    //    GenericMenu genericMenu = new GenericMenu();
+
+    //    //Add remove node function to the context menu option
+    //    //Remove all the selected nodes 
+    //    //Remove all the nodes that are selected until there are none left
+    //    genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
+    //    genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
+    //    genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
+    //    {
+    //        if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+    //        CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
+    //    });
+
+    //    genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate
+    //    {
+    //        //Remove start and end node 
+    //        if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+    //        CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+    //        Repaint();
+    //    });
+    //    genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
+    //    genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
+    //    {
+    //        AllSelectedNodes.Clear();
+    //        for (int i = 0; i < AllNodesInEditor.Count; i++)
+    //            AllNodesInEditor[i].SelectNode();
+    //        Repaint();
+    //    });
+
+    //    genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate
+    //    {
+    //        GUI.FocusControl(null);
+
+    //        //Remove start and end node 
+    //        if (m_AllSelectedNodes.Contains(StartNode))
+    //        {
+    //            StartNode.DeselectNode();
+    //        }
+
+    //        CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+    //    });
+
+    //    //Display the editted made menu
+    //    genericMenu.ShowAsContext();
+    //}
 
     //Drags the window canvas (think like animator window)
     void OnDrag(Vector2 delta)
@@ -853,12 +1251,9 @@ public class NodeLEM_Editor : EditorWindow
         delta /= ScaleFactor;
 
         //Update all the node's positions as well
-        if (AllNodesInEditor != null)
+        for (int i = 0; i < AllNodesInEditor.Count; i++)
         {
-            for (int i = 0; i < AllNodesInEditor.Count; i++)
-            {
-                AllNodesInEditor[i].Drag(delta);
-            }
+            AllNodesInEditor[i].Drag(delta);
         }
 
     }
@@ -1083,6 +1478,36 @@ public class NodeLEM_Editor : EditorWindow
             AllEffectsNodeInEditor.Remove(nodeToRemove.NodeID);
     }
 
+    //Second form of remove node function where it uses lem_Baseeffects instead of nodes cause nodes' referrecnes arent the same during command invokaton
+    void OnClickRemoveNode(NodeBaseData nB)
+    {
+        //Check if there is any connections to be removed from this node's outpoint
+
+        if (nB.HasAtLeastOneNextPointNode)
+            TryToRemoveConnection(nB.m_NextPointsIDs[0], nB.m_NodeID);
+
+        //Remove any and allconnections connected to the node's inpoint
+        string[] allNodesConnectedToInPoint = AllEffectsNodeInEditor[nB.m_NodeID].m_InPoint.GetAllConnectedNodeIDs();
+
+        //List<Node> nodesConnectedToInpoint = AllNodesInEditor.FindAll(node => node.m_OutPoint.IsConnected && node.m_OutPoint.GetConnectedNodeID(0) == nB.m_NodeID);
+
+        for (int i = 0; i < allNodesConnectedToInPoint.Length; i++)
+        {
+            OnClickRemoveConnection(AllConnectionsDictionary[new Tuple<string, string>(nB.m_NodeID, allNodesConnectedToInPoint[i])]);
+        }
+
+        //Remove node from selected collection if it is inside
+        TryToRemoveNodeFromSelectedCollection(nB.m_NodeID);
+
+        //O(n) operation only, inother words same as list.Remove( )
+        //Need nodeid to be checked cause Node references are lost during command invoker
+        int indexOfNodeToRemove = AllNodesInEditor.FindIndex(x => x.NodeID == nB.m_NodeID);
+        AllNodesInEditor.RemoveEfficiently(indexOfNodeToRemove);
+
+        if (AllEffectsNodeInEditor.ContainsKey(nB.m_NodeID))
+            AllEffectsNodeInEditor.Remove(nB.m_NodeID);
+    }
+
     //Use this if you know exactly what nodes to connect
     void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
     {
@@ -1171,6 +1596,14 @@ public class NodeLEM_Editor : EditorWindow
         m_AllSelectedNodes.Remove(nodeToRemove);
     }
 
+    void TryToRemoveNodeFromSelectedCollection(string id)
+    {
+        //If all selected doesnt contain this node, add it
+        int removeAt = m_AllSelectedNodes.FindIndex(node => node.NodeID == id);
+        if (removeAt >= 0)
+            m_AllSelectedNodes.RemoveEfficiently(removeAt);
+    }
+
     void DeselectAllNodes()
     {
         for (int i = 0; i < AllNodesInEditor.Count; i++)
@@ -1185,8 +1618,34 @@ public class NodeLEM_Editor : EditorWindow
 
     #region Saving and Loading
 
-    void  SaveToLinearEvent()
+    //To be called before user presses "Play Button"
+    void SaveBeforeEnterPlayMode(PlayModeStateChange state)
     {
+        if (state != PlayModeStateChange.ExitingEditMode)
+            return;
+
+        SaveToLinearEvent();
+
+
+        if (instance == null || s_CurrentLE == null)
+            return;
+
+        //Save string path of current LE to editor pref
+        //string sceneAssetBasePath = EditorSceneManager.GetActiveScene().path;
+        string linearEventScenePath = s_CurrentLE.transform.GetGameObjectPath();
+
+        //EditorPrefs.SetString("sceneAssetBasePath", sceneAssetBasePath);
+        EditorPrefs.SetString("linearEventScenePath", linearEventScenePath);
+    }
+
+    //To be called when player presses "Save button" or when assembly reloads every time a script changes (when play mode is entered this will get called also but it doesnt save the values to the LE)
+    void SaveToLinearEvent()
+    {
+        if (instance == null || m_EditorState == EDITORSTATE.SAVED || s_CurrentLE == null)
+            return;
+
+        m_EditorState = EDITORSTATE.SAVING;
+
         AllNodesInEditor.Remove(StartNode);
 
         LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllNodesInEditor.Count];
@@ -1200,13 +1659,9 @@ public class NodeLEM_Editor : EditorWindow
         for (int i = 0; i < AllNodesInEditor.Count; i++)
         {
             lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
-
-            //Populate the dictionary in the linear event
-            s_CurrentLE.m_AllEffectsDictionary.Add(lemEffects[i].m_NodeBaseData.m_NodeID, lemEffects[i]);
-
         }
 
-
+        //Save to serializable array of effects
         s_CurrentLE.m_AllEffects = lemEffects;
 
         //Save start and end node data
@@ -1217,10 +1672,33 @@ public class NodeLEM_Editor : EditorWindow
 
         //Finished loading
         Repaint();
+
+        m_EditorState = EDITORSTATE.SAVED;
+    }
+
+    void LoadAfterExitingPlayMode(PlayModeStateChange state)
+    {
+        if (state != PlayModeStateChange.EnteredEditMode)
+            return;
+
+        //Get string paths from editorprefs
+        //string sceneAssetBasePath = EditorPrefs.GetString("sceneAssetBasePath");
+        string linearEventPath = EditorPrefs.GetString("linearEventScenePath");
+
+        if (string.IsNullOrEmpty(linearEventPath))
+            return;
+
+        LinearEvent prevLE = GameObject.Find(linearEventPath).GetComponent<LinearEvent>();
+
+        NodeLEM_Editor.LoadNodeEditor(prevLE);
     }
 
     void LoadFromLinearEvent()
     {
+        if (instance == null || s_CurrentLE == null)
+            return;
+
+        m_EditorState = EDITORSTATE.LOADING;
         #region Loading Events from Dictionary
 
         //Dont do any thing if there is no effects in the dicitionary
@@ -1285,8 +1763,13 @@ public class NodeLEM_Editor : EditorWindow
             }
         }
 
-
         Repaint();
+        m_EditorState = EDITORSTATE.LOADED;
+    }
+
+    LEM_BaseEffect CompileNodeToEffect(string nodeID)
+    {
+        return AllEffectsNodeInEditor[nodeID].CompileToBaseEffect();
     }
 
     #endregion

@@ -8,8 +8,23 @@ using System.Linq;
 
 public class NodeLEM_Editor : EditorWindow
 {
+    #region Loading States
+    struct EDITORSTATE
+    {
+        //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
+        //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
+        public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
+        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects \n (Crlt + S)";
+    }
+
+    int m_EditorState = EDITORSTATE.UNLOADED;
+
     public static NodeLEM_Editor instance = default;
     public static LinearEvent s_CurrentLE = default;
+
+    const string k_EditorPref_LinearEventScenePath = "linearEventScenePath";
+
+    #endregion
 
     //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
@@ -130,18 +145,7 @@ public class NodeLEM_Editor : EditorWindow
     GenericMenu m_NodeContextMenu = default;
     #endregion
 
-    #region Loading States
-    struct EDITORSTATE
-    {
-        //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
-        //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
-        public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
-        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects \n (Crlt + S)";
-    }
-
-    int m_EditorState = EDITORSTATE.UNLOADED;
-
-    #endregion
+    
 
     #endregion
 
@@ -358,7 +362,7 @@ public class NodeLEM_Editor : EditorWindow
         EditorApplication.playModeStateChanged -= LoadAfterExitingPlayMode;
         EditorApplication.quitting -= SaveToLinearEvent;
 
-        EditorPrefs.SetString("linearEventScenePath", "");
+        EditorPrefs.SetString(k_EditorPref_LinearEventScenePath, "");
 
         s_CurrentLE = null;
     }
@@ -1635,7 +1639,7 @@ public class NodeLEM_Editor : EditorWindow
         string linearEventScenePath = s_CurrentLE.transform.GetGameObjectPath();
 
         //EditorPrefs.SetString("sceneAssetBasePath", sceneAssetBasePath);
-        EditorPrefs.SetString("linearEventScenePath", linearEventScenePath);
+        EditorPrefs.SetString(k_EditorPref_LinearEventScenePath, linearEventScenePath);
     }
 
     //To be called when player presses "Save button" or when assembly reloads every time a script changes (when play mode is entered this will get called also but it doesnt save the values to the LE)
@@ -1683,7 +1687,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Get string paths from editorprefs
         //string sceneAssetBasePath = EditorPrefs.GetString("sceneAssetBasePath");
-        string linearEventPath = EditorPrefs.GetString("linearEventScenePath");
+        string linearEventPath = EditorPrefs.GetString(k_EditorPref_LinearEventScenePath);
 
         if (string.IsNullOrEmpty(linearEventPath))
             return;
