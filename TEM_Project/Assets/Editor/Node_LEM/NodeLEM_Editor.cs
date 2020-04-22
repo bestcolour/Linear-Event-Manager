@@ -21,8 +21,11 @@ public class NodeLEM_Editor : EditorWindow
 
     public static NodeLEM_Editor instance = default;
     public static LinearEvent s_CurrentLE = default;
+    public static NodeLEM_Settings s_Settings = default;
 
-    const string k_EditorPref_LinearEventScenePath = "linearEventScenePath";
+    const string k_EditorPref_LinearEventKey = "linearEventScenePath";
+    const string k_EditorPref_SettingsKey = "currentSettings";
+    const string k_DefaultSettingsFolderAssetPath = "Assets/Editor/Node_LEM/Settings";
 
     #endregion
 
@@ -145,7 +148,7 @@ public class NodeLEM_Editor : EditorWindow
     GenericMenu m_NodeContextMenu = default;
     #endregion
 
-    
+
 
     #endregion
 
@@ -199,6 +202,7 @@ public class NodeLEM_Editor : EditorWindow
             d_OnGUI = EmptyEditorUpdate;
         }
 
+        LoadSettings();
 
         //Well regardless of it being empty or not, ensure that node editor saves before reloading assembly
         AssemblyReloadEvents.beforeAssemblyReload += SaveToLinearEvent;
@@ -206,6 +210,59 @@ public class NodeLEM_Editor : EditorWindow
         EditorApplication.playModeStateChanged += SaveBeforeEnterPlayMode;
         EditorApplication.playModeStateChanged += LoadAfterExitingPlayMode;
         EditorApplication.quitting += SaveToLinearEvent;
+
+    }
+
+    void LoadSettings()
+    {
+        string pathToSettings = EditorPrefs.GetString(k_EditorPref_SettingsKey);
+        NodeLEM_Settings settings;
+
+        //If there is a path recorded,
+        if (!string.IsNullOrEmpty(pathToSettings))
+        {
+            //Check if path is of object still valid
+            Debug.Log("Path to Previously used Setting : " + pathToSettings);
+            settings = AssetDatabase.LoadAssetAtPath(pathToSettings + ".asset", typeof(NodeLEM_Settings)) as NodeLEM_Settings;
+
+            //If there is a setting found, set s_Settings to that n return
+            if (settings != null)
+            {
+                s_Settings = settings;
+                return;
+            }
+        }
+
+        //else if settings is null, we need to search inside the default settings folder
+        string[] guidOfAssets = AssetDatabase.FindAssets("t:NodeLEM_Settings", new string[1] { k_DefaultSettingsFolderAssetPath });
+
+        //Attempt to get the first default settings you can find if there is more than 0 searches found
+        if(guidOfAssets.Length > 0)
+        {
+            for (int i = 0; i < guidOfAssets.Length; i++)
+            {
+                pathToSettings = AssetDatabase.GUIDToAssetPath(guidOfAssets[0]) +".asset";
+                settings = AssetDatabase.LoadAssetAtPath(pathToSettings, typeof(NodeLEM_Settings)) as NodeLEM_Settings;
+
+                //If there is a setting found, set s_Settings to that n return
+                if (settings != null)
+                {
+                    s_Settings = settings;
+                    //Set this setting as the next loaded settings
+                    EditorPrefs.SetString(k_EditorPref_SettingsKey, pathToSettings);
+                    return;
+                }
+            }
+        }
+
+        //If there isnt any settings found or if for some god forsaken reason, you got the guid but the assetdatabase cant load the asset
+        //create a new settings
+        settings = ScriptableObject.CreateInstance<NodeLEM_Settings>();
+        pathToSettings = k_DefaultSettingsFolderAssetPath + "/" + NodeLEM_Settings.k_DefaultFileName + ".asset";
+        AssetDatabase.CreateAsset(settings, pathToSettings);
+        AssetDatabase.SaveAssets();
+        EditorPrefs.SetString(k_EditorPref_SettingsKey, pathToSettings);
+        s_Settings = settings;
 
     }
 
@@ -276,7 +333,7 @@ public class NodeLEM_Editor : EditorWindow
             instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 250, 325);
         }
 
-        if(instance.m_NodeContextMenu == null)
+        if (instance.m_NodeContextMenu == null)
         {
             SetupProcessNodeContextMenu();
         }
@@ -362,7 +419,10 @@ public class NodeLEM_Editor : EditorWindow
         EditorApplication.playModeStateChanged -= LoadAfterExitingPlayMode;
         EditorApplication.quitting -= SaveToLinearEvent;
 
-        EditorPrefs.SetString(k_EditorPref_LinearEventScenePath, "");
+        EditorPrefs.SetString(k_EditorPref_LinearEventKey, "");
+
+        if(s_Settings!=null)
+            EditorPrefs.SetString(k_EditorPref_SettingsKey, k_DefaultSettingsFolderAssetPath + "/" + s_Settings.name);
 
         s_CurrentLE = null;
     }
@@ -383,9 +443,15 @@ public class NodeLEM_Editor : EditorWindow
 
         s_CurrentLE = (LinearEvent)EditorGUI.ObjectField(propertyRect, s_CurrentLE, typeof(LinearEvent), true);
 
+        propertyRect.y += EditorGUIUtility.singleLineHeight * 2f;
+        GUI.Label(propertyRect, "Settings");
+        propertyRect.y += EditorGUIUtility.singleLineHeight * 2f;
+        s_Settings = (NodeLEM_Settings)EditorGUI.ObjectField(propertyRect, s_Settings, typeof(NodeLEM_Settings), false);
+
         //Then once Current Linear Event is selected,
-        if (s_CurrentLE != null)
+        if (s_CurrentLE != null && s_Settings != null)
         {
+            EditorPrefs.SetString(k_EditorPref_SettingsKey, k_DefaultSettingsFolderAssetPath + "/" + s_Settings.name);
             LoadNodeEditor(s_CurrentLE);
         }
     }
@@ -415,9 +481,9 @@ public class NodeLEM_Editor : EditorWindow
         DrawSelectionBox(currMousePos);
 
         EditorZoomFeature.EndZoom();
-        bool isMouseInSearchBox= HandleSearchBox(currentEvent);
+        bool isMouseInSearchBox = HandleSearchBox(currentEvent);
 
-      
+
 
         DrawToolButtons(dummyRect);
         HandleCurrentLinearEventLabel(dummyRect, currentEvent);
@@ -764,7 +830,7 @@ public class NodeLEM_Editor : EditorWindow
     #endregion
 
     //Checks what the current event is right now, and then execute code accordingly
-    void ProcessEvents(Event e, Vector2 currMousePosition,bool isMouseInSearchBox)
+    void ProcessEvents(Event e, Vector2 currMousePosition, bool isMouseInSearchBox)
     {
         m_AmountOfMouseDragThisUpdate = Vector2.zero;
         switch (e.type)
@@ -784,7 +850,7 @@ public class NodeLEM_Editor : EditorWindow
 
                     e.Use();
                 }
-               
+
                 break;
 
             case EventType.MouseDown:
@@ -1639,7 +1705,7 @@ public class NodeLEM_Editor : EditorWindow
         string linearEventScenePath = s_CurrentLE.transform.GetGameObjectPath();
 
         //EditorPrefs.SetString("sceneAssetBasePath", sceneAssetBasePath);
-        EditorPrefs.SetString(k_EditorPref_LinearEventScenePath, linearEventScenePath);
+        EditorPrefs.SetString(k_EditorPref_LinearEventKey, linearEventScenePath);
     }
 
     //To be called when player presses "Save button" or when assembly reloads every time a script changes (when play mode is entered this will get called also but it doesnt save the values to the LE)
@@ -1687,7 +1753,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Get string paths from editorprefs
         //string sceneAssetBasePath = EditorPrefs.GetString("sceneAssetBasePath");
-        string linearEventPath = EditorPrefs.GetString(k_EditorPref_LinearEventScenePath);
+        string linearEventPath = EditorPrefs.GetString(k_EditorPref_LinearEventKey);
 
         if (string.IsNullOrEmpty(linearEventPath))
             return;
