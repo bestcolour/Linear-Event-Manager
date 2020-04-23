@@ -502,9 +502,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7bdaefed8911c04b903574c260bfe61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllLinearEvents: []
+  m_CurrentLinearEvent: {fileID: 0}
   m_SelfInitialise: 0
   m_PlayOnAwake: 0
+  m_IsFinishedQueuing: 0
+  m_isFinishedEffects: 0
+  m_DelayBeforeNextEffect: 0
+  m_UpdateCycle: []
+  m_FixedUpdateCycle: []
+  m_LateUpdateCycle: []
 --- !u!4 &1614687450
 Transform:
   m_ObjectHideFlags: 0

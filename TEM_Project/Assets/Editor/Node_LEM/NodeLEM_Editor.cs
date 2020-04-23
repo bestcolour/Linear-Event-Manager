@@ -1696,7 +1696,7 @@ public class NodeLEM_Editor : EditorWindow
         BaseEffectNode[] allEffectNodes = AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
 
         //Clear the dictionary of the currently editting linear event
-        s_CurrentLE.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
+        //s_CurrentLE.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
         float intToFloatConverter = AllNodesInEditor.Count;
 
         //This saves all events regardless of whether they are connected singularly, plurally or disconnected
@@ -1746,26 +1746,38 @@ public class NodeLEM_Editor : EditorWindow
         #region Loading Events from Dictionary
 
         //Dont do any thing if there is no effects in the dicitionary
-        if (!s_CurrentLE.CheckAllEffectsDictionary())
+        //s_CurrentLE.PopulateEffectDictionary();
+
+        Dictionary<string, LEM_BaseEffect> allEffectsDictInLinearEvent = s_CurrentLE.AllEffectsDictionary;
+
+        if(allEffectsDictInLinearEvent == null)
         {
             Repaint();
             return;
         }
+            
 
 
-        string[] allKeys = s_CurrentLE.m_AllEffectsDictionary.Keys.ToArray();
+        //if (!s_CurrentLE.IsEffectDictionaryEmptyOrNull)
+        //{
+        //    Repaint();
+        //    return;
+        //}
+
+
+        string[] allKeys = allEffectsDictInLinearEvent.Keys.ToArray();
 
         BaseEffectNode newEffectNode;
 
         //Recreate all the nodes from the dictionary
         for (int i = 0; i < allKeys.Length; i++)
         {
-            newEffectNode = RecreateEffectNode(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_Position,
-                s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeEffectType,
-                s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
+            newEffectNode = RecreateEffectNode(allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_Position,
+                allEffectsDictInLinearEvent[allKeys[i]].m_NodeEffectType,
+                allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_NodeID);
 
             //Load the new node with saved node values values
-            newEffectNode.LoadFromBaseEffect(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]]);
+            newEffectNode.LoadFromBaseEffect(allEffectsDictInLinearEvent[allKeys[i]]);
         }
 
         #endregion
@@ -1784,10 +1796,10 @@ public class NodeLEM_Editor : EditorWindow
         for (int i = 0; i < allKeys.Length; i++)
         {
             //If this nodebase data doesnt even have one nextpoint node id, skip this loop
-            if (!s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.HasAtLeastOneNextPointNode)
+            if (!allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.HasAtLeastOneNextPointNode)
                 continue;
 
-            TryToRestichConnections(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]]);
+            TryToRestichConnections(allEffectsDictInLinearEvent[allKeys[i]]);
         }
         #endregion
 
