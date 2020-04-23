@@ -12,38 +12,41 @@ public class LinearEventsManager : MonoBehaviour
 {
     public static LinearEventsManager Instance;
 
+    //Base effects collection for node editing 
+    [SerializeField, Header("Linear Events")]
+    LinearEvent[] m_AllLinearEvents = default;
+
     [Header("Settings")]
     [Tooltip("Should the LEM Manager initialise itself or let other scripts initialise for it?")]
     [SerializeField] bool m_SelfInitialise = default;
 
     [Tooltip("Should the LEM Manager play the events on awake?")]
     [SerializeField] bool m_PlayOnAwake = default;
-   
-    //Base effects collection for node editing 
-    public LinearEvent[] m_AllLinearEvents = default;
 
-  
 
-    [Header("Initialization Checks")]
-    public bool m_IsFinishedQueuing;
-    public bool m_isFinishedEffects;
+    //[Header("Initialization Checks")]
+    //public bool m_IsFinishedQueuing;
+    //public bool m_isFinishedEffects;
 
-    [Header("Effect Stats")]
-    public int m_NumOfEventsPlayin;
-    public int m_CurrEventPlaying;
-    public int m_NumOfEventsLeft;
+    //[Header("Effect Stats")]
+    //public int m_NumOfEventsPlayin;
+    //public int m_CurrEventPlaying;
+    //public int m_NumOfEventsLeft;
 
-    [Header("After Effect Type")]
-    public bool m_CallingImmediateEffect;
-    public bool m_CallingNextClick;
+    //[Header("After Effect Type")]
+    //public bool m_CallingImmediateEffect;
+    //public bool m_CallingNextClick;
 
-    [Header("End of All Effects Disposal")]
-    public GameObject[] m_EndEffectDestroy;
+    //[Header("End of All Effects Disposal")]
+    //public GameObject[] m_EndEffectDestroy;
 
-    private void Awake()
+    void Awake()
     {
-        Instance = this;
-        QueueEffects();
+        if (m_SelfInitialise)
+            Instance = this;
+
+        if (m_PlayOnAwake)
+            QueueEffects();
     }
 
     public void QueueEffects()

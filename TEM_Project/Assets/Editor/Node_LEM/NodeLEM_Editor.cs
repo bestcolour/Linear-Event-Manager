@@ -148,8 +148,6 @@ public class NodeLEM_Editor : EditorWindow
     GenericMenu m_NodeContextMenu = default;
     #endregion
 
-
-
     #endregion
 
     #region NodeInvoker
@@ -490,7 +488,7 @@ public class NodeLEM_Editor : EditorWindow
 
         if (s_Settings.m_ShowToolBar)
         {
-            DrawToolButtons(dummyRect); 
+            DrawToolButtons(dummyRect);
         }
         HandleCurrentLinearEventLabel(dummyRect, currentEvent);
 
@@ -539,9 +537,14 @@ public class NodeLEM_Editor : EditorWindow
 
     void DrawConnections()
     {
-        Tuple<string, string>[] allTupleKeys = AllConnectionsDictionary.Keys.ToArray();
-        for (int i = 0; i < allTupleKeys.Length; i++)
-            AllConnectionsDictionary[allTupleKeys[i]].Draw();
+        //Tuple<string, string>[] allTupleKeys = AllConnectionsDictionary.Keys.ToArray();
+        //for (int i = 0; i < allTupleKeys.Length; i++)
+        //    AllConnectionsDictionary[allTupleKeys[i]].Draw();
+
+        foreach (Connection connection in AllConnectionsDictionary.Values)
+        {
+            connection.Draw();
+        }
     }
 
     //This is the realtime drawing of a bezier curve line to let users visualise
@@ -1277,55 +1280,6 @@ public class NodeLEM_Editor : EditorWindow
         instance.m_NodeContextMenu = genericMenu;
     }
 
-    //void ProcessNodeContextMenu()
-    //{
-    //    //and then add an button option with the name "Remove node"
-    //    GenericMenu genericMenu = new GenericMenu();
-
-    //    //Add remove node function to the context menu option
-    //    //Remove all the selected nodes 
-    //    //Remove all the nodes that are selected until there are none left
-    //    genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
-    //    genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
-    //    genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
-    //    {
-    //        if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-    //        CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
-    //    });
-
-    //    genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate
-    //    {
-    //        //Remove start and end node 
-    //        if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-    //        CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
-    //        Repaint();
-    //    });
-    //    genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
-    //    genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
-    //    {
-    //        AllSelectedNodes.Clear();
-    //        for (int i = 0; i < AllNodesInEditor.Count; i++)
-    //            AllNodesInEditor[i].SelectNode();
-    //        Repaint();
-    //    });
-
-    //    genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate
-    //    {
-    //        GUI.FocusControl(null);
-
-    //        //Remove start and end node 
-    //        if (m_AllSelectedNodes.Contains(StartNode))
-    //        {
-    //            StartNode.DeselectNode();
-    //        }
-
-    //        CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
-    //    });
-
-    //    //Display the editted made menu
-    //    genericMenu.ShowAsContext();
-    //}
-
     //Drags the window canvas (think like animator window)
     void OnDrag(Vector2 delta)
     {
@@ -1576,8 +1530,6 @@ public class NodeLEM_Editor : EditorWindow
         //Remove any and allconnections connected to the node's inpoint
         string[] allNodesConnectedToInPoint = AllEffectsNodeInEditor[nB.m_NodeID].m_InPoint.GetAllConnectedNodeIDs();
 
-        //List<Node> nodesConnectedToInpoint = AllNodesInEditor.FindAll(node => node.m_OutPoint.IsConnected && node.m_OutPoint.GetConnectedNodeID(0) == nB.m_NodeID);
-
         for (int i = 0; i < allNodesConnectedToInPoint.Length; i++)
         {
             OnClickRemoveConnection(AllConnectionsDictionary[new Tuple<string, string>(nB.m_NodeID, allNodesConnectedToInPoint[i])]);
@@ -1727,10 +1679,10 @@ public class NodeLEM_Editor : EditorWindow
     void TryToSaveLinearEvent()
     {
         if (!s_Settings.m_AutoSave)
-            //if (instance == null || m_EditorState == EDITORSTATE.SAVED || s_CurrentLE == null)
             return;
 
-        SaveToLinearEvent();
+        if (m_EditorState == EDITORSTATE.LOADED)
+            SaveToLinearEvent();
     }
 
     //To be called when player presses "Save button" or when assembly reloads every time a script changes (when play mode is entered this will get called also but it doesnt save the values to the LE)
