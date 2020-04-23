@@ -14,7 +14,7 @@ public class NodeLEM_Editor : EditorWindow
         //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
         //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
         public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
-        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects \n (Crlt + S)";
+        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects \n (Crlt + S)", AUTOSAVE_STRING = "Auto Save On";
     }
 
     int m_EditorState = EDITORSTATE.UNLOADED;
@@ -205,11 +205,14 @@ public class NodeLEM_Editor : EditorWindow
         LoadSettings();
 
         //Well regardless of it being empty or not, ensure that node editor saves before reloading assembly
+        //AssemblyReloadEvents.beforeAssemblyReload += SaveToLinearEvent;
         AssemblyReloadEvents.beforeAssemblyReload += SaveToLinearEvent;
+
         //Due to beforeAssemblyReload being called when player enters play mode but doesnt save values, this needs to be added
         EditorApplication.playModeStateChanged += SaveBeforeEnterPlayMode;
         EditorApplication.playModeStateChanged += LoadAfterExitingPlayMode;
-        EditorApplication.quitting += SaveToLinearEvent;
+        EditorApplication.quitting += TryToSaveLinearEvent;
+        //EditorApplication.quitting += SaveToLinearEvent;
 
     }
 
@@ -222,7 +225,6 @@ public class NodeLEM_Editor : EditorWindow
         if (!string.IsNullOrEmpty(pathToSettings))
         {
             //Check if path is of object still valid
-            Debug.Log("Path to Previously used Setting : " + pathToSettings);
             settings = AssetDatabase.LoadAssetAtPath(pathToSettings + ".asset", typeof(NodeLEM_Settings)) as NodeLEM_Settings;
 
             //If there is a setting found, set s_Settings to that n return
@@ -237,11 +239,11 @@ public class NodeLEM_Editor : EditorWindow
         string[] guidOfAssets = AssetDatabase.FindAssets("t:NodeLEM_Settings", new string[1] { k_DefaultSettingsFolderAssetPath });
 
         //Attempt to get the first default settings you can find if there is more than 0 searches found
-        if(guidOfAssets.Length > 0)
+        if (guidOfAssets.Length > 0)
         {
             for (int i = 0; i < guidOfAssets.Length; i++)
             {
-                pathToSettings = AssetDatabase.GUIDToAssetPath(guidOfAssets[0]) +".asset";
+                pathToSettings = AssetDatabase.GUIDToAssetPath(guidOfAssets[0]) + ".asset";
                 settings = AssetDatabase.LoadAssetAtPath(pathToSettings, typeof(NodeLEM_Settings)) as NodeLEM_Settings;
 
                 //If there is a setting found, set s_Settings to that n return
@@ -279,7 +281,7 @@ public class NodeLEM_Editor : EditorWindow
         {
             //Save the prev lienarevent
             s_CurrentLE = prevLE;
-            instance.SaveToLinearEvent();
+            instance.TryToSaveLinearEvent();
 
             //Load the new one
             s_CurrentLE = linearEvent;
@@ -407,21 +409,23 @@ public class NodeLEM_Editor : EditorWindow
     void OnDestroy()
     {
         //Before closing the window, save the le if it wasnt saved
-        if (instance != null && m_EditorState == EDITORSTATE.LOADED /*&& m_SaveWindow != null*/)
-        {
-            //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
-            SaveToLinearEvent();
-        }
+        //if (instance != null && m_EditorState == EDITORSTATE.LOADED /*&& m_SaveWindow != null*/)
+        //{
+        //    //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
+        //    SaveToLinearEvent();
+        //}
+
+        TryToSaveLinearEvent();
 
         //Unsubscribe b4 closing window
         AssemblyReloadEvents.beforeAssemblyReload -= SaveToLinearEvent;
         EditorApplication.playModeStateChanged -= SaveBeforeEnterPlayMode;
         EditorApplication.playModeStateChanged -= LoadAfterExitingPlayMode;
-        EditorApplication.quitting -= SaveToLinearEvent;
+        EditorApplication.quitting -= TryToSaveLinearEvent;
 
         EditorPrefs.SetString(k_EditorPref_LinearEventKey, "");
 
-        if(s_Settings!=null)
+        if (s_Settings != null)
             EditorPrefs.SetString(k_EditorPref_SettingsKey, k_DefaultSettingsFolderAssetPath + "/" + s_Settings.name);
 
         s_CurrentLE = null;
@@ -511,10 +515,12 @@ public class NodeLEM_Editor : EditorWindow
 
     private void OnLostFocus()
     {
-        if (m_EditorState == EDITORSTATE.LOADED)
-        {
-            SaveToLinearEvent();
-        }
+        //if (m_EditorState == EDITORSTATE.LOADED)
+        //{
+        //    SaveToLinearEvent();
+        //}
+
+        TryToSaveLinearEvent();
     }
 
     #endregion
@@ -643,29 +649,38 @@ public class NodeLEM_Editor : EditorWindow
 
         #region Drawing Save Button
 
-        //Prevents double clicking on saving
-        if (m_EditorState != EDITORSTATE.SAVING)
+        if (!s_Settings.m_AutoSave)
         {
-            if (m_EditorState == EDITORSTATE.LOADED)
+            if (GUI.Button(propertyRect, EDITORSTATE.LOADED_STRING))
             {
-                if (GUI.Button(propertyRect, EDITORSTATE.LOADED_STRING))
-                {
-                    m_EditorState = EDITORSTATE.SAVING;
-                    SaveToLinearEvent();
-                    m_EditorState = EDITORSTATE.SAVED;
-                }
+                //m_EditorState = EDITORSTATE.SAVING;
+                SaveToLinearEvent();
+                //m_EditorState = EDITORSTATE.SAVED;
             }
-            //else if m_EditorState == EditorState.Saved cause for Unloaded to occur u have no linear event 
-            //but that means save button wont even be drawn due to it not belonging in the same delegate
-            else
-            {
-                bool wasEnabled = GUI.enabled;
-                GUI.enabled = false;
-                GUI.Button(propertyRect, EDITORSTATE.SAVED_STRING);
-                GUI.enabled = wasEnabled;
-            }
+            ////Prevents double clicking on saving
+            //if (m_EditorState == EDITORSTATE.LOADED)
+            //{
 
+            //}
+            ////else if m_EditorState == EditorState.Saved cause for Unloaded to occur u have no linear event 
+            ////but that means save button wont even be drawn due to it not belonging in the same delegate
+            //else
+            //{
+            //    bool wasEnabled = GUI.enabled;
+            //    GUI.enabled = false;
+            //    GUI.Button(propertyRect, EDITORSTATE.SAVED_STRING);
+            //    GUI.enabled = wasEnabled;
+            //}
         }
+        else
+        {
+            bool wasEnabled = GUI.enabled;
+            GUI.enabled = false;
+            GUI.Button(propertyRect, EDITORSTATE.AUTOSAVE_STRING);
+            GUI.enabled = wasEnabled;
+        }
+
+
         #endregion
 
         Event e = Event.current;
@@ -1048,7 +1063,7 @@ public class NodeLEM_Editor : EditorWindow
 
                     }
                     //Save
-                    else if (e.keyCode == KeyCode.S)
+                    else if (!s_Settings.m_AutoSave && e.keyCode == KeyCode.S)
                     {
                         SaveToLinearEvent();
                         e.Use();
@@ -1694,11 +1709,10 @@ public class NodeLEM_Editor : EditorWindow
         if (state != PlayModeStateChange.ExitingEditMode)
             return;
 
-        SaveToLinearEvent();
-
-
         if (instance == null || s_CurrentLE == null)
             return;
+
+        SaveToLinearEvent();
 
         //Save string path of current LE to editor pref
         //string sceneAssetBasePath = EditorSceneManager.GetActiveScene().path;
@@ -1708,12 +1722,18 @@ public class NodeLEM_Editor : EditorWindow
         EditorPrefs.SetString(k_EditorPref_LinearEventKey, linearEventScenePath);
     }
 
+    void TryToSaveLinearEvent()
+    {
+        if (!s_Settings.m_AutoSave)
+            //if (instance == null || m_EditorState == EDITORSTATE.SAVED || s_CurrentLE == null)
+            return;
+
+        SaveToLinearEvent();
+    }
+
     //To be called when player presses "Save button" or when assembly reloads every time a script changes (when play mode is entered this will get called also but it doesnt save the values to the LE)
     void SaveToLinearEvent()
     {
-        if (instance == null || m_EditorState == EDITORSTATE.SAVED || s_CurrentLE == null)
-            return;
-
         m_EditorState = EDITORSTATE.SAVING;
 
         AllNodesInEditor.Remove(StartNode);
@@ -1742,7 +1762,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Finished loading
         Repaint();
-
+        Debug.Log("Saved Linear Event File " + s_CurrentLE.name, s_CurrentLE);
         m_EditorState = EDITORSTATE.SAVED;
     }
 

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d396997542ccca5418d924bc6a44cb0e, type: 3}
   m_Name: NewNodeEditorSettings
   m_EditorClassIdentifier: 
-  m_AutoSave: 1
+  m_AutoSave: 0
   m_EditorTheme: 0
