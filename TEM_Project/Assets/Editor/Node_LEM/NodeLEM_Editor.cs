@@ -488,8 +488,10 @@ public class NodeLEM_Editor : EditorWindow
         bool isMouseInSearchBox = HandleSearchBox(currentEvent);
 
 
-
-        DrawToolButtons(dummyRect);
+        if (s_Settings.m_ShowToolBar)
+        {
+            DrawToolButtons(dummyRect); 
+        }
         HandleCurrentLinearEventLabel(dummyRect, currentEvent);
 
         //DrawDebugLists();
