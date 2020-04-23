@@ -45,7 +45,10 @@ namespace LEM_Effects
         { return true; }
 
 
-
+        public virtual string NextEffectID()
+        {
+            return m_NodeBaseData.m_NextPointsIDs[0];
+        }
     }
 
 }

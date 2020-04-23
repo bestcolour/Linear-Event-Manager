@@ -74,6 +74,12 @@ public class LinearEventsManager : MonoBehaviour
 
             if (m_PlayOnAwake)
             {
+
+#if UNITY_EDITOR
+                Debug.Assert(m_PlayingEvent.m_StartNodeData.HasAtLeastOneNextPointNode, "The Start Node of " + m_PlayingEvent.name + " has not been connected to any effects", m_PlayingEvent);
+#endif
+                m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][m_PlayingEvent.m_StartNodeData.m_NextPointsIDs[0]];
+                AddEffectToCycle(m_PreviousEffectPlayed);
                 m_isEffectsPaused = false;
             }
 
@@ -131,10 +137,11 @@ public class LinearEventsManager : MonoBehaviour
             return;
         }
 
-        if (m_PlayingEvent != null)
+        if (m_PlayingEvent != null && m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode) 
         {
             //Load next effect
-            //m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][m_PreviousEffectPlayed.m_NodeBaseData.m_NodeID];
+            m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][m_PreviousEffectPlayed.NextEffectID()];
+            AddEffectToCycle(m_PreviousEffectPlayed);
 
         }
 
@@ -183,5 +190,27 @@ public class LinearEventsManager : MonoBehaviour
         }
     }
 
+    void AddEffectToCycle(LEM_BaseEffect effectToAdd)
+    {
+        switch (effectToAdd.m_UpdateCycle)
+        {
+            case UpdateCycle.Update:
+                m_UpdateCycle.Add(effectToAdd);
+                break;
+
+            case UpdateCycle.FixedUpdate:
+                m_FixedUpdateCycle.Add(effectToAdd);
+                break;
+
+            case UpdateCycle.LateUpdate:
+                m_LateUpdateCycle.Add(effectToAdd);
+                break;
+
+            default:
+                m_UpdateCycle.Add(effectToAdd);
+                break;
+
+        }
+    }
 
 }

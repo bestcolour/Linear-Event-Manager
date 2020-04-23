@@ -329,7 +329,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &825713913
+--- !u!114 &786480658
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -347,8 +347,9 @@ MonoBehaviour:
   m_NodeBaseData:
     m_Position: {x: 228.18193, y: 177.63638}
     m_NodeID: 25fb4050-5ac7-42e6-a30b-79e30923ec88
-    m_NextPointsIDs: []
-  m_TargetObject: {fileID: 0}
+    m_NextPointsIDs:
+    - c0c730c4-342d-4944-8455-82c5e0b22c98
+  m_TargetObject: {fileID: 963194225}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,6 +474,30 @@ MonoBehaviour:
     m_NodeID: a5fcd42f-6b8c-42cb-8b03-82abe92f49a2
     m_NextPointsIDs: []
   m_TargetObject: {fileID: 0}
+--- !u!114 &1515840859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79cf55c551f33604695a8563340495f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: InstantiateGameObjectNode
+  m_Description: 
+  m_UpdateCycle: 0
+  m_NodeBaseData:
+    m_Position: {x: 626, y: 117}
+    m_NodeID: c0c730c4-342d-4944-8455-82c5e0b22c98
+    m_NextPointsIDs: []
+  m_TargetObject: {fileID: 705507993}
+  m_NumberOfTimes: 1
+  m_TargetPosition: {x: 0, y: 0, z: 0}
+  m_TargetRotation: {x: 0, y: 0, z: 0}
+  m_TargetScale: {x: 1, y: 1, z: 1}
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,11 +527,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7bdaefed8911c04b903574c260bfe61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CurrentLinearEvent: {fileID: 0}
-  m_SelfInitialise: 0
-  m_PlayOnAwake: 0
-  m_IsFinishedQueuing: 0
-  m_isFinishedEffects: 0
+  m_AllLinearEventsInScene:
+  - {fileID: 2127555588}
+  m_InitialiseOnAwake: 1
+  m_PlayOnAwake: 1
+  m_PlayingEvent: {fileID: 2127555588}
+  m_IsInitialised: 0
+  m_PreviousEffectPlayed: {fileID: 0}
   m_DelayBeforeNextEffect: 0
   m_UpdateCycle: []
   m_FixedUpdateCycle: []
@@ -576,11 +603,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LinearEventName: 
   m_AllEffects:
-  - {fileID: 825713913}
+  - {fileID: 786480658}
+  - {fileID: 1515840859}
   m_StartNodeData:
     m_Position: {x: 481.5, y: 50}
     m_NodeID: 192d784c-cfd0-45e4-94db-09aca2fd9388
-    m_NextPointsIDs: []
+    m_NextPointsIDs:
+    - 25fb4050-5ac7-42e6-a30b-79e30923ec88
 --- !u!4 &2127555589
 Transform:
   m_ObjectHideFlags: 0
