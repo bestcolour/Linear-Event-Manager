@@ -26,7 +26,6 @@ namespace LEM_Effects
         public override bool TEM_Update()
         {
             //Destroy the targetted object
-            Debug.Log(m_TargetObject.name);
             GameObject.Destroy(m_TargetObject);
             return true;
         }

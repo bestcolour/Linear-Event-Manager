@@ -8,19 +8,6 @@ using UnityEditor;
 /// </summary>
 public class LEMStyleLibrary
 {
-    public static LEMStyleLibrary Instance
-    {
-        get
-        {
-            //Self initialise
-            if (m_Instance == null)
-            {
-                RefreshLibrary();
-            }
-            return m_Instance;
-        }
-    }
-    static LEMStyleLibrary m_Instance = null;
     public static bool m_SkinsLoaded = false;
 
     #region Colours
@@ -31,7 +18,7 @@ public class LEMStyleLibrary
         //{"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
         { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
         { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) },
-         //{"RandomOutComeNode",         new Color(0.286f,0.992f,0.733f) }
+         {"AddDelayNode",         new Color(1f,0.667f,0.114f) }
 
 
 
@@ -130,7 +117,6 @@ public class LEMStyleLibrary
 
     public static void RefreshLibrary()
     {
-        m_Instance = new LEMStyleLibrary();
         LoadingNodeSkins();
         m_SkinsLoaded = true;
     }

@@ -537,14 +537,14 @@ public class NodeLEM_Editor : EditorWindow
 
     void DrawConnections()
     {
-        //Tuple<string, string>[] allTupleKeys = AllConnectionsDictionary.Keys.ToArray();
-        //for (int i = 0; i < allTupleKeys.Length; i++)
-        //    AllConnectionsDictionary[allTupleKeys[i]].Draw();
+        Tuple<string, string>[] allTupleKeys = AllConnectionsDictionary.Keys.ToArray();
+        for (int i = 0; i < allTupleKeys.Length; i++)
+            AllConnectionsDictionary[allTupleKeys[i]].Draw();
 
-        foreach (Connection connection in AllConnectionsDictionary.Values)
-        {
-            connection.Draw();
-        }
+        //foreach (Connection connection in AllConnectionsDictionary.Values)
+        //{
+        //    connection.Draw();
+        //}
     }
 
     //This is the realtime drawing of a bezier curve line to let users visualise

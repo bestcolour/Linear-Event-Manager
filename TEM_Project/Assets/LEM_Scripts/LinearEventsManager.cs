@@ -12,12 +12,9 @@ public class LinearEventsManager : MonoBehaviour
 {
     public static LinearEventsManager Instance;
 
-
-    //bool HasEffects => m_CurrentLinearEvent != null;
-
-    //Dictionary<string, LEM_BaseEffect> m_CurrentEventDictionary = default;
     Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>> m_AllLinearEventsEffectsDictionary = default;
 
+    #region Linear Events
     [Header("Initialisation Settings")]
     [SerializeField, Tooltip("This array is supposed to represent all the Linear Events in the scene.")]
     LinearEvent[] m_AllLinearEventsInScene = default;
@@ -28,13 +25,15 @@ public class LinearEventsManager : MonoBehaviour
     [Tooltip("Should the LEM Manager start playing an event on Awake after self-initialisation?")]
     [SerializeField] bool m_PlayOnAwake = default;
 
-    [Tooltip("Is used as the first event to play. Leave empty if not needed. Is also used to show the current event playing."),SerializeField]
+    [Tooltip("Is used as the first event to play. Leave empty if not needed. Is also used to show the current event playing."), SerializeField]
     LinearEvent m_PlayingEvent = default;
-    public LinearEvent CurrentEvent { set { m_PlayingEvent = value; } }
+    public LinearEvent CurrentEvent { set { m_PlayingEvent = value; } } 
+    #endregion
+
 
     //Stop conditions
-    [ReadOnly,Header("RunTime Checks"), Space(15)] 
-    public bool m_IsInitialised = false;
+    [ReadOnly, Header("RunTime Checks"), Space(15),SerializeField]
+    bool m_IsInitialised = false;
 
     [ReadOnly] bool m_isEffectsPaused = true;
     public bool PauseEffects { set { m_isEffectsPaused = value; } }
@@ -42,9 +41,13 @@ public class LinearEventsManager : MonoBehaviour
     [ReadOnly, SerializeField]
     LEM_BaseEffect m_PreviousEffectPlayed = null;
 
-    [ReadOnly,/* Header("RunTime Values"), Space(15), */SerializeField]
+    [ReadOnly,SerializeField]
     float m_DelayBeforeNextEffect = default;
     public float TimeToAddToDelay { set { m_DelayBeforeNextEffect += value; } }
+
+    [ReadOnly, SerializeField]
+    bool m_ListeningForClick = default, m_ListeningForTrigger = default;
+    public bool ListeningForClick { set { m_ListeningForClick = value; } }
 
     [SerializeField, ReadOnly, Header("RunTime Cycles (Do not touch)"), Space(15)]
     List<LEM_BaseEffect> m_UpdateCycle = new List<LEM_BaseEffect>();
@@ -52,11 +55,6 @@ public class LinearEventsManager : MonoBehaviour
     [SerializeField, ReadOnly]
     List<LEM_BaseEffect> m_FixedUpdateCycle = new List<LEM_BaseEffect>(), m_LateUpdateCycle = new List<LEM_BaseEffect>();
 
-    //[Header("After Effect Type")]
-    //public bool m_CallingNextClick;
-
-    //[Header("End of All Effects Disposal")]
-    //public GameObject[] m_EndEffectDestroy;
 
     void Awake()
     {
@@ -137,12 +135,9 @@ public class LinearEventsManager : MonoBehaviour
             return;
         }
 
-        if (m_PlayingEvent != null && m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode) 
+        if (m_PlayingEvent != null)
         {
-            //Load next effect
-            m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][m_PreviousEffectPlayed.NextEffectID()];
-            AddEffectToCycle(m_PreviousEffectPlayed);
-
+            ListenToLoadNextEffect();
         }
 
         for (int i = 0; i < m_UpdateCycle.Count; i++)
@@ -153,7 +148,7 @@ public class LinearEventsManager : MonoBehaviour
             }
         }
 
-     
+
     }
 
     void FixedUpdate()
@@ -211,6 +206,26 @@ public class LinearEventsManager : MonoBehaviour
                 break;
 
         }
+    }
+
+    void ListenToLoadNextEffect()
+    {
+        //If manager is listening for a click
+        if (m_ListeningForClick)
+            return;
+
+        if (m_ListeningForTrigger)
+            return;
+
+        //If the previosu effect played is not the end,
+        if (m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode)
+        {
+            //Load next effect
+            m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][m_PreviousEffectPlayed.NextEffectID()];
+            AddEffectToCycle(m_PreviousEffectPlayed);
+        }
+       
+     
     }
 
 }
