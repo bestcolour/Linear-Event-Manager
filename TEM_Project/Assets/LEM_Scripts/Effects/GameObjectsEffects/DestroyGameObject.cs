@@ -23,7 +23,7 @@ namespace LEM_Effects
 
         #endregion
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Destroy the targetted object
             GameObject.Destroy(m_TargetObject);

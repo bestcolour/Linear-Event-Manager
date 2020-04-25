@@ -27,7 +27,10 @@ public class LinearEventsManager : MonoBehaviour
 
     [Tooltip("Is used as the first event to play. Leave empty if not needed. Is also used to show the current event playing."), SerializeField]
     LinearEvent m_PlayingEvent = default;
-    public LinearEvent CurrentEvent { set { m_PlayingEvent = value; } } 
+    public LinearEvent CurrentEvent { set { m_PlayingEvent = value; } }
+
+    [Tooltip("What is the expected amount of effects to run at one time? Increase this if you feel like there will be many effects running over a short period of time"),SerializeField]
+    int m_StartingEffectCapacity = 5;
     #endregion
 
 
@@ -72,11 +75,12 @@ public class LinearEventsManager : MonoBehaviour
 
             if (m_PlayOnAwake)
             {
-
 #if UNITY_EDITOR
+                Debug.Assert(m_PlayingEvent!=null, "There is no Playing Event to play OnAwake!", m_PlayingEvent);
                 Debug.Assert(m_PlayingEvent.m_StartNodeData.HasAtLeastOneNextPointNode, "The Start Node of " + m_PlayingEvent.name + " has not been connected to any effects", m_PlayingEvent);
 #endif
                 m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][m_PlayingEvent.m_StartNodeData.m_NextPointsIDs[0]];
+                m_PreviousEffectPlayed.Initialise();
                 AddEffectToCycle(m_PreviousEffectPlayed);
                 m_isEffectsPaused = false;
             }
@@ -119,6 +123,10 @@ public class LinearEventsManager : MonoBehaviour
             m_AllLinearEventsEffectsDictionary.Add(m_AllLinearEventsInScene[i], m_AllLinearEventsInScene[i].AllEffectsDictionary);
         }
 
+        m_UpdateCycle = new List<LEM_BaseEffect>(m_StartingEffectCapacity);
+        m_FixedUpdateCycle = new List<LEM_BaseEffect>(m_StartingEffectCapacity);
+        m_LateUpdateCycle = new List<LEM_BaseEffect>(m_StartingEffectCapacity);
+
         m_IsInitialised = true;
     }
 
@@ -129,6 +137,15 @@ public class LinearEventsManager : MonoBehaviour
         if (!m_IsInitialised || m_isEffectsPaused)
             return;
 
+        for (int i = 0; i < m_UpdateCycle.Count; i++)
+        {
+            if (m_UpdateCycle[i].ExecuteEffect())
+            {
+                m_UpdateCycle.RemoveEfficiently(i);
+            }
+        }
+
+        //Dont load new effect if there is a delay
         if (m_DelayBeforeNextEffect > 0)
         {
             m_DelayBeforeNextEffect -= Time.deltaTime;
@@ -140,15 +157,6 @@ public class LinearEventsManager : MonoBehaviour
             ListenToLoadNextEffect();
         }
 
-        for (int i = 0; i < m_UpdateCycle.Count; i++)
-        {
-            if (m_UpdateCycle[i].TEM_Update())
-            {
-                m_UpdateCycle.RemoveEfficiently(i);
-            }
-        }
-
-
     }
 
     void FixedUpdate()
@@ -156,12 +164,9 @@ public class LinearEventsManager : MonoBehaviour
         if (!m_IsInitialised || m_isEffectsPaused)
             return;
 
-        if (m_DelayBeforeNextEffect > 0)
-            return;
-
         for (int i = 0; i < m_FixedUpdateCycle.Count; i++)
         {
-            if (m_FixedUpdateCycle[i].TEM_Update())
+            if (m_FixedUpdateCycle[i].ExecuteEffect())
             {
                 m_FixedUpdateCycle.RemoveEfficiently(i);
             }
@@ -173,12 +178,9 @@ public class LinearEventsManager : MonoBehaviour
         if (!m_IsInitialised || m_isEffectsPaused)
             return;
 
-        if (m_DelayBeforeNextEffect > 0)
-            return;
-
         for (int i = 0; i < m_LateUpdateCycle.Count; i++)
         {
-            if (m_LateUpdateCycle[i].TEM_Update())
+            if (m_LateUpdateCycle[i].ExecuteEffect())
             {
                 m_LateUpdateCycle.RemoveEfficiently(i);
             }
@@ -222,6 +224,7 @@ public class LinearEventsManager : MonoBehaviour
         {
             //Load next effect
             m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][m_PreviousEffectPlayed.NextEffectID()];
+            m_PreviousEffectPlayed.Initialise();
             AddEffectToCycle(m_PreviousEffectPlayed);
         }
        

@@ -38,7 +38,7 @@ public class InstantiateGameObject : LEM_BaseEffect, IEffectSavable<GameObject, 
         targetScale = m_TargetScale;
     }
 
-    public override bool TEM_Update()
+    public override bool ExecuteEffect()
     {
         //Create a dummy variable outside of the loop so that we dont create 
         //a new var every loop (optimise)
@@ -58,7 +58,7 @@ public class InstantiateGameObject : LEM_BaseEffect, IEffectSavable<GameObject, 
         }
 
         //Return true after completing the effect
-        return base.TEM_Update();
+        return base.ExecuteEffect();
     }
 
 

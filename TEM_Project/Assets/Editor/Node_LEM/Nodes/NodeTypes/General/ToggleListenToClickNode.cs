@@ -3,9 +3,9 @@ using System;
 using UnityEngine;
 using UnityEditor;
 
-public class AddDelayNode : BaseEffectNode
+public class ToggleListenToClickNode : BaseEffectNode
 {
-    public float m_DelayTimeToAdd = default;
+    bool m_State = true;
 
     public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
     {
@@ -50,6 +50,15 @@ public class AddDelayNode : BaseEffectNode
         GUI.Label(propertyRect1, "Description", LEMStyleLibrary.s_NodeParagraphStyle);
         GUI.Label(m_TopRect, m_Title, LEMStyleLibrary.s_NodeHeaderStyle);
 
+
+        //Draw the description text field
+        propertyRect1.y += 15f;
+        propertyRect1.width -= 20f;
+        propertyRect1.height = 25f;
+        m_LemEffectDescription = EditorGUI.TextField(propertyRect1, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
+
+        //Draw UpdateCycle enum
+
         #endregion
 
         #region Debugging Visuals
@@ -66,27 +75,14 @@ public class AddDelayNode : BaseEffectNode
         //m_TopRect.y += 60;
         #endregion
 
-
-        //Draw the description text field
-        propertyRect1.y += 15f;
-        propertyRect1.width -= 20f;
-        propertyRect1.height = 25f;
-        m_LemEffectDescription = EditorGUI.TextField(propertyRect1, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
-
-        //Draw UpdateCycle enum
-
         propertyRect1.y += 32.5f;
-        GUI.Label(propertyRect1, "Time to Delay");
-        propertyRect1.y += 20f;
-        propertyRect1.height = 25f;
-        m_DelayTimeToAdd = EditorGUI.FloatField(propertyRect1, m_DelayTimeToAdd);
-
+        m_State = EditorGUI.Toggle(propertyRect1, "Toggle State",m_State);
 
     }
 
     public override LEM_BaseEffect CompileToBaseEffect()
     {
-        AddDelay myEffect = ScriptableObject.CreateInstance<AddDelay>();
+        ToggleListenToClick myEffect = ScriptableObject.CreateInstance<ToggleListenToClick>();
         myEffect.m_NodeEffectType = this.GetType().ToString();
         myEffect.m_Description = m_LemEffectDescription;
         myEffect.m_UpdateCycle = m_UpdateCycle;
@@ -96,18 +92,18 @@ public class AddDelayNode : BaseEffectNode
         //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
 
         myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-        myEffect.SetUp(m_DelayTimeToAdd);
+        myEffect.SetUp(m_State);
         return myEffect;
     }
 
     public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
     {
-        AddDelay loadFrom = effectToLoadFrom as AddDelay;
-        loadFrom.UnPack(out m_DelayTimeToAdd);
+
+        ToggleListenToClick loadFrom = effectToLoadFrom as ToggleListenToClick;
+        loadFrom.UnPack(out m_State);
 
         //Important
         m_LemEffectDescription = effectToLoadFrom.m_Description;
         m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
-
     }
 }

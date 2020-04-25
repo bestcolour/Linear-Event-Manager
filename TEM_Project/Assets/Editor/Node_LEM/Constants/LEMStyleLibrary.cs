@@ -18,7 +18,8 @@ public class LEMStyleLibrary
         //{"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
         { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
         { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) },
-         {"AddDelayNode",         new Color(1f,0.667f,0.114f) }
+         {"AddDelayNode",         new Color(1f,0.667f,0.114f) },
+         {"ToggleListenToClickNode",         new Color(0.498f,0.471f,1f) },
 
 
 

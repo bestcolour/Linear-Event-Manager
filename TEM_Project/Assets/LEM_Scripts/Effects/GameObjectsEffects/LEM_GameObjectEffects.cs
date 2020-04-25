@@ -16,7 +16,7 @@ namespace LEM_Effects
         [Tooltip("Set object's active state")]
         [SerializeField] bool state = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Set the target object to true or false
             targetObject.SetActive(state);
@@ -34,7 +34,7 @@ namespace LEM_Effects
         [Tooltip("Set all the objects to this one active state")]
         [SerializeField] bool state = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Set all objects to the same state
             for (int i = 0; i < targetObjects.Length; i++)
@@ -54,7 +54,7 @@ namespace LEM_Effects
         [Tooltip("Object to destroy")]
         [SerializeField] GameObject[] targetObjects = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Destroy the targetted objects
             for (int i = 0; i < targetObjects.Length; i++)

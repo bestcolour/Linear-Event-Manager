@@ -18,11 +18,11 @@ namespace LEM_Effects
         [Tooltip("The scale you want to set the transform to")]
         [SerializeField] Vector3 targetScale = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //If set to local is true, set transform scale as local scale
             targetTransform.localScale = targetScale;
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -41,7 +41,7 @@ namespace LEM_Effects
         [SerializeField] bool relativeToLocal = default;
 
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //If set to local is true, set transform scale as local scale
             if (relativeToLocal)
@@ -53,7 +53,7 @@ namespace LEM_Effects
                 targetTransform.position = targetPosition;
             }
 
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -67,12 +67,12 @@ namespace LEM_Effects
         [Tooltip("The position you want to set the transform to")]
         [SerializeField] Vector3 targetPosition = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //If set to local is true, set transform scale as local scale
             targetRectransform.anchoredPosition3D = targetPosition;
 
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -92,7 +92,7 @@ namespace LEM_Effects
         [SerializeField] bool relativeToLocal = default;
 
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //If set to local is true, set transform scale as local scale
             if (relativeToLocal)
@@ -104,7 +104,7 @@ namespace LEM_Effects
                 targetTransform.rotation = Quaternion.Euler(targetRotation);
             }
 
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -122,11 +122,11 @@ namespace LEM_Effects
         [Tooltip("How much you want to offset the scale by")]
         [SerializeField] Vector3 offsetScale = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Offset the local scale by 
             targetTransform.localScale += offsetScale;
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -145,7 +145,7 @@ namespace LEM_Effects
         [SerializeField] bool relativeToLocal = default;
 
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //If set to local is true, set transform scale as local scale
             if (relativeToLocal)
@@ -157,7 +157,7 @@ namespace LEM_Effects
                 targetTransform.position += offsetPosition;
             }
 
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -176,7 +176,7 @@ namespace LEM_Effects
         [SerializeField] bool relativeToLocal = default;
 
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //If set to local is true, set transform scale as local scale
             //multiplying quaternions is done to add the effects of quaternions
@@ -190,7 +190,7 @@ namespace LEM_Effects
                 targetTransform.rotation = Quaternion.Euler(offsetRotation) * targetTransform.rotation;
             }
 
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -209,14 +209,14 @@ namespace LEM_Effects
         [Tooltip("The index in which the child transform is ordered in the hierarchy. Do not place -ve numbers")]
         [SerializeField,Range(0, 1000)] int siblingIndex = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Set the parent of the child as the parent transform
             childTransform.SetParent(parentTransform);
 
             childTransform.SetSiblingIndex(siblingIndex);
 
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -237,7 +237,7 @@ namespace LEM_Effects
         [Tooltip("This is the distance between the target transform and the target position for the target transform to be considered at the targetposition.")]
         [SerializeField, Range(0.0001f, 1000f)] float snapDistance = 1f;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //meanwhile, lerp the transform to the target
             targetTransform.position = Vector3.Lerp(targetTransform.position, targetPosition, smoothing * Time.deltaTime);
@@ -248,7 +248,7 @@ namespace LEM_Effects
                 //Snap the position to the targetposition
                 targetTransform.position = targetPosition;
                 //finish this effect
-                return base.TEM_Update();
+                return base.ExecuteEffect();
             }
 
             return false;
@@ -280,7 +280,7 @@ namespace LEM_Effects
             intialPosition = targetTransform.position;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //meanwhile, lerp the transform to the target
             targetTransform.position = Vector3.Lerp(targetTransform.position, targetPosition, smoothing * Time.deltaTime);
@@ -291,7 +291,7 @@ namespace LEM_Effects
                 //Snap the position to the targetposition
                 targetTransform.position = intialPosition;
                 //finish this effect
-                return base.TEM_Update();
+                return base.ExecuteEffect();
             }
 
             return false;
@@ -314,7 +314,7 @@ namespace LEM_Effects
         [Tooltip("This is the distance between the target transform and the target position for the target transform to be considered at the targetposition.")]
         [SerializeField, Range(0.0001f, 1000f)] float snapDistance = 1f;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //meanwhile, lerp the transform to the target
             targetTransform.position = Vector3.Lerp(targetTransform.position, targetDestination.position, smoothing * Time.deltaTime);
@@ -325,7 +325,7 @@ namespace LEM_Effects
                 //Snap the position to the targetposition
                 targetTransform.position = targetDestination.position;
                 //finish this effect
-                return base.TEM_Update();
+                return base.ExecuteEffect();
             }
 
             return false;
@@ -357,7 +357,7 @@ namespace LEM_Effects
             initialPosition = targetTransform.position;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
 
             //meanwhile, lerp the transform to the target
@@ -397,7 +397,7 @@ namespace LEM_Effects
             speed = Vector3.Distance(targetTransform.position, targetPosition)/duration;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Increment the time variable by division of duration from delta time
             float delta = Time.deltaTime;
@@ -446,7 +446,7 @@ namespace LEM_Effects
             speed = Vector3.Distance(targetTransform.position, targetPosition)/duration;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Increment the time variable by division of duration from delta time
             float delta = Time.deltaTime;
@@ -485,7 +485,7 @@ namespace LEM_Effects
         [SerializeField, Range(0.0001f, 1000f)] float snapDistance = 1f;
 
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //meanwhile, lerp the transform to the target
             targetTransform.position = Vector3.MoveTowards(targetTransform.position, targetDestination.position, speed * Time.deltaTime);
@@ -496,7 +496,7 @@ namespace LEM_Effects
                 //Snap the position to the targetposition
                 targetTransform.position = targetDestination.position;
                 //finish this effect
-                return base.TEM_Update();
+                return base.ExecuteEffect();
             }
 
             return false;
@@ -529,7 +529,7 @@ namespace LEM_Effects
             initialPosition = targetTransform.position;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
 
             //meanwhile, lerp the transform to the target
@@ -568,7 +568,7 @@ namespace LEM_Effects
 
 
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //meanwhile, lerp the transform to the target
             targetRectransform.anchoredPosition3D = Vector3.Lerp(targetRectransform.anchoredPosition3D, targetPosition, smoothing * Time.deltaTime);
@@ -579,7 +579,7 @@ namespace LEM_Effects
                 //Snap the position to the targetposition
                 targetRectransform.anchoredPosition3D = targetPosition;
                 //finish this effect
-                return base.TEM_Update();
+                return base.ExecuteEffect();
             }
 
             return false;
@@ -611,7 +611,7 @@ namespace LEM_Effects
             intialPosition = targetRectransform.anchoredPosition3D;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
 
             //meanwhile, lerp the transform to the target
@@ -646,7 +646,7 @@ namespace LEM_Effects
 
 
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //meanwhile, lerp the transform to the target
             targetRectransform.anchoredPosition3D = Vector3.Lerp(targetRectransform.anchoredPosition3D, targetDestination.anchoredPosition3D, smoothing * Time.deltaTime);
@@ -657,7 +657,7 @@ namespace LEM_Effects
                 //Snap the position to the targetposition
                 targetRectransform.anchoredPosition3D = targetDestination.anchoredPosition3D;
                 //finish this effect
-                return base.TEM_Update();
+                return base.ExecuteEffect();
             }
 
             return false;
@@ -689,7 +689,7 @@ namespace LEM_Effects
             intialPosition = targetRectransform.anchoredPosition3D;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
 
             //meanwhile, lerp the transform to the target
@@ -729,7 +729,7 @@ namespace LEM_Effects
             speed = Vector3.Distance(targetRectransform.anchoredPosition3D, targetPosition) / duration;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Increment the time variable by division of duration from delta time
             float delta = Time.deltaTime;
@@ -778,7 +778,7 @@ namespace LEM_Effects
             speed = Vector3.Distance(targetRectransform.anchoredPosition3D, targetPosition) / duration;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Increment the time variable by division of duration from delta time
             float delta = Time.deltaTime;
@@ -816,7 +816,7 @@ namespace LEM_Effects
         [Tooltip("This is the distance between the target transform and the target position for the target transform to be considered at the targetposition.")]
         [SerializeField, Range(0.0001f, 1000f)] float snapDistance = 1f;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
 
             //meanwhile, move the transform to the target
@@ -860,7 +860,7 @@ namespace LEM_Effects
             initialPosition = targetRectransform.anchoredPosition3D;
         }
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //meanwhile, move the transform to the target
             targetRectransform.anchoredPosition3D = Vector3.MoveTowards(targetRectransform.anchoredPosition3D, targetDestination.anchoredPosition3D, Time.deltaTime * speed);

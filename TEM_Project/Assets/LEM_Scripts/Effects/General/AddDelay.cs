@@ -10,7 +10,7 @@ namespace LEM_Effects
         [SerializeField]
         float m_DelayTime = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             LinearEventsManager.Instance.TimeToAddToDelay = m_DelayTime;
             return true;

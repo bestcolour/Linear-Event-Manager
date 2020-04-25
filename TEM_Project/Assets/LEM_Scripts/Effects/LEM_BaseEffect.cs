@@ -19,10 +19,11 @@ namespace LEM_Effects
     {
         //Records the node type this effect belongs to
         [ReadOnly] public string m_NodeEffectType = default;
-#if UNITY_EDITOR
+
+//#if UNITY_EDITOR
         [Tooltip("Write a summary about what this event does if you want to"), TextArea(3, 5)]
         public string m_Description = default; 
-#endif
+//#endif
 
         [Tooltip("Which Update Cycle Effect is In")]
         public UpdateCycle m_UpdateCycle = default;
@@ -42,7 +43,7 @@ namespace LEM_Effects
         /// Returns true when the effect has finished executing else return false to keep updating the effect
         /// </summary>
         /// <returns></returns>
-        public virtual bool TEM_Update()
+        public virtual bool ExecuteEffect()
         { return true; }
 
 

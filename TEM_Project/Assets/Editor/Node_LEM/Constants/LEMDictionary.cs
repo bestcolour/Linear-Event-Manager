@@ -29,6 +29,7 @@ public class LEMDictionary
         { "InstantiateGameObjectNode",          new InstantiateGameObjectNode() },
         { "DestroyGameObjectNode",              new DestroyGameObjectNode() },
         { "AddDelayNode",                       new AddDelayNode() },
+        { "ToggleListenToClickNode",                       new ToggleListenToClickNode() },
         //{"RandomOutComeNode",                   new RandomOutComeNode() }
    
 

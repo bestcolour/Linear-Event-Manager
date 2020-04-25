@@ -20,14 +20,14 @@ namespace LEM_Effects
         [Tooltip("True means that the script is going to be enabled, while false means disabled.")]
         [SerializeField] bool state = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Get monobehaviour component from the targeted object
             MonoBehaviour monobehaviourScript = targetObject.GetComponent(scriptName) as MonoBehaviour;
 
             monobehaviourScript.enabled = state;
 
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
     }
 
@@ -39,11 +39,11 @@ namespace LEM_Effects
         [Tooltip("True means that the button is going to be able to be interacted with, while false means it can't.")]
         [SerializeField] bool state = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             targetButton.interactable = state;
 
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
     }
 

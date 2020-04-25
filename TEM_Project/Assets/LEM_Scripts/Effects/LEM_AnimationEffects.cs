@@ -15,11 +15,11 @@ namespace LEM_Effects
         [Tooltip("The name of parameter you want to trigger on the animator")]
         [SerializeField] string parameterName = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Set trigger name
             targetAnimator.SetTrigger(parameterName);
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -35,11 +35,11 @@ namespace LEM_Effects
         [Tooltip("The value of the parameter you want to set on the animator")]
         [SerializeField] float floatValue = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Set float name
             targetAnimator.SetFloat(parameterName,floatValue);
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -55,11 +55,11 @@ namespace LEM_Effects
         [Tooltip("The value of the parameter you want to set on the animator")]
         [SerializeField] int intValue = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Set float name
             targetAnimator.SetInteger(parameterName, intValue);
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
@@ -75,11 +75,11 @@ namespace LEM_Effects
         [Tooltip("The value of the parameter you want to set on the animator")]
         [SerializeField] bool booleanValue = default;
 
-        public override bool TEM_Update()
+        public override bool ExecuteEffect()
         {
             //Set float name
             targetAnimator.SetBool(parameterName, booleanValue);
-            return base.TEM_Update();
+            return base.ExecuteEffect();
         }
 
     }
