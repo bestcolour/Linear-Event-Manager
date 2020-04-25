@@ -9,6 +9,8 @@ namespace LEM_Editor
     {
         bool m_State = true;
 
+        protected override string EffectTypeName => "ToggleListenToClickNode";
+
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
@@ -85,7 +87,7 @@ namespace LEM_Editor
         public override LEM_BaseEffect CompileToBaseEffect()
         {
             ToggleListenToClick myEffect = ScriptableObject.CreateInstance<ToggleListenToClick>();
-            myEffect.m_NodeEffectType = this.GetType().ToString();
+            myEffect.m_NodeEffectType = EffectTypeName;
             myEffect.m_Description = m_LemEffectDescription;
             myEffect.m_UpdateCycle = m_UpdateCycle;
 

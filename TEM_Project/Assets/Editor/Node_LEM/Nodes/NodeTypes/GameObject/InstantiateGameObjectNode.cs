@@ -15,6 +15,8 @@ namespace LEM_Editor
         public Vector3 m_TargetRotation = Vector3.zero;
         public Vector3 m_TargetScale = Vector3.one;
 
+        protected override string EffectTypeName => "InstantiateGameObjectNode";
+
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
@@ -53,7 +55,9 @@ namespace LEM_Editor
 
             effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
 
-            effect.m_NodeEffectType = this.GetType().ToString();
+            //effect.m_NodeEffectType = this.GetType().ToString();
+            effect.m_NodeEffectType = EffectTypeName;
+
 
             //Effect saving
 

@@ -59,6 +59,12 @@ namespace LEM_Editor
             return nodeTypeName;
         }
 
+        public static string RemoveNameSpace(string nodeTypeName)
+        {
+            nodeTypeName = nodeTypeName.Remove(0,11);
+            return nodeTypeName;
+        }
+
     }
 
 }

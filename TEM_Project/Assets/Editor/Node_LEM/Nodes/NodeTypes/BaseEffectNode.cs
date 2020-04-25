@@ -10,6 +10,7 @@ namespace LEM_Editor
 
     public abstract class BaseEffectNode : Node
     {
+        protected abstract string EffectTypeName { get; }
         //TEM effect related variables
         public string m_LemEffectDescription = default;
         //public LEM_BaseEffect m_BaseEffectSaveFile = default;
