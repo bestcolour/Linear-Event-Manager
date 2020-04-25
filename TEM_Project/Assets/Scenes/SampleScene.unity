@@ -409,6 +409,88 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1084835847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4268c10773b80644a9cabbff4bc879c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: ToggleListenToClickNode
+  m_Description: 
+  m_UpdateCycle: 0
+  m_NodeBaseData:
+    m_Position: {x: 881.7035, y: 326.69135}
+    m_NodeID: 3a204c24-18fd-4b33-af1c-fc15453c91fc
+    m_NextPointsIDs: []
+  m_State: 1
+--- !u!114 &1097604506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c801abaef65fa44b3768963a1fda79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: DestroyGameObjectNode
+  m_Description: 
+  m_UpdateCycle: 0
+  m_NodeBaseData:
+    m_Position: {x: 430.3704, y: 226.13585}
+    m_NodeID: a588cd1d-ea0e-43ea-8a28-52b1333de90c
+    m_NextPointsIDs:
+    - 3859f050-873d-4263-9695-529355c19b00
+  m_TargetObject: {fileID: 0}
+--- !u!114 &1425087503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: AddDelayNode
+  m_Description: 
+  m_UpdateCycle: 0
+  m_NodeBaseData:
+    m_Position: {x: 146.37035, y: 284.13577}
+    m_NodeID: f8b91368-46ef-4da8-a03b-a92cb041fa78
+    m_NextPointsIDs: []
+  m_DelayTime: 0
+--- !u!114 &1517982493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05ea74aed3a27874c940f0fe9557785d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: ToggleListenToTriggerNode
+  m_Description: 
+  m_UpdateCycle: 0
+  m_NodeBaseData:
+    m_Position: {x: 554.3706, y: 507.136}
+    m_NodeID: 3859f050-873d-4263-9695-529355c19b00
+    m_NextPointsIDs:
+    - 3a204c24-18fd-4b33-af1c-fc15453c91fc
+  m_State: 1
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,7 +525,7 @@ MonoBehaviour:
   m_InitialiseOnAwake: 1
   m_PlayOnAwake: 1
   m_PlayingEvent: {fileID: 2127555588}
-  m_StartingEffectCapacity: 50
+  m_StartingEffectCapacity: 5
   m_IsInitialised: 0
   m_PreviousEffectPlayed: {fileID: 0}
   m_DelayBeforeNextEffect: 0
@@ -496,11 +578,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LinearEventName: 
-  m_AllEffects: []
+  m_AllEffects:
+  - {fileID: 1084835847}
+  - {fileID: 1425087503}
+  - {fileID: 1097604506}
+  - {fileID: 1517982493}
   m_StartNodeData:
-    m_Position: {x: 0, y: 0}
-    m_NodeID: 
-    m_NextPointsIDs: []
+    m_Position: {x: 313.53726, y: 122.469154}
+    m_NodeID: e362bb9a-3529-4ffd-888d-ba12e123a0fe
+    m_NextPointsIDs:
+    - a588cd1d-ea0e-43ea-8a28-52b1333de90c
 --- !u!4 &2127555589
 Transform:
   m_ObjectHideFlags: 0

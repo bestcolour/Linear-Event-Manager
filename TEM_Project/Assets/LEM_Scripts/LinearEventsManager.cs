@@ -51,6 +51,7 @@ public class LinearEventsManager : MonoBehaviour
     [ReadOnly, SerializeField]
     bool m_ListeningForClick = default, m_ListeningForTrigger = default;
     public bool ListeningForClick { set { m_ListeningForClick = value; } }
+    public bool ListeningForTrigger { set { m_ListeningForTrigger = value; } }
 
     [SerializeField, ReadOnly, Header("RunTime Cycles (Do not touch)"), Space(15)]
     List<LEM_BaseEffect> m_UpdateCycle = new List<LEM_BaseEffect>();

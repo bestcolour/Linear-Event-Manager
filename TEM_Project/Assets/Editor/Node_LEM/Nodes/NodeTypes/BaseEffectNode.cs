@@ -22,7 +22,7 @@ namespace LEM_Editor
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
 
-            m_Title = this.GetType().ToString();
+            m_Title = EffectTypeName;
             m_Title = LEMDictionary.RemoveNodeWord(m_Title);
         }
 

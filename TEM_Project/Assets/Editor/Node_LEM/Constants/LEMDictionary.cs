@@ -32,6 +32,7 @@ namespace LEM_Editor
         { "DestroyGameObjectNode",              new DestroyGameObjectNode() },
         { "AddDelayNode",                       new AddDelayNode() },
         { "ToggleListenToClickNode",                       new ToggleListenToClickNode() },
+        { "ToggleListenToTriggerNode",                       new ToggleListenToTriggerNode() },
         //{"RandomOutComeNode",                   new RandomOutComeNode() }
    
 

@@ -46,7 +46,10 @@ namespace LEM_Effects
         public virtual bool ExecuteEffect()
         { return true; }
 
-
+        /// <summary>
+        /// Potential for multiple output node
+        /// </summary>
+        /// <returns></returns>
         public virtual string NextEffectID()
         {
             return m_NodeBaseData.m_NextPointsIDs[0];

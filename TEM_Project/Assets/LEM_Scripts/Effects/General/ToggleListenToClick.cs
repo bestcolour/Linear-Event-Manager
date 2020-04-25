@@ -1,14 +1,16 @@
-﻿
+﻿using UnityEngine;
+
 namespace LEM_Effects
 {
     public class ToggleListenToClick : LEM_BaseEffect, IEffectSavable<bool>
     {
+        [SerializeField]
         bool m_State = true;
 
 
         public override bool ExecuteEffect()
         {
-            LinearEventsManager.Instance.ListeningForClick = true;
+            LinearEventsManager.Instance.ListeningForClick = m_State;
             return true;
         }
 
