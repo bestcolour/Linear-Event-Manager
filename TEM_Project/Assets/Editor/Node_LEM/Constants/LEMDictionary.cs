@@ -31,6 +31,7 @@ namespace LEM_Editor
              { "AddDelayNode",  new NodeDictionaryDefinition(    new AddDelayNode() , new Color(1f,0.667f,0.114f))},
              { "ToggleListenToClickNode",   new NodeDictionaryDefinition( new ToggleListenToClickNode(), new Color(0.498f,0.471f,1f)) },
              { "ToggleListenToTriggerNode", new NodeDictionaryDefinition(new ToggleListenToTriggerNode(),new Color(0.361f,0.82f,1f)) },
+             { "EqualRandomOutComeNode", new NodeDictionaryDefinition(new EqualRandomOutComeNode(),new Color(0.302f,0.216f,0.851f)) },
              //{"RandomOutComeNode",                   new RandomOutComeNode() }
             
         };

@@ -47,7 +47,7 @@ namespace LEM_Effects
         { return true; }
 
         /// <summary>
-        /// Potential for multiple output node
+        /// To be called before loading the next effect
         /// </summary>
         /// <returns></returns>
         public virtual string NextEffectID()

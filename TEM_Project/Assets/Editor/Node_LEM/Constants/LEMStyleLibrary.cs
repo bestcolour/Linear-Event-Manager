@@ -9,19 +9,19 @@ namespace LEM_Editor
     {
         public static bool m_SkinsLoaded = false;
 
-    //    #region Colours
-    //    //public Dictionary<string, NodeSkinCollection> m_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
-    //    public static readonly Dictionary<string, Color> s_NodeColourDictionary = new Dictionary<string, Color>
-    //{
-    //    {"StartNode",                  new Color(0.11f, 0.937f, 0.11f) },
-    //    //{"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
-    //    { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
-    //    { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) },
-    //     {"AddDelayNode",         new Color(1f,0.667f,0.114f) },
-    //     {"ToggleListenToClickNode",         new Color(0.498f,0.471f,1f) },
-    //     {"ToggleListenToTriggerNode",         new Color(0.361f,0.82f,1f) },
-    //};
-    //    #endregion
+        //    #region Colours
+        //    //public Dictionary<string, NodeSkinCollection> m_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
+        //    public static readonly Dictionary<string, Color> s_NodeColourDictionary = new Dictionary<string, Color>
+        //{
+        //    {"StartNode",                  new Color(0.11f, 0.937f, 0.11f) },
+        //    //{"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
+        //    { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
+        //    { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) },
+        //     {"AddDelayNode",         new Color(1f,0.667f,0.114f) },
+        //     {"ToggleListenToClickNode",         new Color(0.498f,0.471f,1f) },
+        //     {"ToggleListenToTriggerNode",         new Color(0.361f,0.82f,1f) },
+        //};
+        //    #endregion
 
         public static Color s_GUIPreviousColour = default;
         //To be pulled by all nodes with top textures 
@@ -94,6 +94,8 @@ namespace LEM_Editor
             s_WhiteBackGroundSkin.m_SelectedTopOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top_Selected.png", typeof(Texture2D)) as Texture2D;
 
             //Initialising public static node title styles
+            s_NodeHeaderStyle.normal.textColor = NodeLEM_Editor.s_Settings.m_EditorTheme == EditorTheme.Dark ? Color.black : Color.white;
+
             s_NodeHeaderStyle.fontSize = 13;
             s_NodeHeaderStyle.alignment = TextAnchor.MiddleCenter;
 
@@ -102,6 +104,7 @@ namespace LEM_Editor
             s_NodeTextInputStyle.wordWrap = true;
 
             s_NodeParagraphStyle.fontSize = 10;
+            s_NodeParagraphStyle.normal.textColor = NodeLEM_Editor.s_Settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
 
             s_StartEndStyle.fontSize = 20;
