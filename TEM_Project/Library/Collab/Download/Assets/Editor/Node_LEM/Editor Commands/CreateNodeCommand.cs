@@ -12,11 +12,7 @@ public class CreateNodeCommand : INodeCommand
     Vector2 m_Position = default;
     string m_NodeType = default;
 
-    BaseEffectNode m_BaseEffectNode = default;
     LEM_BaseEffect m_NodeEffect = default;
-
-
-    //LEM_BaseEffect m_NodeEffect = default;
 
     public CreateNodeCommand(Vector2 mousePosition, string nameOfNodeType)
     {
@@ -24,58 +20,51 @@ public class CreateNodeCommand : INodeCommand
         m_NodeType = nameOfNodeType;
     }
 
-
-
     public void Execute()
     {
-        m_BaseEffectNode = NodeCommandInvoker.d_CreateEffectNode?.Invoke(m_Position, m_NodeType);
+        string theNewNodeID = NodeCommandInvoker.d_CreateEffectNode?.Invoke(m_Position, m_NodeType).NodeID;
+
+        //Save the effect before losing this reference forever~~~
+        m_NodeEffect = NodeCommandInvoker.d_CompileNodeEffect(theNewNodeID);
     }
 
     //Basically delete but we need to save its current state b4 deleting
     public void Undo()
     {
         //Saving
-        m_NodeEffect = m_BaseEffectNode.CompileToBaseEffect();
+        m_NodeEffect = NodeCommandInvoker.d_CompileNodeEffect(m_NodeEffect.m_NodeBaseData.m_NodeID);
 
         //Delete 
-        BaseEffectNode[] nodesToBeDeleted = new BaseEffectNode[1] { m_BaseEffectNode };
-        NodeCommandInvoker.d_DeleteNodes?.Invoke(nodesToBeDeleted);
-        m_BaseEffectNode = null;
+        NodeBaseData[] nodesToBeDeleted = new NodeBaseData[1] { m_NodeEffect.m_NodeBaseData };
+        NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(nodesToBeDeleted);
     }
 
     public void Redo()
     {
-        //Recreate a node from the baseEffect save file we saved before deleting in the undoing func
-        m_BaseEffectNode = NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(
-               m_NodeEffect.m_NodeBaseData.m_Position,
-               m_NodeEffect.m_NodeEffectType,
-               m_NodeEffect.m_NodeBaseData.m_NodeID);
-
-        //Unpack all the data into the node
-        m_BaseEffectNode.LoadFromBaseEffect(m_NodeEffect);
+        //Recreate and load the effect data
+        NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(m_NodeEffect.m_NodeBaseData.m_Position, m_NodeEffect.m_NodeEffectType, m_NodeEffect.m_NodeBaseData.m_NodeID)
+            .LoadFromBaseEffect(m_NodeEffect);
 
         //Restitch the connections
         NodeCommandInvoker.d_RestitchConnections(m_NodeEffect);
-
     }
 
 }
 
 public class DeleteNodeCommand : INodeCommand
 {
-    BaseEffectNode[] m_DeletedNodes = default;
-
+    string[] m_DeletedNodeIDs = default;
     LEM_BaseEffect[] m_NodesEffects = default;
 
     public int CommandType => NodeCommandType.DELETE;
 
 
-    public DeleteNodeCommand(BaseEffectNode[] deletedNodes)
+    public DeleteNodeCommand(string[] deletedNodesID)
     {
 
-        m_DeletedNodes = deletedNodes;
+        m_DeletedNodeIDs = deletedNodesID;
 
-        m_NodesEffects = new LEM_BaseEffect[deletedNodes.Length];
+        m_NodesEffects = new LEM_BaseEffect[deletedNodesID.Length];
     }
 
 
@@ -84,30 +73,29 @@ public class DeleteNodeCommand : INodeCommand
         //Save before deleting the node
         for (int i = 0; i < m_NodesEffects.Length; i++)
         {
-            m_NodesEffects[i] = m_DeletedNodes[i].CompileToBaseEffect();
+            m_NodesEffects[i] = NodeCommandInvoker.d_CompileNodeEffect(m_DeletedNodeIDs[i]);
         }
 
         //Delete the nodes
-        NodeCommandInvoker.d_DeleteNodes?.Invoke(m_DeletedNodes);
+        NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_NodesEffects.Select(x => x.m_NodeBaseData).ToArray());
     }
 
     public void Undo()
     {
         //Recreate the nodes 
-        for (int i = 0; i < m_DeletedNodes.Length; i++)
+        for (int i = 0; i < m_DeletedNodeIDs.Length; i++)
         {
-            //Repoulate the deleted nodes
-            m_DeletedNodes[i] = NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(
+            //Recreate and load the node's effects
+            NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(
                 m_NodesEffects[i].m_NodeBaseData.m_Position,
                 m_NodesEffects[i].m_NodeEffectType,
-                m_NodesEffects[i].m_NodeBaseData.m_NodeID);
+                m_NodesEffects[i].m_NodeBaseData.m_NodeID).
+                LoadFromBaseEffect(m_NodesEffects[i]);
 
-            //Unpack all the data into the node
-            m_DeletedNodes[i].LoadFromBaseEffect(m_NodesEffects[i]);
         }
 
         //Restitch the nodes' connections ONLY after all the nodes hv been recreated
-        for (int i = 0; i < m_DeletedNodes.Length; i++)
+        for (int i = 0; i < m_DeletedNodeIDs.Length; i++)
         {
             NodeCommandInvoker.d_RestitchConnections(m_NodesEffects[i]);
         }
@@ -132,21 +120,21 @@ public class MoveNodeCommand : INodeCommand
     //i need prev pos
     //and the nodes that are moving
     //Saves all the current position of nodes n get all the node ids
-    public MoveNodeCommand(Node[] nodesMoved)
+    public MoveNodeCommand(Node[] nodesMovedIDs)
     {
         //Get all the nodeids from the passed parameter
-        m_NodeIDsMoved = nodesMoved.Select(x => x.NodeID).ToArray();
+        m_NodeIDsMoved = nodesMovedIDs.Select(x => x.NodeID).ToArray();
 
-        m_PreviousTopRectPositions = new Vector2[nodesMoved.Length];
-        m_PreviousMidRectPositions = new Vector2[nodesMoved.Length];
-        m_PreviousTotalRectPositions = new Vector2[nodesMoved.Length];
+        m_PreviousTopRectPositions = new Vector2[nodesMovedIDs.Length];
+        m_PreviousMidRectPositions = new Vector2[nodesMovedIDs.Length];
+        m_PreviousTotalRectPositions = new Vector2[nodesMovedIDs.Length];
 
 
-        for (int i = 0; i < nodesMoved.Length; i++)
+        for (int i = 0; i < nodesMovedIDs.Length; i++)
         {
-            m_PreviousTopRectPositions[i] = nodesMoved[i].m_TopRect.position;
-            m_PreviousMidRectPositions[i] = nodesMoved[i].m_MidRect.position;
-            m_PreviousTotalRectPositions[i] = nodesMoved[i].m_TotalRect.position;
+            m_PreviousTopRectPositions[i] = nodesMovedIDs[i].m_TopRect.position;
+            m_PreviousMidRectPositions[i] = nodesMovedIDs[i].m_MidRect.position;
+            m_PreviousTotalRectPositions[i] = nodesMovedIDs[i].m_TotalRect.position;
         }
 
     }
@@ -201,37 +189,39 @@ public class PasteCommand : INodeCommand
 
     LEM_BaseEffect[] m_PastedEffects = default;
 
-    BaseEffectNode[] m_PastedNodes = default;
-
     public int CommandType => NodeCommandType.PASTE;
 
     public PasteCommand()
     {
         m_PastedEffects = new LEM_BaseEffect[NodeCommandInvoker.s_ClipBoard.Count];
-        m_PastedNodes = new BaseEffectNode[NodeCommandInvoker.s_ClipBoard.Count];
 
-
+        //SHOULDNT COPY CAUSE THIS IS PASSED BY REFERENCE HENCE ANY PASTE COMMAND AFT THE FIRST ONE WILL CHANGE THE VERY FIRST COMMAND'S REFERENCE'S VALUE
         //Copy pasted effects
         for (int i = 0; i < NodeCommandInvoker.s_ClipBoard.Count; i++)
         {
-            m_PastedEffects[i] = NodeCommandInvoker.s_ClipBoard[i];
+            m_PastedEffects[i] = NodeCommandInvoker.s_ClipBoard[i].ShallowClone();
         }
+
     }
 
     public void Execute()
     {
+
+
         //all of these needs to be done in a certain order
+        BaseEffectNode[] pastedNodes = new BaseEffectNode[m_PastedEffects.Length];
 
         //Create new nodes
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
             //Create a duplicate node with a new node id
-            m_PastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType);
+            pastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType);
         }
 
         #region Identity Crisis Management 
 
         //SINCE lem_baseeffects are references, if i change pastedEffect's list elements values, the m_PastedEffects's elements' values also change too
+        NodeBaseData dummy1 = new NodeBaseData();
 
         //After cr8ting new nodes, settle their new node id identity issues (new node id means their current NodeID and ConnectedNodeID are wrong)
         for (int i = 0; i < m_PastedEffects.Length; i++)
@@ -243,7 +233,12 @@ public class PasteCommand : INodeCommand
             }
 
             //Since there is only one output for now
-            string[] dummy = m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs;
+            string[] dummy = new string[m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs.Length];
+            for (int d = 0; d < dummy.Length; d++)
+            {
+                dummy[d] = m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs[d];
+            }
+
 
             //Populate dummy here but i cant think of a way to avoid a O(n^2) situation
             //the best i can think of is to change this into a O(n log n) situation by using a list which removes its elements as it checks each elements so that we can narrow down our search list
@@ -259,7 +254,7 @@ public class PasteCommand : INodeCommand
                 }
                 else
                 {
-                    dummy[0] = m_PastedNodes[effectIndexWhichHasOldID].NodeID;
+                    dummy[0] = pastedNodes[effectIndexWhichHasOldID].NodeID;
                 }
             }
             //Else if there are multiple nextpoint nodes
@@ -276,20 +271,30 @@ public class PasteCommand : INodeCommand
                     }
                     else
                     {
-                        dummy[l] = m_PastedNodes[effectIndexWhichHasOldID].NodeID;
+                        dummy[l] = pastedNodes[effectIndexWhichHasOldID].NodeID;
                     }
                 }
             }
 
             //Reset if dummy is empty
-            m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs = dummy;
+            dummy1.m_Position = m_PastedEffects[i].m_NodeBaseData.m_Position;
+            dummy1.m_NodeID = m_PastedEffects[i].m_NodeBaseData.m_NodeID;
+            dummy1.m_NextPointsIDs = dummy;
+
+            m_PastedEffects[i].m_NodeBaseData = dummy1;
             m_PastedEffects[i].m_NodeBaseData.ResetNextPointsIDsIfEmpty();
         }
+
 
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
             //Reassign Effects' nodeid to a new one cause we just created a new effect node
-            m_PastedEffects[i].m_NodeBaseData.m_NodeID = m_PastedNodes[i].NodeID;
+            //but since it is a struct we need to reassign em
+            dummy1.m_NextPointsIDs = m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs;
+            dummy1.m_Position = m_PastedEffects[i].m_NodeBaseData.m_Position;
+            dummy1.m_NodeID = pastedNodes[i].NodeID;
+
+            m_PastedEffects[i].m_NodeBaseData = dummy1;
         }
 
         #endregion
@@ -302,8 +307,8 @@ public class PasteCommand : INodeCommand
         {
             NodeCommandInvoker.d_RestitchConnections(m_PastedEffects[i]);
 
-            m_PastedNodes[i].SelectNode();
-            m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
+            pastedNodes[i].SelectNode();
+            pastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
 
         }
 
@@ -314,23 +319,35 @@ public class PasteCommand : INodeCommand
         //Save before deleting the node
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
-            m_PastedEffects[i] = m_PastedNodes[i].CompileToBaseEffect();
+            m_PastedEffects[i] = NodeCommandInvoker.d_CompileNodeEffect(m_PastedEffects[i].m_NodeBaseData.m_NodeID);
         }
 
         //Delete the nodes
-        NodeCommandInvoker.d_DeleteNodes?.Invoke(m_PastedNodes);
+        NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_PastedEffects.Select(x => x.m_NodeBaseData).ToArray());
     }
 
     public void Redo()
     {
+        BaseEffectNode effNode;
+
         //Create new nodes
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
-            //Create a duplicate node with a new node id
-            m_PastedNodes[i] = NodeCommandInvoker.d_ReCreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType, m_PastedEffects[i].m_NodeBaseData.m_NodeID);
+            //Create a duplicate node with a new node id and load
+            effNode = NodeCommandInvoker.d_ReCreateEffectNode
+                   (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset,
+                   nodeType: m_PastedEffects[i].m_NodeEffectType,
+                   m_PastedEffects[i].m_NodeBaseData.m_NodeID);
 
-            //Then copy over all the lemEffect related data
-            m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
+            effNode.LoadFromBaseEffect(m_PastedEffects[i]);
+            effNode.SelectNode();
+        }
+
+        //Restitch after all the node identity crisis has been settled
+        //Then copy over all the lemEffect related data after all the reseting and stuff
+        for (int i = 0; i < m_PastedEffects.Length; i++)
+        {
+            NodeCommandInvoker.d_RestitchConnections(m_PastedEffects[i]);
         }
 
     }
@@ -342,15 +359,11 @@ public class CutPasteCommand : INodeCommand
 {
     LEM_BaseEffect[] m_PastedEffects = default;
 
-    BaseEffectNode[] m_PastedNodes = default;
-
     public int CommandType => NodeCommandType.CUTPASTE;
 
     public CutPasteCommand()
     {
         m_PastedEffects = new LEM_BaseEffect[NodeCommandInvoker.s_ClipBoard.Count];
-        m_PastedNodes = new BaseEffectNode[NodeCommandInvoker.s_ClipBoard.Count];
-
 
         //Copy pasted effects
         for (int i = 0; i < NodeCommandInvoker.s_ClipBoard.Count; i++)
@@ -362,15 +375,19 @@ public class CutPasteCommand : INodeCommand
     public void Execute()
     {
         //all of these needs to be done in a certain order
+        BaseEffectNode[] pastedNodes = new BaseEffectNode[m_PastedEffects.Length]; ;
 
         //ReCreate new nodes
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
             //Create a duplicate node with a new node id
-            m_PastedNodes[i] = NodeCommandInvoker.d_ReCreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + PasteCommand.s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType, m_PastedEffects[i].m_NodeBaseData.m_NodeID);
+            pastedNodes[i] = NodeCommandInvoker.d_ReCreateEffectNode
+                (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + PasteCommand.s_PasteOffset,
+                nodeType: m_PastedEffects[i].m_NodeEffectType,
+                m_PastedEffects[i].m_NodeBaseData.m_NodeID);
 
             //Unpack all the data into the node
-            m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
+            pastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
         }
 
         //Deselect all nodes 
@@ -383,34 +400,51 @@ public class CutPasteCommand : INodeCommand
 
             NodeCommandInvoker.d_RestitchConnections(m_PastedEffects[i]);
 
-            m_PastedNodes[i].SelectNode();
+            pastedNodes[i].SelectNode();
 
         }
     }
 
     public void Undo()
     {
+        //Ok so nodes are refereneces but apparently the nodes here and the nodes in other command are not sharing the same reference
+        //therefore, my effects saved in execute is correct
         //Save before deleting the node
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
-            m_PastedEffects[i] = m_PastedNodes[i].CompileToBaseEffect();
+            m_PastedEffects[i] = NodeCommandInvoker.d_CompileNodeEffect(m_PastedEffects[i].m_NodeBaseData.m_NodeID);
         }
 
         //Delete the nodes
-        NodeCommandInvoker.d_DeleteNodes?.Invoke(m_PastedNodes);
+        NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_PastedEffects.Select(x => x.m_NodeBaseData).ToArray());
     }
 
     public void Redo()
     {
+        BaseEffectNode effNode;
+
         //Create new nodes
         for (int i = 0; i < m_PastedEffects.Length; i++)
         {
             //Create a duplicate node with a new node id
-            m_PastedNodes[i] = NodeCommandInvoker.d_ReCreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + PasteCommand.s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType, m_PastedEffects[i].m_NodeBaseData.m_NodeID);
+            effNode = NodeCommandInvoker.d_ReCreateEffectNode
+                (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + PasteCommand.s_PasteOffset,
+                nodeType: m_PastedEffects[i].m_NodeEffectType,
+                m_PastedEffects[i].m_NodeBaseData.m_NodeID);
 
-            //Then copy over all the lemEffect related data
-            m_PastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
+            effNode.LoadFromBaseEffect(m_PastedEffects[i]);
+
+            effNode.SelectNode();
+
         }
+
+        //Restitch after all the node identity crisis has been settled
+        //Then copy over all the lemEffect related data after all the reseting and stuff
+        for (int i = 0; i < m_PastedEffects.Length; i++)
+        {
+            NodeCommandInvoker.d_RestitchConnections(m_PastedEffects[i]);
+        }
+
     }
 
 }
@@ -420,16 +454,16 @@ public class CutCommand : INodeCommand
 {
     LEM_BaseEffect[] m_CutEffects = default;
 
-    BaseEffectNode[] m_CutNodes = default;
+    string[] m_CutNodesIDS = default;
 
     public int CommandType => NodeCommandType.CUT;
 
-    public CutCommand(BaseEffectNode[] cutNodes)
+    public CutCommand(string[] cutNodesIDs)
     {
         //Copy pasted nodes
-        m_CutNodes = cutNodes;
+        m_CutNodesIDS = cutNodesIDs;
 
-        m_CutEffects = new LEM_BaseEffect[cutNodes.Length];
+        m_CutEffects = new LEM_BaseEffect[cutNodesIDs.Length];
     }
 
     public void Execute()
@@ -437,7 +471,7 @@ public class CutCommand : INodeCommand
         //Save before deleting the node
         for (int i = 0; i < m_CutEffects.Length; i++)
         {
-            m_CutEffects[i] = m_CutNodes[i].CompileToBaseEffect();
+            m_CutEffects[i] = NodeCommandInvoker.d_CompileNodeEffect(m_CutNodesIDS[i]);
         }
 
         //Copy the nodes/effects to the clipboard
@@ -445,26 +479,25 @@ public class CutCommand : INodeCommand
         NodeCommandInvoker.s_ClipBoard.AddRange(m_CutEffects);
 
         //Delete the nodes
-        NodeCommandInvoker.d_DeleteNodes?.Invoke(m_CutNodes);
+        NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_CutEffects.Select(x => x.m_NodeBaseData).ToArray());
     }
 
     public void Undo()
     {
         //Recreate the nodes 
-        for (int i = 0; i < m_CutNodes.Length; i++)
+        for (int i = 0; i < m_CutNodesIDS.Length; i++)
         {
-            //Repoulate the deleted nodes
-            m_CutNodes[i] = NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(
+            //Repoulate the deleted nodes and unpack their data
+            NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(
                 m_CutEffects[i].m_NodeBaseData.m_Position,
                 m_CutEffects[i].m_NodeEffectType,
-                m_CutEffects[i].m_NodeBaseData.m_NodeID);
+                m_CutEffects[i].m_NodeBaseData.m_NodeID).
+                LoadFromBaseEffect(m_CutEffects[i]);
 
-            //Unpack all the data into the node
-            m_CutNodes[i].LoadFromBaseEffect(m_CutEffects[i]);
         }
 
         //Restitch the nodes' connections ONLY after all the nodes hv been recreated
-        for (int i = 0; i < m_CutNodes.Length; i++)
+        for (int i = 0; i < m_CutNodesIDS.Length; i++)
         {
             NodeCommandInvoker.d_RestitchConnections(m_CutEffects[i]);
         }
@@ -475,11 +508,12 @@ public class CutCommand : INodeCommand
         //Save before deleting the node
         for (int i = 0; i < m_CutEffects.Length; i++)
         {
-            m_CutEffects[i] = m_CutNodes[i].CompileToBaseEffect();
+            m_CutEffects[i] = NodeCommandInvoker.d_CompileNodeEffect(m_CutNodesIDS[i]);
         }
 
         //Delete the nodes
-        NodeCommandInvoker.d_DeleteNodes?.Invoke(m_CutNodes);
+        NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_CutEffects.Select(x => x.m_NodeBaseData).ToArray());
+
     }
 
 

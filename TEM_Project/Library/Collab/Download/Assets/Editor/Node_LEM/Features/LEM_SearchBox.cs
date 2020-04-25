@@ -15,8 +15,8 @@ public class LEM_SearchBox
         k_ResultHeight = 18f
         ;
 
-    static GUIStyle k_OddResultStyle   = default;
-    static GUIStyle k_EvenResultStyle  = default;
+    static GUIStyle k_OddResultStyle = default;
+    static GUIStyle k_EvenResultStyle = default;
     static GUIStyle k_ResultLabelStyle = default;
 
     //Delegates
@@ -26,7 +26,7 @@ public class LEM_SearchBox
     //Variables
     SearchField m_SearchField = new SearchField();
 
-    int m_MaxResults = 5;
+    //int m_MaxResults = 5;
     int m_CurrSelectedResultIndex = -1;
 
     string m_CurrentStringInSearchBar = default;
@@ -39,27 +39,30 @@ public class LEM_SearchBox
     public Vector2 Position { set => m_PositionToDrawAt = value; }
 
     Vector2 m_PreviousMousePosition = Vector2.zero;
+    
+    //How much you have scrolled down or up or left or right
+    Vector2 m_ScrollVector = Vector2.zero;
 
     #region Constructors
-    public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2> OnConfirm, int maxResults)
+    public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2> OnConfirm/*, int maxResults*/)
     {
         InitialiseStyles();
 
         d_OnInputChange = OnInputChange;
         d_OnConfirm = OnConfirm;
-        m_MaxResults = maxResults;
+        //m_MaxResults = maxResults;
 
         m_CurrSelectedResultIndex = -1;
         m_SearchField.downOrUpArrowKeyPressed += SearchField_downOrUpArrowKeyPressed;
     }
 
-    public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2> OnConfirm, int maxResults, float width, float height)
+    public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2> OnConfirm/*, int maxResults*/, float width, float height)
     {
         InitialiseStyles();
 
-         d_OnInputChange = OnInputChange;
+        d_OnInputChange = OnInputChange;
         d_OnConfirm = OnConfirm;
-        m_MaxResults = maxResults;
+        //m_MaxResults = maxResults;
         m_Width = width;
         m_Height = height;
 
@@ -111,6 +114,7 @@ public class LEM_SearchBox
     public void TriggerOnInputOnStart()
     {
         d_OnInputChange.Invoke(m_CurrentStringInSearchBar);
+        m_SearchField.SetFocus();
     }
 
     //Miniature process event encapsulated in a function for callback
@@ -128,36 +132,40 @@ public class LEM_SearchBox
 
 
     #endregion
-
-
-
-
-    public void HandleSearchBox(Event e)
+    //Returns true if mouse is currently in searchbox rect
+    public bool HandleSearchBox(Event e)
     {
+        bool isInSearchBox = false;
+
+        //Rect starts at the mosue position and have dimension of width and height
         Rect rect = new Rect(m_PositionToDrawAt.x, m_PositionToDrawAt.y, m_Width, m_Height);
+
+        if (rect.Contains(e.mousePosition))
+            isInSearchBox = true;
 
         //Draw bg box
         GUI.Box(rect, "");
-
         //Just adding these values to make the search label look nicer
         rect.x += k_SearchFieldXOffset;
         rect.y += k_SearchFieldXOffset;
 
         GUI.Label(rect, "Search: ", EditorStyles.boldLabel);
 
-        HandleSearchField(ref rect, ref e);
-        rect.y += k_LineHeight;
-        HandleResults(ref rect, ref e);
 
-    }
-
-
-    void HandleSearchField(ref Rect rect, ref Event e)
-    {
+        //Search field
         rect.width -= 2 * k_SearchFieldXOffset;
         rect.height = k_LineHeight;
         rect.y += k_SearchFieldYOffset;
+        HandleSearchField(rect);
 
+
+        rect.y += k_LineHeight;
+        HandleResults(rect, e);
+        return isInSearchBox;
+    }
+
+    void HandleSearchField(Rect rect)
+    {
         //Draw and get the current Result from the searchfield
         string currentResult = m_SearchField.OnGUI(rect, m_CurrentStringInSearchBar);
 
@@ -174,14 +182,33 @@ public class LEM_SearchBox
         GUI.changed = true;
     }
 
-
-
-    void HandleResults(ref Rect rect, ref Event e)
+    //Takes care of drawing n processing events
+    void HandleResults(Rect rect, Event e)
     {
         if (m_AllResults.Count <= 0)
             return;
 
-        rect.height = k_ResultHeight * Mathf.Min(m_MaxResults, m_AllResults.Count);
+        //Adjust the rect for scroll view content rect
+        rect.width = m_Width;
+        rect.height = k_ResultHeight * m_AllResults.Count;
+
+
+        Rect scrollViewDimensionRect = rect;
+        //Remove the above offests done in the other functiosn so that the height correct
+        scrollViewDimensionRect.height = m_Height - k_SearchFieldXOffset - k_LineHeight- k_SearchFieldYOffset;
+        scrollViewDimensionRect.width -= 10f;
+        //This deduction is to remove horizontal rect
+        rect.width -= 100f;
+
+        //rect.height = k_ResultHeight * Mathf.Min(m_MaxResults, m_AllResults.Count);
+
+        //Constantly update the scrollvector
+        //First rect is pos n size of scroll rect: we want it to be at the searchbox with the dimension of searchbox excluding the searchfield
+        //2nd rect is the location of the content we wanna display. Thus we can put our content where
+        m_ScrollVector = GUI.BeginScrollView(scrollViewDimensionRect, m_ScrollVector, rect);
+
+        //Re-add
+        rect.width += 100f;
 
         //Adjust the rect's height so that it encapsulates the entire list of results that it could possibly give
         Rect currentResultRect = rect;
@@ -192,7 +219,7 @@ public class LEM_SearchBox
         GUIStyle currentResultStyle;
         Rect currentLabelRect;
 
-        for (int i = 0; i < m_AllResults.Count && i < m_MaxResults; i++)
+        for (int i = 0; i < m_AllResults.Count; i++)
         {
             //Drawing section
             currentResultStyle = i % 2 == 0 ? k_OddResultStyle : k_EvenResultStyle;
@@ -227,6 +254,8 @@ public class LEM_SearchBox
             //Increment at the end of every loop
             currentResultRect.y += k_ResultHeight;
         }
+
+        GUI.EndScrollView();
 
         //Handle for enter keycode when choose on a selected result
         if (e.type == EventType.KeyUp && e.keyCode == KeyCode.Return && m_CurrSelectedResultIndex >= 0)

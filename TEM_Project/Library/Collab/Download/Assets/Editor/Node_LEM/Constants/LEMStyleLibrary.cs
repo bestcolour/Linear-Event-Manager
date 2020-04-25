@@ -8,19 +8,6 @@ using UnityEditor;
 /// </summary>
 public class LEMStyleLibrary
 {
-    public static LEMStyleLibrary Instance
-    {
-        get
-        {
-            //Self initialise
-            if (m_Instance == null)
-            {
-                RefreshLibrary();
-            }
-            return m_Instance;
-        }
-    }
-    static LEMStyleLibrary m_Instance = null;
     public static bool m_SkinsLoaded = false;
 
     #region Colours
@@ -31,7 +18,8 @@ public class LEMStyleLibrary
         //{"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
         { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
         { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) },
-         //{"RandomOutComeNode",         new Color(0.286f,0.992f,0.733f) }
+         {"AddDelayNode",         new Color(1f,0.667f,0.114f) },
+         {"ToggleListenToClickNode",         new Color(0.498f,0.471f,1f) },
 
 
 
@@ -62,7 +50,7 @@ public class LEMStyleLibrary
 
     //Just a default skin
     public static NodeSkinCollection s_WhiteBackGroundSkin = default;
-
+    const string k_NodeTextureAssetPath = "Assets/Editor/Node_LEM/NodeTextures";
 
     public static void LoadLibrary()
     {
@@ -79,8 +67,10 @@ public class LEMStyleLibrary
     {
         //Initialise the execution pin style for normal and selected pins
         s_ConnectionPointStyleNormal = new GUIStyle();
-        s_ConnectionPointStyleNormal.normal.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin");
-        s_ConnectionPointStyleNormal.active.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin_Selected");
+        //s_ConnectionPointStyleNormal.normal.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin");
+        s_ConnectionPointStyleNormal.normal.background = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath+ "/NodeIcons/light_ExecutionPin.png", typeof(Texture2D)) as Texture2D;
+        //s_ConnectionPointStyleNormal.active.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin_Selected");
+        s_ConnectionPointStyleNormal.active.background = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin_Selected.png", typeof(Texture2D)) as Texture2D;
 
         //Invert the two pins' backgrounds so that the user will be able to know what will happen if they press it
         s_ConnectionPointStyleSelected = new GUIStyle();
@@ -98,10 +88,14 @@ public class LEMStyleLibrary
         s_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
 
         s_WhiteBackGroundSkin = new NodeSkinCollection();
-        s_WhiteBackGroundSkin.m_MidBackground = Resources.Load<Texture2D>("NodeBg/White_BackGround");
-        s_WhiteBackGroundSkin.m_SelectedMidOutline = Resources.Load<Texture2D>("NodeBg/White_BackGround_Selected");
-        s_WhiteBackGroundSkin.m_TopBackground = Resources.Load<Texture2D>("NodeBg/White_Top");
-        s_WhiteBackGroundSkin.m_SelectedTopOutline = Resources.Load<Texture2D>("NodeBg/White_Top_Selected");
+        //s_WhiteBackGroundSkin.m_MidBackground = Resources.Load<Texture2D>("NodeBg/White_BackGround");
+        s_WhiteBackGroundSkin.m_MidBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround.png", typeof(Texture2D)) as Texture2D;
+        //s_WhiteBackGroundSkin.m_SelectedMidOutline = Resources.Load<Texture2D>("NodeBg/White_BackGround_Selected");
+        s_WhiteBackGroundSkin.m_SelectedMidOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround_Selected.png", typeof(Texture2D)) as Texture2D;
+        //s_WhiteBackGroundSkin.m_TopBackground = Resources.Load<Texture2D>("NodeBg/White_Top");
+        s_WhiteBackGroundSkin.m_TopBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top.png", typeof(Texture2D)) as Texture2D;
+        //s_WhiteBackGroundSkin.m_SelectedTopOutline = Resources.Load<Texture2D>("NodeBg/White_Top_Selected");
+        s_WhiteBackGroundSkin.m_SelectedTopOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top_Selected.png", typeof(Texture2D)) as Texture2D;
 
         //Initialising public static node title styles
         s_NodeHeaderStyle.fontSize = 13;
@@ -124,7 +118,6 @@ public class LEMStyleLibrary
 
     public static void RefreshLibrary()
     {
-        m_Instance = new LEMStyleLibrary();
         LoadingNodeSkins();
         m_SkinsLoaded = true;
     }

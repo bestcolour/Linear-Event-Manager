@@ -8,8 +8,26 @@ using System.Linq;
 
 public class NodeLEM_Editor : EditorWindow
 {
+    #region Loading States
+    struct EDITORSTATE
+    {
+        //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
+        //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
+        public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
+        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects \n (Crlt + S)", AUTOSAVE_STRING = "Auto Save On";
+    }
+
+    int m_EditorState = EDITORSTATE.UNLOADED;
+
     public static NodeLEM_Editor instance = default;
     public static LinearEvent s_CurrentLE = default;
+    public static NodeLEM_Settings s_Settings = default;
+
+    const string k_EditorPref_LinearEventKey = "linearEventScenePath";
+    const string k_EditorPref_SettingsKey = "currentSettings";
+    const string k_DefaultSettingsFolderAssetPath = "Assets/Editor/Node_LEM/Settings";
+
+    #endregion
 
     //For saving 
     List<Node> m_AllNodesInEditor = new List<Node>();
@@ -130,19 +148,6 @@ public class NodeLEM_Editor : EditorWindow
     GenericMenu m_NodeContextMenu = default;
     #endregion
 
-    #region Loading States
-    struct EDITORSTATE
-    {
-        //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
-        //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
-        public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
-        public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects \n (Crlt + S)";
-    }
-
-    int m_EditorState = EDITORSTATE.UNLOADED;
-
-    #endregion
-
     #endregion
 
     #region NodeInvoker
@@ -195,13 +200,69 @@ public class NodeLEM_Editor : EditorWindow
             d_OnGUI = EmptyEditorUpdate;
         }
 
+        LoadSettings();
 
         //Well regardless of it being empty or not, ensure that node editor saves before reloading assembly
+        //AssemblyReloadEvents.beforeAssemblyReload += SaveToLinearEvent;
         AssemblyReloadEvents.beforeAssemblyReload += SaveToLinearEvent;
+
         //Due to beforeAssemblyReload being called when player enters play mode but doesnt save values, this needs to be added
         EditorApplication.playModeStateChanged += SaveBeforeEnterPlayMode;
         EditorApplication.playModeStateChanged += LoadAfterExitingPlayMode;
-        EditorApplication.quitting += SaveToLinearEvent;
+        EditorApplication.quitting += TryToSaveLinearEvent;
+        //EditorApplication.quitting += SaveToLinearEvent;
+
+    }
+
+    void LoadSettings()
+    {
+        string pathToSettings = EditorPrefs.GetString(k_EditorPref_SettingsKey);
+        NodeLEM_Settings settings;
+
+        //If there is a path recorded,
+        if (!string.IsNullOrEmpty(pathToSettings))
+        {
+            //Check if path is of object still valid
+            settings = AssetDatabase.LoadAssetAtPath(pathToSettings + ".asset", typeof(NodeLEM_Settings)) as NodeLEM_Settings;
+
+            //If there is a setting found, set s_Settings to that n return
+            if (settings != null)
+            {
+                s_Settings = settings;
+                return;
+            }
+        }
+
+        //else if settings is null, we need to search inside the default settings folder
+        string[] guidOfAssets = AssetDatabase.FindAssets("t:NodeLEM_Settings", new string[1] { k_DefaultSettingsFolderAssetPath });
+
+        //Attempt to get the first default settings you can find if there is more than 0 searches found
+        if (guidOfAssets.Length > 0)
+        {
+            for (int i = 0; i < guidOfAssets.Length; i++)
+            {
+                pathToSettings = AssetDatabase.GUIDToAssetPath(guidOfAssets[0]) + ".asset";
+                settings = AssetDatabase.LoadAssetAtPath(pathToSettings, typeof(NodeLEM_Settings)) as NodeLEM_Settings;
+
+                //If there is a setting found, set s_Settings to that n return
+                if (settings != null)
+                {
+                    s_Settings = settings;
+                    //Set this setting as the next loaded settings
+                    EditorPrefs.SetString(k_EditorPref_SettingsKey, pathToSettings);
+                    return;
+                }
+            }
+        }
+
+        //If there isnt any settings found or if for some god forsaken reason, you got the guid but the assetdatabase cant load the asset
+        //create a new settings
+        settings = ScriptableObject.CreateInstance<NodeLEM_Settings>();
+        pathToSettings = k_DefaultSettingsFolderAssetPath + "/" + NodeLEM_Settings.k_DefaultFileName + ".asset";
+        AssetDatabase.CreateAsset(settings, pathToSettings);
+        AssetDatabase.SaveAssets();
+        EditorPrefs.SetString(k_EditorPref_SettingsKey, pathToSettings);
+        s_Settings = settings;
 
     }
 
@@ -218,7 +279,7 @@ public class NodeLEM_Editor : EditorWindow
         {
             //Save the prev lienarevent
             s_CurrentLE = prevLE;
-            instance.SaveToLinearEvent();
+            instance.TryToSaveLinearEvent();
 
             //Load the new one
             s_CurrentLE = linearEvent;
@@ -272,7 +333,7 @@ public class NodeLEM_Editor : EditorWindow
             instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 250, 325);
         }
 
-        if(instance.m_NodeContextMenu == null)
+        if (instance.m_NodeContextMenu == null)
         {
             SetupProcessNodeContextMenu();
         }
@@ -346,19 +407,24 @@ public class NodeLEM_Editor : EditorWindow
     void OnDestroy()
     {
         //Before closing the window, save the le if it wasnt saved
-        if (instance != null && m_EditorState == EDITORSTATE.LOADED /*&& m_SaveWindow != null*/)
-        {
-            //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
-            SaveToLinearEvent();
-        }
+        //if (instance != null && m_EditorState == EDITORSTATE.LOADED /*&& m_SaveWindow != null*/)
+        //{
+        //    //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
+        //    SaveToLinearEvent();
+        //}
+
+        TryToSaveLinearEvent();
 
         //Unsubscribe b4 closing window
         AssemblyReloadEvents.beforeAssemblyReload -= SaveToLinearEvent;
         EditorApplication.playModeStateChanged -= SaveBeforeEnterPlayMode;
         EditorApplication.playModeStateChanged -= LoadAfterExitingPlayMode;
-        EditorApplication.quitting -= SaveToLinearEvent;
+        EditorApplication.quitting -= TryToSaveLinearEvent;
 
-        EditorPrefs.SetString("linearEventScenePath", "");
+        EditorPrefs.SetString(k_EditorPref_LinearEventKey, "");
+
+        if (s_Settings != null)
+            EditorPrefs.SetString(k_EditorPref_SettingsKey, k_DefaultSettingsFolderAssetPath + "/" + s_Settings.name);
 
         s_CurrentLE = null;
     }
@@ -379,9 +445,15 @@ public class NodeLEM_Editor : EditorWindow
 
         s_CurrentLE = (LinearEvent)EditorGUI.ObjectField(propertyRect, s_CurrentLE, typeof(LinearEvent), true);
 
+        propertyRect.y += EditorGUIUtility.singleLineHeight * 2f;
+        GUI.Label(propertyRect, "Settings");
+        propertyRect.y += EditorGUIUtility.singleLineHeight * 2f;
+        s_Settings = (NodeLEM_Settings)EditorGUI.ObjectField(propertyRect, s_Settings, typeof(NodeLEM_Settings), false);
+
         //Then once Current Linear Event is selected,
-        if (s_CurrentLE != null)
+        if (s_CurrentLE != null && s_Settings != null)
         {
+            EditorPrefs.SetString(k_EditorPref_SettingsKey, k_DefaultSettingsFolderAssetPath + "/" + s_Settings.name);
             LoadNodeEditor(s_CurrentLE);
         }
     }
@@ -411,11 +483,13 @@ public class NodeLEM_Editor : EditorWindow
         DrawSelectionBox(currMousePos);
 
         EditorZoomFeature.EndZoom();
-        bool isMouseInSearchBox= HandleSearchBox(currentEvent);
+        bool isMouseInSearchBox = HandleSearchBox(currentEvent);
 
-      
 
-        DrawToolButtons(dummyRect);
+        if (s_Settings.m_ShowToolBar)
+        {
+            DrawToolButtons(dummyRect);
+        }
         HandleCurrentLinearEventLabel(dummyRect, currentEvent);
 
         //DrawDebugLists();
@@ -441,10 +515,12 @@ public class NodeLEM_Editor : EditorWindow
 
     private void OnLostFocus()
     {
-        if (m_EditorState == EDITORSTATE.LOADED)
-        {
-            SaveToLinearEvent();
-        }
+        //if (m_EditorState == EDITORSTATE.LOADED)
+        //{
+        //    SaveToLinearEvent();
+        //}
+
+        TryToSaveLinearEvent();
     }
 
     #endregion
@@ -464,6 +540,11 @@ public class NodeLEM_Editor : EditorWindow
         Tuple<string, string>[] allTupleKeys = AllConnectionsDictionary.Keys.ToArray();
         for (int i = 0; i < allTupleKeys.Length; i++)
             AllConnectionsDictionary[allTupleKeys[i]].Draw();
+
+        //foreach (Connection connection in AllConnectionsDictionary.Values)
+        //{
+        //    connection.Draw();
+        //}
     }
 
     //This is the realtime drawing of a bezier curve line to let users visualise
@@ -573,29 +654,38 @@ public class NodeLEM_Editor : EditorWindow
 
         #region Drawing Save Button
 
-        //Prevents double clicking on saving
-        if (m_EditorState != EDITORSTATE.SAVING)
+        if (!s_Settings.m_AutoSave)
         {
-            if (m_EditorState == EDITORSTATE.LOADED)
+            if (GUI.Button(propertyRect, EDITORSTATE.LOADED_STRING))
             {
-                if (GUI.Button(propertyRect, EDITORSTATE.LOADED_STRING))
-                {
-                    m_EditorState = EDITORSTATE.SAVING;
-                    SaveToLinearEvent();
-                    m_EditorState = EDITORSTATE.SAVED;
-                }
+                //m_EditorState = EDITORSTATE.SAVING;
+                SaveToLinearEvent();
+                //m_EditorState = EDITORSTATE.SAVED;
             }
-            //else if m_EditorState == EditorState.Saved cause for Unloaded to occur u have no linear event 
-            //but that means save button wont even be drawn due to it not belonging in the same delegate
-            else
-            {
-                bool wasEnabled = GUI.enabled;
-                GUI.enabled = false;
-                GUI.Button(propertyRect, EDITORSTATE.SAVED_STRING);
-                GUI.enabled = wasEnabled;
-            }
+            ////Prevents double clicking on saving
+            //if (m_EditorState == EDITORSTATE.LOADED)
+            //{
 
+            //}
+            ////else if m_EditorState == EditorState.Saved cause for Unloaded to occur u have no linear event 
+            ////but that means save button wont even be drawn due to it not belonging in the same delegate
+            //else
+            //{
+            //    bool wasEnabled = GUI.enabled;
+            //    GUI.enabled = false;
+            //    GUI.Button(propertyRect, EDITORSTATE.SAVED_STRING);
+            //    GUI.enabled = wasEnabled;
+            //}
         }
+        else
+        {
+            bool wasEnabled = GUI.enabled;
+            GUI.enabled = false;
+            GUI.Button(propertyRect, EDITORSTATE.AUTOSAVE_STRING);
+            GUI.enabled = wasEnabled;
+        }
+
+
         #endregion
 
         Event e = Event.current;
@@ -760,7 +850,7 @@ public class NodeLEM_Editor : EditorWindow
     #endregion
 
     //Checks what the current event is right now, and then execute code accordingly
-    void ProcessEvents(Event e, Vector2 currMousePosition,bool isMouseInSearchBox)
+    void ProcessEvents(Event e, Vector2 currMousePosition, bool isMouseInSearchBox)
     {
         m_AmountOfMouseDragThisUpdate = Vector2.zero;
         switch (e.type)
@@ -780,7 +870,7 @@ public class NodeLEM_Editor : EditorWindow
 
                     e.Use();
                 }
-               
+
                 break;
 
             case EventType.MouseDown:
@@ -978,7 +1068,7 @@ public class NodeLEM_Editor : EditorWindow
 
                     }
                     //Save
-                    else if (e.keyCode == KeyCode.S)
+                    else if (!s_Settings.m_AutoSave && e.keyCode == KeyCode.S)
                     {
                         SaveToLinearEvent();
                         e.Use();
@@ -1189,55 +1279,6 @@ public class NodeLEM_Editor : EditorWindow
         //Display the editted made menu
         instance.m_NodeContextMenu = genericMenu;
     }
-
-    //void ProcessNodeContextMenu()
-    //{
-    //    //and then add an button option with the name "Remove node"
-    //    GenericMenu genericMenu = new GenericMenu();
-
-    //    //Add remove node function to the context menu option
-    //    //Remove all the selected nodes 
-    //    //Remove all the nodes that are selected until there are none left
-    //    genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
-    //    genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
-    //    genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
-    //    {
-    //        if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-    //        CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
-    //    });
-
-    //    genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate
-    //    {
-    //        //Remove start and end node 
-    //        if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-    //        CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
-    //        Repaint();
-    //    });
-    //    genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
-    //    genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
-    //    {
-    //        AllSelectedNodes.Clear();
-    //        for (int i = 0; i < AllNodesInEditor.Count; i++)
-    //            AllNodesInEditor[i].SelectNode();
-    //        Repaint();
-    //    });
-
-    //    genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate
-    //    {
-    //        GUI.FocusControl(null);
-
-    //        //Remove start and end node 
-    //        if (m_AllSelectedNodes.Contains(StartNode))
-    //        {
-    //            StartNode.DeselectNode();
-    //        }
-
-    //        CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
-    //    });
-
-    //    //Display the editted made menu
-    //    genericMenu.ShowAsContext();
-    //}
 
     //Drags the window canvas (think like animator window)
     void OnDrag(Vector2 delta)
@@ -1489,8 +1530,6 @@ public class NodeLEM_Editor : EditorWindow
         //Remove any and allconnections connected to the node's inpoint
         string[] allNodesConnectedToInPoint = AllEffectsNodeInEditor[nB.m_NodeID].m_InPoint.GetAllConnectedNodeIDs();
 
-        //List<Node> nodesConnectedToInpoint = AllNodesInEditor.FindAll(node => node.m_OutPoint.IsConnected && node.m_OutPoint.GetConnectedNodeID(0) == nB.m_NodeID);
-
         for (int i = 0; i < allNodesConnectedToInPoint.Length; i++)
         {
             OnClickRemoveConnection(AllConnectionsDictionary[new Tuple<string, string>(nB.m_NodeID, allNodesConnectedToInPoint[i])]);
@@ -1624,26 +1663,31 @@ public class NodeLEM_Editor : EditorWindow
         if (state != PlayModeStateChange.ExitingEditMode)
             return;
 
-        SaveToLinearEvent();
-
-
         if (instance == null || s_CurrentLE == null)
             return;
+
+        SaveToLinearEvent();
 
         //Save string path of current LE to editor pref
         //string sceneAssetBasePath = EditorSceneManager.GetActiveScene().path;
         string linearEventScenePath = s_CurrentLE.transform.GetGameObjectPath();
 
         //EditorPrefs.SetString("sceneAssetBasePath", sceneAssetBasePath);
-        EditorPrefs.SetString("linearEventScenePath", linearEventScenePath);
+        EditorPrefs.SetString(k_EditorPref_LinearEventKey, linearEventScenePath);
+    }
+
+    void TryToSaveLinearEvent()
+    {
+        if (!s_Settings.m_AutoSave)
+            return;
+
+        if (m_EditorState == EDITORSTATE.LOADED)
+            SaveToLinearEvent();
     }
 
     //To be called when player presses "Save button" or when assembly reloads every time a script changes (when play mode is entered this will get called also but it doesnt save the values to the LE)
     void SaveToLinearEvent()
     {
-        if (instance == null || m_EditorState == EDITORSTATE.SAVED || s_CurrentLE == null)
-            return;
-
         m_EditorState = EDITORSTATE.SAVING;
 
         AllNodesInEditor.Remove(StartNode);
@@ -1652,7 +1696,7 @@ public class NodeLEM_Editor : EditorWindow
         BaseEffectNode[] allEffectNodes = AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
 
         //Clear the dictionary of the currently editting linear event
-        s_CurrentLE.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
+        //s_CurrentLE.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
         float intToFloatConverter = AllNodesInEditor.Count;
 
         //This saves all events regardless of whether they are connected singularly, plurally or disconnected
@@ -1672,7 +1716,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Finished loading
         Repaint();
-
+        Debug.Log("Saved Linear Event File " + s_CurrentLE.name, s_CurrentLE);
         m_EditorState = EDITORSTATE.SAVED;
     }
 
@@ -1683,7 +1727,7 @@ public class NodeLEM_Editor : EditorWindow
 
         //Get string paths from editorprefs
         //string sceneAssetBasePath = EditorPrefs.GetString("sceneAssetBasePath");
-        string linearEventPath = EditorPrefs.GetString("linearEventScenePath");
+        string linearEventPath = EditorPrefs.GetString(k_EditorPref_LinearEventKey);
 
         if (string.IsNullOrEmpty(linearEventPath))
             return;
@@ -1702,26 +1746,38 @@ public class NodeLEM_Editor : EditorWindow
         #region Loading Events from Dictionary
 
         //Dont do any thing if there is no effects in the dicitionary
-        if (!s_CurrentLE.CheckAllEffectsDictionary())
+        //s_CurrentLE.PopulateEffectDictionary();
+
+        Dictionary<string, LEM_BaseEffect> allEffectsDictInLinearEvent = s_CurrentLE.AllEffectsDictionary;
+
+        if(allEffectsDictInLinearEvent == null)
         {
             Repaint();
             return;
         }
+            
 
 
-        string[] allKeys = s_CurrentLE.m_AllEffectsDictionary.Keys.ToArray();
+        //if (!s_CurrentLE.IsEffectDictionaryEmptyOrNull)
+        //{
+        //    Repaint();
+        //    return;
+        //}
+
+
+        string[] allKeys = allEffectsDictInLinearEvent.Keys.ToArray();
 
         BaseEffectNode newEffectNode;
 
         //Recreate all the nodes from the dictionary
         for (int i = 0; i < allKeys.Length; i++)
         {
-            newEffectNode = RecreateEffectNode(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_Position,
-                s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeEffectType,
-                s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
+            newEffectNode = RecreateEffectNode(allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_Position,
+                allEffectsDictInLinearEvent[allKeys[i]].m_NodeEffectType,
+                allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_NodeID);
 
             //Load the new node with saved node values values
-            newEffectNode.LoadFromBaseEffect(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]]);
+            newEffectNode.LoadFromBaseEffect(allEffectsDictInLinearEvent[allKeys[i]]);
         }
 
         #endregion
@@ -1740,10 +1796,10 @@ public class NodeLEM_Editor : EditorWindow
         for (int i = 0; i < allKeys.Length; i++)
         {
             //If this nodebase data doesnt even have one nextpoint node id, skip this loop
-            if (!s_CurrentLE.m_AllEffectsDictionary[allKeys[i]].m_NodeBaseData.HasAtLeastOneNextPointNode)
+            if (!allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.HasAtLeastOneNextPointNode)
                 continue;
 
-            TryToRestichConnections(s_CurrentLE.m_AllEffectsDictionary[allKeys[i]]);
+            TryToRestichConnections(allEffectsDictInLinearEvent[allKeys[i]]);
         }
         #endregion
 

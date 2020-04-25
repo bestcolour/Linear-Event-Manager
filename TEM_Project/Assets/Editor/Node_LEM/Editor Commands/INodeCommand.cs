@@ -10,13 +10,17 @@
 /// 4) Referencing of the scene variables into the editor window 
 /// </summary>
 
-
-public interface INodeCommand
+namespace LEM_Editor
 {
-    void Execute();
-    void Undo();
-    void Redo();
 
-    int CommandType { get; }
+    public interface INodeCommand
+    {
+        void Execute();
+        void Undo();
+        void Redo();
+
+        int CommandType { get; }
+
+    }
 
 }
