@@ -5,35 +5,27 @@ using UnityEditor;
 namespace LEM_Editor
 {
 
-    /// <summary>
-    /// Should only be used by NodeLEMEditor 
-    /// </summary>
     public class LEMStyleLibrary
     {
         public static bool m_SkinsLoaded = false;
 
-        #region Colours
-        //public Dictionary<string, NodeSkinCollection> m_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
-        public static readonly Dictionary<string, Color> s_NodeColourDictionary = new Dictionary<string, Color>
-    {
-        {"StartNode",                  new Color(0.11f, 0.937f, 0.11f) },
-        //{"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
-        { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
-        { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) },
-         {"AddDelayNode",         new Color(1f,0.667f,0.114f) },
-         {"ToggleListenToClickNode",         new Color(0.498f,0.471f,1f) },
-         {"ToggleListenToTriggerNode",         new Color(0.361f,0.82f,1f) },
-
-
-
-    };
+    //    #region Colours
+    //    //public Dictionary<string, NodeSkinCollection> m_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
+    //    public static readonly Dictionary<string, Color> s_NodeColourDictionary = new Dictionary<string, Color>
+    //{
+    //    {"StartNode",                  new Color(0.11f, 0.937f, 0.11f) },
+    //    //{"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
+    //    { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
+    //    { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) },
+    //     {"AddDelayNode",         new Color(1f,0.667f,0.114f) },
+    //     {"ToggleListenToClickNode",         new Color(0.498f,0.471f,1f) },
+    //     {"ToggleListenToTriggerNode",         new Color(0.361f,0.82f,1f) },
+    //};
+    //    #endregion
 
         public static Color s_GUIPreviousColour = default;
         //To be pulled by all nodes with top textures 
         public static Color s_CurrentTopTextureColour = new Color(0.862f, 0.894f, 0.862f);
-
-
-        #endregion
 
         public static GUIStyle s_InPointStyle = default;
         public static GUIStyle s_OutPointStyle = default;
@@ -68,6 +60,7 @@ namespace LEM_Editor
 
         static void LoadingNodeSkins()
         {
+            Debug.Log("Loading Skins");
             //Initialise the execution pin style for normal and selected pins
             s_ConnectionPointStyleNormal = new GUIStyle();
             //s_ConnectionPointStyleNormal.normal.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin");

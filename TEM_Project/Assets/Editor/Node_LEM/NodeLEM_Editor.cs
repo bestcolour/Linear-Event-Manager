@@ -1132,7 +1132,7 @@ namespace LEM_Editor
                 OnClickOutPoint,
                 TryToAddNodeToSelectedCollection,
                 TryToRemoveNodeFromSelectedCollection,
-                LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
+                LEMDictionary.GetNodeColour(nameOfNodeType)
                 );
 
 
@@ -1159,7 +1159,7 @@ namespace LEM_Editor
                 OnClickOutPoint,
                 TryToAddNodeToSelectedCollection,
                 TryToRemoveNodeFromSelectedCollection,
-                LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
+                LEMDictionary.GetNodeColour(nameOfNodeType)
                 );
 
             newEffectNode.SetNodeID(idToSet);
@@ -1187,7 +1187,7 @@ namespace LEM_Editor
                 OnClickOutPoint,
                 TryToAddNodeToSelectedCollection,
                 TryToRemoveNodeFromSelectedCollection,
-                LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
+                LEMDictionary.GetNodeColour(nameOfNodeType)
                 );
 
             basicNode.GenerateNodeID();
@@ -1214,7 +1214,7 @@ namespace LEM_Editor
                 OnClickOutPoint,
                 TryToAddNodeToSelectedCollection,
                 TryToRemoveNodeFromSelectedCollection,
-                LEMStyleLibrary.s_NodeColourDictionary[nameOfNodeType]
+                LEMDictionary.GetNodeColour(nameOfNodeType)
                 );
 
             newNode.SetNodeID(idToSet);
