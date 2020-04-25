@@ -15,6 +15,8 @@ namespace LEM_Editor
 
         [Header("ToolBar")]
         public bool m_ShowToolBar = true;
+        [Range(50f,150f)]
+        public float m_ButtonSize = 50f;
 
     }
 

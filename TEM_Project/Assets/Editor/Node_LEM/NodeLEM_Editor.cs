@@ -16,7 +16,7 @@ namespace LEM_Editor
             //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
             //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
             public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
-            public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save Effects \n (Crlt + S)", AUTOSAVE_STRING = "Auto Save On";
+            public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save"/* Effects \n (Crlt + S)"*/, AUTOSAVE_STRING = "Auto Save On";
         }
 
         int m_EditorState = EDITORSTATE.UNLOADED;
@@ -648,10 +648,11 @@ namespace LEM_Editor
 
         void DrawToolButtons(Rect propertyRect)
         {
+            float buttonWidth = s_Settings.m_ButtonSize;
             //Align button to the right of the screen
-            propertyRect.x = position.width - 100f;
+            propertyRect.x = position.width - buttonWidth;
             propertyRect.y = 0f;
-            propertyRect.width = 100f;
+            propertyRect.width = buttonWidth;
             propertyRect.height = 50f;
 
             #region Drawing Save Button
@@ -692,7 +693,7 @@ namespace LEM_Editor
 
             Event e = Event.current;
 
-            propertyRect.x -= 100f;
+            propertyRect.x -= buttonWidth;
 
             if (GUI.Button(propertyRect, "Paste"))
             {
@@ -713,7 +714,7 @@ namespace LEM_Editor
 
             }
 
-            propertyRect.x -= 100f;
+            propertyRect.x -= buttonWidth;
 
             if (GUI.Button(propertyRect, "Copy"))
             {
@@ -727,7 +728,7 @@ namespace LEM_Editor
                 e.Use();
             }
 
-            propertyRect.x -= 100f;
+            propertyRect.x -= buttonWidth;
 
             if (GUI.Button(propertyRect, "Cut"))
             {
@@ -743,7 +744,7 @@ namespace LEM_Editor
                 GUI.changed = true;
             }
 
-            propertyRect.x -= 100f;
+            propertyRect.x -= buttonWidth;
 
             if (GUI.Button(propertyRect, "Delete"))
             {
@@ -761,7 +762,7 @@ namespace LEM_Editor
 
             }
 
-            propertyRect.x -= 100f;
+            propertyRect.x -= buttonWidth;
 
             if (GUI.Button(propertyRect, "Redo"))
             {
@@ -769,7 +770,7 @@ namespace LEM_Editor
                 GUI.changed = true;
             }
 
-            propertyRect.x -= 100f;
+            propertyRect.x -= buttonWidth;
 
             if (GUI.Button(propertyRect, "Undo"))
             {
