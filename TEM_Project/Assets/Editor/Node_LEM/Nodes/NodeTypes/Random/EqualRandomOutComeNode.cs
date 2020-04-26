@@ -9,9 +9,9 @@ namespace LEM_Editor
     public class EqualRandomOutComeNode : BaseEffectNode
     {
         public int m_NumberOfOutcomes = 2;
-        int UserDeterminedNumberOfOutComes => m_NumberOfOutcomes - 1;
+        int NumberOfExtraOutcomes => m_NumberOfOutcomes - 1;
 
-        public List<OutConnectionPoint> m_UserDeterminedOutPoints = new List<OutConnectionPoint>();
+        public List<OutConnectionPoint> m_NumberOfExtraOutPoints = new List<OutConnectionPoint>();
 
         protected override string EffectTypeName => "EqualRandomOutComeNode";
 
@@ -104,85 +104,55 @@ namespace LEM_Editor
             //m_LemEffectDescription = EditorGUI.TextArea(propertyRect, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
             m_LemEffectDescription = EditorGUI.TextField(propertyRect, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
 
-            //Draw UpdateCycle enum
-
-            //propertyRect.y += 32.5f;
-            //GUI.Label(propertyRect, "Update Cycle", LEMStyleLibrary.s_NodeParagraphStyle);
-            //propertyRect.x += 85f;
-            //propertyRect.width = 80f;
-            //m_UpdateCycle = (UpdateCycle)EditorGUI.EnumPopup(propertyRect, m_UpdateCycle);
-
-
-
 
             //Draw a object field for inputting  the gameobject to destroy
             propertyRect.y += 30f;
             propertyRect.width = m_MidRect.width - 20;
             propertyRect.height = 15f;
 
-            //GUI.Label(propertyRect, "Object To Destroy");
-            //propertyRect.y += 20f;
-            //propertyRect.height = 15;
-            //bool wasEnabled = GUI.enabled;
-            //GUI.enabled = false;
             LEMStyleLibrary.s_GUIPreviousColour = EditorStyles.label.normal.textColor;
             EditorStyles.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
             m_NumberOfOutcomes = EditorGUI.IntField(propertyRect, "Number Of OutComes", m_NumberOfOutcomes, LEMStyleLibrary.s_NodeTextInputStyle);
             EditorStyles.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
 
-            //GUI.enabled = wasEnabled;
 
-            if (UserDeterminedNumberOfOutComes < 0)
+            if (m_NumberOfOutcomes < 1)
                 m_NumberOfOutcomes = 1;
 
 
-            for (int i = 0; i < UserDeterminedNumberOfOutComes; i++)
+            if (NumberOfExtraOutcomes > 0)
             {
-                outPointOffSet.y += m_OutPoint.m_Rect.height + 10f;
-                //If on this loop, the count of the user determined output is lower than loop number
-                // so if i = 0 , UserDeterminedNumberOfOutComes = 3, and m_UserDeterminedOutPoints.Count = 1,
-                if (m_UserDeterminedOutPoints.Count < i + 1)
+                for (int i = 0; i < NumberOfExtraOutcomes; i++)
                 {
-                    //Create new one
-                    m_UserDeterminedOutPoints.Add(new OutConnectionPoint());
-                    m_UserDeterminedOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint);
-                    //Update the rect height
-                    UpdateRectSizes(k_MidRectIncrements, Vector2.zero);
+                    outPointOffSet.y += m_OutPoint.m_Rect.height + 10f;
 
-                }
-                //else if outputs count exceeds current determined out put number remove
-                else if (m_UserDeterminedOutPoints.Count > UserDeterminedNumberOfOutComes)
-                {
-                    m_UserDeterminedOutPoints.RemoveAt(m_UserDeterminedOutPoints.Count - 1);
-                    UpdateRectSizes(-k_MidRectIncrements, Vector2.zero);
+                    if (m_NumberOfExtraOutPoints.Count < i + 1)
+                    {
+                        //Create new one
+                        m_NumberOfExtraOutPoints.Add(new OutConnectionPoint());
+                        m_NumberOfExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint);
+                        //Update the rect height
+                        UpdateRectSizes(k_MidRectIncrements, Vector2.zero);
 
-                    continue;
-                }
-                m_UserDeterminedOutPoints[i].Draw(outPointOffSet);
+                    }
+                    //else if outputs count exceeds current determined out put number remove
+                    else if (m_NumberOfExtraOutPoints.Count > NumberOfExtraOutcomes)
+                    {
+                        m_NumberOfExtraOutPoints.RemoveAt(m_NumberOfExtraOutPoints.Count - 1);
+                        UpdateRectSizes(-k_MidRectIncrements, Vector2.zero);
+                        continue;
+                    }
 
+                    m_NumberOfExtraOutPoints[i].Draw(outPointOffSet);
+                } 
+            }
+            //Clear everything from e0 to length
+            else
+            {
+                UpdateRectSizes(-k_MidRectIncrements * m_NumberOfExtraOutPoints.Count, Vector2.zero);
+                m_NumberOfExtraOutPoints.Clear();
             }
 
-            //for (int i = 0; i < ExtraNumberOfOutComes; i++)
-            //{
-            //    outPointOffSet.y += m_OutPoint.m_Rect.height + 10f;
-
-            //    if (m_ExtraOutPoints.Count - 1 == i)
-            //    {
-            //        Debug.Log("Adding extra out points at element " + i);
-            //        m_ExtraOutPoints.Add(new OutConnectionPoint());
-            //        m_ExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint);
-            //    }
-            //    else if (m_ExtraOutPoints.Count > ExtraNumberOfOutComes)
-            //    {
-            //        m_ExtraOutPoints.RemoveAt(m_ExtraOutPoints.Count - 1);
-            //        continue;
-            //    }
-
-            //    Debug.Log(m_ExtraOutPoints[i].d_OnClickConnectionPoint != null);
-            //    m_ExtraOutPoints[i].Draw(outPointOffSet);
-            //}
-
-        
 
         }
 
