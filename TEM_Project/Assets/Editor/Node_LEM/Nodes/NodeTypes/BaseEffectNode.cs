@@ -16,6 +16,8 @@ namespace LEM_Editor
         //public LEM_BaseEffect m_BaseEffectSaveFile = default;
         public string m_Title = default;
 
+        public override OutConnectionPoint[] GetOutPoints => new OutConnectionPoint[1] { m_OutPoint };
+
         public UpdateCycle m_UpdateCycle = default;
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)

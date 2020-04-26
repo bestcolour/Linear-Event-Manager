@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 namespace LEM_Editor
 {
 
@@ -7,6 +8,12 @@ namespace LEM_Editor
         string m_ConnectedNodeID = default;
 
         public override bool IsConnected => !string.IsNullOrEmpty(m_ConnectedNodeID);
+
+        public void Initialise(Node parentNode, GUIStyle style, Action<ConnectionPoint> onClickConnectionPoint,int index)
+        {
+            base.Initialise(parentNode, style, onClickConnectionPoint);
+            m_Index = index;
+        }
 
         public override void Draw()
         {

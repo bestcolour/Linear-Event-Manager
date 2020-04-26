@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 namespace LEM_Editor
@@ -6,10 +6,15 @@ namespace LEM_Editor
 
     public class InConnectionPoint : ConnectionPoint
     {
-
         List<string> m_ConnectedNodeIDs = new List<string>();
 
         public override bool IsConnected => m_ConnectedNodeIDs.Count > 0;
+
+        public override void Initialise(Node parentNode, GUIStyle style, Action<ConnectionPoint> onClickConnectionPoint)
+        {
+            base.Initialise(parentNode, style, onClickConnectionPoint);
+            m_Index = 0;
+        }
 
         public override void Draw()
         {
