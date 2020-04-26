@@ -26,6 +26,7 @@ namespace LEM_Editor
         public static Color s_GUIPreviousColour = default;
         //To be pulled by all nodes with top textures 
         public static Color s_CurrentTopTextureColour = new Color(0.862f, 0.894f, 0.862f);
+        public static Color s_CurrentLabelColour = default;
 
         public static GUIStyle s_InPointStyle = default;
         public static GUIStyle s_OutPointStyle = default;
@@ -37,7 +38,6 @@ namespace LEM_Editor
         public static readonly GUIStyle s_StartEndStyle = new GUIStyle();
         public static GUIStyle s_NodeTextInputStyle = null;
         public static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
-
 
         //Start End Node    
         //public static NodeSkinCollection s_StartNodeSkins = new NodeSkinCollection();
@@ -60,7 +60,7 @@ namespace LEM_Editor
 
         static void LoadingNodeSkins()
         {
-            Debug.Log("Loading Skins");
+            NodeLEM_Editor.LoadSettings();
             //Initialise the execution pin style for normal and selected pins
             s_ConnectionPointStyleNormal = new GUIStyle();
             //s_ConnectionPointStyleNormal.normal.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin");
@@ -102,10 +102,12 @@ namespace LEM_Editor
             s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
             s_NodeTextInputStyle.fontSize = 10;
             s_NodeTextInputStyle.wordWrap = true;
+            s_NodeTextInputStyle.normal.textColor = Color.black;
 
             s_NodeParagraphStyle.fontSize = 10;
             s_NodeParagraphStyle.normal.textColor = NodeLEM_Editor.s_Settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
+            s_CurrentLabelColour = NodeLEM_Editor.s_Settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
             s_StartEndStyle.fontSize = 20;
             s_StartEndStyle.alignment = TextAnchor.MiddleCenter;

@@ -9,17 +9,37 @@ namespace LEM_Editor
     public class EqualRandomOutComeNode : BaseEffectNode
     {
         public int m_NumberOfOutcomes = 2;
+        int UserDeterminedNumberOfOutComes => m_NumberOfOutcomes - 1;
 
-
+        public List<OutConnectionPoint> m_UserDeterminedOutPoints = new List<OutConnectionPoint>();
 
         protected override string EffectTypeName => "EqualRandomOutComeNode";
+
+        GUIStyle m_ConnectionPointStyle = null;
+        Action<ConnectionPoint> d_OnClickOutPoint = null;
+        static readonly Vector2 k_MidRectIncrements = new Vector2(0f,35f);
+
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
 
+            m_ConnectionPointStyle = connectionPointStyle;
+            d_OnClickOutPoint = onClickOutPoint;
+
             //Override the rect size n pos
             SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
+        }
+
+        protected void UpdateRectSizes(Vector2 midSizeAddition, Vector2 topSizeAddition)
+        {
+            //Default node size
+            m_MidRect.size += midSizeAddition;
+
+            m_TopRect.size += topSizeAddition;
+
+            //Get total size and avrg pos
+            m_TotalRect.size = new Vector2(m_MidRect.size.x, m_MidRect.size.y + m_TopRect.size.y - 2);
         }
 
 
@@ -48,8 +68,12 @@ namespace LEM_Editor
 
             //Draw the in out points as well
             m_InPoint.Draw();
-            m_OutPoint.Draw();
 
+            Vector2 outPointOffSet = Vector2.zero;
+            outPointOffSet.x = m_MidRect.xMax - 35;
+            outPointOffSet.y = m_MidRect.y + 115;
+
+            m_OutPoint.Draw(outPointOffSet);
 
 
 
@@ -63,13 +87,13 @@ namespace LEM_Editor
             //LEMStyleLibrary.s_GUIPreviousColour = LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor;
             //LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = Color.magenta;
             //m_TopRect.y -= 30f;
-            //GUI.Label(m_TopRect, "NodeID : " + NodeID, LEMStyleLibrary.s_NodeHeaderStyle);
+            //GUI.Label(m_TopRect, "MidRect : " + m_MidRect + "\n TopRect " + m_TopRect + "\n TotalRect " + m_TotalRect, LEMStyleLibrary.s_NodeHeaderStyle);
             //m_TopRect.y -= 15f;
             //////GUI.Label(m_TopRect, "OutPoint : " + m_OutPoint.GetConnectedNodeID(0), LEMStyleLibrary.s_NodeHeaderStyle);
             //////m_TopRect.y -= 15f;
             //////GUI.Label(m_TopRect, "InPoint : " + m_InPoint.GetConnectedNodeID(0), LEMStyleLibrary.s_NodeHeaderStyle);
             //LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
-            //m_TopRect.y += 60;
+            //m_TopRect.y += 45f;
             #endregion
 
 
@@ -99,8 +123,66 @@ namespace LEM_Editor
             //GUI.Label(propertyRect, "Object To Destroy");
             //propertyRect.y += 20f;
             //propertyRect.height = 15;
-            m_NumberOfOutcomes = EditorGUI.IntField(propertyRect,"Number Of OutComes", m_NumberOfOutcomes);
-            //m_TargetObject = (GameObject)EditorGUI.ObjectField(propertyRect, "", m_TargetObject, typeof(GameObject), true);
+            //bool wasEnabled = GUI.enabled;
+            //GUI.enabled = false;
+            LEMStyleLibrary.s_GUIPreviousColour = EditorStyles.label.normal.textColor;
+            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
+            m_NumberOfOutcomes = EditorGUI.IntField(propertyRect, "Number Of OutComes", m_NumberOfOutcomes, LEMStyleLibrary.s_NodeTextInputStyle);
+            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+
+            //GUI.enabled = wasEnabled;
+
+            if (UserDeterminedNumberOfOutComes < 0)
+                m_NumberOfOutcomes = 1;
+
+
+            for (int i = 0; i < UserDeterminedNumberOfOutComes; i++)
+            {
+                outPointOffSet.y += m_OutPoint.m_Rect.height + 10f;
+                //If on this loop, the count of the user determined output is lower than loop number
+                // so if i = 0 , UserDeterminedNumberOfOutComes = 3, and m_UserDeterminedOutPoints.Count = 1,
+                if (m_UserDeterminedOutPoints.Count < i + 1)
+                {
+                    //Create new one
+                    m_UserDeterminedOutPoints.Add(new OutConnectionPoint());
+                    m_UserDeterminedOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint);
+                    //Update the rect height
+                    UpdateRectSizes(k_MidRectIncrements, Vector2.zero);
+
+                }
+                //else if outputs count exceeds current determined out put number remove
+                else if (m_UserDeterminedOutPoints.Count > UserDeterminedNumberOfOutComes)
+                {
+                    m_UserDeterminedOutPoints.RemoveAt(m_UserDeterminedOutPoints.Count - 1);
+                    UpdateRectSizes(-k_MidRectIncrements, Vector2.zero);
+
+                    continue;
+                }
+                m_UserDeterminedOutPoints[i].Draw(outPointOffSet);
+
+            }
+
+            //for (int i = 0; i < ExtraNumberOfOutComes; i++)
+            //{
+            //    outPointOffSet.y += m_OutPoint.m_Rect.height + 10f;
+
+            //    if (m_ExtraOutPoints.Count - 1 == i)
+            //    {
+            //        Debug.Log("Adding extra out points at element " + i);
+            //        m_ExtraOutPoints.Add(new OutConnectionPoint());
+            //        m_ExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint);
+            //    }
+            //    else if (m_ExtraOutPoints.Count > ExtraNumberOfOutComes)
+            //    {
+            //        m_ExtraOutPoints.RemoveAt(m_ExtraOutPoints.Count - 1);
+            //        continue;
+            //    }
+
+            //    Debug.Log(m_ExtraOutPoints[i].d_OnClickConnectionPoint != null);
+            //    m_ExtraOutPoints[i].Draw(outPointOffSet);
+            //}
+
+        
 
         }
 
@@ -132,6 +214,9 @@ namespace LEM_Editor
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
 
         }
+
+    
+
     }
 
 }

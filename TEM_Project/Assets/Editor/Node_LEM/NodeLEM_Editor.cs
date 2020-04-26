@@ -216,7 +216,7 @@ namespace LEM_Editor
 
         }
 
-        void LoadSettings()
+        public static void LoadSettings()
         {
             string pathToSettings = EditorPrefs.GetString(k_EditorPref_SettingsKey);
             NodeLEM_Settings settings;

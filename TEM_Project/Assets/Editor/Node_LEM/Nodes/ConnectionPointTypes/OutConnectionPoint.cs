@@ -24,6 +24,22 @@ namespace LEM_Editor
 
         }
 
+        public void Draw(Vector2 positionOffset)
+        {
+            //Draw connection pt at the top of the node
+            m_Rect.y = positionOffset.y;
+
+            m_Rect.x = positionOffset.x;
+
+            //Create a button that will execute the below code if pressed
+            if (GUI.Button(m_Rect, "", m_Style))
+            {
+                //Check if deelgate action is null or not before executing
+                d_OnClickConnectionPoint?.Invoke(this);
+            }
+
+        }
+
         //For out connection point, we gotta restrcit the number of connected nodes it can hv
         public override void SetOrAddConnectedNodeID(string idToAdd)
         {
