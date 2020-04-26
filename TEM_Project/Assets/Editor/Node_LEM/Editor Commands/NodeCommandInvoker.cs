@@ -25,7 +25,7 @@ namespace LEM_Editor
         public delegate void DeleteNodes(NodeBaseData[] nodeBases);
         public delegate LEM_BaseEffect CompileNodeEffect(string nodeID);
         public delegate void MoveNodes(string[] nodeIDsMoved, ref Vector2[] previousTopRectPositions, ref Vector2[] previousMidRectPositions, ref Vector2[] previousTotalRectPositions);
-        public delegate void CreateConnection(string inPointNodeID, string outPointNodeID,int outPointIndex);
+        public delegate void CreateConnection(string inPointNodeID, string outPointNodeID);
         public delegate void RemoveConnection(string inPointNodeID, string outPointNodeID);
         public delegate void DeselectAllNodes();
         #endregion

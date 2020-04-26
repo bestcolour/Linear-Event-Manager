@@ -35,7 +35,6 @@ namespace LEM_Editor
 
         public InConnectionPoint m_InPoint = new InConnectionPoint();
         public OutConnectionPoint m_OutPoint = new OutConnectionPoint();
-        public virtual OutConnectionPoint[] GetOutPoints { get; }
 
         protected NodeSkinCollection m_NodeSkin = default;
         //Top skin will pull from a static cache
@@ -46,7 +45,7 @@ namespace LEM_Editor
 
         public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
             Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint
-            , Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
+            , Action<Node> onSelectNode, Action<Node> onDeSelectNode,  Color midSkinColour)
         {
             m_TopRect = new Rect();
 
@@ -60,7 +59,7 @@ namespace LEM_Editor
 
             //Initialise in and out points
             m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint);
-            m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint,0);
+            m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint);
 
             m_MidSkinColour = midSkinColour;
         }
@@ -311,16 +310,6 @@ namespace LEM_Editor
             m_TotalRect.size = new Vector2(midSize.x, midSize.y + topSize.y - 2);
             m_TotalRect.position = m_TopRect.position;
 
-        }
-        protected void UpdateRectSizes(Vector2 midSizeAddition, Vector2 topSizeAddition)
-        {
-            //Default node size
-            m_MidRect.size += midSizeAddition;
-
-            m_TopRect.size += topSizeAddition;
-
-            //Get total size and avrg pos
-            m_TotalRect.size = new Vector2(m_MidRect.size.x, m_MidRect.size.y + m_TopRect.size.y - 2);
         }
 
 

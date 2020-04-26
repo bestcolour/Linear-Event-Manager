@@ -6,10 +6,12 @@ using UnityEditor;
 
 namespace LEM_Editor
 {
-    public class EqualRandomOutComeNode : MultiOutBaseEffectNode
+    public class EqualRandomOutComeNode : BaseEffectNode
     {
         public int m_NumberOfOutcomes = 2;
         int NumberOfExtraOutcomes => m_NumberOfOutcomes - 1;
+
+        public List<OutConnectionPoint> m_NumberOfExtraOutPoints = new List<OutConnectionPoint>();
 
         protected override string EffectTypeName => "EqualRandomOutComeNode";
 
@@ -128,11 +130,9 @@ namespace LEM_Editor
                     {
                         //Create new one
                         m_NumberOfExtraOutPoints.Add(new OutConnectionPoint());
-                        m_NumberOfExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint,i+1);
+                        m_NumberOfExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint);
                         //Update the rect height
                         UpdateRectSizes(k_MidRectIncrements, Vector2.zero);
-                        //Update dictionary
-                        d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
 
                     }
                     //else if outputs count exceeds current determined out put number remove
@@ -140,7 +140,6 @@ namespace LEM_Editor
                     {
                         m_NumberOfExtraOutPoints.RemoveAt(m_NumberOfExtraOutPoints.Count - 1);
                         UpdateRectSizes(-k_MidRectIncrements, Vector2.zero);
-                        d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
                         continue;
                     }
 
@@ -152,7 +151,6 @@ namespace LEM_Editor
             {
                 UpdateRectSizes(-k_MidRectIncrements * m_NumberOfExtraOutPoints.Count, Vector2.zero);
                 m_NumberOfExtraOutPoints.Clear();
-                d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
             }
 
 

@@ -1,42 +1,62 @@
 ﻿using UnityEngine;
-
-public class OutConnectionPoint : ConnectionPoint
+namespace LEM_Editor
 {
-    string m_ConnectedNodeID = default;
 
-    public override bool IsConnected => !string.IsNullOrEmpty(m_ConnectedNodeID);
-
-    public override void Draw()
+    public class OutConnectionPoint : ConnectionPoint
     {
-        //Draw connection pt at the top of the node
-        m_Rect.y = m_ParentNode.m_MidRect.y + 7.5f;
+        string m_ConnectedNodeID = default;
 
-        m_Rect.x = m_ParentNode.m_MidRect.x + m_ParentNode.m_MidRect.width - 30f;
+        public override bool IsConnected => !string.IsNullOrEmpty(m_ConnectedNodeID);
 
-        //Create a button that will execute the below code if pressed
-        if (GUI.Button(m_Rect, "", m_Style))
+        public override void Draw()
         {
-            //Check if deelgate action is null or not before executing
-            d_OnClickConnectionPoint?.Invoke(this);
+            //Draw connection pt at the top of the node
+            m_Rect.y = m_ParentNode.m_MidRect.y + 7.5f;
+
+            m_Rect.x = m_ParentNode.m_MidRect.x + m_ParentNode.m_MidRect.width - 30f;
+
+            //Create a button that will execute the below code if pressed
+            if (GUI.Button(m_Rect, "", m_Style))
+            {
+                //Check if deelgate action is null or not before executing
+                d_OnClickConnectionPoint?.Invoke(this);
+            }
+
         }
 
-    }
+        public void Draw(Vector2 positionOffset)
+        {
+            //Draw connection pt at the top of the node
+            m_Rect.y = positionOffset.y;
 
-    //For out connection point, we gotta restrcit the number of connected nodes it can hv
-    public override void SetOrAddConnectedNodeID(string idToAdd)
-    {
-        m_ConnectedNodeID = idToAdd;
+            m_Rect.x = positionOffset.x;
+
+            //Create a button that will execute the below code if pressed
+            if (GUI.Button(m_Rect, "", m_Style))
+            {
+                //Check if deelgate action is null or not before executing
+                d_OnClickConnectionPoint?.Invoke(this);
+            }
+
+        }
+
+        //For out connection point, we gotta restrcit the number of connected nodes it can hv
+        public override void SetOrAddConnectedNodeID(string idToAdd)
+        {
+            m_ConnectedNodeID = idToAdd;
+
+        }
+        public override string GetConnectedNodeID(int index)
+        {
+            return m_ConnectedNodeID;
+        }
+
+        public override void RemoveConnectedNodeID(string dummy)
+        {
+            m_ConnectedNodeID = null;
+        }
+
 
     }
-    public override string GetConnectedNodeID(int index)
-    {
-        return m_ConnectedNodeID;
-    }
-
-    public override void RemoveConnectedNodeID(string dummy)
-    {
-        m_ConnectedNodeID = null;
-    }
-
 
 }

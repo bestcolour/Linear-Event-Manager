@@ -16,19 +16,31 @@ namespace LEM_Editor
         //public LEM_BaseEffect m_BaseEffectSaveFile = default;
         public string m_Title = default;
 
-        public override OutConnectionPoint[] GetOutPoints => new OutConnectionPoint[1] { m_OutPoint };
+        //For updating effect node dictionary
+        protected Action<NodeDictionaryStruct> d_UpdateNodeDictionaryStatus = null;
+
+
+        public virtual OutConnectionPoint[] GetOutConnectionPoints
+        {
+            get
+            {
+                OutConnectionPoint[] outConnectionPoints = new OutConnectionPoint[1];
+                outConnectionPoints[0] = m_OutPoint;
+                return outConnectionPoints;
+            }
+        }
 
         public UpdateCycle m_UpdateCycle = default;
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
+        public void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode,Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color midSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
 
             m_Title = EffectTypeName;
             m_Title = LEMDictionary.RemoveNodeWord(m_Title);
+
+            d_UpdateNodeDictionaryStatus = updateEffectNodeInDictionary;
         }
-
-
 
         public override void Draw()
         {

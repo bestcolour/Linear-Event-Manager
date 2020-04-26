@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+
 namespace LEM_Editor
 {
 
@@ -9,10 +10,15 @@ namespace LEM_Editor
 
         public override bool IsConnected => !string.IsNullOrEmpty(m_ConnectedNodeID);
 
+        //Set the index for outconnection point since we will have multiple outputs
+        public override int Index { get => m_Index; set => m_Index = value; }
+        int m_Index = 0;
+
         public void Initialise(Node parentNode, GUIStyle style, Action<ConnectionPoint> onClickConnectionPoint,int index)
         {
             base.Initialise(parentNode, style, onClickConnectionPoint);
             m_Index = index;
+
         }
 
         public override void Draw()

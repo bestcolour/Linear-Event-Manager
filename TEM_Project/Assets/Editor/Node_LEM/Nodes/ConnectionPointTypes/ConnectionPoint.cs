@@ -8,7 +8,8 @@ namespace LEM_Editor
     //Connection point is the point where the lines of the nodes connect with the node
     public abstract class ConnectionPoint
     {
-        public int m_Index = 0;
+        public abstract int Index { get; set; }
+
         public Rect m_Rect = default;
 
         public Node m_ParentNode = default;
