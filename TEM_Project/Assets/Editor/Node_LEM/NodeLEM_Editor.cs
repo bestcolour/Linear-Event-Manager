@@ -1469,7 +1469,7 @@ namespace LEM_Editor
                           );
                 }
 
-                CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID));
+                CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
 
                 ResetDrawingBezierCurve();
             }
@@ -1517,7 +1517,7 @@ namespace LEM_Editor
                        );
                 }
 
-                CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID));
+                CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
 
                 ResetDrawingBezierCurve();
             }
@@ -1532,10 +1532,10 @@ namespace LEM_Editor
             }
         }
 
+        //For now used for startnode removal
         void OnClickRemoveNode(Node nodeToRemove)
         {
             //Check if there is any connections to be removed from this node
-
             TryToRemoveConnection(nodeToRemove.m_OutPoint.GetConnectedNodeID(0), nodeToRemove.NodeID);
 
             //Remove any and allconnections connected to the node's inpoint
@@ -1561,9 +1561,13 @@ namespace LEM_Editor
         void OnClickRemoveNode(NodeBaseData nB)
         {
             //Check if there is any connections to be removed from this node's outpoint
-
             if (nB.HasAtLeastOneNextPointNode)
-                TryToRemoveConnection(nB.m_NextPointsIDs[0], nB.m_NodeID);
+            {
+                for (int i = 0; i < nB.m_NextPointsIDs.Length; i++)
+                {
+                    TryToRemoveConnection(nB.m_NextPointsIDs[i], nB.m_NodeID);
+                }
+            }
 
             //Remove any and allconnections connected to the node's inpoint
             string[] allNodesConnectedToInPoint = AllEffectsNodeInEditor[nB.m_NodeID].effectNode.m_InPoint.GetAllConnectedNodeIDs();
@@ -1586,6 +1590,7 @@ namespace LEM_Editor
         }
 
         //Use this if you know exactly what nodes to connect
+        //For now only used for saving and loading
         void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
         {
             //Add connection to dual key dictionary
@@ -1599,7 +1604,7 @@ namespace LEM_Editor
         }
 
         //Use this if you have the ID of the nodes you wish to connect but dont know their identities
-        void CreateConnection(string inPointNodeID, string outPointNodeID)
+        void CreateConnection(string inPointNodeID, string outPointNodeID, int outPointIndex)
         {
             ConnectionPoint inPoint = default;
             ConnectionPoint outPoint = default;
@@ -1620,15 +1625,17 @@ namespace LEM_Editor
             {
                 OutConnectionPoint[] outs = AllEffectsNodeInEditor[outPointNodeID].outConnectionPoints;
 
-                if(outs.Length == 1)
-                {
-                    outPoint = AllEffectsNodeInEditor[outPointNodeID].effectNode.m_OutPoint;
-                    inPoint = AllEffectsNodeInEditor[inPointNodeID].effectNode.m_InPoint;
-                }
-                else
-                {
+                outPoint = outs.Length == 1 ? AllEffectsNodeInEditor[outPointNodeID].effectNode.m_OutPoint : AllEffectsNodeInEditor[outPointNodeID].outConnectionPoints[outPointIndex];
+                //if (outs.Length == 1)
+                //{
+                //    outPoint = AllEffectsNodeInEditor[outPointNodeID].effectNode.m_OutPoint;
+                //}
+                //else
+                //{
+                //    outPoint = AllEffectsNodeInEditor[outPointNodeID].outConnectionPoints[outPointIndex];
+                //}
 
-                }
+                inPoint = AllEffectsNodeInEditor[inPointNodeID].effectNode.m_InPoint;
 
             }
 

@@ -32,7 +32,7 @@ namespace LEM_Editor
 
         public UpdateCycle m_UpdateCycle = default;
 
-        public void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode,Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color midSkinColour)
+        public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode,Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color midSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
 
