@@ -1462,11 +1462,18 @@ namespace LEM_Editor
                 m_SelectedOutPoint.GetConnectedNodeID(0) != m_SelectedInPoint.m_ParentNode.NodeID)
             {
                 //Remove the old connection if outpoint has an old connection
-                if (m_SelectedOutPoint.IsConnected)
+                //if (m_SelectedOutPoint.IsConnected)
+                //{
+                //    OnClickRemoveConnection(AllConnectionsDictionary
+                //          [new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
+                //          );
+                //}
+
+                if (m_SelectedInPoint.IsConnected)
                 {
-                    OnClickRemoveConnection(AllConnectionsDictionary
-                          [new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
-                          );
+                    OnClickRemoveConnection(
+                      AllConnectionsDictionary[new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)]
+                      );
                 }
 
                 CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
@@ -1510,11 +1517,18 @@ namespace LEM_Editor
                 m_SelectedOutPoint.GetConnectedNodeID(0) != m_SelectedInPoint.m_ParentNode.NodeID)
             {
                 //Remove the old connection if outpoint has an old connection
-                if (m_SelectedOutPoint.IsConnected)
+                //if (m_SelectedOutPoint.IsConnected)
+                //{
+                //    OnClickRemoveConnection(
+                //       AllConnectionsDictionary[new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
+                //       );
+                //}
+                /*else*/ 
+                if (m_SelectedInPoint.IsConnected)
                 {
                     OnClickRemoveConnection(
-                       AllConnectionsDictionary[new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
-                       );
+                      AllConnectionsDictionary[new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)]
+                      );
                 }
 
                 CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
@@ -1706,9 +1720,6 @@ namespace LEM_Editor
             }
         }
 
-
-
-
         #endregion
 
 
@@ -1803,8 +1814,6 @@ namespace LEM_Editor
             #region Loading Events from Dictionary
 
             //Dont do any thing if there is no effects in the dicitionary
-            //s_CurrentLE.PopulateEffectDictionary();
-
             Dictionary<string, LEM_BaseEffect> allEffectsDictInLinearEvent = s_CurrentLE.AllEffectsDictionary;
 
             if (allEffectsDictInLinearEvent == null)
@@ -1812,15 +1821,6 @@ namespace LEM_Editor
                 Repaint();
                 return;
             }
-
-
-
-            //if (!s_CurrentLE.IsEffectDictionaryEmptyOrNull)
-            //{
-            //    Repaint();
-            //    return;
-            //}
-
 
             string[] allKeys = allEffectsDictInLinearEvent.Keys.ToArray();
 
@@ -1838,6 +1838,7 @@ namespace LEM_Editor
             }
 
             #endregion
+
             //Do the same for start n end node only if they arent null (they likely wont because onenable runs first)
             //and that there are records of saving them
             if (StartNode != null && s_CurrentLE.m_StartNodeData.m_NodeID != string.Empty)

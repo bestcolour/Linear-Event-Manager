@@ -67,9 +67,7 @@ namespace LEM_Editor
             //Draw the in out points as well
             m_InPoint.Draw();
 
-            Vector2 outPointOffSet = Vector2.zero;
-            outPointOffSet.x = m_MidRect.xMax - 35;
-            outPointOffSet.y = m_MidRect.y + 115;
+            Vector2 outPointOffSet = new Vector2(m_MidRect.xMax - 35, m_MidRect.y + 115);
 
             m_OutPoint.Draw(outPointOffSet);
 
@@ -120,32 +118,7 @@ namespace LEM_Editor
 
             if (NumberOfExtraOutcomes > 0)
             {
-                for (int i = 0; i < NumberOfExtraOutcomes; i++)
-                {
-                    outPointOffSet.y += m_OutPoint.m_Rect.height + 10f;
-
-                    if (m_NumberOfExtraOutPoints.Count < i + 1)
-                    {
-                        //Create new one
-                        m_NumberOfExtraOutPoints.Add(new OutConnectionPoint());
-                        m_NumberOfExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint,i+1);
-                        //Update the rect height
-                        UpdateRectSizes(k_MidRectIncrements, Vector2.zero);
-                        //Update dictionary
-                        d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
-
-                    }
-                    //else if outputs count exceeds current determined out put number remove
-                    else if (m_NumberOfExtraOutPoints.Count > NumberOfExtraOutcomes)
-                    {
-                        m_NumberOfExtraOutPoints.RemoveAt(m_NumberOfExtraOutPoints.Count - 1);
-                        UpdateRectSizes(-k_MidRectIncrements, Vector2.zero);
-                        d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
-                        continue;
-                    }
-
-                    m_NumberOfExtraOutPoints[i].Draw(outPointOffSet);
-                } 
+                DrawExtraOutComes();
             }
             //Clear everything from e0 to length
             else
@@ -156,6 +129,38 @@ namespace LEM_Editor
             }
 
 
+        }
+
+        void DrawExtraOutComes()
+        {
+            Vector2 outPointOffSet = new Vector2(m_MidRect.xMax - 35, m_MidRect.y + 115);
+
+            for (int i = 0; i < NumberOfExtraOutcomes; i++)
+            {
+                outPointOffSet.y += m_OutPoint.m_Rect.height + 10f;
+
+                if (m_NumberOfExtraOutPoints.Count < i + 1)
+                {
+                    //Create new one
+                    m_NumberOfExtraOutPoints.Add(new OutConnectionPoint());
+                    m_NumberOfExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint, i + 1);
+                    //Update the rect height
+                    UpdateRectSizes(k_MidRectIncrements, Vector2.zero);
+                    //Update dictionary
+                    d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
+
+                }
+                //else if outputs count exceeds current determined out put number remove
+                else if (m_NumberOfExtraOutPoints.Count > NumberOfExtraOutcomes)
+                {
+                    m_NumberOfExtraOutPoints.RemoveAt(m_NumberOfExtraOutPoints.Count - 1);
+                    UpdateRectSizes(-k_MidRectIncrements, Vector2.zero);
+                    d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
+                    continue;
+                }
+
+                m_NumberOfExtraOutPoints[i].Draw(outPointOffSet);
+            }
         }
 
         public override LEM_BaseEffect CompileToBaseEffect()
@@ -180,6 +185,8 @@ namespace LEM_Editor
         {
             EqualRandomOutCome loadFrom = effectToLoadFrom as EqualRandomOutCome;
             loadFrom.UnPack(out m_NumberOfOutcomes);
+
+            DrawExtraOutComes();
 
             //Important
             m_LemEffectDescription = effectToLoadFrom.m_Description;
