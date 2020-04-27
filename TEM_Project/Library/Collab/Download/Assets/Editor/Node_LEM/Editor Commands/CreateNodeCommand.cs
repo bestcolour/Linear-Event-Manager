@@ -160,18 +160,20 @@ namespace LEM_Editor
     {
         string m_InPointNodeID = default;
         string m_OutPointNodeID = default;
+        int m_OutPointIndex = default;
 
         public int CommandType => NodeCommandType.CREATECONNECTION;
 
-        public CreateConnectionCommand(string inPointNodeID, string outPointNodeID)
+        public CreateConnectionCommand(string inPointNodeID, string outPointNodeID,int outPointIndex)
         {
             m_InPointNodeID = inPointNodeID;
             m_OutPointNodeID = outPointNodeID;
+            m_OutPointIndex = outPointIndex;
         }
 
         public void Execute()
         {
-            NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID);
+            NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID, m_OutPointIndex);
         }
 
         public void Undo()
@@ -181,7 +183,7 @@ namespace LEM_Editor
 
         public void Redo()
         {
-            NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID);
+            NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID, m_OutPointIndex);
         }
     }
 

@@ -12,12 +12,28 @@ namespace LEM_Editor
         int NumberOfExtraOutcomes => m_NumberOfOutcomes - 1;
 
         public List<OutConnectionPoint> m_NumberOfExtraOutPoints = new List<OutConnectionPoint>();
+        public override OutConnectionPoint[] GetOutPoints
+        {
+            get
+            {
+                OutConnectionPoint[] allConnectionPoints = new OutConnectionPoint[m_NumberOfOutcomes];
+                allConnectionPoints[0] = m_OutPoint;
+
+                for (int i = 0; i < m_NumberOfExtraOutPoints.Count; i++)
+                {
+                    allConnectionPoints[i + 1] = m_NumberOfExtraOutPoints[i];
+                }
+
+                return allConnectionPoints;
+            }
+
+        }
 
         protected override string EffectTypeName => "EqualRandomOutComeNode";
 
         GUIStyle m_ConnectionPointStyle = null;
         Action<ConnectionPoint> d_OnClickOutPoint = null;
-        static readonly Vector2 k_MidRectIncrements = new Vector2(0f,35f);
+        static readonly Vector2 k_MidRectIncrements = new Vector2(0f, 35f);
 
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
@@ -30,19 +46,6 @@ namespace LEM_Editor
             //Override the rect size n pos
             SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
         }
-
-        protected void UpdateRectSizes(Vector2 midSizeAddition, Vector2 topSizeAddition)
-        {
-            //Default node size
-            m_MidRect.size += midSizeAddition;
-
-            m_TopRect.size += topSizeAddition;
-
-            //Get total size and avrg pos
-            m_TotalRect.size = new Vector2(m_MidRect.size.x, m_MidRect.size.y + m_TopRect.size.y - 2);
-        }
-
-
 
         public override void Draw()
         {
@@ -130,7 +133,7 @@ namespace LEM_Editor
                     {
                         //Create new one
                         m_NumberOfExtraOutPoints.Add(new OutConnectionPoint());
-                        m_NumberOfExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint);
+                        m_NumberOfExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint,i+1);
                         //Update the rect height
                         UpdateRectSizes(k_MidRectIncrements, Vector2.zero);
 
@@ -144,7 +147,7 @@ namespace LEM_Editor
                     }
 
                     m_NumberOfExtraOutPoints[i].Draw(outPointOffSet);
-                } 
+                }
             }
             //Clear everything from e0 to length
             else
@@ -156,6 +159,8 @@ namespace LEM_Editor
 
         }
 
+      
+
         public override LEM_BaseEffect CompileToBaseEffect()
         {
             EqualRandomOutCome myEffect = ScriptableObject.CreateInstance<EqualRandomOutCome>();
@@ -164,14 +169,23 @@ namespace LEM_Editor
             myEffect.m_Description = m_LemEffectDescription;
             myEffect.m_UpdateCycle = m_UpdateCycle;
 
-
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
-            //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
 
-            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
+            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs);
             myEffect.SetUp(m_NumberOfOutcomes);
             return myEffect;
 
+        }
+
+        protected override string[] TryToSaveNextPointNodeID()
+        {
+            OutConnectionPoint[] outConnectionPoints = GetOutPoints;
+            string[] connectedNodeIDs = new string[outConnectionPoints.Length];
+
+            for (int i = 0; i < outConnectionPoints.Length; i++)
+                connectedNodeIDs[i] = outConnectionPoints[i].GetConnectedNodeID(0);
+
+            return connectedNodeIDs;
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
@@ -185,7 +199,7 @@ namespace LEM_Editor
 
         }
 
-    
+
 
     }
 
