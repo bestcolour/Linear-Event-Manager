@@ -25,6 +25,7 @@ namespace LEM_Effects
 
         public override bool ExecuteEffect()
         {
+            Debug.Log("Destroying " + m_TargetObject.name);
             //Destroy the targetted object
             GameObject.Destroy(m_TargetObject);
             return true;

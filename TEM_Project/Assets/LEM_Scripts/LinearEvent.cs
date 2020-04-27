@@ -37,55 +37,12 @@ namespace LEM_Effects
             }
         }
 
-
-        //void Awake()
-        //{
-        //    if (m_SelfInitialising)
-        //    {
-        //        PopulateEffectDictionary();
-        //    }
-        //}
-
-        //public void PopulateEffectDictionary()
-        //{
-        //    m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
-
-        //    //Update the m_AllEffectsDictionary
-        //    for (int i = 0; i < m_AllEffects.Length; i++)
-        //    {
-        //        m_AllEffectsDictionary.Add(m_AllEffects[i].m_NodeBaseData.m_NodeID, m_AllEffects[i]);
-        //    }
-        //}
-
-        //Ok since whenever u change ur script, unity will recompile and all values will be set to its initialisers (that means m_AllEffectsDictionary will be reseted to null)
-        //hence removing all saved progress EXCEPT FOR SERIALIZED VALUES WHICH MEANS THAT M_ALLEFFECTS is unaffected
-        //public bool IsEffectDictionaryEmptyOrNull
-        //{
-        //    get
-        //    {
-        //        if (m_AllEffectsDictionary != null && m_AllEffectsDictionary.Count > 0)
-        //            return true;
-
-        //        //PopulateEffectDictionary();
-
-        //        //if (m_AllEffectsDictionary.Count > 0)
-        //        //    return true;
-
-        //        return false;
-        //    }
-        //}
-
         //Removes any unconnected LEM effects from the m_AllEffectsDictionary
         public void RemoveUnusedEvents()
         {
             //Check if start node is even connected to anything
             if (m_StartNodeData.HasAtLeastOneNextPointNode && m_AllEffects.Length > 0)
             {
-                //PopulateEffectDictionary();
-
-                //if (!IsEffectDictionaryEmptyOrNull)
-                //return;
-
                 int numberEffectsRemoved = 0;
 
                 Dictionary<string, LEM_BaseEffect> allEffectsInDict = AllEffectsDictionary;
@@ -121,7 +78,6 @@ namespace LEM_Effects
                 for (int i = 0; i < effectsInUse.Count; i++)
                 {
                     //Repopulate the collections with the effects that are only in use
-                    //allEffectsInDict.Add(effectsInUse[i].m_NodeBaseData.m_NodeID, effectsInUse[i]);
                     m_AllEffects[i] = effectsInUse[i];
                 }
 

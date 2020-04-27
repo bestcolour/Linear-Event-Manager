@@ -12,6 +12,7 @@ namespace LEM_Effects
 
         public override bool ExecuteEffect()
         {
+            Debug.Log("Delaying " + m_DelayTime);
             LinearEventsManager.Instance.TimeToAddToDelay = m_DelayTime;
             return true;
         }

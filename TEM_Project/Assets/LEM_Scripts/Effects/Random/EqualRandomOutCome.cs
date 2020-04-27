@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class EqualRandomOutCome : LEM_BaseEffect,IEffectSavable<int>
+    public class EqualRandomOutCome : LEM_BaseEffect, IEffectSavable<int>
     {
         public int m_NumberOfOutComes = 2;
 
@@ -14,10 +14,7 @@ namespace LEM_Effects
             return true;
         }
 
-        public override void Initialise()
-        {
-            base.Initialise();
-        }
+        public override void Initialise() { }
 
         public override string NextEffectID()
         {
