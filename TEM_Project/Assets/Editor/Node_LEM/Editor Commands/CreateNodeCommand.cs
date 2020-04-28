@@ -363,7 +363,10 @@ namespace LEM_Editor
             public int index;
         }
 
-        public static readonly Vector2 s_PasteOffset = new Vector2(25f, 25f);
+        public static readonly Vector2 s_PasteOffsetValue = new Vector2(25f, 25f);
+        public static Vector2 s_CurrentPasteOffSet = Vector2.zero;
+
+        public static void ResetCurrentPasteOffSet() { s_CurrentPasteOffSet = Vector2.zero; }
 
         //LEM_BaseEffect[] m_PastedEffectNodes = default;
         //Dictionary<string, PasteCommandData> m_PastedEffectStructDictionary = default;
@@ -373,6 +376,9 @@ namespace LEM_Editor
 
         public PasteCommand()
         {
+            //Increment  paste offset everytime u paste
+            s_CurrentPasteOffSet += s_PasteOffsetValue;
+
             //SHOULDNT COPY CAUSE THIS IS PASSED BY REFERENCE HENCE ANY PASTE COMMAND AFT THE FIRST ONE WILL CHANGE THE VERY FIRST COMMAND'S REFERENCE'S VALUE
             //Copy pasted effects
             LEM_BaseEffect dummy;
@@ -408,7 +414,7 @@ namespace LEM_Editor
 
                 //Create a duplicate node with a new node id
                 pastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(
-                    dummyPasteCommandData.baseEffect.m_NodeBaseData.m_Position + s_PasteOffset,
+                    dummyPasteCommandData.baseEffect.m_NodeBaseData.m_Position + s_CurrentPasteOffSet,
                      dummyPasteCommandData.baseEffect.m_NodeEffectType);
             }
 
@@ -443,7 +449,7 @@ namespace LEM_Editor
                     //Find the effect which has the old id but dont update the effect's NodeID but instead, update ur current effect which has the OutPoint Connection
 
                     //If there is such a node id inside the dictionary
-                    if (m_PastedEffectStructDictionary.TryGetValue(dummy[0], out dummyPasteCommandData))
+                    if (!string.IsNullOrEmpty(dummy[0]) && m_PastedEffectStructDictionary.TryGetValue(dummy[0], out dummyPasteCommandData))
                         dummy[0] = pastedNodes[dummyPasteCommandData.index].NodeID;
                     else
                         dummy = new string[0];
@@ -453,7 +459,8 @@ namespace LEM_Editor
                 else
                 {
                     for (int l = 0; l < dummy.Length; l++)
-                        dummy[l] = m_PastedEffectStructDictionary.TryGetValue(dummy[l], out dummyPasteCommandData) ? pastedNodes[dummyPasteCommandData.index].NodeID : null;
+                        if (!string.IsNullOrEmpty(dummy[l]))
+                            dummy[l] = m_PastedEffectStructDictionary.TryGetValue(dummy[l], out dummyPasteCommandData) ? pastedNodes[dummyPasteCommandData.index].NodeID : null;
                 }
 
                 //Reset if dummy is empty
@@ -509,13 +516,11 @@ namespace LEM_Editor
                 m_PastedEffectDictionary.Add(m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NodeID, m_PastedEffectStructDictionary[allKeys[i]].baseEffect);
             }
 
-          
-
         }
 
         public void Undo()
         {
-            
+
             string[] allKeys = m_PastedEffectDictionary.Keys.ToArray();
             //PasteCommandData dummyCommandData = new PasteCommandData();
             //Save before deleting the node
@@ -537,7 +542,7 @@ namespace LEM_Editor
             {
                 //Create a duplicate node with a new node id and load
                 effNode = NodeCommandInvoker.d_ReCreateEffectNode
-                       (m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_Position + s_PasteOffset,
+                       (m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_Position + s_PasteOffsetValue,
                        m_PastedEffectDictionary[allKeys[i]].m_NodeEffectType,
                        m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
 
@@ -586,7 +591,7 @@ namespace LEM_Editor
             {
                 //Create a duplicate node with a new node id
                 pastedNodes[i] = NodeCommandInvoker.d_ReCreateEffectNode
-                    (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + PasteCommand.s_PasteOffset,
+                    (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + PasteCommand.s_PasteOffsetValue,
                     nodeType: m_PastedEffects[i].m_NodeEffectType,
                     m_PastedEffects[i].m_NodeBaseData.m_NodeID);
 
@@ -629,7 +634,7 @@ namespace LEM_Editor
             {
                 //Create a duplicate node with a new node id
                 effNode = NodeCommandInvoker.d_ReCreateEffectNode
-                    (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + PasteCommand.s_PasteOffset,
+                    (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + PasteCommand.s_PasteOffsetValue,
                     nodeType: m_PastedEffects[i].m_NodeEffectType,
                     m_PastedEffects[i].m_NodeBaseData.m_NodeID);
 

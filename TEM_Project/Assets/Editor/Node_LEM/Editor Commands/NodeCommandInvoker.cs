@@ -12,7 +12,7 @@ namespace LEM_Editor
     // where u undo
     public struct NodeCommandType
     {
-        public const int CREATENODE = 0, DELETE = 1, MOVE = 2, CREATECONNECTION = 3, CUT = 4, PASTE = 5, CUTPASTE = 6;
+        public const int CREATENODE = 0, DELETE = 1, MOVE = 2, CREATECONNECTION = 3, CUT = 4, PASTE = 5, CUTPASTE = 6,DUPLICATE = 7;
     }
 
     public class NodeCommandInvoker
@@ -176,6 +176,7 @@ namespace LEM_Editor
 
         public void CopyToClipBoard(BaseEffectNode[] copiedEffectNodes)
         {
+            PasteCommand.ResetCurrentPasteOffSet();
             s_ClipBoard.Clear();
             //Reset
             m_HasCutButNotCutPaste = false;

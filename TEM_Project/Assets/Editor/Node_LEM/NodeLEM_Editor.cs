@@ -18,7 +18,6 @@ namespace LEM_Editor
             this.outConnectionPoints = outConnectionPoints;
         }
 
-        public bool IsMultiOutPointNode => outConnectionPoints.Length > 1;
 
     }
 
@@ -406,7 +405,7 @@ namespace LEM_Editor
         {
             instance.m_InitialClickedPosition = null;
             instance.m_IsDragging = false;
-            s_SelectionBox = default;
+            s_SelectionBox = Rect.zero;
             s_CurrentClickedNode = null;
             GUI.changed = true;
         }
@@ -585,7 +584,7 @@ namespace LEM_Editor
             for (int i = 0; i < allTupleKeys.Length; i++)
                 if (AllConnectionsDictionary[allTupleKeys[i]].IsWithinWindowScreen)
                     AllConnectionsDictionary[allTupleKeys[i]].Draw();
-              
+
 
             //foreach (Connection connection in AllConnectionsDictionary.Values)
             //{
@@ -1485,32 +1484,52 @@ namespace LEM_Editor
                           [new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
                           );
                 }
-                //else
-                //if (m_SelectedInPoint.IsConnected)
-                //{
-                //    OnClickRemoveConnection(
-                //      AllConnectionsDictionary[new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)]
-                //      );
-                //}
 
-                //Check if inpoint is connected. If not, then heck anyone can go for it
-                if (!m_SelectedInPoint.IsConnected)
+
+                //Else check if current outpoint's node is still being connected to the inpoint node (this may be a case in multioutput nodes)
+                if (AllConnectionsDictionary.ContainsKey(new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)))
                 {
-                    CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
+                    //warn the user not to do that n reset the outpoint skin
+                    Debug.LogWarning("Cant have a node with multiple outpoints to have shared inpoint!");
+                    TrySetConnectionPointSkin(m_SelectedOutPoint, 0);
                 }
                 else
                 {
-                    //Else, check if outpoint is a multiOutpoint node. If it isnt, then go right ahead
-                    if (!AllEffectsNodeInEditor[m_SelectedOutPoint.m_ParentNode.NodeID].IsMultiOutPointNode)
-                        CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
-                    else
-                    {
-                        //else just warn the user not to do that n reset the outpoint skin
-                        Debug.LogWarning("Cant have a node with multiple outpoints to have shared inpoint!");
-                        TrySetConnectionPointSkin(m_SelectedOutPoint, 0);
-                    }
-
+                    CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
                 }
+
+                ////Check if inpoint is connected. If not, then heck anyone can go for it
+                //if (!m_SelectedInPoint.IsConnected)
+                //    CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
+                //else
+                //{
+                //    //Else check if current outpoint's node is still being connected to the inpoint node (this may be a case in multioutput nodes)
+                //    if(AllConnectionsDictionary.ContainsKey(new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)))
+                //    {
+                //        //warn the user not to do that n reset the outpoint skin
+                //        Debug.LogWarning("Cant have a node with multiple outpoints to have shared inpoint!");
+                //        TrySetConnectionPointSkin(m_SelectedOutPoint, 0);
+                //    }
+                //    else
+                //    {
+                //        CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
+                //    }
+
+
+                //    //Else, check if outpoint is a multiOutpoint node. If it isnt, then go right ahead
+                //    if (!AllEffectsNodeInEditor[m_SelectedOutPoint.m_ParentNode.NodeID].IsMultiOutPointNode)
+                //        CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
+                //    else
+                //    {
+                //        //Check if current inpoint that is connected
+
+
+                //        //else just warn the user not to do that n reset the outpoint skin
+                //        Debug.LogWarning("Cant have a node with multiple outpoints to have shared inpoint!");
+                //        TrySetConnectionPointSkin(m_SelectedOutPoint, 0);
+                //    }
+
+                //}
 
                 ResetDrawingBezierCurve();
             }
@@ -1557,31 +1576,36 @@ namespace LEM_Editor
                        AllConnectionsDictionary[new Tuple<string, string>(m_SelectedOutPoint.GetConnectedNodeID(0), m_SelectedOutPoint.m_ParentNode.NodeID)]
                        );
                 }
-                //else
-                //if (m_SelectedInPoint.IsConnected)
+
+                ////Check if inpoint is connected. If not, then heck anyone can go for it
+                //if (!m_SelectedInPoint.IsConnected)
                 //{
-                //    OnClickRemoveConnection(
-                //      AllConnectionsDictionary[new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)]
-                //      );
+                //    CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
+                //}
+                //else
+                //{
+                //    //Else, check if outpoint is a multiOutpoint node. If it isnt, then go right ahead
+                //    if (!AllEffectsNodeInEditor[m_SelectedOutPoint.m_ParentNode.NodeID].IsMultiOutPointNode)
+                //        CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
+                //    else
+                //    {
+                //        //else just warn the user not to do that n reset the outpoint skin
+                //        Debug.LogWarning("Cant have a node with multiple outpoints to have shared inpoint!");
+                //        TrySetConnectionPointSkin(m_SelectedOutPoint, 0);
+                //    }
+
                 //}
 
-                //Check if inpoint is connected. If not, then heck anyone can go for it
-                if (!m_SelectedInPoint.IsConnected)
+                //Else check if current outpoint's node is still being connected to the inpoint node (this may be a case in multioutput nodes)
+                if (AllConnectionsDictionary.ContainsKey(new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)))
                 {
-                    CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
+                    //warn the user not to do that n reset the outpoint skin
+                    Debug.LogWarning("Cant have a node with multiple outpoints to have shared inpoint!");
+                    TrySetConnectionPointSkin(m_SelectedOutPoint, 0);
                 }
                 else
                 {
-                    //Else, check if outpoint is a multiOutpoint node. If it isnt, then go right ahead
-                    if (!AllEffectsNodeInEditor[m_SelectedOutPoint.m_ParentNode.NodeID].IsMultiOutPointNode)
-                        CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
-                    else
-                    {
-                        //else just warn the user not to do that n reset the outpoint skin
-                        Debug.LogWarning("Cant have a node with multiple outpoints to have shared inpoint!");
-                        TrySetConnectionPointSkin(m_SelectedOutPoint, 0);
-                    }
-
+                    CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
                 }
 
 

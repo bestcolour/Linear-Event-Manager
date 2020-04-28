@@ -208,7 +208,7 @@ namespace LEM_Editor
                     return true;
                 }
                 //Check if node is within selection box of editor
-                else if (NodeLEM_Editor.s_SelectionBox.Overlaps(m_TotalRect, true))
+                else if (NodeLEM_Editor.s_SelectionBox != Rect.zero && NodeLEM_Editor.s_SelectionBox.Overlaps(m_TotalRect, true))
                 {
                     SelectBySelectionBox();
                     return true;
