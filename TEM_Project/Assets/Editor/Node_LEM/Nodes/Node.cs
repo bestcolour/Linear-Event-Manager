@@ -43,9 +43,14 @@ namespace LEM_Editor
         protected Action<Node> d_OnSelectNode = null;
         protected Action<Node> d_OnDeselectNode = null;
 
+        public bool IsWithinWindowScreen => m_TotalRect.position.x + m_TotalRect.width > 0 && m_TotalRect.position.x < NodeLEM_Editor.instance.position.width * NodeLEM_Editor.InverseScaleFactor
+             &&
+             m_TotalRect.position.y + m_TotalRect.height > 0 && m_TotalRect.position.y < NodeLEM_Editor.instance.position.height * NodeLEM_Editor.InverseScaleFactor;
+
+
         public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
             Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint
-            , Action<Node> onSelectNode, Action<Node> onDeSelectNode,  Color midSkinColour)
+            , Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
         {
             m_TopRect = new Rect();
 

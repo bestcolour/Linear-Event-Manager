@@ -15,6 +15,7 @@ namespace LEM_Editor
         public Action<Connection> OnClickRemoveConnection
         { private get; set; }
 
+        public bool IsWithinWindowScreen => m_InPoint.m_ParentNode.IsWithinWindowScreen && m_OutPoint.m_ParentNode.IsWithinWindowScreen;
 
         public Connection(ConnectionPoint inPoint, ConnectionPoint outPoint, Action<Connection> OnClickRemoveConnection)
         {

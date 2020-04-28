@@ -140,6 +140,9 @@ namespace LEM_Editor
         const float k_MinScale = 0.15f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.05f;
         static float s_CurrentScaleFactor = 1f;
         float ScaleFactor { get { return s_CurrentScaleFactor; } set { s_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
+
+        public static float InverseScaleFactor => instance.m_InverseScaleFactorOnEveryGUIFrame;
+        float m_InverseScaleFactorOnEveryGUIFrame = default;
         #endregion
 
         #region SearchBox
@@ -498,6 +501,7 @@ namespace LEM_Editor
 
         void UpdateGUI()
         {
+            m_InverseScaleFactorOnEveryGUIFrame = 1 / ScaleFactor;
             Rect dummyRect = Rect.zero;
             Event currentEvent = Event.current;
 
@@ -570,14 +574,18 @@ namespace LEM_Editor
             //If nodes collection is not null
             if (AllNodesInEditor != null)
                 for (int i = 0; i < AllNodesInEditor.Count; i++)
-                    AllNodesInEditor[i].Draw();
+                    if (AllNodesInEditor[i].IsWithinWindowScreen)
+                        AllNodesInEditor[i].Draw();
+
         }
 
         void DrawConnections()
         {
             Tuple<string, string>[] allTupleKeys = AllConnectionsDictionary.Keys.ToArray();
             for (int i = 0; i < allTupleKeys.Length; i++)
-                AllConnectionsDictionary[allTupleKeys[i]].Draw();
+                if (AllConnectionsDictionary[allTupleKeys[i]].IsWithinWindowScreen)
+                    AllConnectionsDictionary[allTupleKeys[i]].Draw();
+              
 
             //foreach (Connection connection in AllConnectionsDictionary.Values)
             //{
