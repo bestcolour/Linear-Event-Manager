@@ -173,7 +173,7 @@ namespace LEM_Editor
 
         public void Execute()
         {
-            NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID,m_OutPointIndex);
+            NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID, m_OutPointIndex);
         }
 
         public void Undo()
@@ -183,136 +183,344 @@ namespace LEM_Editor
 
         public void Redo()
         {
-            NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID,m_OutPointIndex);
+            NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID, m_OutPointIndex);
         }
     }
 
+    //public class PasteCommand : INodeCommand
+    //{
+    //    public static readonly Vector2 s_PasteOffset = new Vector2(25f, 25f);
+
+    //    LEM_BaseEffect[] m_PastedEffectNodes = default;
+
+    //    public int CommandType => NodeCommandType.PASTE;
+
+    //    public PasteCommand()
+    //    {
+    //        m_PastedEffectNodes = new LEM_BaseEffect[NodeCommandInvoker.s_ClipBoard.Count];
+
+    //        //SHOULDNT COPY CAUSE THIS IS PASSED BY REFERENCE HENCE ANY PASTE COMMAND AFT THE FIRST ONE WILL CHANGE THE VERY FIRST COMMAND'S REFERENCE'S VALUE
+    //        //Copy pasted effects
+    //        for (int i = 0; i < NodeCommandInvoker.s_ClipBoard.Count; i++)
+    //        {
+    //            m_PastedEffectNodes[i] = NodeCommandInvoker.s_ClipBoard[i].ShallowClone();
+    //        }
+
+    //    }
+
+    //    public void Execute()
+    //    {
+    //        //all of these needs to be done in a certain order
+    //        BaseEffectNode[] pastedNodes = new BaseEffectNode[m_PastedEffectNodes.Length];
+    //        //Dictionary<string, BaseEffectNode> pastedBaseEffectNodeDictionary = new Dictionary<string, BaseEffectNode>();
+
+    //        //Create new nodes
+    //        for (int i = 0; i < m_PastedEffectNodes.Length; i++)
+    //        {
+    //            //Create a duplicate node with a new node id
+    //            pastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(nodePos: m_PastedEffectNodes[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffectNodes[i].m_NodeEffectType);
+    //        }
+
+    //        #region Old Identity Crisis Management 
+
+    //        //SINCE lem_baseeffects are references, if i change pastedEffect's list elements values, the m_PastedEffects's elements' values also change too
+    //        NodeBaseData dummy1 = new NodeBaseData();
+
+    //        //After cr8ting new nodes, settle their new node id identity issues (new node id means their current NodeID and ConnectedNodeID are wrong)
+    //        for (int i = 0; i < m_PastedEffectNodes.Length; i++)
+    //        {
+    //            //If this effect's node doesnt have at least one next node connected
+    //            if (!m_PastedEffectNodes[i].m_NodeBaseData.HasAtLeastOneNextPointNode)
+    //            {
+    //                continue;
+    //            }
+
+    //            //Since there is only one output for now
+    //            string[] dummy = new string[m_PastedEffectNodes[i].m_NodeBaseData.m_NextPointsIDs.Length];
+    //            for (int d = 0; d < dummy.Length; d++)
+    //            {
+    //                dummy[d] = m_PastedEffectNodes[i].m_NodeBaseData.m_NextPointsIDs[d];
+    //            }
+
+
+    //            //Populate dummy here but i cant think of a way to avoid a O(n^2) situation
+    //            //the best i can think of is to change this into a O(n log n) situation by using a list which removes its elements as it checks each elements so that we can narrow down our search list
+    //            if (m_PastedEffectNodes[i].m_NodeBaseData.HasOnlyOneNextPointNode)
+    //            {
+    //                //Find the effect which has the old id but dont update the effect's NodeID but instead, update ur current effect which has the OutPoint Connection
+    //                int effectIndexWhichHasOldID = Array.FindIndex(m_PastedEffectNodes, x => x.m_NodeBaseData.m_NodeID == dummy[0]);
+
+    //                //If no such effect is found in the clipboard (that means the connected node isnt selected when user copied)
+    //                if (effectIndexWhichHasOldID < 0)
+    //                {
+    //                    dummy = new string[0];
+    //                }
+    //                else
+    //                {
+    //                    dummy[0] = pastedNodes[effectIndexWhichHasOldID].NodeID;
+    //                }
+    //            }
+    //            //Else if there are multiple nextpoint nodes
+    //            else
+    //            {
+    //                for (int l = 0; l < dummy.Length; l++)
+    //                {
+    //                    int effectIndexWhichHasOldID = Array.FindIndex(m_PastedEffectNodes, x => x.m_NodeBaseData.m_NodeID == dummy[l]);
+
+    //                    //If no such effect is found in the clipboard (that means the connected node isnt selected when user copied)
+    //                    dummy[l] = effectIndexWhichHasOldID < 0 ? null : pastedNodes[effectIndexWhichHasOldID].NodeID;
+
+    //                }
+    //            }
+
+    //            //Reset if dummy is empty
+    //            dummy1.m_Position = m_PastedEffectNodes[i].m_NodeBaseData.m_Position;
+    //            dummy1.m_NodeID = m_PastedEffectNodes[i].m_NodeBaseData.m_NodeID;
+    //            dummy1.m_NextPointsIDs = dummy;
+
+    //            m_PastedEffectNodes[i].m_NodeBaseData = dummy1;
+    //            m_PastedEffectNodes[i].m_NodeBaseData.ResetNextPointsIDsIfEmpty();
+    //        }
+
+
+    //        for (int i = 0; i < m_PastedEffectNodes.Length; i++)
+    //        {
+    //            //Reassign Effects' nodeid to a new one cause we just created a new effect node
+    //            //but since it is a struct we need to reassign em
+    //            dummy1.m_NextPointsIDs = m_PastedEffectNodes[i].m_NodeBaseData.m_NextPointsIDs;
+    //            dummy1.m_Position = m_PastedEffectNodes[i].m_NodeBaseData.m_Position;
+    //            dummy1.m_NodeID = pastedNodes[i].NodeID;
+
+    //            m_PastedEffectNodes[i].m_NodeBaseData = dummy1;
+    //        }
+
+    //        #endregion
+
+
+    //        //Deselect all nodes 
+    //        NodeCommandInvoker.d_DeselectAllNodes();
+
+    //        //Restitch after all the node identity crisis has been settled
+    //        //Then copy over all the lemEffect related data after all the reseting and stuff
+    //        for (int i = 0; i < m_PastedEffectNodes.Length; i++)
+    //        {
+    //            NodeCommandInvoker.d_RestitchConnections(m_PastedEffectNodes[i]);
+
+    //            pastedNodes[i].SelectNode();
+    //            pastedNodes[i].LoadFromBaseEffect(m_PastedEffectNodes[i]);
+
+    //        }
+
+    //    }
+
+    //    public void Undo()
+    //    {
+    //        //Save before deleting the node
+    //        for (int i = 0; i < m_PastedEffectNodes.Length; i++)
+    //        {
+    //            m_PastedEffectNodes[i] = NodeCommandInvoker.d_CompileNodeEffect(m_PastedEffectNodes[i].m_NodeBaseData.m_NodeID);
+    //        }
+
+    //        //Delete the nodes
+    //        NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_PastedEffectNodes.Select(x => x.m_NodeBaseData).ToArray());
+    //    }
+
+    //    public void Redo()
+    //    {
+    //        BaseEffectNode effNode;
+
+    //        //Create new nodes
+    //        for (int i = 0; i < m_PastedEffectNodes.Length; i++)
+    //        {
+    //            //Create a duplicate node with a new node id and load
+    //            effNode = NodeCommandInvoker.d_ReCreateEffectNode
+    //                   (nodePos: m_PastedEffectNodes[i].m_NodeBaseData.m_Position + s_PasteOffset,
+    //                   nodeType: m_PastedEffectNodes[i].m_NodeEffectType,
+    //                   m_PastedEffectNodes[i].m_NodeBaseData.m_NodeID);
+
+    //            effNode.LoadFromBaseEffect(m_PastedEffectNodes[i]);
+    //            effNode.SelectNode();
+    //        }
+
+    //        //Restitch after all the node identity crisis has been settled
+    //        //Then copy over all the lemEffect related data after all the reseting and stuff
+    //        for (int i = 0; i < m_PastedEffectNodes.Length; i++)
+    //        {
+    //            NodeCommandInvoker.d_RestitchConnections(m_PastedEffectNodes[i]);
+    //        }
+
+    //    }
+
+
+    //}
+
+
     public class PasteCommand : INodeCommand
     {
+        struct PasteCommandData
+        {
+            public LEM_BaseEffect baseEffect;
+            public int index;
+        }
+
         public static readonly Vector2 s_PasteOffset = new Vector2(25f, 25f);
 
-        LEM_BaseEffect[] m_PastedEffects = default;
+        //LEM_BaseEffect[] m_PastedEffectNodes = default;
+        Dictionary<string, PasteCommandData> m_PastedEffectDictionary = default;
 
         public int CommandType => NodeCommandType.PASTE;
 
         public PasteCommand()
         {
-            m_PastedEffects = new LEM_BaseEffect[NodeCommandInvoker.s_ClipBoard.Count];
+            //m_PastedEffectNodes = new LEM_BaseEffect[NodeCommandInvoker.s_ClipBoard.Count];
+
+            m_PastedEffectDictionary = new Dictionary<string, PasteCommandData>();
 
             //SHOULDNT COPY CAUSE THIS IS PASSED BY REFERENCE HENCE ANY PASTE COMMAND AFT THE FIRST ONE WILL CHANGE THE VERY FIRST COMMAND'S REFERENCE'S VALUE
             //Copy pasted effects
+            LEM_BaseEffect dummy;
+            PasteCommandData dummy2 = new PasteCommandData();
+
             for (int i = 0; i < NodeCommandInvoker.s_ClipBoard.Count; i++)
             {
-                m_PastedEffects[i] = NodeCommandInvoker.s_ClipBoard[i].ShallowClone();
+                dummy = NodeCommandInvoker.s_ClipBoard[i].ShallowClone();
+                dummy2.baseEffect = dummy;
+                m_PastedEffectDictionary.Add(dummy.m_NodeBaseData.m_NodeID, dummy2);
             }
 
         }
 
         public void Execute()
         {
-
-
             //all of these needs to be done in a certain order
-            BaseEffectNode[] pastedNodes = new BaseEffectNode[m_PastedEffects.Length];
+            BaseEffectNode[] pastedNodes = new BaseEffectNode[m_PastedEffectDictionary.Count];
+
+            string[] allKeys = m_PastedEffectDictionary.Keys.ToArray();
+            PasteCommandData dummyPasteCommandData = new PasteCommandData();
 
             //Create new nodes
-            for (int i = 0; i < m_PastedEffects.Length; i++)
+            for (int i = 0; i < allKeys.Length; i++)
             {
+                //Redefine the dictionary's keys to set its index
+                dummyPasteCommandData.baseEffect = m_PastedEffectDictionary[allKeys[i]].baseEffect;
+                dummyPasteCommandData.index = i;
+                m_PastedEffectDictionary[allKeys[i]] = dummyPasteCommandData;
+
                 //Create a duplicate node with a new node id
-                pastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset, nodeType: m_PastedEffects[i].m_NodeEffectType);
+                pastedNodes[i] = NodeCommandInvoker.d_CreateEffectNode(
+                    m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_Position + s_PasteOffset,
+                     m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeEffectType);
             }
 
-            #region Identity Crisis Management 
+            #region Old Identity Crisis Management 
 
             //SINCE lem_baseeffects are references, if i change pastedEffect's list elements values, the m_PastedEffects's elements' values also change too
             NodeBaseData dummy1 = new NodeBaseData();
 
             //After cr8ting new nodes, settle their new node id identity issues (new node id means their current NodeID and ConnectedNodeID are wrong)
-            for (int i = 0; i < m_PastedEffects.Length; i++)
+            for (int i = 0; i < allKeys.Length; i++)
             {
                 //If this effect's node doesnt have at least one next node connected
-                if (!m_PastedEffects[i].m_NodeBaseData.HasAtLeastOneNextPointNode)
+                if (!m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.HasAtLeastOneNextPointNode)
                 {
                     continue;
                 }
 
                 //Since there is only one output for now
-                string[] dummy = new string[m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs.Length];
+                string[] dummy = new string[m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NextPointsIDs.Length];
                 for (int d = 0; d < dummy.Length; d++)
                 {
-                    dummy[d] = m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs[d];
+                    dummy[d] = m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NextPointsIDs[d];
                 }
 
 
                 //Populate dummy here but i cant think of a way to avoid a O(n^2) situation
                 //the best i can think of is to change this into a O(n log n) situation by using a list which removes its elements as it checks each elements so that we can narrow down our search list
-                if (m_PastedEffects[i].m_NodeBaseData.HasOnlyOneNextPointNode)
+                if (m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.HasOnlyOneNextPointNode)
                 {
                     //Find the effect which has the old id but dont update the effect's NodeID but instead, update ur current effect which has the OutPoint Connection
-                    int effectIndexWhichHasOldID = Array.FindIndex(m_PastedEffects, x => x.m_NodeBaseData.m_NodeID == dummy[0]);
+                    //int effectIndexWhichHasOldID = Array.FindIndex(m_PastedEffectNodes, x => x.m_NodeBaseData.m_NodeID == dummy[0]);
 
-                    //If no such effect is found in the clipboard (that means the connected node isnt selected when user copied)
-                    if (effectIndexWhichHasOldID < 0)
+                    //If there is such a node id inside the dictionary
+                    if (m_PastedEffectDictionary.TryGetValue(dummy[0], out dummyPasteCommandData))
                     {
-                        dummy = new string[0];
+                        dummy[0] = pastedNodes[dummyPasteCommandData.index].NodeID;
                     }
                     else
                     {
-                        dummy[0] = pastedNodes[effectIndexWhichHasOldID].NodeID;
+                        dummy = new string[0];
                     }
+
+                    ////If no such effect is found in the clipboard (that means the connected node isnt selected when user copied)
+                    //if (effectIndexWhichHasOldID < 0)
+                    //{
+                    //    dummy = new string[0];
+                    //}
+                    //else
+                    //{
+                    //    dummy[0] = pastedNodes[effectIndexWhichHasOldID].NodeID;
+                    //}
                 }
                 //Else if there are multiple nextpoint nodes
                 else
                 {
                     for (int l = 0; l < dummy.Length; l++)
                     {
-                        int effectIndexWhichHasOldID = Array.FindIndex(m_PastedEffects, x => x.m_NodeBaseData.m_NodeID == dummy[l]);
+                        dummy[l] = m_PastedEffectDictionary.TryGetValue(dummy[l], out dummyPasteCommandData) ? pastedNodes[dummyPasteCommandData.index].NodeID : null;
 
-                        //If no such effect is found in the clipboard (that means the connected node isnt selected when user copied)
-                        if (effectIndexWhichHasOldID < 0)
-                        {
-                            dummy[l] = null;
-                        }
-                        else
-                        {
-                            dummy[l] = pastedNodes[effectIndexWhichHasOldID].NodeID;
-                        }
+                        //int effectIndexWhichHasOldID = Array.FindIndex(m_PastedEffectNodes, x => x.m_NodeBaseData.m_NodeID == dummy[l]);
+
+                        ////If no such effect is found in the clipboard (that means the connected node isnt selected when user copied)
+                        //dummy[l] = effectIndexWhichHasOldID < 0 ? null : pastedNodes[effectIndexWhichHasOldID].NodeID;
+
                     }
                 }
 
                 //Reset if dummy is empty
-                dummy1.m_Position = m_PastedEffects[i].m_NodeBaseData.m_Position;
-                dummy1.m_NodeID = m_PastedEffects[i].m_NodeBaseData.m_NodeID;
+                dummy1.m_Position = m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_Position;
+                dummy1.m_NodeID = m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NodeID;
                 dummy1.m_NextPointsIDs = dummy;
 
-                m_PastedEffects[i].m_NodeBaseData = dummy1;
-                m_PastedEffects[i].m_NodeBaseData.ResetNextPointsIDsIfEmpty();
+                dummyPasteCommandData = m_PastedEffectDictionary[allKeys[i]];
+                dummyPasteCommandData.baseEffect.m_NodeBaseData = dummy1;
+                dummyPasteCommandData.baseEffect.m_NodeBaseData.ResetNextPointsIDsIfEmpty();
+
+                m_PastedEffectDictionary[allKeys[i]] = dummyPasteCommandData;
+                //m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.ResetNextPointsIDsIfEmpty();
+                //m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData = dummy1;
             }
 
 
-            for (int i = 0; i < m_PastedEffects.Length; i++)
+            for (int i = 0; i < allKeys.Length; i++)
             {
                 //Reassign Effects' nodeid to a new one cause we just created a new effect node
                 //but since it is a struct we need to reassign em
-                dummy1.m_NextPointsIDs = m_PastedEffects[i].m_NodeBaseData.m_NextPointsIDs;
-                dummy1.m_Position = m_PastedEffects[i].m_NodeBaseData.m_Position;
+                dummy1.m_NextPointsIDs = m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NextPointsIDs;
+                dummy1.m_Position = m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_Position;
                 dummy1.m_NodeID = pastedNodes[i].NodeID;
 
-                m_PastedEffects[i].m_NodeBaseData = dummy1;
+                dummyPasteCommandData = m_PastedEffectDictionary[allKeys[i]];
+                dummyPasteCommandData.baseEffect.m_NodeBaseData = dummy1;
+
+                //m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData = dummy1;
+                m_PastedEffectDictionary[allKeys[i]] = dummyPasteCommandData;
             }
 
             #endregion
+
+
             //Deselect all nodes 
             NodeCommandInvoker.d_DeselectAllNodes();
 
             //Restitch after all the node identity crisis has been settled
             //Then copy over all the lemEffect related data after all the reseting and stuff
-            for (int i = 0; i < m_PastedEffects.Length; i++)
+            for (int i = 0; i < allKeys.Length; i++)
             {
-                NodeCommandInvoker.d_RestitchConnections(m_PastedEffects[i]);
+                pastedNodes[i].LoadFromBaseEffect(m_PastedEffectDictionary[allKeys[i]].baseEffect);
+
+                NodeCommandInvoker.d_RestitchConnections(m_PastedEffectDictionary[allKeys[i]].baseEffect);
 
                 pastedNodes[i].SelectNode();
-                pastedNodes[i].LoadFromBaseEffect(m_PastedEffects[i]);
 
             }
 
@@ -320,44 +528,52 @@ namespace LEM_Editor
 
         public void Undo()
         {
+            
+            string[] allKeys = m_PastedEffectDictionary.Keys.ToArray();
+            PasteCommandData dummyCommandData = new PasteCommandData();
             //Save before deleting the node
-            for (int i = 0; i < m_PastedEffects.Length; i++)
+            for (int i = 0; i < allKeys.Length; i++)
             {
-                m_PastedEffects[i] = NodeCommandInvoker.d_CompileNodeEffect(m_PastedEffects[i].m_NodeBaseData.m_NodeID);
+                dummyCommandData.baseEffect = NodeCommandInvoker.d_CompileNodeEffect(m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NodeID);
+                m_PastedEffectDictionary[allKeys[i]] = dummyCommandData;
             }
 
             //Delete the nodes
-            NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_PastedEffects.Select(x => x.m_NodeBaseData).ToArray());
+            NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_PastedEffectDictionary.Select(x => x.Value.baseEffect.m_NodeBaseData).ToArray());
         }
 
         public void Redo()
         {
             BaseEffectNode effNode;
+            string[] allKeys = m_PastedEffectDictionary.Keys.ToArray();
+
 
             //Create new nodes
-            for (int i = 0; i < m_PastedEffects.Length; i++)
+            for (int i = 0; i < allKeys.Length; i++)
             {
                 //Create a duplicate node with a new node id and load
                 effNode = NodeCommandInvoker.d_ReCreateEffectNode
-                       (nodePos: m_PastedEffects[i].m_NodeBaseData.m_Position + s_PasteOffset,
-                       nodeType: m_PastedEffects[i].m_NodeEffectType,
-                       m_PastedEffects[i].m_NodeBaseData.m_NodeID);
+                       (m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_Position + s_PasteOffset,
+                       m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeEffectType,
+                       m_PastedEffectDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NodeID);
 
-                effNode.LoadFromBaseEffect(m_PastedEffects[i]);
+                effNode.LoadFromBaseEffect(m_PastedEffectDictionary[allKeys[i]].baseEffect);
                 effNode.SelectNode();
             }
 
             //Restitch after all the node identity crisis has been settled
             //Then copy over all the lemEffect related data after all the reseting and stuff
-            for (int i = 0; i < m_PastedEffects.Length; i++)
+            for (int i = 0; i < allKeys.Length; i++)
             {
-                NodeCommandInvoker.d_RestitchConnections(m_PastedEffects[i]);
+                NodeCommandInvoker.d_RestitchConnections(m_PastedEffectDictionary[allKeys[i]].baseEffect);
             }
 
         }
 
 
     }
+
+
 
     public class CutPasteCommand : INodeCommand
     {
@@ -401,11 +617,8 @@ namespace LEM_Editor
             //Then copy over all the lemEffect related data after all the reseting and stuff
             for (int i = 0; i < m_PastedEffects.Length; i++)
             {
-
                 NodeCommandInvoker.d_RestitchConnections(m_PastedEffects[i]);
-
                 pastedNodes[i].SelectNode();
-
             }
         }
 
