@@ -40,7 +40,7 @@ namespace LEM_Effects
             targetScale = m_TargetScale;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             //Create a dummy variable outside of the loop so that we dont create 
             //a new var every loop (optimise)
@@ -60,7 +60,7 @@ namespace LEM_Effects
             }
 
             //Return true after completing the effect
-            return base.ExecuteEffect();
+            return base.UpdateEffect();
         }
 
 

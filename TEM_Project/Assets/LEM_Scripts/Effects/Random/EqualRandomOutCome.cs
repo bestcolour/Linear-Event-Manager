@@ -9,14 +9,14 @@ namespace LEM_Effects
         public int m_NumberOfOutComes = 2;
 
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             return true;
         }
 
         public override void Initialise() { }
 
-        public override string NextEffectID()
+        public override string GetNextNodeID()
         {
             if (m_NodeBaseData.HasAtLeastOneNextPointNode)
             {

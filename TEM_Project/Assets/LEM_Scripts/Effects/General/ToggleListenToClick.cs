@@ -8,7 +8,7 @@ namespace LEM_Effects
         bool m_State = true;
 
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             LinearEventsManager.Instance.ListeningForClick = m_State;
             return true;

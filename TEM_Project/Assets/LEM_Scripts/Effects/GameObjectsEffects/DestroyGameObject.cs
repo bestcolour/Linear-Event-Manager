@@ -23,7 +23,7 @@ namespace LEM_Effects
 
         #endregion
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             Debug.Log("Destroying " + m_TargetObject.name);
             //Destroy the targetted object

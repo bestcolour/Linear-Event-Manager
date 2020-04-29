@@ -41,7 +41,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime/duration;
 
@@ -53,7 +53,7 @@ namespace LEM_Effects
             {
                 //Set the targetimage as the actual targetted colour
                 targetImage.color = new Color(targetImage.color.r, targetImage.color.g, targetImage.color.b,targetAlpha);
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -93,7 +93,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -112,7 +112,7 @@ namespace LEM_Effects
                     //Set the targetimages as the actual targetted colour
                     targetImages[i].color = new Color(targetImages[i].color.r, targetImages[i].color.g, targetImages[i].color.b, targetAlpha);
                 }
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -149,7 +149,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -161,7 +161,7 @@ namespace LEM_Effects
             {
                 //Set the targetimage as the actual targetted colour
                 targetText.color = new Color(targetText.color.r, targetText.color.g, targetText.color.b, targetAlpha);
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -201,7 +201,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -220,7 +220,7 @@ namespace LEM_Effects
                     //Set the targetimages as the actual targetted colour
                     targetTexts[i].color = new Color(targetTexts[i].color.r, targetTexts[i].color.g, targetTexts[i].color.b, targetAlpha);
                 }
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -257,7 +257,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -269,7 +269,7 @@ namespace LEM_Effects
             {
                 //Set the targetimage as the actual targetted colour
                 textMeshProGUI.color = new Color(textMeshProGUI.color.r, textMeshProGUI.color.g, textMeshProGUI.color.b, targetAlpha);
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -309,7 +309,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -328,7 +328,7 @@ namespace LEM_Effects
                     //Set the targetimages as the actual targetted colour
                     textMeshProGUIs[i].color = new Color(textMeshProGUIs[i].color.r, textMeshProGUIs[i].color.g, textMeshProGUIs[i].color.b, targetAlpha);
                 }
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -365,7 +365,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -377,7 +377,7 @@ namespace LEM_Effects
             {
                 //Set the targetimage as the actual targetted colour
                 textMeshPro.color = new Color(textMeshPro.color.r, textMeshPro.color.g, textMeshPro.color.b, targetAlpha);
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -417,7 +417,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -436,7 +436,7 @@ namespace LEM_Effects
                     //Set the targetimages as the actual targetted colour
                     textMeshPros[i].color = new Color(textMeshPros[i].color.r, textMeshPros[i].color.g, textMeshPros[i].color.b, targetAlpha);
                 }
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -473,7 +473,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -485,7 +485,7 @@ namespace LEM_Effects
             {
                 //Set the targetimage as the actual targetted colour
                 targetSprite.color = new Color(targetSprite.color.r, targetSprite.color.g, targetSprite.color.b, targetAlpha);
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -525,7 +525,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -544,7 +544,7 @@ namespace LEM_Effects
                     //Set the targetimages as the actual targetted colour
                     targetSprites[i].color = new Color(targetSprites[i].color.r, targetSprites[i].color.g, targetSprites[i].color.b, targetAlpha);
                 }
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -584,7 +584,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -605,7 +605,7 @@ namespace LEM_Effects
                        targetRenderer.materials[i].color.g, targetRenderer.materials[i].color.b, targetAlpha); 
                 }
 
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -649,7 +649,7 @@ namespace LEM_Effects
             targetAlpha = targetAlpha / 255f;
         }
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             t += Time.deltaTime / duration;
 
@@ -678,7 +678,7 @@ namespace LEM_Effects
                     }
                 }
 
-                return base.ExecuteEffect();
+                return base.UpdateEffect();
             }
 
             return false;
@@ -698,7 +698,7 @@ namespace LEM_Effects
         [Tooltip("The text you want to insert into the target text")]
         [SerializeField] string newText = default;
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             //Retext 
             targetText.text = newText;
@@ -716,7 +716,7 @@ namespace LEM_Effects
         [Tooltip("The text you want to insert into the target text")]
         [SerializeField] string newText = default;
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             //Retext 
             targetText.text = newText;
@@ -734,7 +734,7 @@ namespace LEM_Effects
         [Tooltip("The text you want to insert into the target text")]
         [SerializeField] string newText = default;
 
-        public override bool ExecuteEffect()
+        public override bool UpdateEffect()
         {
             //Retext 
             targetText.text = newText;

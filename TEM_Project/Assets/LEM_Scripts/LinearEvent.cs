@@ -19,6 +19,8 @@ namespace LEM_Effects
         public LEM_BaseEffect[] m_AllEffects = default;
         public NodeBaseData m_StartNodeData = default;
 
+        [SerializeField, ReadOnly]
+        string m_CurrentEffect = default;
 
         //Runtime values
         public Dictionary<string, LEM_BaseEffect> AllEffectsDictionary
