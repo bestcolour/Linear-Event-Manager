@@ -9,10 +9,9 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.HaltEffect;
 
-        public override bool UpdateEffect()
+        public override void Initialise()
         {
             LinearEventsManager.Instance.TimeToAddToDelay = m_DelayTime;
-            return true;
         }
 
         public void SetUp(float t1)

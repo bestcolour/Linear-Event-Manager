@@ -12,7 +12,7 @@ public class LinearEventsManager : MonoBehaviour
 {
     public static LinearEventsManager Instance;
 
-    Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>> m_AllLinearEventsEffectsDictionary = default;
+    Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>> m_AllLinearEventsEffectsDictionary = new Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>>();
 
     #region Linear Events
     [Header("Initialisation Settings")]
@@ -29,7 +29,7 @@ public class LinearEventsManager : MonoBehaviour
     LinearEvent m_PlayingEvent = default;
     public LinearEvent CurrentEvent { set { m_PlayingEvent = value; } }
 
-    [Tooltip("What is the expected amount of effects to run at one time? Increase this if you feel like there will be many effects running over a short period of time"),SerializeField]
+    [Tooltip("What is the expected amount of effects to run at one time? Increase this if you feel like there will be many effects running over a short period of time"), SerializeField]
     int m_StartingUpdateEffectCapacity = 5;
 
     [SerializeField, Tooltip("How many effects should be executed in a single frame?")]
@@ -38,7 +38,7 @@ public class LinearEventsManager : MonoBehaviour
 
 
     //Stop conditions
-    [ReadOnly, Header("RunTime Checks"), Space(15),SerializeField]
+    [ReadOnly, Header("RunTime Checks"), Space(15), SerializeField]
     bool m_IsInitialised = false;
 
     [ReadOnly] bool m_isEffectsPaused = true;
@@ -47,7 +47,7 @@ public class LinearEventsManager : MonoBehaviour
     [ReadOnly, SerializeField]
     LEM_BaseEffect m_PreviousEffectPlayed = null;
 
-    [ReadOnly,SerializeField]
+    [ReadOnly, SerializeField]
     float m_DelayBeforeNextEffect = default;
     public float TimeToAddToDelay { set { m_DelayBeforeNextEffect += value; } }
 
@@ -80,11 +80,11 @@ public class LinearEventsManager : MonoBehaviour
             if (m_PlayOnAwake)
             {
 #if UNITY_EDITOR
-                Debug.Assert(m_PlayingEvent!=null, "There is no Playing Event to play OnAwake!", m_PlayingEvent);
+                Debug.Assert(m_PlayingEvent != null, "There is no Playing Event to play OnAwake!", this);
                 Debug.Assert(m_PlayingEvent.m_StartNodeData.HasAtLeastOneNextPointNode, "The Start Node of " + m_PlayingEvent.name + " has not been connected to any effects", m_PlayingEvent);
 #endif
 
-                LoadNextEffect(m_InstantEffectCapacity,m_PlayingEvent.m_StartNodeData.m_NextPointsIDs[0]);
+                LoadNextEffect(m_InstantEffectCapacity, m_PlayingEvent.m_StartNodeData.m_NextPointsIDs[0]);
                 m_isEffectsPaused = false;
             }
 
@@ -110,8 +110,6 @@ public class LinearEventsManager : MonoBehaviour
             return;
         }
 #endif
-
-        m_AllLinearEventsEffectsDictionary = new Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>>();
 
         //O(n^2)
         for (int i = 0; i < m_AllLinearEventsInScene.Length; i++)
@@ -222,20 +220,20 @@ public class LinearEventsManager : MonoBehaviour
         if (m_ListeningForTrigger)
             return;
 
-        //If the previosu effect played is at the end,
-        if (!m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode)
-            return;
-
         LoadNextEffect(m_InstantEffectCapacity);
 
     }
 
     void LoadNextEffect(int maxEffectsPerFrame)
     {
-        maxEffectsPerFrame--;
+        //Stop loading effect if there is no next effect
+        if (!m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode)
+            return;
 
         //Record next effect
         m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][m_PreviousEffectPlayed.GetNextNodeID()];
+
+        maxEffectsPerFrame--;
 
         m_PreviousEffectPlayed.Initialise();
 
@@ -245,26 +243,36 @@ public class LinearEventsManager : MonoBehaviour
             case LEM_BaseEffect.EffectFunctionType.InstantEffect:
                 break;
 
-                //Effect type that are supposed to be updated everyframe
+            //Effect type that are supposed to be updated everyframe
             case LEM_BaseEffect.EffectFunctionType.UpdateEffect:
                 AddEffectToCycle(m_PreviousEffectPlayed);
                 break;
 
-                //If effect type is a halt effect type (delay time, listen for trigger, listen for mouse etc.
+            //If effect type is a halt effect type (delay time, listen for trigger, listen for mouse etc.
             case LEM_BaseEffect.EffectFunctionType.HaltEffect:
                 return;
         }
 
-        if(maxEffectsPerFrame > 0)
+        if (maxEffectsPerFrame > 0)
             LoadNextEffect(maxEffectsPerFrame);
     }
 
-    void LoadNextEffect(int maxEffectsPerFrame,string effectID)
+    void LoadNextEffect(int maxEffectsPerFrame, string effectID)
     {
-        maxEffectsPerFrame--;
-
         //Load next effect
         m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][effectID];
+
+        //Stop loading effect if there is no next effect
+        if (!m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("Effect " + m_PreviousEffectPlayed.name + " does not have any effect to play!", m_PreviousEffectPlayed);
+#endif
+            return;
+        }
+
+        maxEffectsPerFrame--;
+
         m_PreviousEffectPlayed.Initialise();
 
         switch (m_PreviousEffectPlayed.FunctionType)

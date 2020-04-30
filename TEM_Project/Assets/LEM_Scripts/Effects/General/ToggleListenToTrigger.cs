@@ -9,10 +9,9 @@ namespace LEM_Effects
 
 		public override EffectFunctionType FunctionType => EffectFunctionType.HaltEffect;
 
-		public override bool UpdateEffect()
+		public override void Initialise()
 		{
 			LinearEventsManager.Instance.ListeningForTrigger = m_State;
-			return true;
 		}
 
 		public void SetUp(bool t1)
