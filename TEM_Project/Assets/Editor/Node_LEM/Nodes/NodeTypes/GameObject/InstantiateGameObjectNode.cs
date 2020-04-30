@@ -17,9 +17,9 @@ namespace LEM_Editor
 
         protected override string EffectTypeName => "InstantiateGameObjectNode";
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color midSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
-            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, midSkinColour);
+            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             //Override the rect size n pos
             SetNodeRects(position, NodeTextureDimensions.BIG_MID_SIZE, NodeTextureDimensions.BIG_TOP_SIZE);
@@ -31,6 +31,11 @@ namespace LEM_Editor
 
             Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 110f, m_MidRect.width - 20, 15f);
 
+            LEMStyleLibrary.s_GUIPreviousColour = EditorStyles.label.normal.textColor;
+            //LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+            //GUI.skin.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
+            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
+
             //Draw fields custom to this class
             m_TargetObject = (GameObject)EditorGUI.ObjectField(propertyRect, "Object to Instantiate", m_TargetObject, typeof(GameObject), true);
             propertyRect.y += 20;
@@ -41,6 +46,8 @@ namespace LEM_Editor
             m_TargetRotation = EditorGUI.Vector3Field(propertyRect, "Target Rotation", m_TargetRotation);
             propertyRect.y += 40f;
             m_TargetScale = EditorGUI.Vector3Field(propertyRect, "Target Scale", m_TargetScale);
+            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+            //GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
 
         }
 

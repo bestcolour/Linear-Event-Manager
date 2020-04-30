@@ -32,9 +32,9 @@ namespace LEM_Editor
 
         public UpdateCycle m_UpdateCycle = default;
 
-        public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode,Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color midSkinColour)
+        public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode,Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
-            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
+            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, topSkinColour);
 
             m_Title = EffectTypeName;
             m_Title = LEMDictionary.RemoveNodeWord(m_Title);

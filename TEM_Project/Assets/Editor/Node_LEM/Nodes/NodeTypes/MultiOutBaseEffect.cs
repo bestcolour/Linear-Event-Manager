@@ -18,9 +18,9 @@ namespace LEM_Editor
 
         static readonly Vector2 k_MidRectIncrements = new Vector2(0f, 35f);
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color midSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
-            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, midSkinColour);
+            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             m_ConnectionPointStyle = connectionPointStyle;
             d_OnClickOutPoint = onClickOutPoint;
@@ -43,11 +43,11 @@ namespace LEM_Editor
             LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
 
             //Draw the top of the node
-            GUI.color = LEMStyleLibrary.s_CurrentTopTextureColour;
+            GUI.color = m_TopSkinColour;
             GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground, ScaleMode.StretchToFill);
 
             //Draw the node midskin with its colour
-            GUI.color = m_MidSkinColour;
+            GUI.color = LEMStyleLibrary.s_CurrentMidSkinColour;
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
             GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 

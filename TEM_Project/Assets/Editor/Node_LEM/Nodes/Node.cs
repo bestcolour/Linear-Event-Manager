@@ -38,7 +38,7 @@ namespace LEM_Editor
 
         protected NodeSkinCollection m_NodeSkin = default;
         //Top skin will pull from a static cache
-        protected Color m_MidSkinColour = default;
+        protected Color m_TopSkinColour = default;
 
         protected Action<Node> d_OnSelectNode = null;
         protected Action<Node> d_OnDeselectNode = null;
@@ -50,7 +50,7 @@ namespace LEM_Editor
 
         public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
             Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint
-            , Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
+            , Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
         {
             m_TopRect = new Rect();
 
@@ -66,7 +66,7 @@ namespace LEM_Editor
             m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint);
             m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint);
 
-            m_MidSkinColour = midSkinColour;
+            m_TopSkinColour = topSkinColour;
         }
 
         //Delta here is a finite increment (eg time.delta time, mouse movement delta(Event.delta), rectransform's delta x and y)
@@ -93,11 +93,11 @@ namespace LEM_Editor
             LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
 
             //Draw the top of the node
-            GUI.color = LEMStyleLibrary.s_CurrentTopTextureColour;
+            GUI.color = m_TopSkinColour;
             GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground, ScaleMode.StretchToFill);
 
             //Draw the node midskin with its colour
-            GUI.color = m_MidSkinColour;
+            GUI.color = LEMStyleLibrary.s_CurrentMidSkinColour;
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
             GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 

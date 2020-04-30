@@ -11,9 +11,9 @@ namespace LEM_Editor
 
         protected override string EffectTypeName => "AddDelayNode";
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color midSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
-            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, midSkinColour);
+            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             //Override the rect size n pos
             SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
@@ -35,11 +35,11 @@ namespace LEM_Editor
             LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
 
             //Draw the top of the node
-            GUI.color = LEMStyleLibrary.s_CurrentTopTextureColour;
+            GUI.color = m_TopSkinColour;
             GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground, ScaleMode.StretchToFill);
 
             //Draw the node midskin with its colour
-            GUI.color = m_MidSkinColour;
+            GUI.color = LEMStyleLibrary.s_CurrentMidSkinColour;
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
             GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
@@ -80,11 +80,13 @@ namespace LEM_Editor
             //Draw UpdateCycle enum
 
             propertyRect1.y += 32.5f;
+            LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+            GUI.skin.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
             GUI.Label(propertyRect1, "Time to Delay");
+            GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
             propertyRect1.y += 20f;
             propertyRect1.height = 25f;
             m_DelayTimeToAdd = EditorGUI.FloatField(propertyRect1, m_DelayTimeToAdd);
-
 
         }
 

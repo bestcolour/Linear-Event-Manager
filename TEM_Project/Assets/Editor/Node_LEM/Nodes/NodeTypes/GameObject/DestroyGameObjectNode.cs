@@ -11,13 +11,14 @@ namespace LEM_Editor
 
         protected override string EffectTypeName => "DestroyGameObjectNode";
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color midSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
-            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, midSkinColour);
+            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
+
             //Override the rect size n pos
             SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
-        }
 
+        }
 
         public override void Draw()
         {
@@ -25,7 +26,11 @@ namespace LEM_Editor
 
             //Draw a object field for inputting  the gameobject to destroy
             Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 110f, m_MidRect.width - 20, 20f);
+
+            LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+            GUI.skin.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
             GUI.Label(propertyRect, "Object To Destroy");
+            GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
             propertyRect.y += 20f;
             propertyRect.height = 25f;
             m_TargetObject = (GameObject)EditorGUI.ObjectField(propertyRect, "", m_TargetObject, typeof(GameObject), true);
@@ -42,7 +47,6 @@ namespace LEM_Editor
 
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
-            //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
 
             myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
             myEffect.SetUp(m_TargetObject);

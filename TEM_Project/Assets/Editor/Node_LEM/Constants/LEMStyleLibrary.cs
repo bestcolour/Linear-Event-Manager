@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 namespace LEM_Editor
 {
@@ -9,23 +7,10 @@ namespace LEM_Editor
     {
         public static bool m_SkinsLoaded = false;
 
-        //    #region Colours
-        //    //public Dictionary<string, NodeSkinCollection> m_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
-        //    public static readonly Dictionary<string, Color> s_NodeColourDictionary = new Dictionary<string, Color>
-        //{
-        //    {"StartNode",                  new Color(0.11f, 0.937f, 0.11f) },
-        //    //{"EndNode",                    new Color(0.969f, 0.141f, 0.141f) },
-        //    { "InstantiateGameObjectNode", new Color(0.286f,0.992f,0.733f)},
-        //    { "DestroyGameObjectNode",     new Color(0.796f,0.098f,0.098f) },
-        //     {"AddDelayNode",         new Color(1f,0.667f,0.114f) },
-        //     {"ToggleListenToClickNode",         new Color(0.498f,0.471f,1f) },
-        //     {"ToggleListenToTriggerNode",         new Color(0.361f,0.82f,1f) },
-        //};
-        //    #endregion
-
         public static Color s_GUIPreviousColour = default;
         //To be pulled by all nodes with top textures 
-        public static Color s_CurrentTopTextureColour = new Color(0.862f, 0.894f, 0.862f);
+        public static Color s_CurrentMidSkinColour = default;
+        public static Color s_CurrentBezierColour = default;
         public static Color s_CurrentLabelColour = default;
 
         public static GUIStyle s_InPointStyle = default;
@@ -39,10 +24,6 @@ namespace LEM_Editor
         public static GUIStyle s_NodeTextInputStyle = null;
         public static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
 
-        //Start End Node    
-        //public static NodeSkinCollection s_StartNodeSkins = new NodeSkinCollection();
-        //public static NodeSkinCollection s_EndNodeSkins = new NodeSkinCollection();
-
         //Just a default skin
         public static NodeSkinCollection s_WhiteBackGroundSkin = default;
         const string k_NodeTextureAssetPath = "Assets/Editor/Node_LEM/NodeTextures";
@@ -52,13 +33,13 @@ namespace LEM_Editor
             //If gui style has not been loaded
             if (!m_SkinsLoaded)
             {
-                LoadingNodeSkins();
+                LoadingNodeSkins(NodeLEM_Editor.s_Settings);
                 m_SkinsLoaded = true;
             }
         }
 
 
-        static void LoadingNodeSkins()
+        static void LoadingNodeSkins(NodeLEM_Settings settings)
         {
             NodeLEM_Editor.LoadSettings();
             //Initialise the execution pin style for normal and selected pins
@@ -84,17 +65,13 @@ namespace LEM_Editor
             s_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
 
             s_WhiteBackGroundSkin = new NodeSkinCollection();
-            //s_WhiteBackGroundSkin.m_MidBackground = Resources.Load<Texture2D>("NodeBg/White_BackGround");
             s_WhiteBackGroundSkin.m_MidBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround.png", typeof(Texture2D)) as Texture2D;
-            //s_WhiteBackGroundSkin.m_SelectedMidOutline = Resources.Load<Texture2D>("NodeBg/White_BackGround_Selected");
             s_WhiteBackGroundSkin.m_SelectedMidOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround_Selected.png", typeof(Texture2D)) as Texture2D;
-            //s_WhiteBackGroundSkin.m_TopBackground = Resources.Load<Texture2D>("NodeBg/White_Top");
             s_WhiteBackGroundSkin.m_TopBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top.png", typeof(Texture2D)) as Texture2D;
-            //s_WhiteBackGroundSkin.m_SelectedTopOutline = Resources.Load<Texture2D>("NodeBg/White_Top_Selected");
             s_WhiteBackGroundSkin.m_SelectedTopOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top_Selected.png", typeof(Texture2D)) as Texture2D;
 
             //Initialising public static node title styles
-            s_NodeHeaderStyle.normal.textColor = NodeLEM_Editor.s_Settings.m_EditorTheme == EditorTheme.Dark ? Color.black : Color.white;
+            s_NodeHeaderStyle.normal.textColor = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
             s_NodeHeaderStyle.fontSize = 13;
             s_NodeHeaderStyle.alignment = TextAnchor.MiddleCenter;
@@ -105,21 +82,21 @@ namespace LEM_Editor
             s_NodeTextInputStyle.normal.textColor = Color.black;
 
             s_NodeParagraphStyle.fontSize = 10;
-            s_NodeParagraphStyle.normal.textColor = NodeLEM_Editor.s_Settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
+            s_NodeParagraphStyle.normal.textColor = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
-            s_CurrentLabelColour = NodeLEM_Editor.s_Settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
+            s_CurrentLabelColour = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
             s_StartEndStyle.fontSize = 20;
             s_StartEndStyle.alignment = TextAnchor.MiddleCenter;
 
-            //For now, just set the current top texture to a light themed colour
-            //s_CurrentTopTextureColour = new Color(0.862f, 0.894f, 0.862f);
-
+            s_CurrentMidSkinColour = settings.m_EditorTheme == EditorTheme.Dark ? new Color(0.164f, 0.164f, 0.164f) : Color.white;
+            s_CurrentBezierColour = settings.m_EditorTheme == EditorTheme.Light ? new Color(0.152f, 0.152f, 0.152f) : Color.white;
+            //s_CurrentBezierColour = settings.m_EditorTheme == EditorTheme.Light ? new Color(0.227f, 0.216f, 0.212f) : Color.white;
         }
 
         public static void RefreshLibrary()
         {
-            LoadingNodeSkins();
+            LoadingNodeSkins(NodeLEM_Editor.s_Settings);
             m_SkinsLoaded = true;
         }
 

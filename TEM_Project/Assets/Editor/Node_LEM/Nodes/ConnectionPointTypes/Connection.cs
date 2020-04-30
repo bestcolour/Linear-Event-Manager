@@ -35,7 +35,7 @@ namespace LEM_Editor
                 m_OutPoint.m_Rect.center,
                 m_InPoint.m_Rect.center + Vector2.left * 50f,
                 m_OutPoint.m_Rect.center - Vector2.left * 50f,
-                Color.white,
+                LEMStyleLibrary.s_CurrentBezierColour,
                 null,
                 2f
             );

@@ -7,9 +7,9 @@ namespace LEM_Editor
 
     public class StartNode : Node
     {
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color midSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
         {
-            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, midSkinColour);
+            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, topSkinColour);
             SetNodeRects(position, NodeTextureDimensions.START_END_NODE, NodeTextureDimensions.START_END_NODE);
 
         }
@@ -27,7 +27,7 @@ namespace LEM_Editor
 
             //Draw the node box,description and title
             LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
-            GUI.color = m_MidSkinColour;
+            GUI.color = m_TopSkinColour;
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground);
             GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 

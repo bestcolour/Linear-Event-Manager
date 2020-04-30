@@ -338,8 +338,10 @@ namespace LEM_Editor
             LEMStyleLibrary.LoadLibrary();
             LEMDictionary.LoadDictionary();
 
+            //Intialising background
             instance.m_EditorBackGroundTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-            instance.m_EditorBackGroundTexture.SetPixel(0, 0, new Color(0.227f, 0.216f, 0.212f));
+            Color bgColour = s_Settings.m_EditorTheme == EditorTheme.Dark ? new Color(0.227f, 0.216f, 0.212f) : new Color(0.8f, 0.8f, 0.8f);
+            instance.m_EditorBackGroundTexture.SetPixel(0, 0, bgColour);
             instance.m_EditorBackGroundTexture.Apply();
 
             if (instance.m_CommandInvoker == null)
@@ -606,7 +608,7 @@ namespace LEM_Editor
                     e.mousePosition,
                     m_SelectedInPoint.m_Rect.center + Vector2.left * 50f,
                     e.mousePosition - Vector2.left * 50f,
-                    Color.white,
+                   LEMStyleLibrary.s_CurrentBezierColour,
                     null,
                     2f
                 );
@@ -624,7 +626,7 @@ namespace LEM_Editor
                     m_SelectedOutPoint.m_Rect.center,
                     e.mousePosition + Vector2.left * 50f,
                     m_SelectedOutPoint.m_Rect.center - Vector2.left * 50f,
-                    Color.white,
+                    LEMStyleLibrary.s_CurrentBezierColour,
                     null,
                     2f
                 );
@@ -831,7 +833,7 @@ namespace LEM_Editor
             propertyRect.y = 0;
 
             LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
-            GUI.skin.label.normal.textColor = Color.yellow;
+            GUI.skin.label.normal.textColor = Color.red;
             GUI.Label(propertyRect, label);
             GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
             //If current event type is a mouse click and mouse click is within the propertyrect,
