@@ -13,8 +13,8 @@ namespace LEM_Editor
         public static Color s_CurrentBezierColour = default;
         public static Color s_CurrentLabelColour = default;
 
-        public static GUIStyle s_InPointStyle = default;
-        public static GUIStyle s_OutPointStyle = default;
+        //public static GUIStyle s_InPointStyle = default;
+        //public static GUIStyle s_OutPointStyle = default;
         public static GUIStyle s_ConnectionPointStyleNormal = default;
         public static GUIStyle s_ConnectionPointStyleSelected = default;
 
@@ -44,10 +44,13 @@ namespace LEM_Editor
             NodeLEM_Editor.LoadSettings();
             //Initialise the execution pin style for normal and selected pins
             s_ConnectionPointStyleNormal = new GUIStyle();
-            //s_ConnectionPointStyleNormal.normal.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin");
-            s_ConnectionPointStyleNormal.normal.background = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin.png", typeof(Texture2D)) as Texture2D;
-            //s_ConnectionPointStyleNormal.active.background = Resources.Load<Texture2D>("NodeIcons/light_ExecutionPin_Selected");
-            s_ConnectionPointStyleNormal.active.background = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin_Selected.png", typeof(Texture2D)) as Texture2D;
+            s_ConnectionPointStyleNormal.normal.background = settings.m_EditorTheme == EditorTheme.Light? 
+                AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin.png", typeof(Texture2D)) as Texture2D:
+                 AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/dark_ExecutionPin.png", typeof(Texture2D)) as Texture2D
+                ;
+            s_ConnectionPointStyleNormal.active.background = settings.m_EditorTheme == EditorTheme.Light ?
+                AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin_Selected.png", typeof(Texture2D)) as Texture2D:
+                AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/dark_ExecutionPin_Selected.png", typeof(Texture2D)) as Texture2D;
 
             //Invert the two pins' backgrounds so that the user will be able to know what will happen if they press it
             s_ConnectionPointStyleSelected = new GUIStyle();
@@ -55,14 +58,14 @@ namespace LEM_Editor
             s_ConnectionPointStyleSelected.active.background = s_ConnectionPointStyleNormal.normal.background;
 
 
-            //Load the in and out point gui styles
-            s_InPointStyle = new GUIStyle();
-            s_InPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
-            s_InPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
+            ////Load the in and out point gui styles
+            //s_InPointStyle = new GUIStyle();
+            //s_InPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
+            //s_InPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
 
-            s_OutPointStyle = new GUIStyle();
-            s_OutPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
-            s_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
+            //s_OutPointStyle = new GUIStyle();
+            //s_OutPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
+            //s_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
 
             s_WhiteBackGroundSkin = new NodeSkinCollection();
             s_WhiteBackGroundSkin.m_MidBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround.png", typeof(Texture2D)) as Texture2D;

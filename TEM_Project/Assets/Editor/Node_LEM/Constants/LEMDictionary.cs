@@ -28,7 +28,7 @@ namespace LEM_Editor
              //{ "EndNode",                            new EndNode() },
              { "InstantiateGameObjectNode", new NodeDictionaryDefinition(   new InstantiateGameObjectNode(),new Color(0.04f,0.65f,0.2f)) },
              { "DestroyGameObjectNode", new NodeDictionaryDefinition(  new DestroyGameObjectNode(),  new Color(0.796f,0.098f,0.098f)) },
-             { "AddDelayNode",  new NodeDictionaryDefinition(    new AddDelayNode() , new Color(1f,0.667f,0.114f))},
+             { "AddDelayNode",  new NodeDictionaryDefinition(    new AddDelayNode() , new Color(0.85f,0.64f,0.13f))},
              { "ToggleListenToClickNode",   new NodeDictionaryDefinition( new ToggleListenToClickNode(), new Color(0.59f,0.24f,0.75f)) },
              { "ToggleListenToTriggerNode", new NodeDictionaryDefinition(new ToggleListenToTriggerNode(),new Color(0.25f,0.54f,0.75f)) },
              { "EqualRandomOutComeNode", new NodeDictionaryDefinition(new EqualRandomOutComeNode(),new Color(0.302f,0.216f,0.851f)) },
