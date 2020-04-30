@@ -7,6 +7,7 @@ namespace LEM_Effects
         [SerializeField]
         bool m_State = true;
 
+        public override EffectFunctionType FunctionType => EffectFunctionType.HaltEffect;
 
         public override bool UpdateEffect()
         {

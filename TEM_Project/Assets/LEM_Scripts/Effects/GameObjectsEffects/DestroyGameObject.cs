@@ -9,6 +9,8 @@ namespace LEM_Effects
         [Tooltip("Object to destroy")]
         [SerializeField] GameObject m_TargetObject = default;
 
+        public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
+
         #region Important
         public void SetUp(GameObject targetObject)
         {
@@ -25,7 +27,6 @@ namespace LEM_Effects
 
         public override bool UpdateEffect()
         {
-            Debug.Log("Destroying " + m_TargetObject.name);
             //Destroy the targetted object
             GameObject.Destroy(m_TargetObject);
             return true;

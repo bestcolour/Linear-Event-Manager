@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace LEM_Effects
@@ -8,11 +7,7 @@ namespace LEM_Effects
     {
         public int m_NumberOfOutComes = 2;
 
-
-        public override bool UpdateEffect()
-        {
-            return true;
-        }
+        public override EffectFunctionType FunctionType =>  EffectFunctionType.InstantEffect;
 
         public override void Initialise() { }
 
@@ -32,9 +27,11 @@ namespace LEM_Effects
                 }
 
                 return listOfPossibleIDs[Random.Range(0, listOfPossibleIDs.Count)];
-
             }
 
+#if UNITY_EDITOR
+            Debug.LogWarning("Equal Random OutCome effect doesnt have any proceeding effects to randomise to!", this);
+#endif
             return null;
         }
 

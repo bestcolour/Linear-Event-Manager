@@ -10,19 +10,19 @@ namespace LEM_Effects
     public class SetAnimatorBool : LEM_BaseEffect
     {
         [Tooltip("The animator you want to set trigger")]
-        [SerializeField] Animator targetAnimator = default;
+        [SerializeField] Animator m_TargetAnimator = default;
 
         [Tooltip("The name of the parameter you want to set on the animator")]
-        [SerializeField] string parameterName = default;
+        [SerializeField] string m_ParameterName = default;
 
         [Tooltip("The value of the parameter you want to set on the animator")]
-        [SerializeField] bool booleanValue = default;
+        [SerializeField] bool m_BooleanValue = default;
 
         public override EffectFunctionType FunctionType =>EffectFunctionType.InstantEffect;
 
         public override void Initialise()
         {
-            targetAnimator.SetBool(parameterName, booleanValue);
+            m_TargetAnimator.SetBool(m_ParameterName, m_BooleanValue);
         }
 
     }

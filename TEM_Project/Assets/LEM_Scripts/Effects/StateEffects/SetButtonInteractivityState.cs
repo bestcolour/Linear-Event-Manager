@@ -12,16 +12,16 @@ namespace LEM_Effects
     public class SetButtonInteractivityState : LEM_BaseEffect
     {
         [Tooltip("The button you want to enable/disable interactivity")]
-        [SerializeField] Button targetButton = default;
+        [SerializeField] Button m_TargetButton = default;
 
         [Tooltip("True means that the button is going to be able to be interacted with, while false means it can't.")]
-        [SerializeField] bool state = default;
+        [SerializeField] bool m_State = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
         public override void Initialise()
         {
-            targetButton.interactable = state;
+            m_TargetButton.interactable = m_State;
         }
 
     }

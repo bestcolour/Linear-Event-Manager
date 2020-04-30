@@ -5,27 +5,27 @@ namespace LEM_Effects
     public class OffsetTransformPosition : LEM_BaseEffect
     {
         [Tooltip("The transform you want to offset")]
-        [SerializeField] Transform targetTransform = default;
+        [SerializeField] Transform m_TargetTransform = default;
 
         [Tooltip("How much you want to offset the position by")]
-        [SerializeField] Vector3 offsetPosition = default;
+        [SerializeField] Vector3 m_OffsetPosition = default;
 
         //So tempted to make ZA WARUDO meme joke here
         [Tooltip("True means to offset the transform relative to the parent. False means offset the transform relative to the world")]
-        [SerializeField] bool relativeToLocal = default;
+        [SerializeField] bool m_RelativeToLocal = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
         public override void Initialise()
         {
             //If set to local is true, set transform scale as local scale
-            if (relativeToLocal)
+            if (m_RelativeToLocal)
             {
-                targetTransform.localPosition += offsetPosition;
+                m_TargetTransform.localPosition += m_OffsetPosition;
             }
             else
             {
-                targetTransform.position += offsetPosition;
+                m_TargetTransform.position += m_OffsetPosition;
             }
 
         }

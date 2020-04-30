@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
-using System;
 namespace LEM_Effects
 {
-
-
-    [Serializable]
     public class InstantiateGameObject : LEM_BaseEffect, IEffectSavable<GameObject, int, Vector3, Vector3, Vector3>
     {
         [Tooltip("Object to instantiate. Usually the prefab of an object")]
@@ -21,6 +17,8 @@ namespace LEM_Effects
 
         [Tooltip("Scale to instantiate the object at")]
         [SerializeField] Vector3 m_TargetScale = Vector3.one;
+
+        public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
         public void SetUp(GameObject targetObject, int numberOfTimes, Vector3 targetPosition, Vector3 targetRotation, Vector3 targetScale)
         {
@@ -60,7 +58,7 @@ namespace LEM_Effects
             }
 
             //Return true after completing the effect
-            return base.UpdateEffect();
+            return true;
         }
 
 

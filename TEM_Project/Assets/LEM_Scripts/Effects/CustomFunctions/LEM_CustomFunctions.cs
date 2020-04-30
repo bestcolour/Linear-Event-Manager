@@ -10,7 +10,7 @@ namespace LEM_Effects
     public class CustomFunctions : LEM_BaseEffect
     {
         [Tooltip("Object with the custom function/method you want to execute")]
-        public UnityEvent customScriptEvent;
+        public UnityEvent m_CustomScriptEvent;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
     }

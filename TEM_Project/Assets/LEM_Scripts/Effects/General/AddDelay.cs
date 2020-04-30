@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LEM_Effects
 {
-    [Serializable]
     public class AddDelay : LEM_BaseEffect,IEffectSavable<float>
     {
         [SerializeField]
         float m_DelayTime = default;
 
+        public override EffectFunctionType FunctionType => EffectFunctionType.HaltEffect;
+
         public override bool UpdateEffect()
         {
-            Debug.Log("Delaying " + m_DelayTime);
             LinearEventsManager.Instance.TimeToAddToDelay = m_DelayTime;
             return true;
         }
