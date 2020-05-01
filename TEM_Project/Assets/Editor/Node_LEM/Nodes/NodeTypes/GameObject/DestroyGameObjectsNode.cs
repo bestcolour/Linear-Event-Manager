@@ -1,15 +1,17 @@
-﻿using System;
+﻿using LEM_Effects;
+using System;
 using UnityEngine;
 using UnityEditor;
-using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class DestroyGameObjectNode : BaseEffectNode
+    public class DestroyGameObjectsNode : BaseEffectNode
     {
-        GameObject m_TargetObject = default;
+        int m_ArraySize = default;
+    
+        GameObject[] m_ObjectsToDestroy = default;
 
-        protected override string EffectTypeName => "DestroyGameObjectNode";
+        protected override string EffectTypeName => "DestroyGameObjectsNode";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -24,6 +26,7 @@ namespace LEM_Editor
         {
             base.Draw();
 
+
             //Draw a object field for inputting  the gameobject to destroy
             Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 110f, m_MidRect.width - 20, 20f);
 
@@ -31,15 +34,24 @@ namespace LEM_Editor
             GUI.skin.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
             GUI.Label(propertyRect, "Object To Destroy");
             GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+
             propertyRect.y += 20f;
-            propertyRect.height = 25f;
-            m_TargetObject = (GameObject)EditorGUI.ObjectField(propertyRect,m_TargetObject, typeof(GameObject), true);
+            propertyRect.height = 15;
+            LEMStyleLibrary.s_GUIPreviousColour = EditorStyles.label.normal.textColor;
+            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
+            m_ArraySize = EditorGUI.IntField(propertyRect, "Size", m_ArraySize);
+            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+
+
+            //m_ObjectsToDestroy = (GameObject[])EditorGUI.ObjectField(propertyRect, "", m_ObjectsToDestroy, typeof(GameObject[]), true);
+
+
 
         }
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            DestroyGameObject myEffect = ScriptableObject.CreateInstance<DestroyGameObject>();
+            DestroyGameObjects myEffect = ScriptableObject.CreateInstance<DestroyGameObjects>();
             myEffect.m_NodeEffectType = EffectTypeName;
 
             myEffect.m_Description = m_LemEffectDescription;
@@ -48,23 +60,22 @@ namespace LEM_Editor
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
-            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetObject);
+            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs);
+            myEffect.SetUp(m_ObjectsToDestroy);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            DestroyGameObject loadFrom = effectToLoadFrom as DestroyGameObject;
-            loadFrom.UnPack(out m_TargetObject);
+            DestroyGameObjects loadFrom = effectToLoadFrom as DestroyGameObjects;
+            loadFrom.UnPack(out m_ObjectsToDestroy);
 
             //Important
             m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
 
         }
-
     }
 
 }

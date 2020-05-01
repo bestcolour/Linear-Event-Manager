@@ -10,8 +10,9 @@ namespace LEM_Editor
         [Header("Theme")]
         public EditorTheme m_EditorTheme = EditorTheme.Light;
 
-        [Header("Enable Auto Save"), Tooltip("Enabling auto save makes the editor save whenver the window is closed or before you load another Linear Event")]
+        [Header("Saving"), Tooltip("Enabling auto save makes the editor save whenver the window is closed or before you load another Linear Event")]
         public bool m_AutoSave = true;
+        public bool m_SaveSceneWhenSavingLinearEvent = true;
 
         [Header("ToolBar")]
         public bool m_ShowToolBar = true;

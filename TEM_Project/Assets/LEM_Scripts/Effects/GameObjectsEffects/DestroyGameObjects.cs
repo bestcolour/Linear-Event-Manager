@@ -6,7 +6,7 @@
 /// </summary>
 namespace LEM_Effects
 {
-    public class DestroyGameObjects : LEM_BaseEffect
+    public class DestroyGameObjects : LEM_BaseEffect,IEffectSavable<GameObject[]>
     {
         [Tooltip("Object to destroy")]
         [SerializeField] GameObject[] m_TargetObjects = default;
@@ -22,7 +22,15 @@ namespace LEM_Effects
             }
         }
 
+        public void SetUp(GameObject[] t1)
+        {
+            m_TargetObjects = t1;
+        }
 
+        public void UnPack(out GameObject[] t1)
+        {
+            t1 = m_TargetObjects;
+        }
     }
 
    

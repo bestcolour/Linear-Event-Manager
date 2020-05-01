@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -1851,6 +1851,10 @@ namespace LEM_Editor
 
             //Finished loading
             Repaint();
+
+            if(s_Settings.m_SaveSceneWhenSavingLinearEvent)
+                EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+
             Debug.Log("Saved Linear Event File " + s_CurrentLE.name, s_CurrentLE);
             m_EditorState = EDITORSTATE.SAVED;
         }

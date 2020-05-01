@@ -44,12 +44,12 @@ namespace LEM_Editor
             NodeLEM_Editor.LoadSettings();
             //Initialise the execution pin style for normal and selected pins
             s_ConnectionPointStyleNormal = new GUIStyle();
-            s_ConnectionPointStyleNormal.normal.background = settings.m_EditorTheme == EditorTheme.Light? 
-                AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin.png", typeof(Texture2D)) as Texture2D:
+            s_ConnectionPointStyleNormal.normal.background = settings.m_EditorTheme == EditorTheme.Light ?
+                AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin.png", typeof(Texture2D)) as Texture2D :
                  AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/dark_ExecutionPin.png", typeof(Texture2D)) as Texture2D
                 ;
             s_ConnectionPointStyleNormal.active.background = settings.m_EditorTheme == EditorTheme.Light ?
-                AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin_Selected.png", typeof(Texture2D)) as Texture2D:
+                AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin_Selected.png", typeof(Texture2D)) as Texture2D :
                 AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/dark_ExecutionPin_Selected.png", typeof(Texture2D)) as Texture2D;
 
             //Invert the two pins' backgrounds so that the user will be able to know what will happen if they press it
@@ -102,6 +102,7 @@ namespace LEM_Editor
             LoadingNodeSkins(NodeLEM_Editor.s_Settings);
             m_SkinsLoaded = true;
         }
+
 
     }
 

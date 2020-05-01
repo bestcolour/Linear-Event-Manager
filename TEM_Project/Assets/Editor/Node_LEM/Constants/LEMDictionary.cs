@@ -25,14 +25,13 @@ namespace LEM_Editor
         public static readonly Dictionary<string, NodeDictionaryDefinition> s_NodeTypesDictionary = new Dictionary<string, NodeDictionaryDefinition>
         {
              { "StartNode", new NodeDictionaryDefinition(new StartNode(),  new Color(0.11f, 0.937f, 0.11f)) },
-             //{ "EndNode",                            new EndNode() },
              { "InstantiateGameObjectNode", new NodeDictionaryDefinition(   new InstantiateGameObjectNode(),new Color(0.04f,0.65f,0.2f)) },
              { "DestroyGameObjectNode", new NodeDictionaryDefinition(  new DestroyGameObjectNode(),  new Color(0.796f,0.098f,0.098f)) },
+             { "DestroyGameObjectsNode", new NodeDictionaryDefinition(  new DestroyGameObjectsNode(),  new Color(0.796f,0.098f,0.098f)) },
              { "AddDelayNode",  new NodeDictionaryDefinition(    new AddDelayNode() , new Color(0.85f,0.64f,0.13f))},
              { "ToggleListenToClickNode",   new NodeDictionaryDefinition( new ToggleListenToClickNode(), new Color(0.59f,0.24f,0.75f)) },
              { "ToggleListenToTriggerNode", new NodeDictionaryDefinition(new ToggleListenToTriggerNode(),new Color(0.25f,0.54f,0.75f)) },
              { "EqualRandomOutComeNode", new NodeDictionaryDefinition(new EqualRandomOutComeNode(),new Color(0.302f,0.216f,0.851f)) },
-             //{"RandomOutComeNode",                   new RandomOutComeNode() }
             
         };
 
@@ -76,33 +75,6 @@ namespace LEM_Editor
             nodeTypeName = nodeTypeName.Remove(characters.Length - 4);
             return nodeTypeName;
         }
-
-
-        //    //This is a method to bypass the insanity of making a Dictionary that keeps the Generic T as its TValue
-        //    readonly static Dictionary<string, object> s_NodeTypesDictionary = new Dictionary<string, object>
-        //{
-        //    { "StartNode",                          new StartNode() },
-        //    //{ "EndNode",                            new EndNode() },
-        //    { "InstantiateGameObjectNode",          new InstantiateGameObjectNode() },
-        //    { "DestroyGameObjectNode",              new DestroyGameObjectNode() },
-        //    { "AddDelayNode",                       new AddDelayNode() },
-        //    { "ToggleListenToClickNode",                       new ToggleListenToClickNode() },
-        //    { "ToggleListenToTriggerNode",                       new ToggleListenToTriggerNode() },
-        //    //{"RandomOutComeNode",                   new RandomOutComeNode() }
-
-
-        //};
-
-        //public static Dictionary<string, NodeSkinCollection> s_NodeStyleDictionary = new Dictionary<string, NodeSkinCollection>();
-
-
-
-
-        //public static string RemoveNameSpace(string nodeTypeName)
-        //{
-        //    nodeTypeName = nodeTypeName.Remove(0,11);
-        //    return nodeTypeName;
-        //}
 
     }
 
