@@ -524,8 +524,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AllLinearEventsInScene:
   - {fileID: 2127555588}
-  m_InitialiseOnAwake: 1
-  m_PlayOnAwake: 1
+  m_InitialiseOnAwake: 0
+  m_PlayOnAwake: 0
   m_PlayingEvent: {fileID: 2127555588}
   m_StartingUpdateEffectCapacity: 5
   m_InstantEffectCapacity: 10
@@ -572,6 +572,64 @@ MonoBehaviour:
     m_NextPointsIDs:
     - 6ccd68d8-9dc0-4288-bdd5-e2a3951d7e91
   m_DelayTime: 5
+--- !u!1 &1767939841
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1767939843}
+  - component: {fileID: 1767939842}
+  - component: {fileID: 1767939844}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1767939842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767939841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f97306efc8f8ab74c99b07e938b4cf83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1767939843
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767939841}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1767939844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767939841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b644833491105ad4f8cdaf0dbd2ef477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HideConditionalField: 0
+  m_SlaveOne: 00000000000000000000000000000000
 --- !u!114 &1825958987
 MonoBehaviour:
   m_ObjectHideFlags: 0
