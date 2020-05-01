@@ -317,6 +317,28 @@ namespace LEM_Editor
 
         }
 
+        protected void AddMidRectSize(Vector2 midSizeAddition)
+        {
+            //Default node size
+            m_MidRect.size += midSizeAddition;
+            m_TotalRect.size = new Vector2(m_MidRect.size.x, m_MidRect.size.y + m_TopRect.size.y - 2);
+
+        }
+
+        protected void SetMidRectSize(Vector2 sizeToSet)
+        {
+            //Default node size
+            m_MidRect.size = sizeToSet;
+            m_TotalRect.size = new Vector2(m_MidRect.size.x, m_MidRect.size.y + m_TopRect.size.y - 2);
+
+        }
+
+        protected void AddTopRectSize(Vector2 topSizeAddition)
+        {
+            m_TopRect.size += topSizeAddition;
+            m_TotalRect.size = new Vector2(m_MidRect.size.x, m_MidRect.size.y + m_TopRect.size.y - 2);
+        }
+
 
     }
 

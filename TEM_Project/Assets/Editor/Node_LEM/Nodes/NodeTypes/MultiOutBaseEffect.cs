@@ -116,7 +116,7 @@ namespace LEM_Editor
                     d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
                 }
 
-                UpdateRectSizes(-k_MidRectIncrements * m_NumberOfExtraOutPoints.Count, Vector2.zero);
+                AddMidRectSize(-k_MidRectIncrements * m_NumberOfExtraOutPoints.Count);
             }
 
 
@@ -127,7 +127,7 @@ namespace LEM_Editor
         {
             get
             {
-                OutConnectionPoint[] outConnectionPoints = new OutConnectionPoint[1+ m_NumberOfExtraOutPoints.Count];
+                OutConnectionPoint[] outConnectionPoints = new OutConnectionPoint[1 + m_NumberOfExtraOutPoints.Count];
                 outConnectionPoints[0] = m_OutPoint;
 
                 for (int i = 0; i < m_NumberOfExtraOutPoints.Count; i++)
@@ -164,7 +164,7 @@ namespace LEM_Editor
                     m_NumberOfExtraOutPoints.Add(new OutConnectionPoint());
                     m_NumberOfExtraOutPoints[i].Initialise(this, m_ConnectionPointStyle, d_OnClickOutPoint, i + 1);
                     //Update the rect height
-                    UpdateRectSizes(k_MidRectIncrements, Vector2.zero);
+                    AddMidRectSize(k_MidRectIncrements);
                     //Update dictionary
                     d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
 
@@ -173,7 +173,7 @@ namespace LEM_Editor
                 else if (m_NumberOfExtraOutPoints.Count > NumberOfExtraOutcomes)
                 {
                     m_NumberOfExtraOutPoints.RemoveAt(m_NumberOfExtraOutPoints.Count - 1);
-                    UpdateRectSizes(-k_MidRectIncrements, Vector2.zero);
+                    AddMidRectSize(-k_MidRectIncrements);
                     d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
                     continue;
                 }
@@ -182,16 +182,7 @@ namespace LEM_Editor
             }
         }
 
-        protected void UpdateRectSizes(Vector2 midSizeAddition, Vector2 topSizeAddition)
-        {
-            //Default node size
-            m_MidRect.size += midSizeAddition;
 
-            m_TopRect.size += topSizeAddition;
-
-            //Get total size and avrg pos
-            m_TotalRect.size = new Vector2(m_MidRect.size.x, m_MidRect.size.y + m_TopRect.size.y - 2);
-        }
 
 
     }

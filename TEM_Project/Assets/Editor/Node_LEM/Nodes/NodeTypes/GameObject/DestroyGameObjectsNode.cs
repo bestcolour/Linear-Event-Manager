@@ -7,9 +7,8 @@ namespace LEM_Editor
 
     public class DestroyGameObjectsNode : BaseEffectNode
     {
-        int m_ArraySize = default;
-    
-        GameObject[] m_ObjectsToDestroy = default;
+
+        ArrayObjectDrawer<GameObject> m_ArrayOfGameObjects = new ArrayObjectDrawer<GameObject>();
 
         protected override string EffectTypeName => "DestroyGameObjectsNode";
 
@@ -39,13 +38,15 @@ namespace LEM_Editor
             propertyRect.height = 15;
             LEMStyleLibrary.s_GUIPreviousColour = EditorStyles.label.normal.textColor;
             EditorStyles.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
-            m_ArraySize = EditorGUI.IntField(propertyRect, "Size", m_ArraySize);
+
+            propertyRect.y += 15f;
+            //If there is change in array size, update rect
+            if (m_ArrayOfGameObjects.HandleDrawAndProcess(propertyRect, out float propertyHeight))
+            {
+                SetMidRectSize(NodeTextureDimensions.NORMAL_MID_SIZE + Vector2.up * propertyHeight);
+            }
+
             EditorStyles.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
-
-
-            //m_ObjectsToDestroy = (GameObject[])EditorGUI.ObjectField(propertyRect, "", m_ObjectsToDestroy, typeof(GameObject[]), true);
-
-
 
         }
 
@@ -61,7 +62,7 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs);
-            myEffect.SetUp(m_ObjectsToDestroy);
+            myEffect.SetUp(m_ArrayOfGameObjects.GetObjectArray());
             return myEffect;
 
         }
@@ -69,7 +70,8 @@ namespace LEM_Editor
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
             DestroyGameObjects loadFrom = effectToLoadFrom as DestroyGameObjects;
-            loadFrom.UnPack(out m_ObjectsToDestroy);
+            loadFrom.UnPack(out GameObject[] t1);
+            m_ArrayOfGameObjects.SetObjectArray(t1);
 
             //Important
             m_LemEffectDescription = effectToLoadFrom.m_Description;
