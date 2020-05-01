@@ -6,8 +6,12 @@ public class TestingCondiitonalHide : MonoBehaviour
 {
     public bool m_HideConditionalField = true;
 
-    [SerializeField, BoolHideIf("m_HideConditionalField",isFullPropertyPath: true,m_StateToObserve = false)]
-    List<int> m_SlaveOne;
+    //[SerializeField, BoolHideIf("m_HideConditionalField",isFullPropertyPath: true,m_StateToObserve = false)]
+    [SerializeField, ConditionalReadOnly("m_HideConditionalField",  m_ConditionToMeet = false)]
+    int[] m_SlaveOne;
+
+    [SerializeField,ConditionalReadOnly("m_HideConditionalField",m_ConditionToMeet = false)]
+    float m_Slave2;
 
 
     // Start is called before the first frame update

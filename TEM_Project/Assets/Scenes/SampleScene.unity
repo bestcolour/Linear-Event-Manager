@@ -522,10 +522,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7bdaefed8911c04b903574c260bfe61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AutoFindLinearEvents: 1
   m_AllLinearEventsInScene:
-  - {fileID: 2127555588}
-  m_InitialiseOnAwake: 0
-  m_PlayOnAwake: 0
+  - {fileID: 0}
+  m_InitialiseOnAwake: 1
+  m_PlayOnAwake: 1
   m_PlayingEvent: {fileID: 2127555588}
   m_StartingUpdateEffectCapacity: 5
   m_InstantEffectCapacity: 10
@@ -589,7 +590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1767939842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -629,7 +630,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_HideConditionalField: 0
-  m_SlaveOne: 00000000000000000000000000000000
+  m_SlaveOne: 
+  m_Slave2: 0
 --- !u!114 &1825958987
 MonoBehaviour:
   m_ObjectHideFlags: 0

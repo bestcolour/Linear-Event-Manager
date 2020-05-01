@@ -15,8 +15,10 @@ public class LinearEventsManager : MonoBehaviour
     Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>> m_AllLinearEventsEffectsDictionary = new Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>>();
 
     #region Linear Events
-    [Header("Initialisation Settings")]
-    [SerializeField, Tooltip("This array is supposed to represent all the Linear Events in the scene.")]
+    [Header("Initialisation Settings"), Tooltip("Should LinearEventManager find all LinearEvents in the scene automatically on Initialisation?")]
+    [SerializeField] bool m_AutoFindLinearEvents = false;
+
+    [SerializeField, Tooltip("This array is supposed to represent all the Linear Events in the scene."), ConditionalReadOnly("m_AutoFindLinearEvents", m_ConditionToMeet = false)]
     LinearEvent[] m_AllLinearEventsInScene = default;
 
     [Tooltip("Should the LEM Manager initialise itself on Awake or let other scripts initialise it?")]
@@ -102,6 +104,8 @@ public class LinearEventsManager : MonoBehaviour
 
     void InitialiseAllLinearEvents()
     {
+        if (m_AutoFindLinearEvents)
+            m_AllLinearEventsInScene = FindObjectsOfType<LinearEvent>();
 
 #if UNITY_EDITOR
         if (m_AllLinearEventsInScene == null || m_AllLinearEventsInScene.Length <= 0)
@@ -153,7 +157,7 @@ public class LinearEventsManager : MonoBehaviour
             return;
         }
 
-        if (m_PlayingEvent != null)
+        if (m_PlayingEvent)
         {
             ListenToLoadNextEffect();
         }

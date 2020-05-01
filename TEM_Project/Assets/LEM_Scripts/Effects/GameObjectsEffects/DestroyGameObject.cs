@@ -11,6 +11,12 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+        public override void Initialise()
+        {
+            //Destroy the targetted object
+            GameObject.Destroy(m_TargetObject);
+        }
+
         #region Important
         public void SetUp(GameObject targetObject)
         {
@@ -25,12 +31,6 @@ namespace LEM_Effects
 
         #endregion
 
-        public override bool UpdateEffect()
-        {
-            //Destroy the targetted object
-            GameObject.Destroy(m_TargetObject);
-            return true;
-        }
 
     }
 }
