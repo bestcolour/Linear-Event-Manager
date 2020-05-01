@@ -71,7 +71,8 @@ namespace LEM_Editor
         {
             DestroyGameObjects loadFrom = effectToLoadFrom as DestroyGameObjects;
             loadFrom.UnPack(out GameObject[] t1);
-            m_ArrayOfGameObjects.SetObjectArray(t1);
+            m_ArrayOfGameObjects.SetObjectArray(t1,out float changeInRectHeight);
+            SetMidRectSize(NodeTextureDimensions.NORMAL_MID_SIZE + Vector2.up * changeInRectHeight);
 
             //Important
             m_LemEffectDescription = effectToLoadFrom.m_Description;

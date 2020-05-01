@@ -102,9 +102,17 @@ public class ArrayObjectDrawer<T> where T : UnityEngine.Object
         return m_ListOfObjects.ToArray();
     }
 
-    public void SetObjectArray(T[] data)
+    public void SetObjectArray(T[] data,out float changeInRectHeight)
     {
-        m_ListOfObjects = new List<T>(data);
+        m_ListOfObjects.Clear();
+        for (int i = 0; i < data.Length; i++)
+        {
+            m_ListOfObjects.Add(data[i]);
+            m_ArraySize++;
+        }
+
+        //Returns the amount float that you need to increment
+        changeInRectHeight = m_ArraySize * EditorGUIUtility.singleLineHeight;
     }
 
     void AddToObjectArray(T[] data)
