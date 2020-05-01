@@ -32,6 +32,8 @@ namespace LEM_Editor
              { "ToggleListenToClickNode",   new NodeDictionaryDefinition( new ToggleListenToClickNode(), new Color(0.59f,0.24f,0.75f)) },
              { "ToggleListenToTriggerNode", new NodeDictionaryDefinition(new ToggleListenToTriggerNode(),new Color(0.25f,0.54f,0.75f)) },
              { "EqualRandomOutComeNode", new NodeDictionaryDefinition(new EqualRandomOutComeNode(),new Color(0.302f,0.216f,0.851f)) },
+             { "SetGameObjectsActiveNode", new NodeDictionaryDefinition(new SetGameObjectsActiveNode(),new Color(0.64f,0.09f,0.39f)) },
+             { "SetGameObjectActiveNode", new NodeDictionaryDefinition(new SetGameObjectActiveNode(),new Color(0.64f,0.09f,0.39f)) },
             
         };
 

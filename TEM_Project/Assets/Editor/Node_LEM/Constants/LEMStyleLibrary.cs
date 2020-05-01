@@ -38,6 +38,16 @@ namespace LEM_Editor
             }
         }
 
+        public static void BeginEditorLabelColourChange(Color colourToChangeTo)
+        {
+            s_GUIPreviousColour = EditorStyles.label.normal.textColor;
+            EditorStyles.label.normal.textColor = s_CurrentLabelColour;
+        }
+        public static void EndEditorLabelColourChange()
+        {
+            EditorStyles.label.normal.textColor = s_GUIPreviousColour;
+        }
+
 
         static void LoadingNodeSkins(NodeLEM_Settings settings)
         {

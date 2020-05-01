@@ -49,6 +49,7 @@ namespace LEM_Editor
             #endregion
 
             #region BaseEffect Node Draw
+
             Rect propertyRect1 = new Rect(m_MidRect.x + 10, m_MidRect.y + 35, m_MidRect.width, 30f);
 
             GUI.Label(propertyRect1, "Description", LEMStyleLibrary.s_NodeParagraphStyle);
@@ -80,13 +81,14 @@ namespace LEM_Editor
             //Draw UpdateCycle enum
 
             propertyRect1.y += 32.5f;
-            LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
-            GUI.skin.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
-            GUI.Label(propertyRect1, "Time to Delay");
-            GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
+            EditorGUI.LabelField(propertyRect1, "Time to Delay");
             propertyRect1.y += 20f;
             propertyRect1.height = 25f;
             m_DelayTimeToAdd = EditorGUI.FloatField(propertyRect1, m_DelayTimeToAdd);
+
+            LEMStyleLibrary.EndEditorLabelColourChange();
 
         }
 

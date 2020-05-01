@@ -85,20 +85,21 @@ namespace LEM_Editor
 
 
 
-        //public virtual LEM_BaseEffect CompileToBaseEffect()
-        //{
-        //    return null;
-        //}
-
-        //For overriding of Load
-        //public virtual void LoadFromLinearEvent(LEM_BaseEffect effectToLoadFrom)
-        //{
-        //    m_LemEffectDescription = effectToLoadFrom.m_Description;
-        //}
-
+        //This is easy, just assign everything from that effectToLoadFrom parameter to your node's variables. Use the UnPack method from effectToLoadFrom to get the LEM_BaseEffect class derived's variables
+        //Example classes to refer to: DestroyGameObjectsNode (for array type data), DestroyGameObjetNode
+        /// <summary>
+        /// Assign node effect's variables with data from the baseEffect
+        /// </summary>
+        /// <returns></returns>
         public abstract void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom);
 
-        //For saving 
+        //For saving of Node's information to a LEM_BaseEffect. Use ScriptableObject.CreateInstance to create a new instance of a LEM_BaseEffect and assign all of the node's data to the newly created effect. 
+        //Use SetUp method in LEM_BaseEffect to save LEM_BaseEffect class derived's variables
+        //Example classes to refer to: DestroyGameObjectsNode (for array type data), DestroyGameObjetNode
+        /// <summary>
+        /// Saves node's value to a LEM_BaseEffect to be saved
+        /// </summary>
+        /// <returns></returns>
         public abstract LEM_BaseEffect CompileToBaseEffect();
 
     }

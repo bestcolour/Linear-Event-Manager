@@ -93,11 +93,9 @@ namespace LEM_Editor
             propertyRect.width = m_MidRect.width - 20;
             propertyRect.height = 15f;
 
-            LEMStyleLibrary.s_GUIPreviousColour = EditorStyles.label.normal.textColor;
-            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             m_NumberOfOutcomes = EditorGUI.IntField(propertyRect, "Number Of OutComes", m_NumberOfOutcomes, LEMStyleLibrary.s_NodeTextInputStyle);
-            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
-
+            LEMStyleLibrary.EndEditorLabelColourChange();
 
             if (m_NumberOfOutcomes < 1)
                 m_NumberOfOutcomes = 1;

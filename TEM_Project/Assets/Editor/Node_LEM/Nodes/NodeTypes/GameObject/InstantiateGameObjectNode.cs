@@ -31,11 +31,7 @@ namespace LEM_Editor
 
             Rect propertyRect = new Rect(m_MidRect.x + 10, m_MidRect.y + 110f, m_MidRect.width - 20, 15f);
 
-            LEMStyleLibrary.s_GUIPreviousColour = EditorStyles.label.normal.textColor;
-            //LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
-            //GUI.skin.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
-            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
-
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             //Draw fields custom to this class
             m_TargetObject = (GameObject)EditorGUI.ObjectField(propertyRect, "Object to Instantiate", m_TargetObject, typeof(GameObject), true);
             propertyRect.y += 20;
@@ -46,8 +42,8 @@ namespace LEM_Editor
             m_TargetRotation = EditorGUI.Vector3Field(propertyRect, "Target Rotation", m_TargetRotation);
             propertyRect.y += 40f;
             m_TargetScale = EditorGUI.Vector3Field(propertyRect, "Target Scale", m_TargetScale);
-            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
-            //GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+
+            LEMStyleLibrary.EndEditorLabelColourChange();
 
         }
 

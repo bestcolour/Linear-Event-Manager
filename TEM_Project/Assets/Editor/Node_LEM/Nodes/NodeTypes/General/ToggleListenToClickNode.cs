@@ -81,10 +81,9 @@ namespace LEM_Editor
 
             propertyRect1.y += 32.5f;
 
-            LEMStyleLibrary.s_GUIPreviousColour = EditorStyles.label.normal.textColor;
-            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_CurrentLabelColour;
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             m_State = EditorGUI.Toggle(propertyRect1, "Toggle State", m_State);
-            EditorStyles.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+            LEMStyleLibrary.EndEditorLabelColourChange();
 
         }
 

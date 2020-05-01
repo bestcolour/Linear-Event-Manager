@@ -2,7 +2,7 @@
 
 namespace LEM_Effects
 {
-    public class SetGameObjectActive : LEM_BaseEffect
+    public class SetGameObjectActive : LEM_BaseEffect,IEffectSavable<GameObject,bool>
     {
         [Tooltip("Object to set its active state to true or false")]
         [SerializeField] GameObject m_TargetObject = default;
@@ -18,5 +18,16 @@ namespace LEM_Effects
             m_TargetObject.SetActive(m_State);
         }
 
+        public void SetUp(GameObject t1, bool t2)
+        {
+            m_TargetObject = t1;
+            m_State = t2;
+        }
+
+        public void UnPack(out GameObject t1, out bool t2)
+        {
+            t1 = m_TargetObject;
+            t2 = m_State;
+        }
     } 
 }
