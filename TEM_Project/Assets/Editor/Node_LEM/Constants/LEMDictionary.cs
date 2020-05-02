@@ -34,6 +34,10 @@ namespace LEM_Editor
              { "EqualRandomOutComeNode", new NodeDictionaryDefinition(new EqualRandomOutComeNode(),new Color(0.302f,0.216f,0.851f)) },
              { "SetGameObjectsActiveNode", new NodeDictionaryDefinition(new SetGameObjectsActiveNode(),new Color(0.64f,0.09f,0.39f)) },
              { "SetGameObjectActiveNode", new NodeDictionaryDefinition(new SetGameObjectActiveNode(),new Color(0.64f,0.09f,0.39f)) },
+             { "SetAnimatorBoolNode", new NodeDictionaryDefinition(new SetAnimatorBoolNode(),new Color(0.64f,0.55f,0.76f)) },
+             { "SetAnimatorFloatNode", new NodeDictionaryDefinition(new SetAnimatorFloatNode(),new Color(0.64f,0.55f,0.76f)) },
+             { "SetAnimatorIntNode", new NodeDictionaryDefinition(new SetAnimatorIntNode(),new Color(0.64f,0.55f,0.76f)) },
+             { "SetAnimatorTriggerNode", new NodeDictionaryDefinition(new SetAnimatorTriggerNode(),new Color(0.64f,0.55f,0.76f)) },
             
         };
 

@@ -2,12 +2,7 @@
 
 namespace LEM_Effects
 {
-    /// <summary>
-    /// © 2020 Lee Kee Shen All Rights Reserved
-    /// Basically this is where i am going to store all the Animation related events for TEM
-    /// </summary>
-
-    public class SetAnimatorBool : LEM_BaseEffect
+    public class SetAnimatorBool : LEM_BaseEffect,IEffectSavable<Animator,string,bool>
     {
         [Tooltip("The animator you want to set trigger")]
         [SerializeField] Animator m_TargetAnimator = default;
@@ -25,6 +20,19 @@ namespace LEM_Effects
             m_TargetAnimator.SetBool(m_ParameterName, m_BooleanValue);
         }
 
+        public void SetUp(Animator t1, string t2, bool t3)
+        {
+            m_TargetAnimator = t1;
+            m_ParameterName = t2;
+            m_BooleanValue = t3;
+        }
+
+        public void UnPack(out Animator t1, out string t2, out bool t3)
+        {
+            t1 = m_TargetAnimator;
+            t2 = m_ParameterName;
+            t3 = m_BooleanValue;
+        }
     }
 
 }

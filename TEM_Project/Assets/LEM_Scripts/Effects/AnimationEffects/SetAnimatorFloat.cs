@@ -3,7 +3,7 @@
 namespace LEM_Effects
 {
 
-    public class SetAnimatorFloat : LEM_BaseEffect
+    public class SetAnimatorFloat : LEM_BaseEffect,IEffectSavable<Animator,string,float>
     {
         [Tooltip("The animator you want to set float")]
         [SerializeField] Animator m_TargetAnimator = default;
@@ -17,5 +17,19 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
         public override void Initialise() { m_TargetAnimator.SetFloat(m_ParameterName, m_FloatValue); }
+
+        public void SetUp(Animator t1, string t2, float t3)
+        {
+            m_TargetAnimator = t1;
+            m_ParameterName = t2;
+            m_FloatValue = t3;
+        }
+
+        public void UnPack(out Animator t1, out string t2, out float t3)
+        {
+            t1 = m_TargetAnimator;
+            t2 = m_ParameterName;
+            t3 = m_FloatValue;
+        }
     } 
 }

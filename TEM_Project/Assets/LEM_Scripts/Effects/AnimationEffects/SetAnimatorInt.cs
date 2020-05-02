@@ -3,7 +3,7 @@
 namespace LEM_Effects
 {
 
-    public class SetAnimatorInt : LEM_BaseEffect
+    public class SetAnimatorInt : LEM_BaseEffect,IEffectSavable<Animator,string,int>
     {
         [Tooltip("The animator you want to set int")]
         [SerializeField] Animator m_TargetAnimator = default;
@@ -21,5 +21,18 @@ namespace LEM_Effects
             m_TargetAnimator.SetInteger(m_ParameterName, m_IntValue);
         }
 
+        public void SetUp(Animator t1, string t2, int t3)
+        {
+            m_TargetAnimator = t1;
+            m_ParameterName = t2;
+            m_IntValue = t3;
+        }
+
+        public void UnPack(out Animator t1, out string t2, out int t3)
+        {
+            t1 = m_TargetAnimator;
+            t2 = m_ParameterName;
+            t3 = m_IntValue;
+        }
     } 
 }
