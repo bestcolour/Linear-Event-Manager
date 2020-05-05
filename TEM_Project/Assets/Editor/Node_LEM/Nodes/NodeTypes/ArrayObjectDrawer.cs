@@ -55,6 +55,9 @@ namespace LEM_Editor
 
             propertyRect.y += EditorGUIUtility.singleLineHeight * 1.5f;
 
+            if (m_ArraySize < 0)
+                m_ArraySize = 0;
+
             int sizeDiff = SizeDifference;
 
             if (m_ListOfObjects.Count > m_ArraySize)

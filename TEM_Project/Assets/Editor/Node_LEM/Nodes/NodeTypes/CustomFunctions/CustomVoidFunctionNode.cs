@@ -6,9 +6,9 @@ using LEM_Effects;
 
 namespace LEM_Editor
 {
-    public class CustomFunctionNode : BaseEffectNode
+    public class CustomVoidFunctionNode : BaseEffectNode
     {
-        protected override string EffectTypeName => "CustomFunctionNode";
+        protected override string EffectTypeName => "CustomVoidFunctionNode";
 
         //UnityEventObject m_CustomFunction = default;
         SerializedProperty m_EventSerializedProperty = default;
