@@ -5,7 +5,7 @@ using UnityEditor;
 namespace LEM_Effects
 {
 
-    [CanEditMultipleObjects]
+    [CanEditMultipleObjects,System.Serializable]
     public class LinearEvent : MonoBehaviour
     {
         [Header("Name of This String of Events ")]
@@ -19,8 +19,8 @@ namespace LEM_Effects
         public LEM_BaseEffect[] m_AllEffects = default;
         public NodeBaseData m_StartNodeData = default;
 
-        [SerializeField, ReadOnly]
-        string m_CurrentEffect = default;
+        //[SerializeField, ReadOnly]
+        //string m_CurrentEffect = default;
 
         //Runtime values
         public Dictionary<string, LEM_BaseEffect> AllEffectsDictionary
@@ -92,7 +92,6 @@ namespace LEM_Effects
             }
 
         }
-
 
     }
 

@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EditorTheme: 1
   m_AutoSave: 0
+  m_SaveSceneWhenSavingLinearEvent: 1
   m_ShowToolBar: 1
   m_ButtonSize: 50

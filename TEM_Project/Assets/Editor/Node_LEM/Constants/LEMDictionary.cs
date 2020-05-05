@@ -38,6 +38,7 @@ namespace LEM_Editor
              { "SetAnimatorFloatNode", new NodeDictionaryDefinition(new SetAnimatorFloatNode(),new Color(0.64f,0.55f,0.76f)) },
              { "SetAnimatorIntNode", new NodeDictionaryDefinition(new SetAnimatorIntNode(),new Color(0.64f,0.55f,0.76f)) },
              { "SetAnimatorTriggerNode", new NodeDictionaryDefinition(new SetAnimatorTriggerNode(),new Color(0.64f,0.55f,0.76f)) },
+             { "CustomFunctionNode", new NodeDictionaryDefinition(new CustomFunctionNode(),new Color(0.76f,0.15f,0.7f)) },
             
         };
 

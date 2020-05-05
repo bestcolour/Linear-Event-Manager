@@ -35,7 +35,7 @@ namespace LEM_Effects
         [Tooltip("Stores basic node data. This is applicable for effect nodes as well"), Header("Node Data")]
         public NodeBaseData m_NodeBaseData = default;
 
-        public LEM_BaseEffect ShallowClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
+        public virtual LEM_BaseEffect ShallowClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
 
         public virtual void Initialise() { }
 

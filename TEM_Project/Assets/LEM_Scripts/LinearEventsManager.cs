@@ -120,9 +120,14 @@ public class LinearEventsManager : MonoBehaviour
         {
 #if UNITY_EDITOR
             Debug.Assert(m_AllLinearEventsInScene[i] != null, "There is a null Linear Event in AllLinearEventsInScene's array at element " + i, m_AllLinearEventsInScene[i]);
-            Debug.Assert(m_AllLinearEventsInScene[i].m_AllEffects != null && m_AllLinearEventsInScene[i].m_AllEffects.Length > 0,
-                "Linear Event " + m_AllLinearEventsInScene[i].name + " does not have any effects on it. AllLinearEventsInScene element: " + i,
-                m_AllLinearEventsInScene[i]);
+
+            if (m_AllLinearEventsInScene[i].m_AllEffects == null && m_AllLinearEventsInScene[i].m_AllEffects.Length <= 0)
+            {
+                Debug.LogWarning("Linear Event " + m_AllLinearEventsInScene[i].name + " does not have any effects on it. AllLinearEventsInScene element: " + i,
+                    m_AllLinearEventsInScene[i]);
+            }
+
+
 #endif
 
             m_AllLinearEventsEffectsDictionary.Add(m_AllLinearEventsInScene[i], m_AllLinearEventsInScene[i].AllEffectsDictionary);
@@ -261,23 +266,14 @@ public class LinearEventsManager : MonoBehaviour
             LoadNextEffect(maxEffectsPerFrame);
     }
 
-    void LoadNextEffect(int maxEffectsPerFrame, string effectID)
+    void LoadNextEffect(int maxEffectsPerFrame, string nextEffect)
     {
         //Load next effect
-        m_PreviousEffectPlayed = m_AllLinearEventsEffectsDictionary[m_PlayingEvent][effectID];
-
-        //Stop loading effect if there is no next effect
-        if (!m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning("Effect " + m_PreviousEffectPlayed.name + " does not have any effect to play!", m_PreviousEffectPlayed);
-#endif
+        if (!m_AllLinearEventsEffectsDictionary[m_PlayingEvent].TryGetValue(nextEffect, out m_PreviousEffectPlayed))
             return;
-        }
-
-        maxEffectsPerFrame--;
 
         m_PreviousEffectPlayed.Initialise();
+        maxEffectsPerFrame--;
 
         switch (m_PreviousEffectPlayed.FunctionType)
         {
@@ -297,6 +293,16 @@ public class LinearEventsManager : MonoBehaviour
 
         if (maxEffectsPerFrame > 0)
             LoadNextEffect(maxEffectsPerFrame);
+
+
+        //        //Stop loading effect if there is no next effect
+        //        if (!m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode)
+        //        {
+        //#if UNITY_EDITOR
+        //            Debug.LogWarning("Effect " + m_PreviousEffectPlayed.name + " does not have any effect to play!", m_PreviousEffectPlayed);
+        //#endif
+        //            return;
+        //        }
 
     }
 
