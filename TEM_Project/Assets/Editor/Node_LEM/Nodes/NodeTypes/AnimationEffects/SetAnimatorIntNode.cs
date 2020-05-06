@@ -12,7 +12,7 @@ namespace LEM_Editor
         string m_ParameterName = default;
         int m_IntValue = default;
 
-        protected override string EffectTypeName => "SetAnimatorIntNode";
+        protected override string EffectTypeName => "SetAnimatorInt";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {

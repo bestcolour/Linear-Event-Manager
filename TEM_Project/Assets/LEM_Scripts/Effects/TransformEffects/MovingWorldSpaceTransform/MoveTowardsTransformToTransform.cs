@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsTransformToTransform : LEM_BaseEffect
+    public class MoveTowardsTransformToTransform : LEM_BaseEffect,IEffectSavable<Transform,Transform,float,float>
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -16,6 +16,22 @@ namespace LEM_Effects
         [SerializeField, Range(0.0001f, 1000f)] float m_SnapDistance = 1f;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
+
+        public void SetUp(Transform t1, Transform t2, float t3, float t4)
+        {
+            m_TargetTransform = t1;
+            m_TargetDestination = t2;
+            m_Speed = t3;
+            m_SnapDistance = t4;
+        }
+
+        public void UnPack(out Transform t1, out Transform t2, out float t3, out float t4)
+        {
+            t1 = m_TargetTransform;
+            t2 = m_TargetDestination;
+            t3 = m_Speed;
+            t4 = m_SnapDistance;
+        }
 
         public override bool UpdateEffect()
         {

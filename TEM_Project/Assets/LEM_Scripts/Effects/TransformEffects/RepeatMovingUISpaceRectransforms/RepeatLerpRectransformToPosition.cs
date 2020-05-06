@@ -22,6 +22,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+        bool m_StopEffect = false;
+
         public override void Initialise()
         {
             //Record the intiial position for repeated process
@@ -30,7 +32,6 @@ namespace LEM_Effects
 
         public override bool UpdateEffect()
         {
-
             //meanwhile, lerp the transform to the target
             m_TargetRectransform.anchoredPosition3D = Vector3.Lerp(m_TargetRectransform.anchoredPosition3D, m_TargetPosition, m_Smoothing * Time.deltaTime);
 
@@ -41,7 +42,12 @@ namespace LEM_Effects
                 m_TargetRectransform.anchoredPosition3D = m_IntialPosition;
             }
 
-            return false;
+            return m_StopEffect;
+        }
+
+        public override void ForceStop()
+        {
+            m_StopEffect = true;
         }
 
     } 

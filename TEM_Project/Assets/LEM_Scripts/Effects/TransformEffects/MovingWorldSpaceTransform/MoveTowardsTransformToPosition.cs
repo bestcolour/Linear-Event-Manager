@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsTransformToPosition : LEM_BaseEffect
+    public class MoveTowardsTransformToPosition : LEM_BaseEffect,IEffectSavable<Transform,Vector3,float>
     {
         [Tooltip("The transform you want to move")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -24,6 +24,20 @@ namespace LEM_Effects
         {
             //Calculate speed in initialise
             m_Speed = Vector3.Distance(m_TargetTransform.position, m_TargetPosition) / m_Duration;
+        }
+
+        public void SetUp(Transform t1, Vector3 t2, float t3)
+        {
+            m_TargetTransform = t1;
+            m_TargetPosition = t2;
+            m_Duration = t3;
+        }
+
+        public void UnPack(out Transform t1, out Vector3 t2, out float t3)
+        {
+            t1 = m_TargetTransform;
+            t2 = m_TargetPosition;
+            t3 = m_Duration;
         }
 
         public override bool UpdateEffect()

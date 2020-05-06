@@ -11,7 +11,7 @@ namespace LEM_Editor
         string m_ParameterName = default;
         bool m_State = default;
 
-        protected override string EffectTypeName => "SetAnimatorBoolNode";
+        protected override string EffectTypeName => "SetAnimatorBool";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {

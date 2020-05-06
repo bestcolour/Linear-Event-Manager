@@ -13,7 +13,7 @@ namespace LEM_Editor
         ArrayObjectDrawer<GameObject> m_GameObjectsToSet = new ArrayObjectDrawer<GameObject>();
 
 
-        protected override string EffectTypeName => "SetGameObjectsActiveNode";
+        protected override string EffectTypeName => "SetGameObjectsActive";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
         {

@@ -10,7 +10,7 @@ namespace LEM_Editor
 
         ArrayObjectDrawer<GameObject> m_ArrayOfGameObjects = new ArrayObjectDrawer<GameObject>();
 
-        protected override string EffectTypeName => "DestroyGameObjectsNode";
+        protected override string EffectTypeName => "DestroyGameObjects";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {

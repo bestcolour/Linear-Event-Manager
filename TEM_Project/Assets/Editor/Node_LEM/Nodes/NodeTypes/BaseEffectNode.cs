@@ -37,7 +37,7 @@ namespace LEM_Editor
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, topSkinColour);
 
             m_Title = EffectTypeName;
-            m_Title = LEMDictionary.RemoveNodeWord(m_Title);
+            //m_Title = LEMDictionary.RemoveNodeWord(m_Title);
 
             d_UpdateNodeDictionaryStatus = updateEffectNodeInDictionary;
         }

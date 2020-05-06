@@ -10,7 +10,7 @@ namespace LEM_Editor
         Animator m_TargetAnimator = default;
         string m_Trigger = default;
 
-        protected override string EffectTypeName => "SetAnimatorTriggerNode";
+        protected override string EffectTypeName => "SetAnimatorTrigger";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {

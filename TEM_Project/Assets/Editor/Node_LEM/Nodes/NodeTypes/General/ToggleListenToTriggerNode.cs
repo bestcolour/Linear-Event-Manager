@@ -9,7 +9,7 @@ namespace LEM_Editor
     {
         bool m_State = true;
 
-        protected override string EffectTypeName => "ToggleListenToTriggerNode";
+        protected override string EffectTypeName => "ToggleListenToTrigger";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {

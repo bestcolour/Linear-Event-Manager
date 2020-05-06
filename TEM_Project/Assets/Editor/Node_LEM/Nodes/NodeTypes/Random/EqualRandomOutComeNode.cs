@@ -8,7 +8,7 @@ namespace LEM_Editor
         //public int m_NumberOfOutcomes = 2;
         //int NumberOfExtraOutcomes => m_NumberOfOutcomes - 1;
 
-        protected override string EffectTypeName => "EqualRandomOutComeNode";
+        protected override string EffectTypeName => "EqualRandomOutCome";
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {

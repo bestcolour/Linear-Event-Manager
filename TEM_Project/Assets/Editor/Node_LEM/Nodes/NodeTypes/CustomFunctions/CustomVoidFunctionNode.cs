@@ -8,7 +8,7 @@ namespace LEM_Editor
 {
     public class CustomVoidFunctionNode : BaseEffectNode
     {
-        protected override string EffectTypeName => "CustomVoidFunctionNode";
+        protected override string EffectTypeName => "CustomVoidFunction";
 
         //UnityEventObject m_CustomFunction = default;
         SerializedProperty m_EventSerializedProperty = default;

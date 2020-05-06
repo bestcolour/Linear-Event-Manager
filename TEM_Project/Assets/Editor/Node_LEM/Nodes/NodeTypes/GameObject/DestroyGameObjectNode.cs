@@ -9,7 +9,7 @@ namespace LEM_Editor
     {
         GameObject m_TargetObject = default;
 
-        protected override string EffectTypeName => "DestroyGameObjectNode";
+        protected override string EffectTypeName => "DestroyGameObject";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {

@@ -15,7 +15,7 @@ namespace LEM_Editor
         public Vector3 m_TargetRotation = Vector3.zero;
         public Vector3 m_TargetScale = Vector3.one;
 
-        protected override string EffectTypeName => "InstantiateGameObjectNode";
+        protected override string EffectTypeName => "InstantiateGameObject";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {

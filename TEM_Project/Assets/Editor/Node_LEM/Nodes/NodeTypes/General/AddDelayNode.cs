@@ -9,7 +9,7 @@ namespace LEM_Editor
     {
         public float m_DelayTimeToAdd = default;
 
-        protected override string EffectTypeName => "AddDelayNode";
+        protected override string EffectTypeName => "AddDelay";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {

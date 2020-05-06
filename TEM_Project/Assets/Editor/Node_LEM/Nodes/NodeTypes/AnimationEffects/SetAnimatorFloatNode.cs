@@ -11,7 +11,7 @@ namespace LEM_Editor
         string m_ParameterName = default;
         float m_FloatValue = default;
 
-        protected override string EffectTypeName => "SetAnimatorFloatNode";
+        protected override string EffectTypeName => "SetAnimatorFloat";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {

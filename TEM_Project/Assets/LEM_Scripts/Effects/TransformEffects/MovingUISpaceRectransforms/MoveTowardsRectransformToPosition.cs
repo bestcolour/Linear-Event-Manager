@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsRectransformToPosition : LEM_BaseEffect
+    public class MoveTowardsRectransformToPosition : LEM_BaseEffect,IEffectSavable<RectTransform,Vector3,float>
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;
@@ -10,7 +10,7 @@ namespace LEM_Effects
         [SerializeField] Vector3 m_TargetPosition = default;
 
         [Tooltip("The time needed for target to reach target position with lerp. Not recommended for constant speed movement.")]
-        [SerializeField, Range(0.0001f, 1000f)] float m_Duration = 1f;
+        [SerializeField] float m_Duration = 1f;
 
         //Calculate speed for the transform to move
         float m_Speed = default;
@@ -22,6 +22,20 @@ namespace LEM_Effects
         {
             //Calculate speed in initialise
             m_Speed = Vector3.Distance(m_TargetRectransform.anchoredPosition3D, m_TargetPosition) / m_Duration;
+        }
+
+        public void SetUp(RectTransform t1, Vector3 t2, float t3)
+        {
+            m_TargetRectransform = t1;
+            m_TargetPosition = t2;
+            m_Duration = t3;
+        }
+
+        public void UnPack(out RectTransform t1, out Vector3 t2, out float t3)
+        {
+            t1 = m_TargetRectransform;
+            t2 = m_TargetPosition;
+            t3 = m_Duration;
         }
 
         public override bool UpdateEffect()

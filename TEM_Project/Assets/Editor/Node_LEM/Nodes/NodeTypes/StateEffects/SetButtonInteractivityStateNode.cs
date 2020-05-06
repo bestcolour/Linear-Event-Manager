@@ -8,7 +8,7 @@ namespace LEM_Editor
 
     public class SetButtonInteractivityStateNode : BaseEffectNode
     {
-        protected override string EffectTypeName => "SetButtonInteractivityStateNode";
+        protected override string EffectTypeName => "SetButtonInteractivityState";
 
         Button m_Button = default;
         bool m_State = default;
