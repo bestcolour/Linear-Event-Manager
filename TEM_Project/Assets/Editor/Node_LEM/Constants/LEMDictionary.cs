@@ -49,6 +49,8 @@ namespace LEM_Editor
              { "MoveTowTransToPos", new NodeDictionaryDefinition(new MoveTowardsTransformToPositionNode(),new Color(0.48f,0.04f,0.69f)) },
              { "MoveTowTransToTrans", new NodeDictionaryDefinition(new MoveTowardsTransformToTransformNode(),new Color(0.48f,0.04f,0.69f)) },
              { "OffsetTransPos", new NodeDictionaryDefinition(new OffsetTransformPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "OffsetTransRot", new NodeDictionaryDefinition(new OffsetTransformRotationNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "OffsetTransScale", new NodeDictionaryDefinition(new OffsetTransformScaleNode(),new Color(0.19f ,0.74f,0.67f)) },
             
         };
 
