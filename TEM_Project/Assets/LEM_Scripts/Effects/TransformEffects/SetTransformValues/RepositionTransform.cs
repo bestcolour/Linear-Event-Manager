@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class RepositionTransform : LEM_BaseEffect
+    public class RepositionTransform : LEM_BaseEffect,IEffectSavable<Transform,Vector3,bool>
     {
         [Tooltip("The transform you want to change")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -26,6 +26,18 @@ namespace LEM_Effects
 
         }
 
+        public void SetUp(Transform t1, Vector3 t2, bool t3)
+        {
+            m_TargetTransform = t1;
+            m_TargetPosition = t2;
+            m_RelativeToLocal = t3;
+        }
 
+        public void UnPack(out Transform t1, out Vector3 t2, out bool t3)
+        {
+            t1 = m_TargetTransform;
+            t2 = m_TargetPosition;
+            t3 = m_RelativeToLocal;
+        }
     } 
 }

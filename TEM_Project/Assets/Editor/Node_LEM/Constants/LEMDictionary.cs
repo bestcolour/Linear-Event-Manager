@@ -51,6 +51,13 @@ namespace LEM_Editor
              { "OffsetTransPos", new NodeDictionaryDefinition(new OffsetTransformPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
              { "OffsetTransRot", new NodeDictionaryDefinition(new OffsetTransformRotationNode(),new Color(0.19f ,0.74f,0.67f)) },
              { "OffsetTransScale", new NodeDictionaryDefinition(new OffsetTransformScaleNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "OffsetRectTransSize", new NodeDictionaryDefinition(new OffsetRectTransformSizeNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "ReposTrans", new NodeDictionaryDefinition(new RepositionTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "ReposRectTrans", new NodeDictionaryDefinition(new RepositionRectTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "ReScaleTrans", new NodeDictionaryDefinition(new RescaleTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "ReRotTrans", new NodeDictionaryDefinition(new ReRotateTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "ReSizeRectTrans", new NodeDictionaryDefinition(new ReSizeRectTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "SetTransParent", new NodeDictionaryDefinition(new SetTransformParentNode(),new Color(0.19f ,0.74f,0.67f)) },
             
         };
 

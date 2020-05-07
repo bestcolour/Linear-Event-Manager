@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class SetTransformParent : LEM_BaseEffect
+    public class SetTransformParent : LEM_BaseEffect,IEffectSavable<Transform,Transform,int>
     {
         [Tooltip("The transform you want to set as the child transform")]
         [SerializeField] Transform m_ChildTransform = default;
@@ -22,6 +22,18 @@ namespace LEM_Effects
             m_ChildTransform.SetSiblingIndex(m_SiblingIndex);
         }
 
+        public void SetUp(Transform t1, Transform t2, int t3)
+        {
+            m_ChildTransform = t1;
+            m_ParentTransform = t2;
+            m_SiblingIndex = t3;
+        }
 
+        public void UnPack(out Transform t1, out Transform t2, out int t3)
+        {
+            t1 = m_ChildTransform;
+            t2 = m_ParentTransform;
+            t3 = m_SiblingIndex;
+        }
     } 
 }
