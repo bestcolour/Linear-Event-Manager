@@ -27,12 +27,12 @@ namespace LEM_Editor
 
 
             //Draw a object field for inputting  the gameobject to destroy
-            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, 20f);
+            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
+
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             EditorGUI.LabelField(propertyRect, "Object To Destroy");
 
             propertyRect.y += 20f;
-            propertyRect.height = 15;
 
             //If there is change in array size, update rect
             if (m_ArrayOfGameObjects.HandleDrawAndProcess(propertyRect, out float propertyHeight))

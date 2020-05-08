@@ -40,8 +40,7 @@ namespace LEM_Editor
         {
             base.Draw();
 
-            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, 20f);
-            propertyRect.height = 15;
+            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
             EditorGUI.PropertyField(propertyRect, m_EventSerializedProperty, m_LabelContent, true);
 
             if (m_PreviousSize != m_EventCallbackArray.arraySize)

@@ -17,8 +17,6 @@ namespace LEM_Editor
             this.effectNode = effectNode;
             this.outConnectionPoints = outConnectionPoints;
         }
-
-
     }
 
     public class NodeLEM_Editor : EditorWindow

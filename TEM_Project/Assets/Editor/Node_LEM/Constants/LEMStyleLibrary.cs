@@ -12,6 +12,7 @@ namespace LEM_Editor
         public static Color s_CurrentMidSkinColour = default;
         public static Color s_CurrentBezierColour = default;
         public static Color s_CurrentLabelColour = default;
+        public static Color s_CurrentGroupRectColour = default;
 
         //public static GUIStyle s_InPointStyle = default;
         //public static GUIStyle s_OutPointStyle = default;
@@ -21,7 +22,7 @@ namespace LEM_Editor
         //Node fontstyles
         public static readonly GUIStyle s_NodeHeaderStyle = new GUIStyle();
         public static readonly GUIStyle s_StartEndStyle = new GUIStyle();
-        public static GUIStyle s_NodeTextInputStyle = null;
+        //public static GUIStyle s_NodeTextInputStyle = null;
         public static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
 
         //Just a default skin
@@ -83,28 +84,50 @@ namespace LEM_Editor
             s_WhiteBackGroundSkin.m_TopBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top.png", typeof(Texture2D)) as Texture2D;
             s_WhiteBackGroundSkin.m_SelectedTopOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top_Selected.png", typeof(Texture2D)) as Texture2D;
 
-            //Initialising public static node title styles
-            s_NodeHeaderStyle.normal.textColor = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
+        
+
+            //s_NodeHeaderStyle.normal.textColor = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
             s_NodeHeaderStyle.fontSize = 13;
             s_NodeHeaderStyle.alignment = TextAnchor.MiddleCenter;
 
-            s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
-            s_NodeTextInputStyle.fontSize = 10;
-            s_NodeTextInputStyle.wordWrap = true;
-            s_NodeTextInputStyle.normal.textColor = Color.black;
+            //s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
+            //s_NodeTextInputStyle.fontSize = 10;
+            //s_NodeTextInputStyle.wordWrap = true;
+            //s_NodeTextInputStyle.normal.textColor = Color.black;
 
             s_NodeParagraphStyle.fontSize = 10;
-            s_NodeParagraphStyle.normal.textColor = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
+            //s_NodeParagraphStyle.normal.textColor = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
-            s_CurrentLabelColour = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
+            //s_CurrentLabelColour = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
             s_StartEndStyle.fontSize = 20;
             s_StartEndStyle.alignment = TextAnchor.MiddleCenter;
 
-            s_CurrentMidSkinColour = settings.m_EditorTheme == EditorTheme.Dark ? new Color(0.164f, 0.164f, 0.164f) : Color.white;
-            s_CurrentBezierColour = settings.m_EditorTheme == EditorTheme.Light ? new Color(0.152f, 0.152f, 0.152f) : Color.white;
-            //s_CurrentBezierColour = settings.m_EditorTheme == EditorTheme.Light ? new Color(0.227f, 0.216f, 0.212f) : Color.white;
+
+            //Initialising public static node title styles
+            if (settings.m_EditorTheme == EditorTheme.Dark)
+            {
+                s_NodeHeaderStyle.normal.textColor = Color.white;
+                s_NodeParagraphStyle.normal.textColor = Color.white;
+                s_CurrentLabelColour = Color.white;
+                s_CurrentMidSkinColour = new Color(0.164f, 0.164f, 0.164f);
+                s_CurrentBezierColour = Color.white;
+                s_CurrentGroupRectColour = new Color(0, 0, 0, 0.5f);
+
+            }
+            else
+            {
+                s_NodeHeaderStyle.normal.textColor = Color.black;
+                s_NodeParagraphStyle.normal.textColor = Color.black;
+                s_CurrentLabelColour = Color.black;
+                s_CurrentMidSkinColour = Color.white;
+                s_CurrentBezierColour = new Color(0.152f, 0.152f, 0.152f);
+                s_CurrentGroupRectColour = new Color(1, 1, 1, 0.5f);
+            }
+
+            //s_CurrentMidSkinColour = settings.m_EditorTheme == EditorTheme.Dark ? new Color(0.164f, 0.164f, 0.164f) : Color.white;
+            //s_CurrentBezierColour = settings.m_EditorTheme == EditorTheme.Light ? new Color(0.152f, 0.152f, 0.152f) : Color.white;
         }
 
         public static void RefreshLibrary()

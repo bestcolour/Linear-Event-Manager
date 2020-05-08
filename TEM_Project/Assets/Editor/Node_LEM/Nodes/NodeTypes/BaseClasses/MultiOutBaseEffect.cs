@@ -59,7 +59,7 @@ namespace LEM_Editor
 
             m_OutPoint.Draw(outPointOffSet);
 
-            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + 35, m_MidRect.width, 30f);
+            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + 35, m_MidRect.width, EditorGUIUtility.singleLineHeight);
 
             //GUI.Label(propertyRect, "Description", LEMStyleLibrary.s_NodeParagraphStyle);
             GUI.Label(m_TopRect, m_Title, LEMStyleLibrary.s_NodeHeaderStyle);
@@ -98,7 +98,7 @@ namespace LEM_Editor
             propertyRect.width = m_MidRect.width - 20;
             propertyRect.height = 15f;
 
-            m_NumberOfOutcomes = EditorGUI.IntField(propertyRect, "Number Of OutComes", m_NumberOfOutcomes, LEMStyleLibrary.s_NodeTextInputStyle);
+            m_NumberOfOutcomes = EditorGUI.IntField(propertyRect, "Number Of OutComes", m_NumberOfOutcomes);
 
 
             propertyRect.y += 65f;
