@@ -50,9 +50,9 @@ namespace LEM_Editor
 
             #region BaseEffect Node Draw
 
-            Rect propertyRect1 = new Rect(m_MidRect.x + 10, m_MidRect.y + 35, m_MidRect.width, 30f);
+            Rect propertyRect1 = new Rect(m_MidRect.x + 10, m_MidRect.y + 15f, m_MidRect.width, 30f);
 
-            GUI.Label(propertyRect1, "Description", LEMStyleLibrary.s_NodeParagraphStyle);
+            //GUI.Label(propertyRect1, "Description", LEMStyleLibrary.s_NodeParagraphStyle);
             GUI.Label(m_TopRect, m_Title, LEMStyleLibrary.s_NodeHeaderStyle);
 
             #endregion
@@ -73,10 +73,10 @@ namespace LEM_Editor
 
 
             //Draw the description text field
-            propertyRect1.y += 15f;
+            //propertyRect1.y += 15f;
             propertyRect1.width -= 20f;
-            propertyRect1.height = 25f;
-            m_LemEffectDescription = EditorGUI.TextField(propertyRect1, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
+            //propertyRect1.height = 25f;
+            //m_LemEffectDescription = EditorGUI.TextField(propertyRect1, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
 
             //Draw UpdateCycle enum
 

@@ -14,7 +14,6 @@ namespace LEM_Editor
         //Returns true when there is change in array size
         public bool HandleDrawAndProcess(Rect propertyRect, out float propertyHeight)
         {
-            #region Drawing
             bool isThereChangeInSize = false;
             propertyHeight = 0f;
 
@@ -49,11 +48,11 @@ namespace LEM_Editor
             //EditorGUI.LabelField(propertyRect, "Size");
             //propertyRect.y += EditorGUIUtility.singleLineHeight;
 
+            #region Drawing
+
             m_ArraySize = EditorGUI.IntField(propertyRect,"Size", m_ArraySize);
 
-
-
-            propertyRect.y += EditorGUIUtility.singleLineHeight * 1.5f;
+            propertyRect.y += 20f;
 
             if (m_ArraySize < 0)
                 m_ArraySize = 0;

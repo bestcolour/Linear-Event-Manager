@@ -28,7 +28,7 @@ namespace LEM_Editor
             this.m_Style = style;
             this.d_OnClickConnectionPoint = onClickConnectionPoint;
 
-            m_Rect = new Rect(0, 0, 20, 23);
+            m_Rect = new Rect(0, 0, NodeGUIConstants.k_ConnectionPointHeight, 23);
         }
 
         //Drawing the connection point
