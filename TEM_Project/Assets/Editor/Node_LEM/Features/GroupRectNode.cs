@@ -48,7 +48,7 @@ namespace LEM_Editor
 
             for (int i = 0; i < nestedNodes.Length; i++)
             {
-                nestedNodes[i].m_GroupedNode = this;
+                nestedNodes[i].m_GroupedParent = this;
                 m_NestedNodesDictionary.Add(nestedNodes[i].NodeID, nestedNodes[i]);
             }
 
@@ -147,7 +147,7 @@ namespace LEM_Editor
 
                 if (!m_TotalRect.Overlaps(m_NestedNodesDictionary[keys[i]].m_TotalRect, true))
                 {
-                    m_NestedNodesDictionary[keys[i]].m_GroupedNode = null;
+                    m_NestedNodesDictionary[keys[i]].m_GroupedParent = null;
                     m_NestedNodesDictionary.Remove(keys[i]);
                 }
 
@@ -158,12 +158,21 @@ namespace LEM_Editor
             {
                 if (!NodeLEM_Editor.AllNodesInEditor[i].IsGrouped && !m_NestedNodesDictionary.ContainsKey(NodeLEM_Editor.AllNodesInEditor[i].NodeID) && m_TotalRect.Overlaps(NodeLEM_Editor.AllNodesInEditor[i].m_TotalRect, true))
                 {
-                    NodeLEM_Editor.AllNodesInEditor[i].m_GroupedNode = this;
+                    NodeLEM_Editor.AllNodesInEditor[i].m_GroupedParent = this;
                     m_NestedNodesDictionary.Add(NodeLEM_Editor.AllNodesInEditor[i].NodeID, NodeLEM_Editor.AllNodesInEditor[i]);
                 }
             }
         }
 
+        void DeselectNestedNodes()
+        {
+            string[] keys = NestedNodesKeys;
+            for (int i = 0; i < keys.Length; i++)
+            {
+                m_NestedNodesDictionary[keys[i]].DeselectNode();
+            }
+        }
+        
         public override bool HandleLeftMouseDown(Event e)
         {
             //Check if mouseposition is within the bounds of the node's rect body
@@ -183,6 +192,7 @@ namespace LEM_Editor
                     {
                         SelectByClicking();
                         UpdateNestedNode();
+                        DeselectNestedNodes();
                         return true;
                     }
 
@@ -198,6 +208,7 @@ namespace LEM_Editor
                     // or i want to drag this selected nodes 
                     m_IsDragged = true;
                     UpdateNestedNode();
+                    DeselectNestedNodes();
                     return false;
                 }
 

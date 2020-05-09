@@ -35,10 +35,10 @@ namespace LEM_Editor
         }
 
         protected bool m_IsDragged = default;
-        public Node m_GroupedNode = default;
+        public Node m_GroupedParent = default;
         public abstract NodeType BaseNodeType { get; }
         //protected bool m_IsGrouped = false;
-        public bool IsGrouped => m_GroupedNode != null;
+        public bool IsGrouped => m_GroupedParent != null;
         //public bool IsGrouped { get { return m_IsGrouped; } set { m_IsGrouped = value; } }
         protected bool m_IsSelected = false;
         public bool IsSelected { get { return m_IsSelected; } }
@@ -140,6 +140,11 @@ namespace LEM_Editor
                         SelectByClicking();
                         return true;
                     }
+                    //Else if this node is selected n is grouped
+                    else if(IsGrouped)
+                    {
+                        m_GroupedParent.DeselectNode();
+                    }
 
                     //Else if mouse clicks on a selected node
 
@@ -165,6 +170,7 @@ namespace LEM_Editor
                         return false;
                     }
 
+                   
                     //Deselect if this node is selected but there isnt multiple selected nodes
                     // or if there is no node clicked
                     if (currentClickedNode.m_IsSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
@@ -176,6 +182,11 @@ namespace LEM_Editor
                     //as well as having multiple nodes selected
                     else if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
                     {
+                        if (IsGrouped)
+                        {
+                            m_GroupedParent.DeselectNode();
+                        }
+
                         m_IsDragged = true;
                     }
 

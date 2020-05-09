@@ -4,6 +4,8 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using LEM_Effects;
+using System.Data;
+
 namespace LEM_Editor
 {
 
@@ -562,8 +564,6 @@ namespace LEM_Editor
 
     }
 
-
-
     public class CutPasteCommand : INodeCommand
     {
         LEM_BaseEffect[] m_PastedEffects = default;
@@ -655,7 +655,6 @@ namespace LEM_Editor
 
     }
 
-
     public class CutCommand : INodeCommand
     {
         LEM_BaseEffect[] m_CutEffects = default;
@@ -723,6 +722,26 @@ namespace LEM_Editor
         }
 
 
+    }
+
+    public class GroupCommand : INodeCommand
+    {
+        public int CommandType => NodeCommandType.GROUP;
+
+        public void Execute()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Redo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Undo()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
