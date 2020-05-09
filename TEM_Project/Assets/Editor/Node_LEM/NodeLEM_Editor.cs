@@ -46,6 +46,9 @@ namespace LEM_Editor
         List<Node> m_AllNodesInEditor = new List<Node>();
         List<Node> AllNodesInEditor => instance.m_AllNodesInEditor;
 
+        List<GroupRect> m_AllGroupRectsInEditor = new List<GroupRect>();
+        List<GroupRect> AllGroupRectsInEditor => instance.m_AllGroupRectsInEditor;
+
         //Dictionary<string, BaseEffectNode> m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
         //Dictionary<string, BaseEffectNode> AllEffectsNodeInEditor => instance.m_AllEffectsNodeInEditor;
 
@@ -515,6 +518,8 @@ namespace LEM_Editor
             //Draw graphics that are zoomable
             EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
             Vector2 currMousePos = currentEvent.mousePosition;
+
+            DrawRectGroups();
             //Draw the nodes first
             DrawNodes();
 
@@ -547,7 +552,13 @@ namespace LEM_Editor
 
         }
 
-
+        private void DrawRectGroups()
+        {
+            for (int i = 0; i < AllGroupRectsInEditor.Count; i++)
+            {
+                AllGroupRectsInEditor[i].Draw();
+            }
+        }
 
         void OnGUI()
         {
@@ -556,11 +567,6 @@ namespace LEM_Editor
 
         private void OnLostFocus()
         {
-            //if (m_EditorState == EDITORSTATE.LOADED)
-            //{
-            //    SaveToLinearEvent();
-            //}
-
             TryToSaveLinearEvent();
         }
 
@@ -585,11 +591,6 @@ namespace LEM_Editor
                 if (AllConnectionsDictionary[allTupleKeys[i]].IsWithinWindowScreen)
                     AllConnectionsDictionary[allTupleKeys[i]].Draw();
 
-
-            //foreach (Connection connection in AllConnectionsDictionary.Values)
-            //{
-            //    connection.Draw();
-            //}
         }
 
         //This is the realtime drawing of a bezier curve line to let users visualise
@@ -1148,6 +1149,35 @@ namespace LEM_Editor
 
                     for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
                         if (AllNodesInEditor[i].HandleMouseDrag(e, convertedDelta))
+                            GUI.changed = true;
+                    break;
+
+            }
+        }
+
+        void ProcessGroupRectEvents(Event e)
+        {
+            //Check current event once and then tell all the nodes to handle that event so they dont have to check
+            switch (e.type)
+            {
+                case EventType.MouseDown:
+
+                    for (int i = AllGroupRectsInEditor.Count - 1; i >= 0; i--)
+                        if (AllGroupRectsInEditor[i].HandleMouseDown(e))
+                            GUI.changed = true;
+                    break;
+
+                case EventType.MouseUp:
+                    for (int i = AllGroupRectsInEditor.Count - 1; i >= 0; i--)
+                        if (AllGroupRectsInEditor[i].HandleMouseUp())
+                            GUI.changed = true;
+                    break;
+
+                case EventType.MouseDrag:
+                    Vector2 convertedDelta = e.delta / ScaleFactor;
+
+                    for (int i = AllGroupRectsInEditor.Count - 1; i >= 0; i--)
+                        if (AllGroupRectsInEditor[i].HandleMouseDrag(e, convertedDelta))
                             GUI.changed = true;
                     break;
 

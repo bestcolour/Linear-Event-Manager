@@ -16,7 +16,7 @@ namespace LEM_Editor
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             //Override the rect size n pos
-            SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
+            SetNodeRects(position, NodeTextureDimensions.SMALL_MID_SIZE, NodeTextureDimensions.SMALLL_TOP_SIZE);
         }
 
         public override void Draw()
@@ -50,7 +50,7 @@ namespace LEM_Editor
 
             #region BaseEffect Node Draw
 
-            Rect propertyRect1 = new Rect(m_MidRect.x + 10, m_MidRect.y + 15f, m_MidRect.width, 30f);
+            Rect propertyRect1 = new Rect(m_MidRect.x + 10, m_MidRect.y + 37.5f, m_MidRect.width -NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
 
             //GUI.Label(propertyRect1, "Description", LEMStyleLibrary.s_NodeParagraphStyle);
             GUI.Label(m_TopRect, m_Title, LEMStyleLibrary.s_NodeHeaderStyle);
@@ -74,18 +74,15 @@ namespace LEM_Editor
 
             //Draw the description text field
             //propertyRect1.y += 15f;
-            propertyRect1.width -= 20f;
+            //propertyRect1.width -= 20f;
             //propertyRect1.height = 25f;
             //m_LemEffectDescription = EditorGUI.TextField(propertyRect1, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
 
             //Draw UpdateCycle enum
 
-            propertyRect1.y += 32.5f;
-
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             EditorGUI.LabelField(propertyRect1, "Time to Delay");
             propertyRect1.y += 20f;
-            propertyRect1.height = 25f;
             m_DelayTimeToAdd = EditorGUI.FloatField(propertyRect1, m_DelayTimeToAdd);
 
             LEMStyleLibrary.EndEditorLabelColourChange();

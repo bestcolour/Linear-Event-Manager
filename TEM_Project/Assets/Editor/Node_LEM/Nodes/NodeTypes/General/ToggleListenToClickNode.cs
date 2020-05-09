@@ -16,7 +16,7 @@ namespace LEM_Editor
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             //Override the rect size n pos
-            SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
+            SetNodeRects(position, NodeTextureDimensions.SMALL_MID_SIZE, NodeTextureDimensions.SMALLL_TOP_SIZE);
         }
 
         public override void Draw()
@@ -28,7 +28,7 @@ namespace LEM_Editor
                 GUI.DrawTexture(new Rect(
                     m_TotalRect.x - NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.x,
                     m_TotalRect.y - NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.y,
-                    m_TotalRect.width * 1.075f, m_TotalRect.height * 1.075f),
+                    m_TotalRect.width * NodeGUIConstants.k_SelectedNodeTextureScale, m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale),
                     m_NodeSkin.m_SelectedMidOutline);
             }
 
