@@ -1011,7 +1011,7 @@ namespace LEM_Editor
                         else
                         {
                             //Only rearrange when currentclicked node is not grouprect node
-                            if (s_CurrentClickedNode.GetType() != typeof(GroupRectNode))
+                            if (s_CurrentClickedNode.BaseNodeType != NodeType.GroupRectNode)
                                 AllNodesInEditor.RearrangeElement(s_CurrentClickedNode, AllNodesInEditor.Count - 1);
                         }
 
@@ -1442,7 +1442,8 @@ namespace LEM_Editor
             //Drag all the group rects
             for (int i = 0; i < AllGroupRectsInEditor.Count; i++)
             {
-                AllGroupRectsInEditor[i].Drag(delta);
+                if (!AllGroupRectsInEditor[i].IsGrouped)
+                    AllGroupRectsInEditor[i].Drag(delta);
             }
 
         }

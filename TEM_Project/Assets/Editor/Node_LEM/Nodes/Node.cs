@@ -4,6 +4,13 @@ using UnityEngine;
 using LEM_Effects;
 namespace LEM_Editor
 {
+    public enum NodeType
+    {
+        StartNode = 0,
+        GroupRectNode = 1,
+        EffectNode = 2
+    }
+
 
     public abstract class Node
     {
@@ -29,6 +36,7 @@ namespace LEM_Editor
 
         protected bool m_IsDragged = default;
         public Node m_GroupedNode = default;
+        public abstract NodeType BaseNodeType { get; }
         //protected bool m_IsGrouped = false;
         public bool IsGrouped => m_GroupedNode != null;
         //public bool IsGrouped { get { return m_IsGrouped; } set { m_IsGrouped = value; } }

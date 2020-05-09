@@ -90,6 +90,7 @@ namespace LEM_Editor
 
             s_NodeHeaderStyle.fontSize = 13;
             s_NodeHeaderStyle.alignment = TextAnchor.MiddleCenter;
+            s_NodeHeaderStyle.wordWrap = true;
 
             //s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
             //s_NodeTextInputStyle.fontSize = 10;

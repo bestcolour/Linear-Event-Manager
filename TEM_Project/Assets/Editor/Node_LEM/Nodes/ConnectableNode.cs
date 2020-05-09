@@ -4,7 +4,7 @@ using UnityEngine;
 using LEM_Effects;
 namespace LEM_Editor
 {
-    public class ConnectableNode : Node
+    public abstract class ConnectableNode : Node
     {
         public InConnectionPoint m_InPoint = new InConnectionPoint();
         public OutConnectionPoint m_OutPoint = new OutConnectionPoint();

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 namespace LEM_Editor
@@ -36,6 +37,8 @@ namespace LEM_Editor
 
         Dictionary<string, Node> m_NestedNodesDictionary = new Dictionary<string, Node>();
         string[] NestedNodesKeys => m_NestedNodesDictionary.Keys.ToArray();
+
+        public override NodeType BaseNodeType => NodeType.GroupRectNode;
 
         Rect m_BorderRect = new Rect();
 
@@ -90,10 +93,10 @@ namespace LEM_Editor
 
             string[] keys = NestedNodesKeys;
 
+            //If this group rect is not grouped
             for (int i = 0; i < keys.Length; i++)
             {
-                if (!m_NestedNodesDictionary[keys[i]].IsSelected)
-                    m_NestedNodesDictionary[keys[i]].Drag(delta);
+                m_NestedNodesDictionary[keys[i]].Drag(delta);
             }
         }
 
@@ -122,26 +125,39 @@ namespace LEM_Editor
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
             GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
+            //Rect labelRect = m_TopRect;
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
+            m_CommentLabel = EditorGUI.DelayedTextField(m_TopRect, m_CommentLabel, LEMStyleLibrary.s_NodeHeaderStyle);
+            LEMStyleLibrary.EndEditorLabelColourChange();
         }
 
         void UpdateNestedNode()
         {
             string[] keys = NestedNodesKeys;
 
+            //Remove any nodes whose rects do not overlap
             for (int i = 0; i < keys.Length; i++)
             {
+                //If any of its grouped child is another group rect, force it to update
+                if (m_NestedNodesDictionary[keys[i]].BaseNodeType == NodeType.GroupRectNode)
+                {
+                    GroupRectNode forceUpdateGrpNode = m_NestedNodesDictionary[keys[i]] as GroupRectNode;
+                    forceUpdateGrpNode.UpdateNestedNode();
+                }
+                else
                 if (!m_TotalRect.Overlaps(m_NestedNodesDictionary[keys[i]].m_TotalRect, true))
                 {
-                    //Remove any nodes whose rects do not overlap
                     m_NestedNodesDictionary[keys[i]].m_GroupedNode = null;
                     m_NestedNodesDictionary.Remove(keys[i]);
                 }
+
+
             }
 
+            //Add any nodes whose rects do overlap which at the same time are not inside the nested dictionary and is not grouped b4
             for (int i = 0; i < NodeLEM_Editor.AllNodesInEditor.Count; i++)
             {
-                //Add any nodes whose rects do overlap which at the same time are not inside the nested dictionary
-                if (!m_NestedNodesDictionary.ContainsKey(NodeLEM_Editor.AllNodesInEditor[i].NodeID) && m_TotalRect.Overlaps(NodeLEM_Editor.AllNodesInEditor[i].m_TotalRect, true))
+                if (!NodeLEM_Editor.AllNodesInEditor[i].IsGrouped && !m_NestedNodesDictionary.ContainsKey(NodeLEM_Editor.AllNodesInEditor[i].NodeID) && m_TotalRect.Overlaps(NodeLEM_Editor.AllNodesInEditor[i].m_TotalRect, true))
                 {
                     NodeLEM_Editor.AllNodesInEditor[i].m_GroupedNode = this;
                     m_NestedNodesDictionary.Add(NodeLEM_Editor.AllNodesInEditor[i].NodeID, NodeLEM_Editor.AllNodesInEditor[i]);
