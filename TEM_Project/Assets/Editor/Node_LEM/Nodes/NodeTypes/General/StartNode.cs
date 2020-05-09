@@ -7,7 +7,8 @@ namespace LEM_Editor
 
     public class StartNode : ConnectableNode
     {
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
+            Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, topSkinColour);
             SetNodeRects(position, NodeTextureDimensions.START_END_NODE, NodeTextureDimensions.START_END_NODE);
@@ -18,10 +19,12 @@ namespace LEM_Editor
         {
             if (m_IsSelected)
             {
+                float newWidth = m_TotalRect.width * NodeGUIConstants.k_SelectedStartNodeTextureScale;
+                float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedStartNodeTextureScale;
                 GUI.DrawTexture(new Rect(
-                    m_TotalRect.x - NodeTextureDimensions.STARTEND_OUTLINE_OFFSET.x,
-                    m_TotalRect.y - NodeTextureDimensions.STARTEND_OUTLINE_OFFSET.y,
-                    m_TotalRect.width * 1.1f, m_TotalRect.height * 1.1f),
+                    m_TotalRect.x - /*NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.x*/(newWidth - m_TotalRect.width) * 0.5f,
+                    m_TotalRect.y -/* NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.y*/  (newHeight - m_TotalRect.height) * 0.5f,
+                    newWidth, newHeight),
                     m_NodeSkin.m_SelectedMidOutline);
             }
 

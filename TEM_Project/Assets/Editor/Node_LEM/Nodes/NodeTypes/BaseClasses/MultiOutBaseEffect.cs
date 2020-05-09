@@ -34,10 +34,12 @@ namespace LEM_Editor
         {
             if (m_IsSelected)
             {
+                float newWidth = m_TotalRect.width * NodeGUIConstants.k_SelectedNodeTextureScale;
+                float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale;
                 GUI.DrawTexture(new Rect(
-                    m_TotalRect.x - NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.x,
-                    m_TotalRect.y - NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.y,
-                    m_TotalRect.width * 1.075f, m_TotalRect.height * 1.075f),
+                    m_TotalRect.x - /*NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.x*/(newWidth - m_TotalRect.width) * 0.5f,
+                    m_TotalRect.y -/* NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.y*/  (newHeight - m_TotalRect.height) * 0.5f,
+                    newWidth, newHeight),
                     m_NodeSkin.m_SelectedMidOutline);
             }
 

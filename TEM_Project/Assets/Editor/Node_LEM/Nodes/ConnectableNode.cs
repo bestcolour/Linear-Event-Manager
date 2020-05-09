@@ -9,9 +9,10 @@ namespace LEM_Editor
         public InConnectionPoint m_InPoint = new InConnectionPoint();
         public OutConnectionPoint m_OutPoint = new OutConnectionPoint();
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
+        public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint,
+            Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
         {
-            base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, topSkinColour);
+            base.Initialise(position, nodeSkin/*, connectionPointStyle, onClickInPoint, onClickOutPoint*/, onSelectNode, onDeSelectNode, topSkinColour);
 
             //Initialise in and out points
             m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint);

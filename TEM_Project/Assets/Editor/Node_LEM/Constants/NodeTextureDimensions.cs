@@ -7,7 +7,6 @@ namespace LEM_Editor
     public struct NodeTextureDimensions
     {
         //Outline visual offsets
-        public static readonly Vector2 EFFECT_NODE_OUTLINE_OFFSET = new Vector2(10, 10);
         public static readonly Vector2 STARTEND_OUTLINE_OFFSET = new Vector2(5f, 5f);
 
         //width, height
@@ -23,7 +22,11 @@ namespace LEM_Editor
 
     public struct NodeGUIConstants
     {
+        public const float k_GroupRectExtraBufferSpace = 20f;
+        public const float k_GroupRectBorder = 2f;
+
         public const float k_SelectedNodeTextureScale = 1.075f;
+        public const float k_SelectedStartNodeTextureScale =1.2f;
 
         //Used for those nodes which just overrides the baseEffect's draw and need to draw a new property with a new Rect. Add this value to m_MidRect's y for the new Rect's y
         public const float Y_DIST_FROM_MIDRECT = 90f;
