@@ -5,7 +5,7 @@ using System.Collections;
 namespace LEM_Editor
 {
 
-    public class StartNode : Node
+    public class StartNode : ConnectableNode
     {
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
         {

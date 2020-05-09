@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace LEM_Editor
 {
 
-    public abstract class BaseEffectNode : Node
+    public abstract class BaseEffectNode : ConnectableNode
     {
         protected abstract string EffectTypeName { get; }
         //TEM effect related variables

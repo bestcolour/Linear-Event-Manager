@@ -33,8 +33,8 @@ namespace LEM_Editor
         protected bool m_IsSelected = false;
         public bool IsSelected { get { return m_IsSelected; } }
 
-        public InConnectionPoint m_InPoint = new InConnectionPoint();
-        public OutConnectionPoint m_OutPoint = new OutConnectionPoint();
+        //public InConnectionPoint m_InPoint = new InConnectionPoint();
+        //public OutConnectionPoint m_OutPoint = new OutConnectionPoint();
 
         protected NodeSkinCollection m_NodeSkin = default;
         //Top skin will pull from a static cache
@@ -62,9 +62,9 @@ namespace LEM_Editor
             this.d_OnSelectNode = onSelectNode;
             this.d_OnDeselectNode = onDeSelectNode;
 
-            //Initialise in and out points
-            m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint);
-            m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint);
+            ////Initialise in and out points
+            //m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint);
+            //m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint);
 
             m_TopSkinColour = topSkinColour;
         }
@@ -101,9 +101,9 @@ namespace LEM_Editor
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
             GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
-            //Draw the in out points as well
-            m_InPoint.Draw();
-            m_OutPoint.Draw();
+            ////Draw the in out points as well
+            //m_InPoint.Draw();
+            //m_OutPoint.Draw();
 
         }
 
@@ -274,13 +274,13 @@ namespace LEM_Editor
 
         #endregion
 
-        protected virtual string[] TryToSaveNextPointNodeID()
-        {
-            //Returns true value of saved state
-            string[] connectedNodeIDs = m_OutPoint.IsConnected ? new string[1] { m_OutPoint.GetConnectedNodeID(0) } : new string[0];
+        //protected virtual string[] TryToSaveNextPointNodeID()
+        //{
+        //    //Returns true value of saved state
+        //    string[] connectedNodeIDs = m_OutPoint.IsConnected ? new string[1] { m_OutPoint.GetConnectedNodeID(0) } : new string[0];
 
-            return connectedNodeIDs;
-        }
+        //    return connectedNodeIDs;
+        //}
 
         //protected string[] TryToSavePrevPointNodeID()
         //{
@@ -294,10 +294,10 @@ namespace LEM_Editor
         //Returns only NodeBaseData (use for non effect nodes)
         public virtual NodeBaseData SaveNodeData()
         {
-            string[] connectedNextNodeIDs = TryToSaveNextPointNodeID();
+            //string[] connectedNextNodeIDs = TryToSaveNextPointNodeID();
             //string[] connectedPrevNodeIDs = TryToSavePrevPointNodeID();
 
-            return new NodeBaseData(m_MidRect.position, NodeID, connectedNextNodeIDs/*, connectedPrevNodeIDs*/);
+            return new NodeBaseData(m_MidRect.position, NodeID, /*connectedNextNodeIDs*/null);
         }
 
         //Change values here

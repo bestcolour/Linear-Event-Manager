@@ -77,8 +77,8 @@ namespace LEM_Editor
         Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
         Dictionary<Tuple<string, string>, Connection> AllConnectionsDictionary => instance.m_AllConnectionsDictionary;
 
-        Node m_StartNode = default;
-        Node StartNode { get { return instance.m_StartNode; } set { instance.m_StartNode = value; } }
+        ConnectableNode m_StartNode = default;
+        ConnectableNode StartNode { get { return instance.m_StartNode; } set { instance.m_StartNode = value; } }
 
         Action d_OnGUI = null;
 
@@ -395,7 +395,7 @@ namespace LEM_Editor
         {
             if (StartNode == null)
             {
-                CreateBasicNode(new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), "StartNode", out Node startTempNode);
+                CreateBasicNode(new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), "StartNode", out ConnectableNode startTempNode);
                 StartNode = startTempNode;
             }
         }
@@ -923,7 +923,6 @@ namespace LEM_Editor
                 case EventType.MouseDown:
 
                     //Set the currenly clicked node
-                    //s_CurrentClickedNode = AllNodesInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
                     s_CurrentClickedNode = AllNodesInEditor.FindFromLastIndex(x => x.m_TotalRect.Contains(currMousePosition));
 
                     //Check if the mouse button down is the right click button
@@ -1253,9 +1252,9 @@ namespace LEM_Editor
         }
 
         //These two functions are mainly used for creating and loading start node
-        void CreateBasicNode(Vector2 mousePosition, string nameOfNodeType, out Node newBasicNode)
+        void CreateBasicNode(Vector2 mousePosition, string nameOfNodeType, out ConnectableNode newBasicNode)
         {
-            Node basicNode = LEMDictionary.GetNodeObject(nameOfNodeType) as Node;
+            ConnectableNode basicNode = LEMDictionary.GetNodeObject(nameOfNodeType) as ConnectableNode;
 
             //Get the respective skin from the collection of nodeskin
             NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
@@ -1280,9 +1279,9 @@ namespace LEM_Editor
             newBasicNode = basicNode;
         }
 
-        void RecreateBasicNode(Vector2 positionToSet, string nameOfNodeType, string idToSet, out Node newlyCreatedNode)
+        void RecreateBasicNode(Vector2 positionToSet, string nameOfNodeType, string idToSet, out ConnectableNode newlyCreatedNode)
         {
-            Node newNode = LEMDictionary.GetNodeObject(nameOfNodeType) as Node;
+            ConnectableNode newNode = LEMDictionary.GetNodeObject(nameOfNodeType) as ConnectableNode;
 
             //Get the respective skin from the collection of nodeskin
             NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
@@ -1653,7 +1652,7 @@ namespace LEM_Editor
         }
 
         //For now used for startnode removal
-        void OnClickRemoveNode(Node nodeToRemove)
+        void OnClickRemoveNode(ConnectableNode nodeToRemove)
         {
             //Check if there is any connections to be removed from this node
             TryToRemoveConnection(nodeToRemove.m_OutPoint.GetConnectedNodeID(0), nodeToRemove.NodeID);
@@ -1943,7 +1942,7 @@ namespace LEM_Editor
             if (StartNode != null && s_CurrentLE.m_StartNodeData.m_NodeID != string.Empty)
             {
                 OnClickRemoveNode(StartNode);
-                RecreateBasicNode(s_CurrentLE.m_StartNodeData.m_Position, "StartNode", s_CurrentLE.m_StartNodeData.m_NodeID, out Node startTempNode);
+                RecreateBasicNode(s_CurrentLE.m_StartNodeData.m_Position, "StartNode", s_CurrentLE.m_StartNodeData.m_NodeID, out ConnectableNode startTempNode);
                 StartNode = startTempNode;
             }
 
