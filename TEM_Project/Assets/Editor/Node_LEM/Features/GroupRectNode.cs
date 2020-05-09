@@ -154,12 +154,12 @@ namespace LEM_Editor
             }
 
             //Add any nodes whose rects do overlap which at the same time are not inside the nested dictionary and is not grouped b4
-            for (int i = 0; i < NodeLEM_Editor.AllNodesInEditor.Count; i++)
+            for (int i = 0; i < NodeLEM_Editor.AllConnectableNodesInEditor.Count; i++)
             {
-                if (!NodeLEM_Editor.AllNodesInEditor[i].IsGrouped && !m_NestedNodesDictionary.ContainsKey(NodeLEM_Editor.AllNodesInEditor[i].NodeID) && m_TotalRect.Overlaps(NodeLEM_Editor.AllNodesInEditor[i].m_TotalRect, true))
+                if (!NodeLEM_Editor.AllConnectableNodesInEditor[i].IsGrouped && !m_NestedNodesDictionary.ContainsKey(NodeLEM_Editor.AllConnectableNodesInEditor[i].NodeID) && m_TotalRect.Overlaps(NodeLEM_Editor.AllConnectableNodesInEditor[i].m_TotalRect, true))
                 {
-                    NodeLEM_Editor.AllNodesInEditor[i].m_GroupedParent = this;
-                    m_NestedNodesDictionary.Add(NodeLEM_Editor.AllNodesInEditor[i].NodeID, NodeLEM_Editor.AllNodesInEditor[i]);
+                    NodeLEM_Editor.AllConnectableNodesInEditor[i].m_GroupedParent = this;
+                    m_NestedNodesDictionary.Add(NodeLEM_Editor.AllConnectableNodesInEditor[i].NodeID, NodeLEM_Editor.AllConnectableNodesInEditor[i]);
                 }
             }
         }

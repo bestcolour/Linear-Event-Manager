@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using LEM_Effects;
+using System.Xml.Serialization;
+
 namespace LEM_Editor
 {
     public enum NodeType
@@ -143,7 +145,8 @@ namespace LEM_Editor
                     //Else if this node is selected n is grouped
                     else if(IsGrouped)
                     {
-                        m_GroupedParent.DeselectNode();
+                        //m_GroupedParent.DeselectNode();
+                        DeselectAllParentGroupNodes();
                     }
 
                     //Else if mouse clicks on a selected node
@@ -184,7 +187,8 @@ namespace LEM_Editor
                     {
                         if (IsGrouped)
                         {
-                            m_GroupedParent.DeselectNode();
+                            DeselectAllParentGroupNodes();
+                            //m_GroupedParent.DeselectNode();
                         }
 
                         m_IsDragged = true;
@@ -267,12 +271,21 @@ namespace LEM_Editor
 
         }
 
-        public void DeselectNode()
+        public virtual void DeselectNode()
         {
             d_OnDeselectNode?.Invoke(this);
             m_IsSelected = false;
             m_IsDragged = false;
             //m_NodeSkin.textureToRender = m_NodeSkin.m_NodeBackground;
+        }
+
+        public virtual void DeselectAllParentGroupNodes()
+        {
+            if (!IsGrouped)
+                return;
+
+            m_GroupedParent.DeselectNode();
+            m_GroupedParent.DeselectAllParentGroupNodes();
         }
 
         public void SelectNode()
