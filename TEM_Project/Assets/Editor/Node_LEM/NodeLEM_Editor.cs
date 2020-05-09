@@ -1148,13 +1148,7 @@ namespace LEM_Editor
                         //Select all
                         else if (e.keyCode == KeyCode.A)
                         {
-                            m_AllSelectedNodes.Clear();
-
-                            for (int i = 0; i < m_AllNodesInEditor.Count; i++)
-                            {
-                                m_AllNodesInEditor[i].SelectNode();
-                            }
-
+                            SelectAllNodes();
                             GUI.changed = true;
 
                         }
@@ -1876,6 +1870,20 @@ namespace LEM_Editor
         {
             for (int i = 0; i < AllNodesInEditor.Count; i++)
                 AllNodesInEditor[i].DeselectNode();
+
+            for (int i = 0; i < AllGroupRectsInEditor.Count; i++)
+                AllGroupRectsInEditor[i].DeselectNode();
+        }
+
+        void SelectAllNodes()
+        {
+            AllSelectedNodes.Clear();
+
+            for (int i = 0; i < m_AllNodesInEditor.Count; i++)
+                m_AllNodesInEditor[i].SelectNode();
+
+            for (int i = 0; i < AllGroupRectsInEditor.Count; i++)
+                AllGroupRectsInEditor[i].SelectNode();
         }
 
         Node FindSelectedNode(Vector2 currMousePosition)

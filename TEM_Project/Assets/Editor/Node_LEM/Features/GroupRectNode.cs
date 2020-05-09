@@ -144,13 +144,12 @@ namespace LEM_Editor
                     GroupRectNode forceUpdateGrpNode = m_NestedNodesDictionary[keys[i]] as GroupRectNode;
                     forceUpdateGrpNode.UpdateNestedNode();
                 }
-                else
+
                 if (!m_TotalRect.Overlaps(m_NestedNodesDictionary[keys[i]].m_TotalRect, true))
                 {
                     m_NestedNodesDictionary[keys[i]].m_GroupedNode = null;
                     m_NestedNodesDictionary.Remove(keys[i]);
                 }
-
 
             }
 
