@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using LEM_Effects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 namespace LEM_Editor
 {
-
     public class GroupRectNode : Node
     {
         public static void CalculateGroupRectPosition(Rect[] rects, out Vector2 startVector2Pos, out Vector2 endVector2Pos)
@@ -36,9 +34,11 @@ namespace LEM_Editor
         string m_CommentLabel = default;
 
         Dictionary<string, Node> m_NestedNodesDictionary = new Dictionary<string, Node>();
-        string[] NestedNodesKeys => m_NestedNodesDictionary.Keys.ToArray();
+        public Dictionary<string, Node> NestedNodesDictionary => m_NestedNodesDictionary;
+        public string[] NestedNodesNodeIDs => m_NestedNodesDictionary.Keys.ToArray();
+        public Node[] NestedNodes => m_NestedNodesDictionary.Values.ToArray();
 
-        public override NodeType BaseNodeType => NodeType.GroupRectNode;
+        public override BaseNodeType BaseNodeType => BaseNodeType.GroupRectNode;
 
         Rect m_BorderRect = new Rect();
 
@@ -91,7 +91,7 @@ namespace LEM_Editor
             m_TotalRect.position += delta;
             m_BorderRect.position += delta;
 
-            string[] keys = NestedNodesKeys;
+            string[] keys = NestedNodesNodeIDs;
 
             //If this group rect is not grouped
             for (int i = 0; i < keys.Length; i++)
@@ -99,7 +99,6 @@ namespace LEM_Editor
                 m_NestedNodesDictionary[keys[i]].Drag(delta);
             }
         }
-
 
         public override void Draw()
         {
@@ -133,13 +132,13 @@ namespace LEM_Editor
 
         void UpdateNestedNode()
         {
-            string[] keys = NestedNodesKeys;
+            string[] keys = NestedNodesNodeIDs;
 
             //Remove any nodes whose rects do not overlap
             for (int i = 0; i < keys.Length; i++)
             {
                 //If any of its grouped child is another group rect, force it to update
-                if (m_NestedNodesDictionary[keys[i]].BaseNodeType == NodeType.GroupRectNode)
+                if (m_NestedNodesDictionary[keys[i]].BaseNodeType == BaseNodeType.GroupRectNode)
                 {
                     GroupRectNode forceUpdateGrpNode = m_NestedNodesDictionary[keys[i]] as GroupRectNode;
                     forceUpdateGrpNode.UpdateNestedNode();
@@ -166,7 +165,7 @@ namespace LEM_Editor
 
         void DeselectNestedNodes()
         {
-            string[] keys = NestedNodesKeys;
+            string[] keys = NestedNodesNodeIDs;
             for (int i = 0; i < keys.Length; i++)
             {
                 m_NestedNodesDictionary[keys[i]].DeselectNode();
@@ -250,6 +249,16 @@ namespace LEM_Editor
                 DeselectNode();
             }
             return true;
+        }
+
+        public GroupRectNodeBase SaveGroupRectNodeata()
+        {
+            GroupRectNodeBase g = new GroupRectNodeBase();
+            g.m_NodeID = NodeID;
+            g.m_Position = m_MidRect.position;
+            g.m_Size = m_MidRect.size;
+            g.m_NestedNodeIDs = NestedNodesNodeIDs;
+            return g;
         }
 
     }

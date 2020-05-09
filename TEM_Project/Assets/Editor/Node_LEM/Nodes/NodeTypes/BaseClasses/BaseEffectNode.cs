@@ -13,7 +13,7 @@ namespace LEM_Editor
         protected abstract string EffectTypeName { get; }
         //TEM effect related variables
         public string m_LemEffectDescription = default;
-        public override NodeType BaseNodeType => NodeType.EffectNode; 
+        public override BaseNodeType BaseNodeType => BaseNodeType.EffectNode; 
         //public LEM_BaseEffect m_BaseEffectSaveFile = default;
         public string m_Title = default;
 

@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace LEM_Editor
 {
-    public enum NodeType
+    public enum BaseNodeType
     {
         StartNode = 0,
         GroupRectNode = 1,
@@ -38,7 +38,7 @@ namespace LEM_Editor
 
         protected bool m_IsDragged = default;
         public Node m_GroupedParent = default;
-        public abstract NodeType BaseNodeType { get; }
+        public abstract BaseNodeType BaseNodeType { get; }
         //protected bool m_IsGrouped = false;
         public bool IsGrouped => m_GroupedParent != null;
         //public bool IsGrouped { get { return m_IsGrouped; } set { m_IsGrouped = value; } }

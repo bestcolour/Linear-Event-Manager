@@ -43,14 +43,18 @@ namespace LEM_Editor
         #endregion
 
         //For saving 
-        List<Node> m_AllNodesInEditor = new List<Node>();
-        public static List<Node> AllConnectableNodesInEditor => instance.m_AllNodesInEditor;
+        List<Node> m_AllConnectableNodesInEditor = new List<Node>();
+        public static List<Node> AllConnectableNodesInEditor => instance.m_AllConnectableNodesInEditor;
 
-        List<GroupRectNode> m_AllGroupRectsInEditor = new List<GroupRectNode>();
-        public static List<GroupRectNode> AllGroupRectsInEditor => instance.m_AllGroupRectsInEditor;
+        //List<GroupRectNode> m_AllGroupRectsInEditor = new List<GroupRectNode>();
+        //public static List<GroupRectNode> AllGroupRectsInEditor => instance.m_AllGroupRectsInEditor;
+
+        Dictionary<string, GroupRectNode> m_AllGroupRectsInEditorDictionary = new Dictionary<string, GroupRectNode>();
+        public static Dictionary<string, GroupRectNode> AllGroupRectsInEditorDictionary => instance.m_AllGroupRectsInEditorDictionary;
+        public static string[] AllGroupRectsInEditorNodeIDs => AllGroupRectsInEditorDictionary.Keys.ToArray();
 
         Dictionary<string, NodeDictionaryStruct> m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
-        Dictionary<string, NodeDictionaryStruct> AllEffectsNodeInEditor => instance.m_AllEffectsNodeInEditor;
+        public static Dictionary<string, NodeDictionaryStruct> AllEffectsNodeInEditor => instance.m_AllEffectsNodeInEditor;
 
         void EditEffectNodeStruct(NodeDictionaryStruct nodeStruct)
         {
@@ -69,13 +73,12 @@ namespace LEM_Editor
             AllEffectsNodeInEditor[nodeStruct.effectNode.NodeID] = nodeStruct;
         }
 
-
         //RULE: INPOINT'S CONNECTED NODE ID FIRST THEN OUTPOINT CONNECTED NODE ID
         Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
         Dictionary<Tuple<string, string>, Connection> AllConnectionsDictionary => instance.m_AllConnectionsDictionary;
 
         ConnectableNode m_StartNode = default;
-        ConnectableNode StartNode { get { return instance.m_StartNode; } set { instance.m_StartNode = value; } }
+        public static ConnectableNode StartNode { get { return instance.m_StartNode; } set { instance.m_StartNode = value; } }
 
         Action d_OnGUI = null;
 
@@ -344,12 +347,12 @@ namespace LEM_Editor
 
             if (instance.m_CommandInvoker == null)
             {
-                instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, CompileNodeToEffect, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
+                instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions, CreateEffectNode, RecreateEffectNode,CreateGroupNode, TryToRestichConnections, DeleteNodes, CompileNodeToEffect, /*MoveNodes,*/ CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
             }
 
-            if (instance.m_AllNodesInEditor == null)
+            if (instance.m_AllConnectableNodesInEditor == null)
             {
-                instance.m_AllNodesInEditor = new List<Node>();
+                instance.m_AllConnectableNodesInEditor = new List<Node>();
             }
 
             if (instance.m_AllEffectsNodeInEditor == default)
@@ -476,7 +479,7 @@ namespace LEM_Editor
             m_IsSearchBoxActive = false;
 
 
-            m_AllNodesInEditor = new List<Node>();
+            m_AllConnectableNodesInEditor = new List<Node>();
             m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
             m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
             m_CommandInvoker.ResetHistory();
@@ -610,9 +613,11 @@ namespace LEM_Editor
 
         void DrawRectGroups()
         {
-            for (int i = 0; i < AllGroupRectsInEditor.Count; i++)
-                if (AllGroupRectsInEditor[i].IsWithinWindowScreen)
-                    AllGroupRectsInEditor[i].Draw();
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+
+            for (int i = 0; i < keys.Length; i++)
+                if (AllGroupRectsInEditorDictionary[keys[i]].IsWithinWindowScreen)
+                    AllGroupRectsInEditorDictionary[keys[i]].Draw();
         }
 
         void DrawNodes()
@@ -1011,7 +1016,7 @@ namespace LEM_Editor
                         else
                         {
                             //Only rearrange when currentclicked node is not grouprect node
-                            if (s_CurrentClickedNode.BaseNodeType != NodeType.GroupRectNode)
+                            if (s_CurrentClickedNode.BaseNodeType != BaseNodeType.GroupRectNode)
                                 AllConnectableNodesInEditor.RearrangeElement(s_CurrentClickedNode, AllConnectableNodesInEditor.Count - 1);
                         }
 
@@ -1211,35 +1216,45 @@ namespace LEM_Editor
 
         void ProcessGroupRectEvents(Event e)
         {
-            if (AllGroupRectsInEditor.Count <= 0)
+            if (AllGroupRectsInEditorDictionary.Count <= 0)
                 return;
+
+            string[] keys;
+
 
             //Check current event once and then tell all the nodes to handle that event so they dont have to check
             switch (e.type)
             {
                 case EventType.MouseDown:
+
+                    keys = AllGroupRectsInEditorNodeIDs;
                     //Check if it is the left mousebutton that was pressed
                     if (e.button == 0)
                     {
-                        for (int i = AllGroupRectsInEditor.Count - 1; i >= 0; i--)
-                            if (AllGroupRectsInEditor[i].HandleLeftMouseDown(e))
+                        for (int i = keys.Length - 1; i >= 0; i--)
+                            if (AllGroupRectsInEditorDictionary[keys[i]].HandleLeftMouseDown(e))
                                 GUI.changed = true;
                     }
                     break;
 
                 case EventType.MouseUp:
-                    for (int i = AllGroupRectsInEditor.Count - 1; i >= 0; i--)
-                        if (AllGroupRectsInEditor[i].HandleMouseUp())
+
+                    keys = AllGroupRectsInEditorNodeIDs;
+
+                    for (int i = keys.Length - 1; i >= 0; i--)
+                        if (AllGroupRectsInEditorDictionary[keys[i]].HandleMouseUp())
                             GUI.changed = true;
                     break;
 
                 case EventType.MouseDrag:
                     if (e.button == 0)
                     {
+                        keys = AllGroupRectsInEditorNodeIDs;
+
                         Vector2 convertedDelta = e.delta / ScaleFactor;
 
-                        for (int i = AllGroupRectsInEditor.Count - 1; i >= 0; i--)
-                            if (AllGroupRectsInEditor[i].HandleLeftMouseButtonDrag(e, convertedDelta))
+                        for (int i = keys.Length - 1; i >= 0; i--)
+                            if (AllGroupRectsInEditorDictionary[keys[i]].HandleLeftMouseButtonDrag(e, convertedDelta))
                                 GUI.changed = true;
                     }
                     break;
@@ -1370,7 +1385,7 @@ namespace LEM_Editor
             newlyCreatedNode = newNode;
         }
 
-        void CreateGroupNode(Rect[] allSelectedNodesTotalRect, List<Node> allSelectedNodes)
+        GroupRectNode CreateGroupNode(Rect[] allSelectedNodesTotalRect, List<Node> allSelectedNodes)
         {
             GroupRectNode.CalculateGroupRectPosition(allSelectedNodesTotalRect, out Vector2 startVector2Pos, out Vector2 endVector2Pos);
 
@@ -1402,8 +1417,10 @@ namespace LEM_Editor
 
             //Add the node into collection in editor
             //AllNodesInEditor.Add(groupRect);
-            AllGroupRectsInEditor.Add(groupRect);
+            AllGroupRectsInEditorDictionary.Add(groupRect.NodeID,groupRect);
             //AllNodesInEditor.Add(groupRect);
+
+            return groupRect;
         }
 
         void DeleteNodes(NodeBaseData[] nodesToBeDeleted)
@@ -1434,11 +1451,13 @@ namespace LEM_Editor
                     AllConnectableNodesInEditor[i].Drag(delta);
             }
 
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+
             //Drag all the group rects
-            for (int i = 0; i < AllGroupRectsInEditor.Count; i++)
+            for (int i = 0; i < keys.Length; i++)
             {
-                if (!AllGroupRectsInEditor[i].IsGrouped)
-                    AllGroupRectsInEditor[i].Drag(delta);
+                if (!AllGroupRectsInEditorDictionary[keys[i]].IsGrouped)
+                    AllGroupRectsInEditorDictionary[keys[i]].Drag(delta);
             }
 
         }
@@ -1872,19 +1891,23 @@ namespace LEM_Editor
             for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
                 AllConnectableNodesInEditor[i].DeselectNode();
 
-            for (int i = 0; i < AllGroupRectsInEditor.Count; i++)
-                AllGroupRectsInEditor[i].DeselectNode();
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+
+            for (int i = 0; i < keys.Length; i++)
+                AllGroupRectsInEditorDictionary[keys[i]].DeselectNode();
         }
 
         void SelectAllNodes()
         {
             AllSelectedNodes.Clear();
 
-            for (int i = 0; i < m_AllNodesInEditor.Count; i++)
-                m_AllNodesInEditor[i].SelectNode();
+            for (int i = 0; i < m_AllConnectableNodesInEditor.Count; i++)
+                m_AllConnectableNodesInEditor[i].SelectNode();
 
-            for (int i = 0; i < AllGroupRectsInEditor.Count; i++)
-                AllGroupRectsInEditor[i].SelectNode();
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+
+            for (int i = 0; i < keys.Length; i++)
+                AllGroupRectsInEditorDictionary[keys[i]].SelectNode();
         }
 
         Node FindSelectedNode(Vector2 currMousePosition)
@@ -1897,7 +1920,16 @@ namespace LEM_Editor
                 return selectedNode;
 
             //Search for group rects after searching for nodes
-            return AllGroupRectsInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
+            //return AllGroupRectsInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
+
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+            for (int i = 0; i < keys.Length; i++)
+            {
+                if (AllGroupRectsInEditorDictionary[keys[i]].m_TotalRect.Contains(currMousePosition))
+                    return AllGroupRectsInEditorDictionary[keys[i]];
+            }
+
+            return null;
         }
 
         #endregion

@@ -126,19 +126,42 @@ namespace LEM_Editor
         //Saves all the current position of nodes n get all the node ids
         public MoveNodeCommand(Node[] nodesMovedIDs)
         {
-            //Get all the nodeids from the passed parameter
-            m_NodeIDsMoved = nodesMovedIDs.Select(x => x.NodeID).ToArray();
-
-            m_PreviousTopRectPositions = new Vector2[nodesMovedIDs.Length];
-            m_PreviousMidRectPositions = new Vector2[nodesMovedIDs.Length];
-            m_PreviousTotalRectPositions = new Vector2[nodesMovedIDs.Length];
-
-
+            List<Node> nodesMoved = new List<Node>();
+            GroupRectNode dummy;
+            //Expand all the nodes selected and check through all the nested node if the node is a grouprect node
             for (int i = 0; i < nodesMovedIDs.Length; i++)
             {
-                m_PreviousTopRectPositions[i] = nodesMovedIDs[i].m_TopRect.position;
-                m_PreviousMidRectPositions[i] = nodesMovedIDs[i].m_MidRect.position;
-                m_PreviousTotalRectPositions[i] = nodesMovedIDs[i].m_TotalRect.position;
+                nodesMoved.Add(nodesMovedIDs[i]);
+
+                if (nodesMovedIDs[i].BaseNodeType == BaseNodeType.GroupRectNode)
+                {
+                    dummy = nodesMovedIDs[i] as GroupRectNode;
+                    nodesMoved.AddRange(dummy.NestedNodes);
+                }
+            }
+
+
+            //Get all the nodeids from the passed parameter
+            m_NodeIDsMoved = nodesMoved.Select(x => x.NodeID).ToArray();
+
+            m_PreviousTopRectPositions = new Vector2[m_NodeIDsMoved.Length];
+            m_PreviousMidRectPositions = new Vector2[m_NodeIDsMoved.Length];
+            m_PreviousTotalRectPositions = new Vector2[m_NodeIDsMoved.Length];
+
+            ////Populate  the array of v3
+            //for (int i = 0; i < nodesMovedIDs.Length; i++)
+            //{
+            //    m_PreviousTopRectPositions[i] = nodesMovedIDs[i].m_TopRect.position;
+            //    m_PreviousMidRectPositions[i] = nodesMovedIDs[i].m_MidRect.position;
+            //    m_PreviousTotalRectPositions[i] = nodesMovedIDs[i].m_TotalRect.position;
+            //}
+
+            //Populate  the array of v3
+            for (int i = 0; i < nodesMoved.Count; i++)
+            {
+                m_PreviousTopRectPositions[i] = nodesMoved[i].m_TopRect.position;
+                m_PreviousMidRectPositions[i] = nodesMoved[i].m_MidRect.position;
+                m_PreviousTotalRectPositions[i] = nodesMoved[i].m_TotalRect.position;
             }
 
         }
@@ -147,7 +170,87 @@ namespace LEM_Editor
 
         public void Undo()
         {
-            NodeCommandInvoker.d_MoveNodes(m_NodeIDsMoved, ref m_PreviousTopRectPositions, ref m_PreviousMidRectPositions, ref m_PreviousTotalRectPositions);
+            //NodeCommandInvoker.d_MoveNodes(m_NodeIDsMoved, ref m_PreviousTopRectPositions, ref m_PreviousMidRectPositions, ref m_PreviousTotalRectPositions);
+            Vector2 currentNodePosition;
+            NodeDictionaryStruct dummyStruct;
+            GroupRectNode dummyGroupRect;
+
+            //Firstly, check if there is start node in the nodeidsmoved
+            #region Start Node Revert to avoid O(n^2) operation
+
+            int startNodeInt = 0;
+            while (startNodeInt < m_NodeIDsMoved.Length)
+            {
+                if (m_NodeIDsMoved[startNodeInt] == NodeLEM_Editor.StartNode.NodeID)
+                    break;
+
+                startNodeInt++;
+            }
+
+            //if startNodeInt is not Length of nodeIDsMoved, that means startNodeint is found inside nodeIDsMoved
+            if (startNodeInt != m_NodeIDsMoved.Length)
+            {
+                //Do revert/redo movenode command (they r basically the same)
+                currentNodePosition = NodeLEM_Editor.StartNode.m_TopRect.position;
+                NodeLEM_Editor.StartNode.m_TopRect.position = m_PreviousTopRectPositions[startNodeInt];
+                m_PreviousTopRectPositions[startNodeInt] = currentNodePosition;
+
+                currentNodePosition = NodeLEM_Editor.StartNode.m_MidRect.position;
+                NodeLEM_Editor.StartNode.m_MidRect.position = m_PreviousMidRectPositions[startNodeInt];
+                m_PreviousMidRectPositions[startNodeInt] = currentNodePosition;
+
+                currentNodePosition = NodeLEM_Editor.StartNode.m_TotalRect.position;
+                NodeLEM_Editor.StartNode.m_TotalRect.position = m_PreviousTotalRectPositions[startNodeInt];
+                m_PreviousTotalRectPositions[startNodeInt] = currentNodePosition;
+            }
+            else
+            {
+                //If startnode isnt in the array of moved nodes,
+                startNodeInt = -1;
+            }
+
+            #endregion
+
+            //All thats left are effect nodes so we can just use the dictionary to get the nodes instead of using AllNodesInEditor.Find()
+            //Revert all the node's positions to the prev positions but before that, save that position in a local var to reassign to prev pos 
+            for (int i = 0; i < m_NodeIDsMoved.Length; i++)
+            {
+                //Skip startnode id 
+                if (i == startNodeInt)
+                    continue;
+
+                //Check if current node is a effect node else check if its a group rect node
+                if (NodeLEM_Editor.AllEffectsNodeInEditor.TryGetValue(m_NodeIDsMoved[i], out dummyStruct))
+                {
+                    currentNodePosition = dummyStruct.effectNode.m_TopRect.position;
+                    dummyStruct.effectNode.m_TopRect.position = m_PreviousTopRectPositions[i];
+                    m_PreviousTopRectPositions[i] = currentNodePosition;
+
+                    currentNodePosition = dummyStruct.effectNode.m_MidRect.position;
+                    dummyStruct.effectNode.m_MidRect.position = m_PreviousMidRectPositions[i];
+                    m_PreviousMidRectPositions[i] = currentNodePosition;
+
+                    currentNodePosition = dummyStruct.effectNode.m_TotalRect.position;
+                    dummyStruct.effectNode.m_TotalRect.position = m_PreviousTotalRectPositions[i];
+                    m_PreviousTotalRectPositions[i] = currentNodePosition;
+                }
+                //Else if node id belongs to a group rect
+                else if (NodeLEM_Editor.AllGroupRectsInEditorDictionary.TryGetValue(m_NodeIDsMoved[i], out dummyGroupRect))
+                {
+                    currentNodePosition = dummyGroupRect.m_TopRect.position;
+                    dummyGroupRect.m_TopRect.position = m_PreviousTopRectPositions[i];
+                    m_PreviousTopRectPositions[i] = currentNodePosition;
+
+                    currentNodePosition = dummyGroupRect.m_MidRect.position;
+                    dummyGroupRect.m_MidRect.position = m_PreviousMidRectPositions[i];
+                    m_PreviousMidRectPositions[i] = currentNodePosition;
+
+                    currentNodePosition = dummyGroupRect.m_TotalRect.position;
+                    dummyGroupRect.m_TotalRect.position = m_PreviousTotalRectPositions[i];
+                    m_PreviousTotalRectPositions[i] = currentNodePosition;
+                }
+
+            }
         }
 
         public void Redo()
@@ -559,21 +662,39 @@ namespace LEM_Editor
     public class GroupCommand : INodeCommand
     {
         public int CommandType => NodeCommandType.GROUP;
+        GroupRectNode m_GroupRectNode = default;
+
+        public GroupCommand(Rect[] allSelectedNodesTotalRect, List<Node> allSelectedNodes)
+        {
+            m_GroupRectNode = NodeCommandInvoker.d_CreateGroupRectNode(allSelectedNodesTotalRect, allSelectedNodes);
+        }
 
         public void Execute()
         {
-            throw new NotImplementedException();
+        }
+
+
+        //Basically delete but we need to save its current state b4 deleting
+        public void Undo()
+        {
+            //Delete 
+            GroupRectNodeBase[] nodesToBeDeleted = new GroupRectNodeBase[1] { m_GroupRectNode.SaveGroupRectNodeata() };
+
+            //I ENDED HERE
+            NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(nodesToBeDeleted);
         }
 
         public void Redo()
         {
-            throw new NotImplementedException();
+            //Recreate and load the effect data
+            NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(m_NodeEffect.m_NodeBaseData.m_Position, m_NodeEffect.m_NodeEffectType, m_NodeEffect.m_NodeBaseData.m_NodeID)
+                .LoadFromBaseEffect(m_NodeEffect);
+
+            //Restitch the connections
+            NodeCommandInvoker.d_RestitchConnections(m_NodeEffect);
         }
 
-        public void Undo()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 
 }
