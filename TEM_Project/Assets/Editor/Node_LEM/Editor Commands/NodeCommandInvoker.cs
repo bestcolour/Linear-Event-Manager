@@ -36,7 +36,8 @@ namespace LEM_Editor
         INodeCommand[] m_CommandHistory = null;
 
         //Copy feature
-        public static List<LEM_BaseEffect> s_Effect_ClipBoard = new List<LEM_BaseEffect>();
+        //public static List<LEM_BaseEffect> s_Effect_ClipBoard = new List<LEM_BaseEffect>();
+        public static List<Node> s_Nodes_ClipBoard = new List<Node>();
         //public static List<GroupRectNodeBase> s_GroupRectData_ClipBoard = new List<GroupRectNodeBase>();
 
         int m_CurrentCounter = 0;
@@ -197,22 +198,26 @@ namespace LEM_Editor
         public void CopyToClipBoard(Node[] copiedNodes)
         {
             PasteCommand.ResetCurrentPasteOffSet();
-            s_Effect_ClipBoard.Clear();
+            //s_Effect_ClipBoard.Clear();
+            s_Nodes_ClipBoard.Clear();
             //s_GroupRectData_ClipBoard.Clear();
             //Reset
             m_HasCutButNotCutPaste = false;
 
-            BaseEffectNode dummyEffectNode;
+            //BaseEffectNode dummyEffectNode;
             //GroupRectNode dummyGroupRectNode;
 
             for (int i = 0; i < copiedNodes.Length; i++)
             {
-                //Save to clipboard
-                if(copiedNodes[i].BaseNodeType == BaseNodeType.EffectNode)
-                {
-                    dummyEffectNode = copiedNodes[i] as BaseEffectNode;
-                    s_Effect_ClipBoard.Add(dummyEffectNode.CompileToBaseEffect());
-                }
+                ////Save to clipboard
+                //if(copiedNodes[i].BaseNodeType == BaseNodeType.EffectNode)
+                //{
+                //    dummyEffectNode = copiedNodes[i] as BaseEffectNode;
+                //    s_Effect_ClipBoard.Add(dummyEffectNode.CompileToBaseEffect());
+                //}
+
+                s_Nodes_ClipBoard.Add(copiedNodes[i]);
+
                 ////There wont be a start node here so no nid to worry
                 //else
                 //{

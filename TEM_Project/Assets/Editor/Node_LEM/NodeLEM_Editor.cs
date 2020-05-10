@@ -203,13 +203,13 @@ namespace LEM_Editor
                 StartNode.DeselectNode();
             }
 
-            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.ToArray()));
         }
 
         void DoPasteCommand()
         {
             //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
-            if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
+            if (NodeCommandInvoker.s_Nodes_ClipBoard.Count > 0)
             {
                 //If player had cut 
                 if (CommandInvoker.m_HasCutButNotCutPaste)
