@@ -87,7 +87,7 @@ namespace LEM_Editor
                         nodesEffects.Add(NodeLEM_Editor.AllEffectsNodeInEditor[deletedNodesID[i]].effectNode.CompileToBaseEffect());
                         continue;
 
-                        case LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial:
+                    case LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial:
                         groupRectNodeBases.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[deletedNodesID[i]].SaveGroupRectNodedata());
                         continue;
                 }
@@ -159,13 +159,16 @@ namespace LEM_Editor
             //Recreate group rectnode
             for (int i = 0; i < m_DeletedGroupRectNodeBases.Length; i++)
             {
-                NodeLEM_Editor.ReCreateGroupNode(
-                    //m_DeletedGroupRectNodeBases[i].m_Position,
-                    //m_DeletedGroupRectNodeBases[i].m_Size,
-                    m_DeletedGroupRectNodeBases[i].m_NestedNodeIDs,
-                    m_DeletedGroupRectNodeBases[i].m_NodeID,
-                    m_DeletedGroupRectNodeBases[i].m_LabelText
-                    ).SelectNode();
+                if (m_DeletedGroupRectNodeBases[i].HasAtLeastOneNestedNode)
+                    NodeLEM_Editor.ReCreateGroupNode(
+                        //m_DeletedGroupRectNodeBases[i].m_Position,
+                        //m_DeletedGroupRectNodeBases[i].m_Size,
+                        m_DeletedGroupRectNodeBases[i].m_NestedNodeIDs,
+                        m_DeletedGroupRectNodeBases[i].m_NodeID,
+                        m_DeletedGroupRectNodeBases[i].m_LabelText
+                        ).SelectNode();
+                else
+                    NodeLEM_Editor.ReCreateGroupNode(m_DeletedGroupRectNodeBases[i].m_Position, m_DeletedGroupRectNodeBases[i].m_Size, m_DeletedGroupRectNodeBases[i].m_NodeID, m_DeletedGroupRectNodeBases[i].m_LabelText);
             }
 
 
@@ -295,7 +298,7 @@ namespace LEM_Editor
 
                 initials = NodeLEM_Editor.GetInitials(m_NodeIDsMoved[i]);
 
-                if(initials == LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
+                if (initials == LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
                 {
                     currentNodePosition = NodeLEM_Editor.AllEffectsNodeInEditor[m_NodeIDsMoved[i]].effectNode.m_TopRect.position;
                     NodeLEM_Editor.AllEffectsNodeInEditor[m_NodeIDsMoved[i]].effectNode.m_TopRect.position = m_PreviousTopRectPositions[i];
@@ -720,7 +723,11 @@ namespace LEM_Editor
 
             for (int i = 0; i < m_PastedGroupRects.Length; i++)
             {
-                NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_NestedNodeIDs, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText).SelectNode();
+
+                if (m_PastedGroupRects[i].HasAtLeastOneNestedNode)
+                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_NestedNodeIDs, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText).SelectNode();
+                else
+                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_Position, m_PastedGroupRects[i].m_Size, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText);
             }
         }
 
@@ -775,7 +782,10 @@ namespace LEM_Editor
 
             for (int i = 0; i < m_PastedGroupRects.Length; i++)
             {
-                NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_NestedNodeIDs, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText).SelectNode();
+                if (m_PastedGroupRects[i].HasAtLeastOneNestedNode)
+                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_NestedNodeIDs, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText).SelectNode();
+                else
+                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_Position, m_PastedGroupRects[i].m_Size, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText);
             }
 
         }
@@ -869,7 +879,11 @@ namespace LEM_Editor
             //Recreate the groups
             for (int i = 0; i < m_PastedGroupRects.Length; i++)
             {
+                if(m_PastedGroupRects[i].HasAtLeastOneNestedNode)
                 NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_NestedNodeIDs, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText);
+                else
+                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_Position, m_PastedGroupRects[i].m_Size, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText);
+
             }
 
 

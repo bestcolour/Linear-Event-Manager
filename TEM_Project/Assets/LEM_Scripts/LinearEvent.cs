@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using UnityEditor;
 namespace LEM_Effects
@@ -17,6 +16,11 @@ namespace LEM_Effects
         //Comment this out after you are done
         [Header("Cached Values")]
         public LEM_BaseEffect[] m_AllEffects = default;
+
+#if UNITY_EDITOR
+        public GroupRectNodeBase[] m_AllGroupRectNodes = default;
+#endif
+
         public NodeBaseData m_StartNodeData = default;
 
         //[SerializeField, ReadOnly]

@@ -35,13 +35,10 @@ namespace LEM_Editor
         public string CommentLabel { set { m_CommentLabel = value; } }
 
         Dictionary<string, Node> m_NestedNodesDictionary = new Dictionary<string, Node>();
-        public Dictionary<string, Node> NestedNodesDictionary => m_NestedNodesDictionary;
         public string[] NestedNodesNodeIDs => m_NestedNodesDictionary.Keys.ToArray();
         public Node[] NestedNodes => m_NestedNodesDictionary.Values.ToArray();
 
-        //public override BaseNodeType BaseNodeType => BaseNodeType.GroupRectNode;
-
-        public override string ID_Initial =>LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial;
+        public override string ID_Initial => LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial;
 
         Rect m_BorderRect = new Rect();
 
@@ -130,10 +127,19 @@ namespace LEM_Editor
             //Rect labelRect = m_TopRect;
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             m_CommentLabel = EditorGUI.DelayedTextField(m_TopRect, m_CommentLabel, LEMStyleLibrary.s_NodeHeaderStyle);
+
+            #region Debug
+            Rect debugRect = m_TopRect;
+            debugRect.y -= 20f;
+            EditorGUI.LabelField(debugRect, "Is Grouped to " + m_GroupedParent?.NodeID);
+            #endregion
+
+
+
             LEMStyleLibrary.EndEditorLabelColourChange();
         }
 
-        void UpdateNestedNode()
+        void UpdateNestedNodes()
         {
             string[] keys = NestedNodesNodeIDs;
 
@@ -141,10 +147,10 @@ namespace LEM_Editor
             for (int i = 0; i < keys.Length; i++)
             {
                 //If any of its grouped child is another group rect, force it to update
-                if (m_NestedNodesDictionary[keys[i]].ID_Initial ==LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
+                if (m_NestedNodesDictionary[keys[i]].ID_Initial == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
                 {
                     GroupRectNode forceUpdateGrpNode = m_NestedNodesDictionary[keys[i]] as GroupRectNode;
-                    forceUpdateGrpNode.UpdateNestedNode();
+                    forceUpdateGrpNode.UpdateNestedNodes();
                 }
 
                 if (!m_TotalRect.Overlaps(m_NestedNodesDictionary[keys[i]].m_TotalRect, true))
@@ -152,7 +158,6 @@ namespace LEM_Editor
                     m_NestedNodesDictionary[keys[i]].m_GroupedParent = null;
                     m_NestedNodesDictionary.Remove(keys[i]);
                 }
-
             }
 
             //Add any nodes whose rects do overlap which at the same time are not inside the nested dictionary and is not grouped b4
@@ -164,6 +169,21 @@ namespace LEM_Editor
                     m_NestedNodesDictionary.Add(NodeLEM_Editor.AllConnectableNodesInEditor[i].NodeID, NodeLEM_Editor.AllConnectableNodesInEditor[i]);
                 }
             }
+
+            //keys = NodeLEM_Editor.AllGroupRectsInEditorNodeIDs;
+
+            //for (int i = 0; i < keys.Length; i++)
+            //{
+            //    if (keys[i] != NodeID &&
+            //        !NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]].IsGrouped &&
+            //        !m_NestedNodesDictionary.ContainsKey(keys[i]) &&
+            //        m_TotalRect.Overlaps(NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]].m_TotalRect))
+            //    {
+            //        NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]].m_GroupedParent = this;
+            //        m_NestedNodesDictionary.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]].NodeID, NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]]);
+            //    }
+            //}
+
         }
 
         void DeselectNestedNodes()
@@ -193,8 +213,8 @@ namespace LEM_Editor
                     if (!m_IsSelected)
                     {
                         SelectByClicking();
-                        UpdateNestedNode();
-                        DeselectNestedNodes();
+                        UpdateNestedNodes();
+                        //DeselectNestedNodes();
                         return true;
                     }
 
@@ -209,7 +229,7 @@ namespace LEM_Editor
 
                     // or i want to drag this selected nodes 
                     m_IsDragged = true;
-                    UpdateNestedNode();
+                    UpdateNestedNodes();
                     DeselectNestedNodes();
                     return false;
                 }
@@ -226,21 +246,26 @@ namespace LEM_Editor
 
                     //Deselect if this node is selected but there isnt multiple selected nodes
                     // or if there is no node clicked
-                    if (currentClickedNode.IsSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
+                    if (currentClickedNode.IsSelected)
                     {
-                        DeselectNode();
-                        return true;
-                    }
-                    //when there is another node clicked in the window,
-                    //as well as having multiple nodes selected
-                    else if (currentClickedNode.IsSelected && NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
-                    {
-                        m_IsDragged = true;
+                        if (NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
+                        {
+                            DeselectNode();
+                            return true;
+                        }
+                        //when there is another node clicked in the window,
+                        //as well as having multiple nodes selected
+                        else if (NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
+                        {
+                            m_IsDragged = true;
+                        }
                     }
 
+                    DeselectNode();
+                    UpdateNestedNodes();
                 }
 
-
+                UpdateNestedNodes();
                 return false;
             }
 
@@ -254,12 +279,20 @@ namespace LEM_Editor
             return true;
         }
 
+        public override bool HandleMouseUp()
+        {
+            //Reset draggin bool
+            UpdateNestedNodes();
+            m_IsDragged = false;
+            return false;
+        }
+
         public GroupRectNodeBase SaveGroupRectNodedata()
         {
             GroupRectNodeBase g = new GroupRectNodeBase();
             g.m_NodeID = NodeID;
-            //g.m_Position = m_MidRect.position;
-            //g.m_Size = m_MidRect.size;
+            g.m_Position = m_MidRect.position;
+            g.m_Size = m_MidRect.size;
             g.m_NestedNodeIDs = NestedNodesNodeIDs;
             g.m_LabelText = m_CommentLabel;
             return g;

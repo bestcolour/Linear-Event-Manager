@@ -13,6 +13,7 @@ namespace LEM_Editor
         public static Color s_CurrentBezierColour = default;
         public static Color s_CurrentLabelColour = default;
         public static Color s_CurrentGroupRectMidSkinColour = default;
+        public static Color s_CurrentGroupRectTopSkinColour = default;
 
         //public static GUIStyle s_InPointStyle = default;
         //public static GUIStyle s_OutPointStyle = default;
@@ -114,7 +115,8 @@ namespace LEM_Editor
                 s_CurrentLabelColour = Color.white;
                 s_CurrentMidSkinColour = new Color(0.164f, 0.164f, 0.164f);
                 s_CurrentBezierColour = Color.white;
-                s_CurrentGroupRectMidSkinColour = new Color(0, 0, 0, 0.5f);
+                s_CurrentGroupRectMidSkinColour = new Color(0, 0, 0, 0.1f);
+                s_CurrentGroupRectTopSkinColour = new Color(0, 0, 0, 0.5f);
 
             }
             else
@@ -125,6 +127,7 @@ namespace LEM_Editor
                 s_CurrentMidSkinColour = Color.white;
                 s_CurrentBezierColour = new Color(0.152f, 0.152f, 0.152f);
                 s_CurrentGroupRectMidSkinColour = new Color(1, 1, 1, 0.5f);
+                s_CurrentGroupRectTopSkinColour = new Color(1,1,1, 0.5f);
             }
 
             //s_CurrentMidSkinColour = settings.m_EditorTheme == EditorTheme.Dark ? new Color(0.164f, 0.164f, 0.164f) : Color.white;

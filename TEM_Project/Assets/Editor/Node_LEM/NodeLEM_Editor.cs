@@ -292,7 +292,7 @@ namespace LEM_Editor
             }
 
             //CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
-            CommandInvoker.CopyToClipBoard(AllSelectedNodes.Select(x=>x.NodeID).ToArray());
+            CommandInvoker.CopyToClipBoard(AllSelectedNodes.Select(x => x.NodeID).ToArray());
 
         }
 
@@ -1535,7 +1535,7 @@ namespace LEM_Editor
                 nodeSkin,
                 instance.TryToAddNodeToSelectedCollection,
                 instance.TryToRemoveNodeFromSelectedCollection,
-                LEMStyleLibrary.s_CurrentGroupRectMidSkinColour
+                LEMStyleLibrary.s_CurrentGroupRectTopSkinColour
                 );
 
             groupRect.GenerateNodeID();
@@ -1546,43 +1546,76 @@ namespace LEM_Editor
             return groupRect;
         }
 
+        //Recreategroup if there is nestednodes in this group node
         public static GroupRectNode ReCreateGroupNode(/*Vector2 rectGroupPos, Vector2 rectGroupSize,*/ string[] allNestedNodesIDs, string idToSet, string labelText)
         {
-            GroupRectNode groupRect;
             //Get the respective skin from the collection of nodeskin
             NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
-            NodeDictionaryStruct dummy;
+
             Node[] allSelectedNodesWithNoGroups = new Node[allNestedNodesIDs.Length];
             Rect[] allNestedNodesRects = new Rect[allNestedNodesIDs.Length];
 
+            string initials;
+
             for (int i = 0; i < allSelectedNodesWithNoGroups.Length; i++)
             {
-                if (StartNode.NodeID == allNestedNodesIDs[i])
+                initials = GetInitials(allNestedNodesIDs[i]);
+
+                if (initials == LEMDictionary.NodeIDs_Initials.k_StartNodeInitial)
                     allSelectedNodesWithNoGroups[i] = StartNode;
-                else if (AllEffectsNodeInEditor.TryGetValue(allNestedNodesIDs[i], out dummy))
-                    allSelectedNodesWithNoGroups[i] = dummy.effectNode;
-                else if (AllGroupRectsInEditorDictionary.TryGetValue(allNestedNodesIDs[i], out groupRect))
-                    allSelectedNodesWithNoGroups[i] = groupRect;
+                else if (initials == LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
+                    allSelectedNodesWithNoGroups[i] = AllEffectsNodeInEditor[allNestedNodesIDs[i]].effectNode;
+                else if (initials == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
+                    allSelectedNodesWithNoGroups[i] = AllGroupRectsInEditorDictionary[allNestedNodesIDs[i]];
 
                 allNestedNodesRects[i] = allSelectedNodesWithNoGroups[i].m_TotalRect;
             }
 
-            GroupRectNode.CalculateGroupRectPosition(allNestedNodesRects, out Vector2 startVector2Pos, out Vector2 endVector2Pos);
+            GroupRectNode.CalculateGroupRectPosition(allNestedNodesRects, out Vector2 spawnPos, out Vector2 endPos);
 
-            groupRect = new GroupRectNode();
+            endPos.x = Mathf.Abs(endPos.x - spawnPos.x);
+            endPos.y = Mathf.Abs(endPos.y - spawnPos.y);
 
-            endVector2Pos.x = Mathf.Abs(endVector2Pos.x - startVector2Pos.x);
-            endVector2Pos.y = Mathf.Abs(endVector2Pos.y - startVector2Pos.y);
+
+            GroupRectNode groupRect = new GroupRectNode();
 
             //Initialise the new node 
             groupRect.Initialise
-                (startVector2Pos,
-                endVector2Pos,
+                (spawnPos,
+                endPos,
                 allSelectedNodesWithNoGroups,
                 nodeSkin,
                 instance.TryToAddNodeToSelectedCollection,
                 instance.TryToRemoveNodeFromSelectedCollection,
-                LEMStyleLibrary.s_CurrentGroupRectMidSkinColour
+                LEMStyleLibrary.s_CurrentGroupRectTopSkinColour
+                );
+
+            groupRect.CommentLabel = labelText;
+            groupRect.SetNodeID(idToSet);
+
+            //Add the node into collection in editor
+            AllGroupRectsInEditorDictionary.Add(groupRect.NodeID, groupRect);
+            return groupRect;
+        }
+
+        //Recreategroup if there is nestednodes in this group node
+        public static GroupRectNode ReCreateGroupNode(Vector2 rectGroupPos, Vector2 rectGroupSize, string idToSet, string labelText)
+        {
+            //Get the respective skin from the collection of nodeskin
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+            GroupRectNode groupRect = new GroupRectNode();
+
+            Node[] noNested = new Node[0];
+            //Initialise the new node 
+            groupRect.Initialise
+                (rectGroupPos,
+                rectGroupSize,
+                noNested
+                ,
+                nodeSkin,
+                instance.TryToAddNodeToSelectedCollection,
+                instance.TryToRemoveNodeFromSelectedCollection,
+                LEMStyleLibrary.s_CurrentGroupRectTopSkinColour
                 );
 
             groupRect.CommentLabel = labelText;
@@ -2017,7 +2050,8 @@ namespace LEM_Editor
             m_EditorState = EDITORSTATE.SAVING;
 
             LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllEffectsNodeInEditor.Count];
-            BaseEffectNode[] allEffectNodes = AllEffectsNodeInEditor.Select(x => x.Value.effectNode).ToArray();
+            BaseEffectNode[] allEffectNodes = AllEffectsNodeInEditor.Values.Select(x => x.effectNode).ToArray();
+            GroupRectNodeBase[] allGroupRects = new GroupRectNodeBase[AllGroupRectsInEditorDictionary.Count];
 
             //This saves all events regardless of whether they are connected singularly, plurally or disconnected
             for (int i = 0; i < lemEffects.Length; i++)
@@ -2025,8 +2059,16 @@ namespace LEM_Editor
                 lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
             }
 
+            string[] keysForGrp = AllGroupRectsInEditorNodeIDs;
+
+            for (int i = 0; i < keysForGrp.Length; i++)
+            {
+                allGroupRects[i] = AllGroupRectsInEditorDictionary[keysForGrp[i]].SaveGroupRectNodedata();
+            }
+
             //Save to serializable array of effects
             s_CurrentLE.m_AllEffects = lemEffects;
+            s_CurrentLE.m_AllGroupRectNodes = allGroupRects;
 
             //Save start and end node data
             s_CurrentLE.m_StartNodeData = StartNode.SaveNodeData();
@@ -2101,7 +2143,18 @@ namespace LEM_Editor
                 StartNode = startTempNode;
             }
 
-            #region Loading Connections From Dictionary
+            //Recr8 group nodes
+            for (int i = 0; i < s_CurrentLE.m_AllGroupRectNodes.Length; i++)
+            {
+                if (s_CurrentLE.m_AllGroupRectNodes[i].HasAtLeastOneNestedNode)
+                    ReCreateGroupNode(s_CurrentLE.m_AllGroupRectNodes[i].m_NestedNodeIDs, s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID, s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
+                else
+                    ReCreateGroupNode(s_CurrentLE.m_AllGroupRectNodes[i].m_Position, s_CurrentLE.m_AllGroupRectNodes[i].m_Size, s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID, s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
+
+            }
+
+
+            #region Stitch Connections
 
             //Stitch dictionary's their connnection back
             for (int i = 0; i < allKeys.Length; i++)
@@ -2112,7 +2165,6 @@ namespace LEM_Editor
 
                 TryToRestichConnections(allEffectsDictInLinearEvent[allKeys[i]]);
             }
-            #endregion
 
             //Dont stitch up start node if it isnt connected to at least one point
             if (s_CurrentLE.m_StartNodeData.HasAtLeastOneNextPointNode)
@@ -2129,6 +2181,7 @@ namespace LEM_Editor
                                     );
                 }
             }
+            #endregion
 
             Repaint();
             m_EditorState = EDITORSTATE.LOADED;

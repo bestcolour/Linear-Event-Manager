@@ -4,14 +4,6 @@ using LEM_Effects;
 
 namespace LEM_Editor
 {
-    //public enum BaseNodeType
-    //{
-    //    StartNode = 0,
-    //    GroupRectNode = 1,
-    //    EffectNode = 2
-    //}
-
-
     public abstract class Node
     {
         public Rect m_MidRect = new Rect();
