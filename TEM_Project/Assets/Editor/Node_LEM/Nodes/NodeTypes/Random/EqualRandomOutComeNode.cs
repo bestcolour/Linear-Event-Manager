@@ -12,7 +12,7 @@ namespace LEM_Editor
             EqualRandomOutCome myEffect = ScriptableObject.CreateInstance<EqualRandomOutCome>();
             myEffect.m_NodeEffectType = EffectTypeName;
 
-            myEffect.m_Description = m_LemEffectDescription;
+           //myEffect.m_Description = m_LemEffectDescription;
             myEffect.m_UpdateCycle = m_UpdateCycle;
 
 
@@ -33,7 +33,7 @@ namespace LEM_Editor
             DrawExtraOutComes();
 
             //Important
-            m_LemEffectDescription = effectToLoadFrom.m_Description;
+            //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
 
         }

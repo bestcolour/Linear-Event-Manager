@@ -43,7 +43,7 @@ namespace LEM_Editor
 
         Rect m_BorderRect = new Rect();
 
-        public void Initialise(Vector2 startRectPos, Vector2 size, Node[] nestedNodes, NodeSkinCollection nodeSkin, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
+        public void Initialise(Vector2 startRectPos, Vector2 size, Node[] nestedNodes, NodeSkinCollection nodeSkin, Action<Node> onSelectNode, Action<string> onDeSelectNode, Color topSkinColour)
         {
             m_TopRect = new Rect();
 
@@ -252,12 +252,12 @@ namespace LEM_Editor
             return true;
         }
 
-        public GroupRectNodeBase SaveGroupRectNodeata()
+        public GroupRectNodeBase SaveGroupRectNodedata()
         {
             GroupRectNodeBase g = new GroupRectNodeBase();
             g.m_NodeID = NodeID;
-            g.m_Position = m_MidRect.position;
-            g.m_Size = m_MidRect.size;
+            //g.m_Position = m_MidRect.position;
+            //g.m_Size = m_MidRect.size;
             g.m_NestedNodeIDs = NestedNodesNodeIDs;
             g.m_LabelText = m_CommentLabel;
             return g;

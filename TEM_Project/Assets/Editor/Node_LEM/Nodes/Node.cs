@@ -53,7 +53,7 @@ namespace LEM_Editor
         protected Color m_TopSkinColour = default;
 
         protected Action<Node> d_OnSelectNode = null;
-        protected Action<Node> d_OnDeselectNode = null;
+        protected Action<string> d_OnDeselectNode = null;
 
         public bool IsWithinWindowScreen => m_TotalRect.position.x + m_TotalRect.width > 0 && m_TotalRect.position.x < NodeLEM_Editor.instance.position.width * NodeLEM_Editor.InverseScaleFactor
              &&
@@ -62,7 +62,7 @@ namespace LEM_Editor
 
         public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin /*, GUIStyle connectionPointStyle,
             Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint*/
-            , Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
+            , Action<Node> onSelectNode, Action<string> onDeSelectNode, Color topSkinColour)
         {
             m_TopRect = new Rect();
 
@@ -273,7 +273,7 @@ namespace LEM_Editor
 
         public virtual void DeselectNode()
         {
-            d_OnDeselectNode?.Invoke(this);
+            d_OnDeselectNode?.Invoke(NodeID);
             m_IsSelected = false;
             m_IsDragged = false;
             //m_NodeSkin.textureToRender = m_NodeSkin.m_NodeBackground;

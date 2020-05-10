@@ -196,6 +196,17 @@ namespace LEM_Editor
         bool m_IsDragging = default;
         public static int s_MaxActions = 100;
 
+        void DoCutCommand()
+        {
+            if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+        }
+
+        void DoPasteCommand()
+        {
+
+        }
+
         #endregion
 
         Texture2D m_EditorBackGroundTexture = default;
@@ -412,14 +423,15 @@ namespace LEM_Editor
             genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
             {
                 if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-                CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
+                //CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
+                CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray()); Repaint();
+
             });
 
             genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate
             {
                 //Remove start and end node 
-                if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-                CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                DoCutCommand();
                 Repaint();
             });
             genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
@@ -579,7 +591,7 @@ namespace LEM_Editor
             }
             HandleCurrentLinearEventLabel(dummyRect, currentEvent);
 
-            DrawDebugLists();
+            //DrawDebugLists();
 
             //Then process the events that occured from unity's events (events are like clicks,drag etc)
             ProcessEvents(currentEvent, currMousePos, isMouseInSearchBox);
@@ -787,7 +799,7 @@ namespace LEM_Editor
             if (GUI.Button(propertyRect, "Paste"))
             {
                 //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
-                if (NodeCommandInvoker.s_ClipBoard.Count > 0)
+                if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
                 {
                     //If player had cut 
                     if (CommandInvoker.m_HasCutButNotCutPaste)
@@ -813,7 +825,9 @@ namespace LEM_Editor
                     StartNode.DeselectNode();
                 }
 
-                CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                //CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
+
                 e.Use();
             }
 
@@ -821,14 +835,7 @@ namespace LEM_Editor
 
             if (GUI.Button(propertyRect, "Cut"))
             {
-                //Remove start and end node 
-                if (m_AllSelectedNodes.Contains(StartNode))
-                {
-                    StartNode.DeselectNode();
-                }
-
-                //CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
-                CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                DoCutCommand();
                 //e.Use();
                 GUI.changed = true;
             }
@@ -900,17 +907,31 @@ namespace LEM_Editor
 
             #region All Nodes In Editor Debug
 
-            GUI.Label(propertyRect, "All Nodes in Editor");
-            propertyRect.y += EditorGUIUtility.singleLineHeight;
+            //GUI.Label(propertyRect, "All Nodes in Editor");
+            //propertyRect.y += EditorGUIUtility.singleLineHeight;
 
-            for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
+            //for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
+            //{
+            //    GUI.Label(propertyRect, i + ") " + AllConnectableNodesInEditor[i].NodeID);
+            //    propertyRect.y += EditorGUIUtility.singleLineHeight;
+            //}
+
+            #endregion
+
+
+            #region All GroupRect Nodes
+            GUI.Label(propertyRect, "All GroupRect Nodes in Editor");
+            propertyRect.y += EditorGUIUtility.singleLineHeight;
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+            for (int i = 0; i < keys.Length; i++)
             {
-                GUI.Label(propertyRect, i + ") " + AllConnectableNodesInEditor[i].NodeID);
+                GUI.Label(propertyRect, i + ") " + AllGroupRectsInEditorDictionary[keys[i]].NodeID);
                 propertyRect.y += EditorGUIUtility.singleLineHeight;
             }
 
             #endregion
 
+            #region SelectedNodes
             propertyRect.y += EditorGUIUtility.singleLineHeight;
             GUI.Label(propertyRect, "All SelectedNodes in Editor");
             propertyRect.y += EditorGUIUtility.singleLineHeight;
@@ -919,7 +940,8 @@ namespace LEM_Editor
             {
                 GUI.Label(propertyRect, i + ") " + AllSelectedNodes[i].NodeID);
                 propertyRect.y += EditorGUIUtility.singleLineHeight;
-            }
+            } 
+            #endregion
 
             propertyRect.y += EditorGUIUtility.singleLineHeight;
 
@@ -1122,20 +1144,15 @@ namespace LEM_Editor
                                 StartNode.DeselectNode();
                             }
 
-                            CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                            //CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                            CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
+
                             e.Use();
                         }
                         //Cut
                         else if (e.keyCode == KeyCode.X)
                         {
-                            //Remove start and end node 
-                            if (m_AllSelectedNodes.Contains(StartNode))
-                            {
-                                StartNode.DeselectNode();
-                            }
-
-                            //CommandInvoker.InvokeCommand(new CutCommand(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)));
-                            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                            DoCutCommand();
                             //e.Use();
                             GUI.changed = true;
                         }
@@ -1144,7 +1161,7 @@ namespace LEM_Editor
                         {
 
                             //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
-                            if (NodeCommandInvoker.s_ClipBoard.Count > 0)
+                            if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
                             {
                                 //If player had cut 
                                 if (CommandInvoker.m_HasCutButNotCutPaste)
@@ -1432,13 +1449,14 @@ namespace LEM_Editor
             return groupRect;
         }
 
-        public static GroupRectNode ReCreateGroupNode(Vector2 rectGroupPos, Vector2 rectGroupSize, string[] allNestedNodesIDs, string idToSet,string labelText)
+        public static GroupRectNode ReCreateGroupNode(/*Vector2 rectGroupPos, Vector2 rectGroupSize,*/ string[] allNestedNodesIDs, string idToSet,string labelText)
         {
             GroupRectNode groupRect;
             //Get the respective skin from the collection of nodeskin
             NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
             NodeDictionaryStruct dummy;
             Node[] allSelectedNodesWithNoGroups = new Node[allNestedNodesIDs.Length];
+            Rect[] allNestedNodesRects = new Rect[allNestedNodesIDs.Length];
 
             for (int i = 0; i < allSelectedNodesWithNoGroups.Length; i++)
             {
@@ -1448,15 +1466,21 @@ namespace LEM_Editor
                     allSelectedNodesWithNoGroups[i] = dummy.effectNode;
                 else if (AllGroupRectsInEditorDictionary.TryGetValue(allNestedNodesIDs[i], out groupRect))
                     allSelectedNodesWithNoGroups[i] = groupRect;
+
+                allNestedNodesRects[i] = allSelectedNodesWithNoGroups[i].m_TotalRect;
             }
 
+            GroupRectNode.CalculateGroupRectPosition(allNestedNodesRects, out Vector2 startVector2Pos, out Vector2 endVector2Pos);
 
             groupRect = new GroupRectNode();
 
+            endVector2Pos.x = Mathf.Abs(endVector2Pos.x - startVector2Pos.x);
+            endVector2Pos.y = Mathf.Abs(endVector2Pos.y - startVector2Pos.y);
+
             //Initialise the new node 
             groupRect.Initialise
-                (rectGroupPos,
-                rectGroupSize,
+                (startVector2Pos,
+                endVector2Pos,
                 allSelectedNodesWithNoGroups,
                 nodeSkin,
                 instance.TryToAddNodeToSelectedCollection,
@@ -1465,7 +1489,6 @@ namespace LEM_Editor
                 );
 
             groupRect.CommentLabel = labelText;
-
             groupRect.SetNodeID(idToSet);
 
             //Add the node into collection in editor
@@ -1896,15 +1919,8 @@ namespace LEM_Editor
         {
             m_EditorState = EDITORSTATE.SAVING;
 
-            //AllNodesInEditor.Remove(StartNode);
-
             LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllEffectsNodeInEditor.Count];
             BaseEffectNode[] allEffectNodes = AllEffectsNodeInEditor.Select(x => x.Value.effectNode).ToArray();
-            //BaseEffectNode[] allEffectNodes = AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
-
-            //Clear the dictionary of the currently editting linear event
-            //s_CurrentLE.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
-            float intToFloatConverter = AllEffectsNodeInEditor.Count;
 
             //This saves all events regardless of whether they are connected singularly, plurally or disconnected
             for (int i = 0; i < lemEffects.Length; i++)
@@ -1917,9 +1933,6 @@ namespace LEM_Editor
 
             //Save start and end node data
             s_CurrentLE.m_StartNodeData = StartNode.SaveNodeData();
-
-            //Saving ends here
-            //AllNodesInEditor.Add(StartNode);
 
             //Finished loading
             Repaint();
@@ -2032,18 +2045,6 @@ namespace LEM_Editor
             return AllEffectsNodeInEditor[nodeID].effectNode.CompileToBaseEffect();
         }
 
-
-        //public static void DeselectAllNodes()
-        //{
-        //    for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
-        //        AllConnectableNodesInEditor[i].DeselectNode();
-
-        //    string[] keys = AllGroupRectsInEditorNodeIDs;
-
-        //    for (int i = 0; i < keys.Length; i++)
-        //        AllGroupRectsInEditorDictionary[keys[i]].DeselectNode();
-        //}
-
         public static void DeselectAllNodes()
         {
             while (AllSelectedNodes.Count>0)
@@ -2155,7 +2156,7 @@ namespace LEM_Editor
                 }
                 //Debug.LogError("Element " + i + " of NestedNodeIDs does not belong to any of the dictionaries in NodeLEM_Editor");
             }
-
+            instance.TryToRemoveNodeFromSelectedCollection(groupRectNodes.m_NodeID);
             AllGroupRectsInEditorDictionary.Remove(groupRectNodes.m_NodeID);
         }
 

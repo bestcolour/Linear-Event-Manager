@@ -19,7 +19,7 @@ namespace LEM_Editor
 
         GUIContent m_LabelContent = default;
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
@@ -56,7 +56,7 @@ namespace LEM_Editor
 
             eff.m_NodeEffectType = EffectTypeName;
 
-            eff.m_Description = m_LemEffectDescription;
+          //  eff.m_Description = m_LemEffectDescription;
             eff.m_UpdateCycle = m_UpdateCycle;
 
 
@@ -81,7 +81,7 @@ namespace LEM_Editor
             SetMidRectSize(NodeTextureDimensions.NORMAL_MID_SIZE + Vector2.up * k_CallBackGraphicHeight * m_PreviousSize);
 
             //Important
-            m_LemEffectDescription = effectToLoadFrom.m_Description;
+            //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
 
         }

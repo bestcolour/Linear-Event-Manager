@@ -17,7 +17,7 @@ namespace LEM_Editor
 
         protected override string EffectTypeName => "InstantiateGameObject";
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
@@ -50,7 +50,7 @@ namespace LEM_Editor
         public override LEM_BaseEffect CompileToBaseEffect()
         {
             InstantiateGameObject effect = ScriptableObject.CreateInstance<InstantiateGameObject>();
-            effect.m_Description = m_LemEffectDescription;
+            //effect.m_Description = m_LemEffectDescription;
             effect.m_UpdateCycle = m_UpdateCycle;
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
@@ -80,7 +80,7 @@ namespace LEM_Editor
 
 
             //Important
-            m_LemEffectDescription = effectToLoadFrom.m_Description;
+            //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
 
 

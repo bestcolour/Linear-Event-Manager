@@ -36,7 +36,8 @@ namespace LEM_Editor
         INodeCommand[] m_CommandHistory = null;
 
         //Copy feature
-        public static List<LEM_BaseEffect> s_ClipBoard = new List<LEM_BaseEffect>();
+        public static List<LEM_BaseEffect> s_Effect_ClipBoard = new List<LEM_BaseEffect>();
+        //public static List<GroupRectNodeBase> s_GroupRectData_ClipBoard = new List<GroupRectNodeBase>();
 
         int m_CurrentCounter = 0;
         int m_MaxActionSize = 100;
@@ -179,17 +180,45 @@ namespace LEM_Editor
             d_OnCommand?.Invoke();
         }
 
-        public void CopyToClipBoard(BaseEffectNode[] copiedEffectNodes)
+        //public void CopyToClipBoard(BaseEffectNode[] copiedEffectNodes)
+        //{
+        //    PasteCommand.ResetCurrentPasteOffSet();
+        //    s_ClipBoard.Clear();
+        //    //Reset
+        //    m_HasCutButNotCutPaste = false;
+
+        //    for (int i = 0; i < copiedEffectNodes.Length; i++)
+        //    {
+        //        //Save to clipboard
+        //        s_ClipBoard.Add(copiedEffectNodes[i].CompileToBaseEffect());
+        //    }
+        //}
+
+        public void CopyToClipBoard(Node[] copiedNodes)
         {
             PasteCommand.ResetCurrentPasteOffSet();
-            s_ClipBoard.Clear();
+            s_Effect_ClipBoard.Clear();
+            //s_GroupRectData_ClipBoard.Clear();
             //Reset
             m_HasCutButNotCutPaste = false;
 
-            for (int i = 0; i < copiedEffectNodes.Length; i++)
+            BaseEffectNode dummyEffectNode;
+            //GroupRectNode dummyGroupRectNode;
+
+            for (int i = 0; i < copiedNodes.Length; i++)
             {
                 //Save to clipboard
-                s_ClipBoard.Add(copiedEffectNodes[i].CompileToBaseEffect());
+                if(copiedNodes[i].BaseNodeType == BaseNodeType.EffectNode)
+                {
+                    dummyEffectNode = copiedNodes[i] as BaseEffectNode;
+                    s_Effect_ClipBoard.Add(dummyEffectNode.CompileToBaseEffect());
+                }
+                ////There wont be a start node here so no nid to worry
+                //else
+                //{
+                //    dummyGroupRectNode = copiedNodes[i] as GroupRectNode;
+                //    s_GroupRectData_ClipBoard.Add(dummyGroupRectNode.SaveGroupRectNodedata());
+                //}
             }
         }
 

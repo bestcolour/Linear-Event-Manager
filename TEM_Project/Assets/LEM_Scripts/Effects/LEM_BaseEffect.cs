@@ -24,10 +24,10 @@ namespace LEM_Effects
         //Records the node type this effect belongs to
         [ReadOnly] public string m_NodeEffectType = default;
 
-#if UNITY_EDITOR
-        [Tooltip("Write a summary about what this event does if you want to"), TextArea(3, 5)]
-        public string m_Description = default;
-#endif
+//#if UNITY_EDITOR
+//        [Tooltip("Write a summary about what this event does if you want to"), TextArea(3, 5)]
+//        public string m_Description = default;
+//#endif
 
         [Tooltip("Which Update Cycle Effect is In")]
         public UpdateCycle m_UpdateCycle = default;

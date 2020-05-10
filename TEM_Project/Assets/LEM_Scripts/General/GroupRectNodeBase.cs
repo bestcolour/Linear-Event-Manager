@@ -7,8 +7,8 @@ namespace LEM_Effects
 {
     public struct GroupRectNodeBase
     {
-        [ReadOnly]
-        public Vector2 m_Position, m_Size ;
+        //[ReadOnly]
+        //public Vector2 m_Position, m_Size ;
 
         [ReadOnly]
         public string m_NodeID;
@@ -17,10 +17,10 @@ namespace LEM_Effects
         [ReadOnly]
         public string m_LabelText;
 
-        public GroupRectNodeBase(Vector2 position, Vector2 size, string nodeID, string[] nestedNodeIDs,string labelText)
+        public GroupRectNodeBase(/*Vector2 position, Vector2 size,*/ string nodeID, string[] nestedNodeIDs,string labelText)
         {
-            m_Position = position;
-            m_Size = size;
+            //m_Position = position;
+            //m_Size = size;
             m_NodeID = nodeID;
             m_NestedNodeIDs = nestedNodeIDs;
             m_LabelText = labelText;
@@ -28,8 +28,8 @@ namespace LEM_Effects
 
         public GroupRectNodeBase(GroupRectNodeBase groupRectNodeData)
         {
-            m_Position = groupRectNodeData.m_Position;
-            m_Size = groupRectNodeData.m_Size;
+            //m_Position = groupRectNodeData.m_Position;
+            //m_Size = groupRectNodeData.m_Size;
             m_NodeID = groupRectNodeData.m_NodeID;
             //m_PrevPointNodeID = prevNodeID;
             m_NestedNodeIDs = groupRectNodeData.m_NestedNodeIDs;

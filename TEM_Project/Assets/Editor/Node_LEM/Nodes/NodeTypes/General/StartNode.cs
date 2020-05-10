@@ -10,7 +10,7 @@ namespace LEM_Editor
         public override BaseNodeType BaseNodeType => BaseNodeType.StartNode;
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
-            Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
+            Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, topSkinColour);
             SetNodeRects(position, NodeTextureDimensions.START_END_NODE, NodeTextureDimensions.START_END_NODE);

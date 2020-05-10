@@ -16,7 +16,7 @@ namespace LEM_Editor
         protected override string EffectTypeName => "SetGameObjectsActive";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint,
-            Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Color topSkinColour)
+            Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, topSkinColour);
             //Override the rect size n pos
@@ -51,7 +51,7 @@ namespace LEM_Editor
         {
             SetGameObjectsActive eff = ScriptableObject.CreateInstance<SetGameObjectsActive>();
 
-            eff.m_Description = m_LemEffectDescription;
+          //  eff.m_Description = m_LemEffectDescription;
             eff.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, TryToSaveNextPointNodeID());
 
             eff.m_NodeEffectType = EffectTypeName;
@@ -72,7 +72,7 @@ namespace LEM_Editor
             SetMidRectSize(NodeTextureDimensions.NORMAL_MID_SIZE + Vector2.up * changeInRectHeight);
 
             //Important
-            m_LemEffectDescription = effectToLoadFrom.m_Description;
+            //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
 
         }

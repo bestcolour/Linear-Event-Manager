@@ -12,7 +12,7 @@ namespace LEM_Editor
     {
         protected abstract string EffectTypeName { get; }
         //TEM effect related variables
-        public string m_LemEffectDescription = default;
+        //public string m_LemEffectDescription = default;
         public override BaseNodeType BaseNodeType => BaseNodeType.EffectNode; 
         //public LEM_BaseEffect m_BaseEffectSaveFile = default;
         public string m_Title = default;
@@ -33,7 +33,7 @@ namespace LEM_Editor
 
         public UpdateCycle m_UpdateCycle = default;
 
-        public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode,Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
+        public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode,Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, topSkinColour);
 

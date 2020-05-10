@@ -13,7 +13,7 @@ namespace LEM_Editor
 
         protected override string EffectTypeName => "SetAnimatorBool";
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
@@ -48,7 +48,7 @@ namespace LEM_Editor
             SetAnimatorBool myEffect = ScriptableObject.CreateInstance<SetAnimatorBool>();
             myEffect.m_NodeEffectType = EffectTypeName;
 
-            myEffect.m_Description = m_LemEffectDescription;
+           //myEffect.m_Description = m_LemEffectDescription;
             myEffect.m_UpdateCycle = m_UpdateCycle;
 
 
@@ -66,7 +66,7 @@ namespace LEM_Editor
             loadFrom.UnPack(out m_TargetAnimator,out m_ParameterName,out m_State);
 
             //Important
-            m_LemEffectDescription = effectToLoadFrom.m_Description;
+            //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
 
         }

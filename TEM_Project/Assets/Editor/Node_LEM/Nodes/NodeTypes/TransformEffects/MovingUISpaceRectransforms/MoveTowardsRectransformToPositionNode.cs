@@ -13,7 +13,7 @@ namespace LEM_Editor
         Vector3 m_TargetPosition = default;
         float m_Duration = default;
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<Node> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
@@ -47,7 +47,7 @@ namespace LEM_Editor
             MoveTowardsRectransformToPosition myEffect = ScriptableObject.CreateInstance<MoveTowardsRectransformToPosition>();
             myEffect.m_NodeEffectType = EffectTypeName;
 
-            myEffect.m_Description = m_LemEffectDescription;
+           //myEffect.m_Description = m_LemEffectDescription;
             myEffect.m_UpdateCycle = m_UpdateCycle;
 
 
@@ -64,7 +64,7 @@ namespace LEM_Editor
             MoveTowardsRectransformToPosition loadFrom = effectToLoadFrom as MoveTowardsRectransformToPosition;
             loadFrom.UnPack(out m_TargetRectransform, out m_TargetPosition, out m_Duration);
             //Important
-            m_LemEffectDescription = effectToLoadFrom.m_Description;
+            //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
 
         }
