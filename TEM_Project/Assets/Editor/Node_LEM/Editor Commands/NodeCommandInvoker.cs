@@ -12,7 +12,7 @@ namespace LEM_Editor
     // where u undo
     public struct NodeCommandType
     {
-        public const int CREATENODE = 0, DELETE = 1, MOVE = 2, CREATECONNECTION = 3, CUT = 4, PASTE = 5, CUTPASTE = 6,DUPLICATE = 7, GROUP = 8;
+        public const int CREATENODE = 0, DELETE = 1, MOVE = 2, CREATECONNECTION = 3, CUT = 4, PASTE = 5, CUTPASTE = 6, DUPLICATE = 7, GROUP = 8;
     }
 
     public class NodeCommandInvoker
@@ -36,8 +36,16 @@ namespace LEM_Editor
         INodeCommand[] m_CommandHistory = null;
 
         //Copy feature
-        //public static List<LEM_BaseEffect> s_Effect_ClipBoard = new List<LEM_BaseEffect>();
-        public static List<Node> s_Nodes_ClipBoard = new List<Node>();
+        public static List<LEM_BaseEffect> s_Effect_ClipBoard = new List<LEM_BaseEffect>();
+        public static bool HasEffectsCopied => s_Effect_ClipBoard.Count > 0;
+        public static List<GroupRectNodeBase> s_GroupRectNodeData_ClipBoard = new List<GroupRectNodeBase>();
+        public static bool HasGroupRectsCopied => s_GroupRectNodeData_ClipBoard.Count > 0;
+
+        //public static List<Node> s_Nodes_ClipBoard = new List<Node>();
+        //public static List<string> s_NodesIds_ClipBoard = new List<string>();
+
+
+
         //public static List<GroupRectNodeBase> s_GroupRectData_ClipBoard = new List<GroupRectNodeBase>();
 
         int m_CurrentCounter = 0;
@@ -195,40 +203,71 @@ namespace LEM_Editor
         //    }
         //}
 
-        public void CopyToClipBoard(Node[] copiedNodes)
+        public void CopyToClipBoard(string[] copiedNodesId)
         {
             PasteCommand.ResetCurrentPasteOffSet();
-            //s_Effect_ClipBoard.Clear();
-            s_Nodes_ClipBoard.Clear();
-            //s_GroupRectData_ClipBoard.Clear();
+            s_Effect_ClipBoard.Clear();
+            s_GroupRectNodeData_ClipBoard.Clear();
+            //s_NodesIds_ClipBoard.Clear();
             //Reset
             m_HasCutButNotCutPaste = false;
 
-            //BaseEffectNode dummyEffectNode;
-            //GroupRectNode dummyGroupRectNode;
+            string initials;
 
-            for (int i = 0; i < copiedNodes.Length; i++)
+            for (int i = 0; i < copiedNodesId.Length; i++)
             {
-                ////Save to clipboard
-                //if(copiedNodes[i].BaseNodeType == BaseNodeType.EffectNode)
-                //{
-                //    dummyEffectNode = copiedNodes[i] as BaseEffectNode;
-                //    s_Effect_ClipBoard.Add(dummyEffectNode.CompileToBaseEffect());
-                //}
-
-                s_Nodes_ClipBoard.Add(copiedNodes[i]);
-
-                ////There wont be a start node here so no nid to worry
-                //else
-                //{
-                //    dummyGroupRectNode = copiedNodes[i] as GroupRectNode;
-                //    s_GroupRectData_ClipBoard.Add(dummyGroupRectNode.SaveGroupRectNodedata());
-                //}
+                initials = NodeLEM_Editor.GetInitials(copiedNodesId[i]);
+                if(initials == LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
+                {
+                    s_Effect_ClipBoard.Add(NodeLEM_Editor.GetNodeEffectFromID(copiedNodesId[i]));
+                }
+                else
+                {
+                    s_GroupRectNodeData_ClipBoard.Add(NodeLEM_Editor.GetGroupRectDataFromID(copiedNodesId[i]));
+                }
+                //s_NodesIds_ClipBoard.Add(copiedNodesId[i]);
             }
         }
+
+
+        //public void CopyToClipBoard(Node[] copiedNodes)
+        //{
+        //    PasteCommand.ResetCurrentPasteOffSet();
+        //    //s_Effect_ClipBoard.Clear();
+        //    s_Nodes_ClipBoard.Clear();
+        //    s_NodesIds_ClipBoard.Clear();
+        //    //s_GroupRectData_ClipBoard.Clear();
+        //    //Reset
+        //    m_HasCutButNotCutPaste = false;
+
+        //    //BaseEffectNode dummyEffectNode;
+        //    //GroupRectNode dummyGroupRectNode;
+
+        //    for (int i = 0; i < copiedNodes.Length; i++)
+        //    {
+        //        ////Save to clipboard
+        //        //if(copiedNodes[i].BaseNodeType == BaseNodeType.EffectNode)
+        //        //{
+        //        //    dummyEffectNode = copiedNodes[i] as BaseEffectNode;
+        //        //    s_Effect_ClipBoard.Add(dummyEffectNode.CompileToBaseEffect());
+        //        //}
+
+        //        s_Nodes_ClipBoard.Add(copiedNodes[i]);
+        //        ////There wont be a start node here so no nid to worry
+        //        //else
+        //        //{
+        //        //    dummyGroupRectNode = copiedNodes[i] as GroupRectNode;
+        //        //    s_GroupRectData_ClipBoard.Add(dummyGroupRectNode.SaveGroupRectNodedata());
+        //        //}
+        //    }
+        //}
 
 
 
     }
 
+
+
+
 }
+

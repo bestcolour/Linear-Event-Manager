@@ -7,7 +7,9 @@ namespace LEM_Editor
 
     public class StartNode : ConnectableNode
     {
-        public override BaseNodeType BaseNodeType => BaseNodeType.StartNode;
+        //public override BaseNodeType BaseNodeType => BaseNodeType.StartNode;
+
+        public override string ID_Initial => LEMDictionary.NodeIDs_Initials.k_StartNodeInitial;
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle,
             Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Color topSkinColour)

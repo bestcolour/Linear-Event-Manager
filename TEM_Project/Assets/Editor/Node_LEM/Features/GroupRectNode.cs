@@ -39,7 +39,9 @@ namespace LEM_Editor
         public string[] NestedNodesNodeIDs => m_NestedNodesDictionary.Keys.ToArray();
         public Node[] NestedNodes => m_NestedNodesDictionary.Values.ToArray();
 
-        public override BaseNodeType BaseNodeType => BaseNodeType.GroupRectNode;
+        //public override BaseNodeType BaseNodeType => BaseNodeType.GroupRectNode;
+
+        public override string ID_Initial =>LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial;
 
         Rect m_BorderRect = new Rect();
 
@@ -139,7 +141,7 @@ namespace LEM_Editor
             for (int i = 0; i < keys.Length; i++)
             {
                 //If any of its grouped child is another group rect, force it to update
-                if (m_NestedNodesDictionary[keys[i]].BaseNodeType == BaseNodeType.GroupRectNode)
+                if (m_NestedNodesDictionary[keys[i]].ID_Initial ==LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
                 {
                     GroupRectNode forceUpdateGrpNode = m_NestedNodesDictionary[keys[i]] as GroupRectNode;
                     forceUpdateGrpNode.UpdateNestedNode();

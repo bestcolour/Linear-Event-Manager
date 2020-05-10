@@ -169,7 +169,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &121666737
+--- !u!114 &141467702
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -184,27 +184,8 @@ MonoBehaviour:
   m_NodeEffectType: AddDelay
   m_UpdateCycle: 0
   m_NodeBaseData:
-    m_Position: {x: 949.59375, y: 254.55388}
-    m_NodeID: b05343bf-8799-4f87-88d1-6fd826490128
-    m_NextPointsIDs: []
-  m_DelayTime: 0
---- !u!114 &158870972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 924.1853, y: 652.47034}
-    m_NodeID: 5c7c1674-797f-4ad3-87eb-8fc0ceeb51a7
+    m_Position: {x: 309, y: 334}
+    m_NodeID: BEN_0d4bc3a2-7ddc-4d9b-9dcf-088865d1aa13
     m_NextPointsIDs: []
   m_DelayTime: 0
 --- !u!1 &178400244
@@ -273,25 +254,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &267174391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 953.32837, y: 855.89966}
-    m_NodeID: 208c0cd8-9a7e-4f09-89e1-03813f987ccc
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &682789792
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,6 +437,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &845129675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: AddDelay
+  m_UpdateCycle: 0
+  m_NodeBaseData:
+    m_Position: {x: 88, y: 235}
+    m_NodeID: BEN_0114b1d1-8d35-4ea7-84a9-9f822d814c29
+    m_NextPointsIDs: []
+  m_DelayTime: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,44 +612,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114990028}
   m_CullTransparentMesh: 0
---- !u!114 &1231785800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 429.51572, y: 1142.4806}
-    m_NodeID: a3422c7e-0f2e-4cef-bab2-a9ccae20f1e6
-    m_NextPointsIDs: []
-  m_DelayTime: 0
---- !u!114 &1254249597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 975.6135, y: 435.04163}
-    m_NodeID: 8ec80031-8df5-49ee-a6ef-2c602dddf907
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &1337597659
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,44 +705,6 @@ Transform:
   m_Father: {fileID: 1681769661}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1375012634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 483.78165, y: 509.13498}
-    m_NodeID: 25513a8a-a938-479b-8670-9bb72becfe63
-    m_NextPointsIDs: []
-  m_DelayTime: 0
---- !u!114 &1604567251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 452.37277, y: 941.0514}
-    m_NodeID: e22a91c8-466f-428e-81ac-abc4c30d3c9d
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,25 +964,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1858252088}
   m_CullTransparentMesh: 0
---- !u!114 &2001718304
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 473.80142, y: 719.6225}
-    m_NodeID: 0c06938c-0425-495e-b816-239ddce8116c
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &2039914929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1208,17 +1094,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LinearEventName: 
   m_AllEffects:
-  - {fileID: 1231785800}
-  - {fileID: 1604567251}
-  - {fileID: 1375012634}
-  - {fileID: 2001718304}
-  - {fileID: 1254249597}
-  - {fileID: 121666737}
-  - {fileID: 158870972}
-  - {fileID: 267174391}
+  - {fileID: 845129675}
+  - {fileID: 141467702}
   m_StartNodeData:
-    m_Position: {x: 279.1311, y: 802.8739}
-    m_NodeID: 118dfc88-144a-42f1-8696-adb8fcc114df
+    m_Position: {x: 375, y: 202}
+    m_NodeID: SN_d135bcd7-02ab-4566-aaa9-3dd313612147
     m_NextPointsIDs: []
 --- !u!4 &2127555589
 Transform:

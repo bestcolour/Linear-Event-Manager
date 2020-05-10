@@ -20,6 +20,11 @@ namespace LEM_Editor
 
         }
 
+        public struct NodeIDs_Initials
+        {
+            public const string k_BaseEffectInital = "BEN_", k_StartNodeInitial = "SN_", k_GroupRectNodeInitial = "GRN_";
+        }
+
         public static string[] s_NodeTypeKeys = default;
 
         public static readonly Dictionary<string, NodeDictionaryDefinition> s_NodeTypesDictionary = new Dictionary<string, NodeDictionaryDefinition>

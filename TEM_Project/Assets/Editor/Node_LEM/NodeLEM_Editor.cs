@@ -71,6 +71,45 @@ namespace LEM_Editor
             AllEffectsNodeInEditor[nodeStruct.effectNode.NodeID] = nodeStruct;
         }
 
+        public static string GetInitials(string nodeID)
+        {
+            char[] chars = nodeID.ToCharArray();
+            string idInitials = "";
+
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (chars[i] == '_')
+                {
+                    idInitials += chars[i];
+                    break;
+                }
+
+                idInitials += chars[i];
+            }
+
+            return idInitials;
+        }
+
+        //public static bool TryGetFromAllDictionaries(string nodeID,out NodeDictionaryStruct nD,out GroupRectNode gR)
+        //{
+        //    string idInitials = GetInitials(nodeID);
+        //    //switch (idInitials)
+        //    //{
+        //    //    case LEMDictionary.NodeIDs_Initials.k_BaseEffectInital:
+        //    //        nD = AllEffectsNodeInEditor[nodeID];
+        //    //        return true;
+
+
+
+
+        //    //    default:
+        //    //        nD = null;
+        //    //        gR = null;
+        //    //        return false;
+
+
+        //    //}
+        //}
 
         //RULE: INPOINT'S CONNECTED NODE ID FIRST THEN OUTPOINT CONNECTED NODE ID
         Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
@@ -209,7 +248,7 @@ namespace LEM_Editor
         void DoPasteCommand()
         {
             //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
-            if (NodeCommandInvoker.s_Nodes_ClipBoard.Count > 0)
+            if (NodeCommandInvoker.HasEffectsCopied || NodeCommandInvoker.HasGroupRectsCopied)
             {
                 //If player had cut 
                 if (CommandInvoker.m_HasCutButNotCutPaste)
@@ -248,14 +287,12 @@ namespace LEM_Editor
             //Filter out alll the grouprect nodes in the selectednodes
             for (int i = 0; i < AllSelectedNodes.Count; i++)
             {
-                if (AllSelectedNodes[i].BaseNodeType != BaseNodeType.EffectNode)
-                {
+                if (AllSelectedNodes[i].ID_Initial != LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
                     AllSelectedNodes[i].DeselectNode();
-                }
             }
 
             //CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
-            CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
+            CommandInvoker.CopyToClipBoard(AllSelectedNodes.Select(x=>x.NodeID).ToArray());
 
         }
 
@@ -1107,7 +1144,7 @@ namespace LEM_Editor
                         else
                         {
                             //Only rearrange when currentclicked node is not grouprect node
-                            if (s_CurrentClickedNode.BaseNodeType != BaseNodeType.GroupRectNode)
+                            if (s_CurrentClickedNode.ID_Initial != LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
                                 AllConnectableNodesInEditor.RearrangeElement(s_CurrentClickedNode, AllConnectableNodesInEditor.Count - 1);
                         }
 
@@ -2100,10 +2137,16 @@ namespace LEM_Editor
         #endregion
 
         #region Static Functions
-        public static LEM_BaseEffect GetNodeIDCompiledNodeToEffect(string nodeID)
+        public static LEM_BaseEffect GetNodeEffectFromID(string nodeID)
         {
             return AllEffectsNodeInEditor[nodeID].effectNode.CompileToBaseEffect();
         }
+
+        public static GroupRectNodeBase GetGroupRectDataFromID(string nodeID)
+        {
+            return AllGroupRectsInEditorDictionary[nodeID].SaveGroupRectNodedata();
+        }
+
 
         public static void DeselectAllNodes()
         {

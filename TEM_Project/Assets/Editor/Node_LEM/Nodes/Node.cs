@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using LEM_Effects;
-using System.Xml.Serialization;
 
 namespace LEM_Editor
 {
-    public enum BaseNodeType
-    {
-        StartNode = 0,
-        GroupRectNode = 1,
-        EffectNode = 2
-    }
+    //public enum BaseNodeType
+    //{
+    //    StartNode = 0,
+    //    GroupRectNode = 1,
+    //    EffectNode = 2
+    //}
 
 
     public abstract class Node
@@ -28,7 +26,7 @@ namespace LEM_Editor
         public void GenerateNodeID()
         {
             //m_NodeID = Guid.NewGuid();
-            NodeID = Guid.NewGuid().ToString();
+            NodeID = ID_Initial + Guid.NewGuid().ToString();
         }
 
         public void SetNodeID(string id)
@@ -38,7 +36,9 @@ namespace LEM_Editor
 
         protected bool m_IsDragged = default;
         public Node m_GroupedParent = default;
-        public abstract BaseNodeType BaseNodeType { get; }
+
+        public abstract string ID_Initial { get; }
+        //public abstract BaseNodeType BaseNodeType { get; }
         //protected bool m_IsGrouped = false;
         public bool IsGrouped => m_GroupedParent != null;
         //public bool IsGrouped { get { return m_IsGrouped; } set { m_IsGrouped = value; } }
