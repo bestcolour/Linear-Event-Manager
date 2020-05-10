@@ -198,12 +198,64 @@ namespace LEM_Editor
 
         void DoCutCommand()
         {
-            if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+            if (AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
             CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
         }
 
         void DoPasteCommand()
         {
+            //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+            if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
+            {
+                //If player had cut 
+                if (CommandInvoker.m_HasCutButNotCutPaste)
+                {
+                    CommandInvoker.InvokeCommand(new CutPasteCommand());
+                    GUI.changed = true;
+                    return;
+                }
+
+                CommandInvoker.InvokeCommand(new PasteCommand());
+                GUI.changed = true;
+            }
+        }
+
+        void DoDeleteCommand()
+        {
+            GUI.FocusControl(null);
+
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+        }
+
+        void DoCopy()
+        {
+            //if (m_AllSelectedNodes.Contains(StartNode))
+            //{
+            //    StartNode.DeselectNode();
+            //}
+
+            //Remove start and end node 
+            //Filter out alll the grouprect nodes in the selectednodes
+            for (int i = 0; i < AllSelectedNodes.Count; i++)
+            {
+                if (AllSelectedNodes[i].BaseNodeType != BaseNodeType.EffectNode)
+                {
+                    AllSelectedNodes[i].DeselectNode();
+                }
+            }
+
+            //CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+            CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
 
         }
 
@@ -422,9 +474,10 @@ namespace LEM_Editor
             genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
             genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
             {
-                if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-                //CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
-                CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray()); Repaint();
+                //if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+                //CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
+                DoCopy();
+                Repaint();
 
             });
 
@@ -434,7 +487,7 @@ namespace LEM_Editor
                 DoCutCommand();
                 Repaint();
             });
-            genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
+            genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { DoPasteCommand(); Repaint(); });
             genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
             {
                 AllSelectedNodes.Clear();
@@ -445,15 +498,18 @@ namespace LEM_Editor
 
             genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate
             {
-                GUI.FocusControl(null);
+                DoDeleteCommand();
 
-                //Remove start and end node 
-                if (m_AllSelectedNodes.Contains(StartNode))
-                {
-                    StartNode.DeselectNode();
-                }
+                //GUI.FocusControl(null);
 
-                CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                ////Remove start and end node 
+                //if (m_AllSelectedNodes.Contains(StartNode))
+                //{
+                //    StartNode.DeselectNode();
+                //}
+
+                //CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                Repaint();
             });
 
             //Display the editted made menu
@@ -798,20 +854,21 @@ namespace LEM_Editor
 
             if (GUI.Button(propertyRect, "Paste"))
             {
-                //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
-                if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
-                {
-                    //If player had cut 
-                    if (CommandInvoker.m_HasCutButNotCutPaste)
-                    {
-                        CommandInvoker.InvokeCommand(new CutPasteCommand());
-                        GUI.changed = true;
-                        return;
-                    }
+                DoPasteCommand();
+                ////Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+                //if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
+                //{
+                //    //If player had cut 
+                //    if (CommandInvoker.m_HasCutButNotCutPaste)
+                //    {
+                //        CommandInvoker.InvokeCommand(new CutPasteCommand());
+                //        GUI.changed = true;
+                //        return;
+                //    }
 
-                    CommandInvoker.InvokeCommand(new PasteCommand());
-                    GUI.changed = true;
-                }
+                //    CommandInvoker.InvokeCommand(new PasteCommand());
+                //    GUI.changed = true;
+                //}
 
             }
 
@@ -819,14 +876,15 @@ namespace LEM_Editor
 
             if (GUI.Button(propertyRect, "Copy"))
             {
-                //Remove start and end node 
-                if (m_AllSelectedNodes.Contains(StartNode))
-                {
-                    StartNode.DeselectNode();
-                }
+                DoCopy();
+                ////Remove start and end node 
+                //if (m_AllSelectedNodes.Contains(StartNode))
+                //{
+                //    StartNode.DeselectNode();
+                //}
 
-                //CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
-                CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
+                ////CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                //CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
 
                 e.Use();
             }
@@ -844,15 +902,17 @@ namespace LEM_Editor
 
             if (GUI.Button(propertyRect, "Delete"))
             {
-                GUI.FocusControl(null);
+                DoDeleteCommand();
 
-                //Remove start and end node 
-                if (m_AllSelectedNodes.Contains(StartNode))
-                {
-                    StartNode.DeselectNode();
-                }
+                //GUI.FocusControl(null);
 
-                CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                ////Remove start and end node 
+                //if (m_AllSelectedNodes.Contains(StartNode))
+                //{
+                //    StartNode.DeselectNode();
+                //}
+
+                //CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
                 //Skip everything else and repaint
                 e.Use();
 
@@ -940,7 +1000,7 @@ namespace LEM_Editor
             {
                 GUI.Label(propertyRect, i + ") " + AllSelectedNodes[i].NodeID);
                 propertyRect.y += EditorGUIUtility.singleLineHeight;
-            } 
+            }
             #endregion
 
             propertyRect.y += EditorGUIUtility.singleLineHeight;
@@ -1100,15 +1160,16 @@ namespace LEM_Editor
 
                     if (e.keyCode == KeyCode.Delete)
                     {
-                        GUI.FocusControl(null);
+                        DoDeleteCommand();
+                        //GUI.FocusControl(null);
 
-                        //Remove start and end node 
-                        if (m_AllSelectedNodes.Contains(StartNode))
-                        {
-                            StartNode.DeselectNode();
-                        }
+                        ////Remove start and end node 
+                        //if (m_AllSelectedNodes.Contains(StartNode))
+                        //{
+                        //    StartNode.DeselectNode();
+                        //}
 
-                        CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                        //CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
                         //Skip everything else and repaint
                         e.Use();
                     }
@@ -1138,14 +1199,15 @@ namespace LEM_Editor
                         //Copy
                         else if (e.keyCode == KeyCode.C)
                         {
-                            //Remove start and end node 
-                            if (m_AllSelectedNodes.Contains(StartNode))
-                            {
-                                StartNode.DeselectNode();
-                            }
+                            DoCopy();
+                            ////Remove start and end node 
+                            //if (m_AllSelectedNodes.Contains(StartNode))
+                            //{
+                            //    StartNode.DeselectNode();
+                            //}
 
-                            //CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
-                            CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
+                            ////CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                            //CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
 
                             e.Use();
                         }
@@ -1159,23 +1221,21 @@ namespace LEM_Editor
                         //Paste only when there is no foccus on anyother keyboard demanding control,
                         else if (e.keyCode == KeyCode.V && GUIUtility.keyboardControl == 0)
                         {
+                            DoPasteCommand();
+                            ////Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+                            //if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
+                            //{
+                            //    //If player had cut 
+                            //    if (CommandInvoker.m_HasCutButNotCutPaste)
+                            //    {
+                            //        CommandInvoker.InvokeCommand(new CutPasteCommand());
+                            //        GUI.changed = true;
+                            //        return;
+                            //    }
 
-                            //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
-                            if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
-                            {
-                                //If player had cut 
-                                if (CommandInvoker.m_HasCutButNotCutPaste)
-                                {
-                                    CommandInvoker.InvokeCommand(new CutPasteCommand());
-                                    GUI.changed = true;
-                                    return;
-                                }
-
-                                CommandInvoker.InvokeCommand(new PasteCommand());
-                                GUI.changed = true;
-                            }
-
-
+                            //    CommandInvoker.InvokeCommand(new PasteCommand());
+                            //    GUI.changed = true;
+                            //}
                         }
                         //Select all
                         else if (e.keyCode == KeyCode.A)
@@ -1449,7 +1509,7 @@ namespace LEM_Editor
             return groupRect;
         }
 
-        public static GroupRectNode ReCreateGroupNode(/*Vector2 rectGroupPos, Vector2 rectGroupSize,*/ string[] allNestedNodesIDs, string idToSet,string labelText)
+        public static GroupRectNode ReCreateGroupNode(/*Vector2 rectGroupPos, Vector2 rectGroupSize,*/ string[] allNestedNodesIDs, string idToSet, string labelText)
         {
             GroupRectNode groupRect;
             //Get the respective skin from the collection of nodeskin
@@ -2047,7 +2107,7 @@ namespace LEM_Editor
 
         public static void DeselectAllNodes()
         {
-            while (AllSelectedNodes.Count>0)
+            while (AllSelectedNodes.Count > 0)
             {
                 AllSelectedNodes[0].DeselectNode();
             }
