@@ -14,14 +14,16 @@ namespace LEM_Effects
         public string m_NodeID;
         [ReadOnly]
         public string[] m_NestedNodeIDs;
+        [ReadOnly]
+        public string m_LabelText;
 
-        public GroupRectNodeBase(Vector2 position, Vector2 size, string nodeID, string[] nestedNodeIDs)
+        public GroupRectNodeBase(Vector2 position, Vector2 size, string nodeID, string[] nestedNodeIDs,string labelText)
         {
             m_Position = position;
             m_Size = size;
             m_NodeID = nodeID;
-            //m_PrevPointNodeID = prevNodeID;
             m_NestedNodeIDs = nestedNodeIDs;
+            m_LabelText = labelText;
         }
 
         public GroupRectNodeBase(GroupRectNodeBase groupRectNodeData)
@@ -31,6 +33,7 @@ namespace LEM_Effects
             m_NodeID = groupRectNodeData.m_NodeID;
             //m_PrevPointNodeID = prevNodeID;
             m_NestedNodeIDs = groupRectNodeData.m_NestedNodeIDs;
+            m_LabelText = groupRectNodeData.m_LabelText;
         }
 
         public bool HasAtLeastOneNestedNode => m_NestedNodeIDs.Length > 0 ? true : false;

@@ -98,7 +98,7 @@ namespace LEM_Editor
                 float newWidth = m_TotalRect.width * NodeGUIConstants.k_SelectedNodeTextureScale;
                 float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale;
                 GUI.DrawTexture(new Rect(
-                    m_TotalRect.x - /*NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.x*/(newWidth - m_TotalRect.width)*0.5f,
+                    m_TotalRect.x - /*NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.x*/(newWidth - m_TotalRect.width) * 0.5f,
                     m_TotalRect.y -/* NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.y*/  (newHeight - m_TotalRect.height) * 0.5f,
                     newWidth, newHeight),
                     m_NodeSkin.m_SelectedMidOutline);
@@ -143,7 +143,7 @@ namespace LEM_Editor
                         return true;
                     }
                     //Else if this node is selected n is grouped
-                    else if(IsGrouped)
+                    else if (IsGrouped)
                     {
                         //m_GroupedParent.DeselectNode();
                         DeselectAllParentGroupNodes();
@@ -173,7 +173,7 @@ namespace LEM_Editor
                         return false;
                     }
 
-                   
+
                     //Deselect if this node is selected but there isnt multiple selected nodes
                     // or if there is no node clicked
                     if (currentClickedNode.m_IsSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
@@ -227,7 +227,7 @@ namespace LEM_Editor
                 return true;
             }
             //Check if node is within selection box of editor
-            else if (NodeLEM_Editor.s_SelectionBox != Rect.zero && NodeLEM_Editor.s_SelectionBox.Overlaps(m_TotalRect, true))
+            else if ( NodeLEM_Editor.s_SelectionBox != Rect.zero && NodeLEM_Editor.s_SelectionBox.Overlaps(m_TotalRect, true))
             {
                 SelectBySelectionBox();
                 return true;
@@ -366,6 +366,7 @@ namespace LEM_Editor
             m_TotalRect.size = new Vector2(m_MidRect.size.x, m_MidRect.size.y + m_TopRect.size.y - 2);
         }
 
+        public virtual void DeleteNodes() { }
 
     }
 

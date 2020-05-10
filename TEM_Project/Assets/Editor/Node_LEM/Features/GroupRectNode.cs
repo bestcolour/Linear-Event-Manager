@@ -32,6 +32,7 @@ namespace LEM_Editor
         }
 
         string m_CommentLabel = default;
+        public string CommentLabel { set { m_CommentLabel = value; } }
 
         Dictionary<string, Node> m_NestedNodesDictionary = new Dictionary<string, Node>();
         public Dictionary<string, Node> NestedNodesDictionary => m_NestedNodesDictionary;
@@ -171,7 +172,7 @@ namespace LEM_Editor
                 m_NestedNodesDictionary[keys[i]].DeselectNode();
             }
         }
-        
+
         public override bool HandleLeftMouseDown(Event e)
         {
             //Check if mouseposition is within the bounds of the node's rect body
@@ -258,8 +259,11 @@ namespace LEM_Editor
             g.m_Position = m_MidRect.position;
             g.m_Size = m_MidRect.size;
             g.m_NestedNodeIDs = NestedNodesNodeIDs;
+            g.m_LabelText = m_CommentLabel;
             return g;
         }
+
+
 
     }
 

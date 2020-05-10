@@ -18,18 +18,18 @@ namespace LEM_Editor
     public class NodeCommandInvoker
     {
         #region Command Delegates Definitions
-        public delegate BaseEffectNode CreateEffectNode(Vector2 nodePos, string nodeType);
-        public delegate BaseEffectNode ReCreateEffectNode(Vector2 nodePos, string nodeType, string idToSet);
-        public delegate GroupRectNode CreateGroupRectNode(Rect[] allSelectedNodesTotalRect, List<Node> allSelectedNodes);
+        //public delegate BaseEffectNode CreateEffectNode(Vector2 nodePos, string nodeType);
+        //public delegate BaseEffectNode ReCreateEffectNode(Vector2 nodePos, string nodeType, string idToSet);
+        //public delegate GroupRectNode CreateGroupRectNode(Rect[] allSelectedNodesTotalRect, List<Node> allSelectedNodes);
 
         public delegate void RestitchConnections(LEM_BaseEffect currentEffect);
         //public delegate void DeleteNodes(BaseEffectNode[] nodesToBeDeleted);
-        public delegate void DeleteNodes(NodeBaseData[] nodeBases);
-        public delegate LEM_BaseEffect CompileNodeEffect(string nodeID);
+        //public delegate void DeleteNodes(NodeBaseData[] nodeBases);
+        //public delegate LEM_BaseEffect CompileNodeEffect(string nodeID);
         //public delegate void MoveNodes(string[] nodeIDsMoved, ref Vector2[] previousTopRectPositions, ref Vector2[] previousMidRectPositions, ref Vector2[] previousTotalRectPositions);
-        public delegate void CreateConnection(string inPointNodeID, string outPointNodeID,int outPointIndex);
-        public delegate void RemoveConnection(string inPointNodeID, string outPointNodeID);
-        public delegate void DeselectAllNodes();
+        //public delegate void CreateConnection(string inPointNodeID, string outPointNodeID,int outPointIndex);
+        //public delegate void RemoveConnection(string inPointNodeID, string outPointNodeID);
+        //public delegate void DeselectAllNodes();
         #endregion
 
 
@@ -52,59 +52,59 @@ namespace LEM_Editor
 
         //For Node commands to get and use 
         //im putting these commands here because nodecommand invoker has a connection to the nodelem editor during its intiialisation
-        public static CreateEffectNode d_CreateEffectNode = null;
-        public static ReCreateEffectNode d_ReCreateEffectNode = null;
-        public static CreateGroupRectNode d_CreateGroupRectNode = null;
+        //public static CreateEffectNode d_CreateEffectNode = null;
+        //public static ReCreateEffectNode d_ReCreateEffectNode = null;
+        //public static CreateGroupRectNode d_CreateGroupRectNode = null;
         public static RestitchConnections d_RestitchConnections = null;
         //public static DeleteNodes d_DeleteNodes = null;
-        public static DeleteNodes d_DeleteNodesWithNodeBase = null;
-        public static CompileNodeEffect d_CompileNodeEffect = null;
+        //public static DeleteNodes d_DeleteNodesWithNodeBase = null;
+        //public static CompileNodeEffect d_CompileNodeEffect = null;
         //public static MoveNodes d_MoveNodes = null;
-        public static CreateConnection d_CreateConnection = null;
-        public static RemoveConnection d_RemoveConnection = null;
-        public static DeselectAllNodes d_DeselectAllNodes = null;
+        //public static CreateConnection d_CreateConnection = null;
+        //public static RemoveConnection d_RemoveConnection = null;
+        //public static DeselectAllNodes d_DeselectAllNodes = null;
         public static Action d_OnCommand = null;
 
 
         #region Construction and Resets
-        public NodeCommandInvoker(CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, CreateGroupRectNode createGroupRectNode,
-            RestitchConnections restitchConnections, DeleteNodes deleteNodesWithNodeBase, CompileNodeEffect compileNodeEffect,/* MoveNodes moveNodes,*/
-            CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes, Action onCommand)
+        public NodeCommandInvoker(/*CreateEffectNode createEffectNode,*/ /*ReCreateEffectNode recreateEffectNode,*//* CreateGroupRectNode createGroupRectNode,*/
+            RestitchConnections restitchConnections/*, DeleteNodes deleteNodesWithNodeBase*/,/* CompileNodeEffect compileNodeEffect,*//* MoveNodes moveNodes,*/
+            /*CreateConnection createConnection, RemoveConnection removeConnection,*/ /*DeselectAllNodes deselectAllNodes,*/ Action onCommand)
         {
             //m_MaxActionSize = 100;
             m_CommandHistory = new INodeCommand[m_MaxActionSize];
-            d_CreateEffectNode = createEffectNode;
-            d_ReCreateEffectNode = recreateEffectNode;
-            d_CreateGroupRectNode = createGroupRectNode;
+            //d_CreateEffectNode = createEffectNode;
+            //d_ReCreateEffectNode = recreateEffectNode;
+            //d_CreateGroupRectNode = createGroupRectNode;
             d_RestitchConnections = restitchConnections;
             //d_DeleteNodes = deleteNodes;
-            d_CompileNodeEffect = compileNodeEffect;
-            d_DeleteNodesWithNodeBase = deleteNodesWithNodeBase;
+            //d_CompileNodeEffect = compileNodeEffect;
+            //d_DeleteNodesWithNodeBase = deleteNodesWithNodeBase;
             //d_MoveNodes = moveNodes;
-            d_CreateConnection = createConnection;
-            d_RemoveConnection = removeConnection;
-            d_DeselectAllNodes = deselectAllNodes;
+            //d_CreateConnection = createConnection;
+            //d_RemoveConnection = removeConnection;
+            //d_DeselectAllNodes = deselectAllNodes;
             d_OnCommand = onCommand;
         }
 
-        public NodeCommandInvoker(int actionSize, CreateEffectNode createEffectNode, ReCreateEffectNode recreateEffectNode, CreateGroupRectNode createGroupRectNode,
-          RestitchConnections restitchConnections, DeleteNodes deleteNodesWithNodeBase, CompileNodeEffect compileNodeEffect,/* MoveNodes moveNodes,*/
-          CreateConnection createConnection, RemoveConnection removeConnection, DeselectAllNodes deselectAllNodes, Action onCommand)
+        public NodeCommandInvoker(int actionSize,/* CreateEffectNode createEffectNode,*/ /*ReCreateEffectNode recreateEffectNode,*//* CreateGroupRectNode createGroupRectNode,*/
+          RestitchConnections restitchConnections/*, DeleteNodes deleteNodesWithNodeBase*/, /*CompileNodeEffect compileNodeEffect,*//* MoveNodes moveNodes,*/
+          /*CreateConnection createConnection, RemoveConnection removeConnection,*//* DeselectAllNodes deselectAllNodes,*/ Action onCommand)
         {
             m_MaxActionSize = actionSize;
             m_CommandHistory = new INodeCommand[actionSize];
 
-            d_CreateEffectNode = createEffectNode;
-            d_ReCreateEffectNode = recreateEffectNode;
-            d_CreateGroupRectNode = createGroupRectNode;
+            //d_CreateEffectNode = createEffectNode;
+            //d_ReCreateEffectNode = recreateEffectNode;
+            //d_CreateGroupRectNode = createGroupRectNode;
             d_RestitchConnections = restitchConnections;
             //d_DeleteNodes = deleteNodes;
-            d_CompileNodeEffect = compileNodeEffect;
-            d_DeleteNodesWithNodeBase = deleteNodesWithNodeBase;
+            //d_CompileNodeEffect = compileNodeEffect;
+            //d_DeleteNodesWithNodeBase = deleteNodesWithNodeBase;
             //d_MoveNodes = moveNodes;
-            d_CreateConnection = createConnection;
-            d_RemoveConnection = removeConnection;
-            d_DeselectAllNodes = deselectAllNodes;
+            //d_CreateConnection = createConnection;
+            //d_RemoveConnection = removeConnection;
+            //d_DeselectAllNodes = deselectAllNodes;
             d_OnCommand = onCommand;
         }
 
