@@ -131,14 +131,9 @@ namespace LEM_Editor
                     //if node has not been selected
                     if (!m_IsSelected)
                     {
+                        DeselectAllParentGroupNodes();
                         SelectByClicking();
                         return true;
-                    }
-                    //Else if this node is selected n is grouped
-                    else if (IsGrouped)
-                    {
-                        //m_GroupedParent.DeselectNode();
-                        DeselectAllParentGroupNodes();
                     }
 
                     //Else if mouse clicks on a selected node
@@ -150,6 +145,7 @@ namespace LEM_Editor
                         return true;
                     }
 
+                    DeselectAllParentGroupNodes();
                     // or i want to drag this selected nodes 
                     m_IsDragged = true;
                     return false;
@@ -177,12 +173,7 @@ namespace LEM_Editor
                     //as well as having multiple nodes selected
                     else if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
                     {
-                        if (IsGrouped)
-                        {
-                            DeselectAllParentGroupNodes();
-                            //m_GroupedParent.DeselectNode();
-                        }
-
+                        DeselectAllParentGroupNodes();
                         m_IsDragged = true;
                     }
 
@@ -219,7 +210,7 @@ namespace LEM_Editor
                 return true;
             }
             //Check if node is within selection box of editor
-            else if ( NodeLEM_Editor.s_SelectionBox != Rect.zero && NodeLEM_Editor.s_SelectionBox.Overlaps(m_TotalRect, true))
+            else if (NodeLEM_Editor.s_SelectionBox != Rect.zero && NodeLEM_Editor.s_SelectionBox.Overlaps(m_TotalRect, true))
             {
                 SelectBySelectionBox();
                 return true;

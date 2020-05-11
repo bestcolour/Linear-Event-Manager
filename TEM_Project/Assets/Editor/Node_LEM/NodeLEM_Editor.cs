@@ -47,6 +47,14 @@ namespace LEM_Editor
         List<Node> m_AllConnectableNodesInEditor = new List<Node>();
         public static List<Node> AllConnectableNodesInEditor => instance.m_AllConnectableNodesInEditor;
 
+
+        int m_IndexOfTheStartOfGroupRectNodes = default;
+        public static int IndexOfTheStartOfGroupRectNodes { get { return instance.m_IndexOfTheStartOfGroupRectNodes; } set { instance.m_IndexOfTheStartOfGroupRectNodes = value; } }
+
+        Dictionary<int, Node> m_AllNodesInEditor = new Dictionary<int, Node>();
+        public static Dictionary<int, Node> AllNodesInEditor => instance.m_AllNodesInEditor;
+
+
         Dictionary<string, GroupRectNode> m_AllGroupRectsInEditorDictionary = new Dictionary<string, GroupRectNode>();
         public static Dictionary<string, GroupRectNode> AllGroupRectsInEditorDictionary => instance.m_AllGroupRectsInEditorDictionary;
         public static string[] AllGroupRectsInEditorNodeIDs => AllGroupRectsInEditorDictionary.Keys.ToArray();
@@ -89,27 +97,6 @@ namespace LEM_Editor
 
             return idInitials;
         }
-
-        //public static bool TryGetFromAllDictionaries(string nodeID,out NodeDictionaryStruct nD,out GroupRectNode gR)
-        //{
-        //    string idInitials = GetInitials(nodeID);
-        //    //switch (idInitials)
-        //    //{
-        //    //    case LEMDictionary.NodeIDs_Initials.k_BaseEffectInital:
-        //    //        nD = AllEffectsNodeInEditor[nodeID];
-        //    //        return true;
-
-
-
-
-        //    //    default:
-        //    //        nD = null;
-        //    //        gR = null;
-        //    //        return false;
-
-
-        //    //}
-        //}
 
         //RULE: INPOINT'S CONNECTED NODE ID FIRST THEN OUTPOINT CONNECTED NODE ID
         Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
@@ -278,20 +265,12 @@ namespace LEM_Editor
 
         void DoCopy()
         {
-            //if (m_AllSelectedNodes.Contains(StartNode))
-            //{
-            //    StartNode.DeselectNode();
-            //}
-
             //Remove start and end node 
             //Filter out alll the grouprect nodes in the selectednodes
             for (int i = 0; i < AllSelectedNodes.Count; i++)
-            {
                 if (AllSelectedNodes[i].ID_Initial != LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
                     AllSelectedNodes[i].DeselectNode();
-            }
 
-            //CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
             CommandInvoker.CopyToClipBoard(AllSelectedNodes.Select(x => x.NodeID).ToArray());
 
         }
@@ -454,6 +433,11 @@ namespace LEM_Editor
                 instance.m_AllConnectableNodesInEditor = new List<Node>();
             }
 
+            if(instance.m_AllNodesInEditor == null)
+            {
+                instance.m_AllNodesInEditor = new Dictionary<int, Node>();
+            }
+
             if (instance.m_AllEffectsNodeInEditor == default)
             {
                 instance.m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
@@ -527,9 +511,7 @@ namespace LEM_Editor
             genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { DoPasteCommand(); Repaint(); });
             genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
             {
-                AllSelectedNodes.Clear();
-                for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
-                    AllConnectableNodesInEditor[i].SelectNode();
+                SelectAllNodes();
                 Repaint();
             });
 
@@ -582,8 +564,10 @@ namespace LEM_Editor
             CurrentNodeLastRecordedSelectState = null;
             m_IsSearchBoxActive = false;
 
-
             m_AllConnectableNodesInEditor = new List<Node>();
+            m_AllNodesInEditor = new Dictionary<int, Node>();
+            instance.m_IndexOfTheStartOfGroupRectNodes = 0;
+
             m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
             m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
             m_CommandInvoker.ResetHistory();
@@ -1507,6 +1491,7 @@ namespace LEM_Editor
 
             //Add the node into collection in editor
             AllConnectableNodesInEditor.Add(newNode);
+
             newlyCreatedNode = newNode;
         }
 

@@ -38,6 +38,7 @@ namespace LEM_Editor
         public string[] NestedNodesNodeIDs => m_NestedNodesDictionary.Keys.ToArray();
         public Node[] NestedNodes => m_NestedNodesDictionary.Values.ToArray();
 
+
         public override string ID_Initial => LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial;
 
         Rect m_BorderRect = new Rect();
@@ -128,11 +129,11 @@ namespace LEM_Editor
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             m_CommentLabel = EditorGUI.DelayedTextField(m_TopRect, m_CommentLabel, LEMStyleLibrary.s_NodeHeaderStyle);
 
-            #region Debug
-            Rect debugRect = m_TopRect;
-            debugRect.y -= 20f;
-            EditorGUI.LabelField(debugRect, "Is Grouped to " + m_GroupedParent?.NodeID);
-            #endregion
+            //#region Debug
+            //Rect debugRect = m_TopRect;
+            //debugRect.y -= 20f;
+            //EditorGUI.LabelField(debugRect, "Is Grouped to " + m_GroupedParent?.NodeID);
+            //#endregion
 
 
 
@@ -163,7 +164,9 @@ namespace LEM_Editor
             //Add any nodes whose rects do overlap which at the same time are not inside the nested dictionary and is not grouped b4
             for (int i = 0; i < NodeLEM_Editor.AllConnectableNodesInEditor.Count; i++)
             {
-                if (!NodeLEM_Editor.AllConnectableNodesInEditor[i].IsGrouped && !m_NestedNodesDictionary.ContainsKey(NodeLEM_Editor.AllConnectableNodesInEditor[i].NodeID) && m_TotalRect.Overlaps(NodeLEM_Editor.AllConnectableNodesInEditor[i].m_TotalRect, true))
+                if (!NodeLEM_Editor.AllConnectableNodesInEditor[i].IsGrouped && 
+                    !m_NestedNodesDictionary.ContainsKey(NodeLEM_Editor.AllConnectableNodesInEditor[i].NodeID) &&
+                    m_TotalRect.Overlaps(NodeLEM_Editor.AllConnectableNodesInEditor[i].m_TotalRect))
                 {
                     NodeLEM_Editor.AllConnectableNodesInEditor[i].m_GroupedParent = this;
                     m_NestedNodesDictionary.Add(NodeLEM_Editor.AllConnectableNodesInEditor[i].NodeID, NodeLEM_Editor.AllConnectableNodesInEditor[i]);
