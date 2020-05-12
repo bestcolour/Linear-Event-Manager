@@ -1,12 +1,24 @@
-﻿using System.Collections;
+﻿using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
 using LEM_Effects;
 using System.Linq;
+
 namespace LEM_Editor
 {
+    public struct NodeDictionaryStruct
+    {
+        public BaseEffectNode effectNode;
+        public OutConnectionPoint[] outConnectionPoints;
+
+        public NodeDictionaryStruct(BaseEffectNode effectNode, OutConnectionPoint[] outConnectionPoints)
+        {
+            this.effectNode = effectNode;
+            this.outConnectionPoints = outConnectionPoints;
+        }
+    }
 
     public class NodeLEM_Editor : EditorWindow
     {
@@ -31,40 +43,74 @@ namespace LEM_Editor
 
         #endregion
 
-
-
         //For saving 
-        List<Node> m_AllNodesInEditor = new List<Node>();
-        List<Node> AllNodesInEditor => instance.m_AllNodesInEditor;
+        List<Node> m_AllConnectableNodesInEditor = new List<Node>();
+        public static List<Node> AllConnectableNodesInEditor => instance.m_AllConnectableNodesInEditor;
 
-        Dictionary<string, BaseEffectNode> m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
-        Dictionary<string, BaseEffectNode> AllEffectsNodeInEditor => instance.m_AllEffectsNodeInEditor;
 
-        ////Potentially use this to cut down on repeated dictioanry
-        //struct NodeDictionaryStruct
-        //{
-        //    public BaseEffectNode effectNode;
-        //    public OutConnectionPoint[] nodeOutPoints;
-        //}
+        int m_IndexOfTheStartOfGroupRectNodes = default;
+        public static int IndexOfTheStartOfGroupRectNodes { get { return instance.m_IndexOfTheStartOfGroupRectNodes; } set { instance.m_IndexOfTheStartOfGroupRectNodes = value; } }
+
+        Dictionary<int, Node> m_AllNodesInEditor = new Dictionary<int, Node>();
+        public static Dictionary<int, Node> AllNodesInEditor => instance.m_AllNodesInEditor;
+
+
+        Dictionary<string, GroupRectNode> m_AllGroupRectsInEditorDictionary = new Dictionary<string, GroupRectNode>();
+        public static Dictionary<string, GroupRectNode> AllGroupRectsInEditorDictionary => instance.m_AllGroupRectsInEditorDictionary;
+        public static string[] AllGroupRectsInEditorNodeIDs => AllGroupRectsInEditorDictionary.Keys.ToArray();
+
+        Dictionary<string, NodeDictionaryStruct> m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
+        public static Dictionary<string, NodeDictionaryStruct> AllEffectsNodeInEditor => instance.m_AllEffectsNodeInEditor;
+
+        void EditEffectNodeStruct(NodeDictionaryStruct nodeStruct)
+        {
+            //Do the service of removing connection when edit occurs
+            //Only when new node struct has lesser outpoints than current nodestruct
+            int currentNsOutPtLength = AllEffectsNodeInEditor[nodeStruct.effectNode.NodeID].outConnectionPoints.Length;
+
+            if (currentNsOutPtLength > nodeStruct.outConnectionPoints.Length)
+            {
+                //Remove connection
+                TryToRemoveConnection(AllEffectsNodeInEditor[nodeStruct.effectNode.NodeID].outConnectionPoints[currentNsOutPtLength - 1].GetConnectedNodeID(0),
+                    nodeStruct.effectNode.NodeID
+                    );
+            }
+
+            AllEffectsNodeInEditor[nodeStruct.effectNode.NodeID] = nodeStruct;
+        }
+
+        public static string GetInitials(string nodeID)
+        {
+            char[] chars = nodeID.ToCharArray();
+            string idInitials = "";
+
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (chars[i] == '_')
+                {
+                    idInitials += chars[i];
+                    break;
+                }
+
+                idInitials += chars[i];
+            }
+
+            return idInitials;
+        }
 
         //RULE: INPOINT'S CONNECTED NODE ID FIRST THEN OUTPOINT CONNECTED NODE ID
         Dictionary<Tuple<string, string>, Connection> m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
-        Dictionary<Tuple<string, string>, Connection> AllConnectionsDictionary => instance.m_AllConnectionsDictionary;
+        static Dictionary<Tuple<string, string>, Connection> AllConnectionsDictionary => instance.m_AllConnectionsDictionary;
 
-        //RULE: NODEID THEN OUTPOINT
-        Dictionary<string, OutConnectionPoint[]> m_AllOutPointsDictionary = new Dictionary<string, OutConnectionPoint[]>();
-        Dictionary<string, OutConnectionPoint[]> AllOutPointsDictionary => instance.m_AllOutPointsDictionary;
-
-
-        Node m_StartNode = default;
-        Node StartNode { get { return instance.m_StartNode; } set { instance.m_StartNode = value; } }
+        ConnectableNode m_StartNode = default;
+        public static ConnectableNode StartNode { get { return instance.m_StartNode; } set { instance.m_StartNode = value; } }
 
         Action d_OnGUI = null;
 
         #region Process Event Variables
 
         List<Node> m_AllSelectedNodes = new List<Node>();
-        List<Node> AllSelectedNodes => instance.m_AllSelectedNodes;
+        public static List<Node> AllSelectedNodes => instance.m_AllSelectedNodes;
 
         Node s_CurrentClickedNode = null;
         public static Node CurrentClickedNode => instance.s_CurrentClickedNode;
@@ -119,6 +165,9 @@ namespace LEM_Editor
         const float k_MinScale = 0.15f, k_MaxScale = 1.0f, k_ScaleChangeRate = 0.2f, k_SlowScaleChangeRate = 0.05f;
         static float s_CurrentScaleFactor = 1f;
         float ScaleFactor { get { return s_CurrentScaleFactor; } set { s_CurrentScaleFactor = Mathf.Clamp(value, k_MinScale, k_MaxScale); } }
+
+        public static float InverseScaleFactor => instance.m_InverseScaleFactorOnEveryGUIFrame;
+        float m_InverseScaleFactorOnEveryGUIFrame = default;
         #endregion
 
         #region SearchBox
@@ -172,6 +221,59 @@ namespace LEM_Editor
         static NodeCommandInvoker CommandInvoker => instance.m_CommandInvoker;
         bool m_IsDragging = default;
         public static int s_MaxActions = 100;
+
+        void DoCutCommand()
+        {
+            if (AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.ToArray()));
+        }
+
+        void DoPasteCommand()
+        {
+            //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+            if (NodeCommandInvoker.HasEffectsCopied || NodeCommandInvoker.HasGroupRectsCopied)
+            {
+                //If player had cut 
+                if (CommandInvoker.m_HasCutButNotCutPaste)
+                {
+                    CommandInvoker.InvokeCommand(new CutPasteCommand());
+                    GUI.changed = true;
+                    return;
+                }
+
+                CommandInvoker.InvokeCommand(new PasteCommand());
+                GUI.changed = true;
+            }
+        }
+
+        void DoDeleteCommand()
+        {
+            GUI.FocusControl(null);
+
+            //Remove start and end node 
+            if (m_AllSelectedNodes.Contains(StartNode))
+            {
+                StartNode.DeselectNode();
+            }
+
+            CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+        }
+
+        void DoCopy()
+        {
+            //Remove start and end node 
+            //Filter out alll the grouprect nodes in the selectednodes
+            for (int i = 0; i < AllSelectedNodes.Count; i++)
+                if (AllSelectedNodes[i].ID_Initial != LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
+                    AllSelectedNodes[i].DeselectNode();
+
+            CommandInvoker.CopyToClipBoard(AllSelectedNodes.Select(x => x.NodeID).ToArray());
+
+        }
 
         #endregion
 
@@ -315,23 +417,31 @@ namespace LEM_Editor
             LEMStyleLibrary.LoadLibrary();
             LEMDictionary.LoadDictionary();
 
+            //Intialising background
             instance.m_EditorBackGroundTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-            instance.m_EditorBackGroundTexture.SetPixel(0, 0, new Color(0.227f, 0.216f, 0.212f));
+            Color bgColour = s_Settings.m_EditorTheme == EditorTheme.Dark ? new Color(0.227f, 0.216f, 0.212f) : new Color(0.8f, 0.8f, 0.8f);
+            instance.m_EditorBackGroundTexture.SetPixel(0, 0, bgColour);
             instance.m_EditorBackGroundTexture.Apply();
 
             if (instance.m_CommandInvoker == null)
             {
-                instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions, CreateEffectNode, RecreateEffectNode, TryToRestichConnections, DeleteNodes, CompileNodeToEffect, MoveNodes, CreateConnection, TryToRemoveConnection, DeselectAllNodes, () => m_EditorState = EDITORSTATE.LOADED);
+                instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions,/* CreateEffectNode,*/ /*RecreateEffectNode,*//* CreateGroupNode,*/ TryToRestichConnections,/* CompileNodeToEffect, *//*MoveNodes,*/ /*CreateConnection, TryToRemoveConnection,*/ /*DeselectAllNodes, */() => m_EditorState = EDITORSTATE.LOADED);
             }
 
-            if (instance.m_AllNodesInEditor == null)
+            if (instance.m_AllConnectableNodesInEditor == null)
             {
-                instance.m_AllNodesInEditor = new List<Node>();
+                instance.m_AllConnectableNodesInEditor = new List<Node>();
+            }
+
+            if(instance.m_AllNodesInEditor == null)
+            {
+                instance.m_AllNodesInEditor = new Dictionary<int, Node>();
             }
 
             if (instance.m_AllEffectsNodeInEditor == default)
             {
-                instance.m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
+                instance.m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
+                //instance.m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
             }
 
             if (instance.m_AllConnectionsDictionary == null)
@@ -368,9 +478,61 @@ namespace LEM_Editor
         {
             if (StartNode == null)
             {
-                CreateBasicNode(new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), "StartNode", out Node startTempNode);
+                CreateConnectableNode(new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), "StartNode", out ConnectableNode startTempNode);
                 StartNode = startTempNode;
             }
+        }
+
+        void SetupProcessNodeContextMenu()
+        {
+            //and then add an button option with the name "Remove node"
+            GenericMenu genericMenu = new GenericMenu();
+
+            //Add remove node function to the context menu option
+            //Remove all the selected nodes 
+            //Remove all the nodes that are selected until there are none left
+            genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
+            genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
+            genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
+            {
+                //if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
+                //CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
+                DoCopy();
+                Repaint();
+
+            });
+
+            genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate
+            {
+                //Remove start and end node 
+                DoCutCommand();
+                Repaint();
+            });
+            genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { DoPasteCommand(); Repaint(); });
+            genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
+            {
+                SelectAllNodes();
+                Repaint();
+            });
+
+            genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate
+            {
+                DoDeleteCommand();
+
+                //GUI.FocusControl(null);
+
+                ////Remove start and end node 
+                //if (m_AllSelectedNodes.Contains(StartNode))
+                //{
+                //    StartNode.DeselectNode();
+                //}
+
+                //CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                Repaint();
+            });
+
+            //Display the editted made menu
+            instance.m_NodeContextMenu = genericMenu;
         }
 
         #endregion
@@ -381,7 +543,7 @@ namespace LEM_Editor
         {
             instance.m_InitialClickedPosition = null;
             instance.m_IsDragging = false;
-            s_SelectionBox = default;
+            s_SelectionBox = Rect.zero;
             s_CurrentClickedNode = null;
             GUI.changed = true;
         }
@@ -402,9 +564,11 @@ namespace LEM_Editor
             CurrentNodeLastRecordedSelectState = null;
             m_IsSearchBoxActive = false;
 
+            m_AllConnectableNodesInEditor = new List<Node>();
+            m_AllNodesInEditor = new Dictionary<int, Node>();
+            instance.m_IndexOfTheStartOfGroupRectNodes = 0;
 
-            m_AllNodesInEditor = new List<Node>();
-            m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNode>();
+            m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
             m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
             m_CommandInvoker.ResetHistory();
 
@@ -422,13 +586,6 @@ namespace LEM_Editor
         //Called when window is closed
         void OnDestroy()
         {
-            //Before closing the window, save the le if it wasnt saved
-            //if (instance != null && m_EditorState == EDITORSTATE.LOADED /*&& m_SaveWindow != null*/)
-            //{
-            //    //Really shitty way to close the popup window cause onlost focus is called b4 ondestroy and there is no way to differentiate between them
-            //    SaveToLinearEvent();
-            //}
-
             TryToSaveLinearEvent();
 
             //Unsubscribe b4 closing window
@@ -476,6 +633,7 @@ namespace LEM_Editor
 
         void UpdateGUI()
         {
+            m_InverseScaleFactorOnEveryGUIFrame = 1 / ScaleFactor;
             Rect dummyRect = Rect.zero;
             Event currentEvent = Event.current;
 
@@ -490,7 +648,9 @@ namespace LEM_Editor
             //Draw graphics that are zoomable
             EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
             Vector2 currMousePos = currentEvent.mousePosition;
-            //Draw the nodes first
+
+            //Draw the rect grpsfirst
+            DrawRectGroups();
             DrawNodes();
 
 
@@ -513,6 +673,7 @@ namespace LEM_Editor
             //Then process the events that occured from unity's events (events are like clicks,drag etc)
             ProcessEvents(currentEvent, currMousePos, isMouseInSearchBox);
             ProcessNodeEvents(currentEvent);
+            ProcessGroupRectEvents(currentEvent);
 
             //If there is any value change in the gui,repaint it
             if (GUI.changed)
@@ -538,24 +699,32 @@ namespace LEM_Editor
 
         #region Draw Functions
 
+        void DrawRectGroups()
+        {
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+
+            for (int i = 0; i < keys.Length; i++)
+                if (AllGroupRectsInEditorDictionary[keys[i]].IsWithinWindowScreen)
+                    AllGroupRectsInEditorDictionary[keys[i]].Draw();
+        }
+
         void DrawNodes()
         {
             //If nodes collection is not null
-            if (AllNodesInEditor != null)
-                for (int i = 0; i < AllNodesInEditor.Count; i++)
-                    AllNodesInEditor[i].Draw();
+            if (AllConnectableNodesInEditor != null)
+                for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
+                    if (AllConnectableNodesInEditor[i].IsWithinWindowScreen)
+                        AllConnectableNodesInEditor[i].Draw();
+
         }
 
         void DrawConnections()
         {
             Tuple<string, string>[] allTupleKeys = AllConnectionsDictionary.Keys.ToArray();
             for (int i = 0; i < allTupleKeys.Length; i++)
-                AllConnectionsDictionary[allTupleKeys[i]].Draw();
+                if (AllConnectionsDictionary[allTupleKeys[i]].IsWithinWindowScreen)
+                    AllConnectionsDictionary[allTupleKeys[i]].Draw();
 
-            //foreach (Connection connection in AllConnectionsDictionary.Values)
-            //{
-            //    connection.Draw();
-            //}
         }
 
         //This is the realtime drawing of a bezier curve line to let users visualise
@@ -572,7 +741,7 @@ namespace LEM_Editor
                     e.mousePosition,
                     m_SelectedInPoint.m_Rect.center + Vector2.left * 50f,
                     e.mousePosition - Vector2.left * 50f,
-                    Color.white,
+                   LEMStyleLibrary.s_CurrentBezierColour,
                     null,
                     2f
                 );
@@ -590,7 +759,7 @@ namespace LEM_Editor
                     m_SelectedOutPoint.m_Rect.center,
                     e.mousePosition + Vector2.left * 50f,
                     m_SelectedOutPoint.m_Rect.center - Vector2.left * 50f,
-                    Color.white,
+                    LEMStyleLibrary.s_CurrentBezierColour,
                     null,
                     2f
                 );
@@ -670,8 +839,24 @@ namespace LEM_Editor
             {
                 if (GUI.Button(propertyRect, EDITORSTATE.LOADED_STRING))
                 {
+                    //m_EditorState = EDITORSTATE.SAVING;
                     SaveToLinearEvent();
+                    //m_EditorState = EDITORSTATE.SAVED;
                 }
+                ////Prevents double clicking on saving
+                //if (m_EditorState == EDITORSTATE.LOADED)
+                //{
+
+                //}
+                ////else if m_EditorState == EditorState.Saved cause for Unloaded to occur u have no linear event 
+                ////but that means save button wont even be drawn due to it not belonging in the same delegate
+                //else
+                //{
+                //    bool wasEnabled = GUI.enabled;
+                //    GUI.enabled = false;
+                //    GUI.Button(propertyRect, EDITORSTATE.SAVED_STRING);
+                //    GUI.enabled = wasEnabled;
+                //}
             }
             else
             {
@@ -690,20 +875,21 @@ namespace LEM_Editor
 
             if (GUI.Button(propertyRect, "Paste"))
             {
-                //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
-                if (NodeCommandInvoker.s_ClipBoard.Count > 0)
-                {
-                    //If player had cut 
-                    if (CommandInvoker.m_HasCutButNotCutPaste)
-                    {
-                        CommandInvoker.InvokeCommand(new CutPasteCommand());
-                        GUI.changed = true;
-                        return;
-                    }
+                DoPasteCommand();
+                ////Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+                //if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
+                //{
+                //    //If player had cut 
+                //    if (CommandInvoker.m_HasCutButNotCutPaste)
+                //    {
+                //        CommandInvoker.InvokeCommand(new CutPasteCommand());
+                //        GUI.changed = true;
+                //        return;
+                //    }
 
-                    CommandInvoker.InvokeCommand(new PasteCommand());
-                    GUI.changed = true;
-                }
+                //    CommandInvoker.InvokeCommand(new PasteCommand());
+                //    GUI.changed = true;
+                //}
 
             }
 
@@ -711,13 +897,16 @@ namespace LEM_Editor
 
             if (GUI.Button(propertyRect, "Copy"))
             {
-                //Remove start and end node 
-                if (m_AllSelectedNodes.Contains(StartNode))
-                {
-                    StartNode.DeselectNode();
-                }
+                DoCopy();
+                ////Remove start and end node 
+                //if (m_AllSelectedNodes.Contains(StartNode))
+                //{
+                //    StartNode.DeselectNode();
+                //}
 
-                CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                ////CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                //CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
+
                 e.Use();
             }
 
@@ -725,13 +914,8 @@ namespace LEM_Editor
 
             if (GUI.Button(propertyRect, "Cut"))
             {
-                //Remove start and end node 
-                if (m_AllSelectedNodes.Contains(StartNode))
-                {
-                    StartNode.DeselectNode();
-                }
-
-                CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                DoCutCommand();
+                //e.Use();
                 GUI.changed = true;
             }
 
@@ -739,15 +923,17 @@ namespace LEM_Editor
 
             if (GUI.Button(propertyRect, "Delete"))
             {
-                GUI.FocusControl(null);
+                DoDeleteCommand();
 
-                //Remove start and end node 
-                if (m_AllSelectedNodes.Contains(StartNode))
-                {
-                    StartNode.DeselectNode();
-                }
+                //GUI.FocusControl(null);
 
-                CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                ////Remove start and end node 
+                //if (m_AllSelectedNodes.Contains(StartNode))
+                //{
+                //    StartNode.DeselectNode();
+                //}
+
+                //CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
                 //Skip everything else and repaint
                 e.Use();
 
@@ -779,7 +965,7 @@ namespace LEM_Editor
             propertyRect.y = 0;
 
             LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
-            GUI.skin.label.normal.textColor = Color.yellow;
+            GUI.skin.label.normal.textColor = Color.red;
             GUI.Label(propertyRect, label);
             GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
             //If current event type is a mouse click and mouse click is within the propertyrect,
@@ -802,15 +988,40 @@ namespace LEM_Editor
 
             #region All Nodes In Editor Debug
 
-            GUI.Label(propertyRect, "All Nodes in Editor");
-            propertyRect.y += EditorGUIUtility.singleLineHeight;
+            //GUI.Label(propertyRect, "All Nodes in Editor");
+            //propertyRect.y += EditorGUIUtility.singleLineHeight;
 
-            for (int i = 0; i < AllNodesInEditor.Count; i++)
+            //for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
+            //{
+            //    GUI.Label(propertyRect, i + ") " + AllConnectableNodesInEditor[i].NodeID);
+            //    propertyRect.y += EditorGUIUtility.singleLineHeight;
+            //}
+
+            #endregion
+
+
+            #region All GroupRect Nodes
+            GUI.Label(propertyRect, "All GroupRect Nodes in Editor");
+            propertyRect.y += EditorGUIUtility.singleLineHeight;
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+            for (int i = 0; i < keys.Length; i++)
             {
-                GUI.Label(propertyRect, i + ") " + AllNodesInEditor[i].NodeID);
+                GUI.Label(propertyRect, i + ") " + AllGroupRectsInEditorDictionary[keys[i]].NodeID);
                 propertyRect.y += EditorGUIUtility.singleLineHeight;
             }
 
+            #endregion
+
+            #region SelectedNodes
+            propertyRect.y += EditorGUIUtility.singleLineHeight;
+            GUI.Label(propertyRect, "All SelectedNodes in Editor");
+            propertyRect.y += EditorGUIUtility.singleLineHeight;
+
+            for (int i = 0; i < AllSelectedNodes.Count; i++)
+            {
+                GUI.Label(propertyRect, i + ") " + AllSelectedNodes[i].NodeID);
+                propertyRect.y += EditorGUIUtility.singleLineHeight;
+            }
             #endregion
 
             propertyRect.y += EditorGUIUtility.singleLineHeight;
@@ -843,6 +1054,7 @@ namespace LEM_Editor
 
         #endregion
 
+        #region Process Events
         //Checks what the current event is right now, and then execute code accordingly
         void ProcessEvents(Event e, Vector2 currMousePosition, bool isMouseInSearchBox)
         {
@@ -870,7 +1082,8 @@ namespace LEM_Editor
                 case EventType.MouseDown:
 
                     //Set the currenly clicked node
-                    s_CurrentClickedNode = AllNodesInEditor.FindFromLastIndex(x => x.m_TotalRect.Contains(currMousePosition));
+                    s_CurrentClickedNode = FindSelectedNode(currMousePosition);
+                    //s_CurrentClickedNode = AllNodesInEditor.FindFromLastIndex(x => x.m_TotalRect.Contains(currMousePosition));
 
                     //Check if the mouse button down is the right click button
                     if (e.button == 1)
@@ -890,6 +1103,7 @@ namespace LEM_Editor
 
 
                         //Else, open the node's context menu
+                        //ProcessNodeContextMenu();
                         m_NodeContextMenu.ShowAsContext();
                     }
 
@@ -913,7 +1127,9 @@ namespace LEM_Editor
                         //Else if current clicked node isnt null
                         else
                         {
-                            AllNodesInEditor.RearrangeElement(s_CurrentClickedNode, AllNodesInEditor.Count - 1);
+                            //Only rearrange when currentclicked node is not grouprect node
+                            if (s_CurrentClickedNode.ID_Initial != LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
+                                AllConnectableNodesInEditor.RearrangeElement(s_CurrentClickedNode, AllConnectableNodesInEditor.Count - 1);
                         }
 
                         //Remove focus on the controls when user clicks on something regardless if it is a node or not because apparently this doesnt get
@@ -938,10 +1154,11 @@ namespace LEM_Editor
                             //GUI.changed = true;
                             e.Use();
                         }
-                        //If user is currently planning to drag a node and wasnt draggin the previous paint,
+                        //If user is currently planning to drag a node and wasnt draggin the previous gui loop, (that means this is the first drag event after on clickevent)
                         else if (s_CurrentClickedNode != null && !m_IsDragging)
                         {
                             m_IsDragging = true;
+                            //Since selected nodes will clear itself of the rect node before moving the nodes,
                             CommandInvoker.InvokeCommand(new MoveNodeCommand(m_AllSelectedNodes.ToArray()));
                         }
                     }
@@ -964,15 +1181,16 @@ namespace LEM_Editor
 
                     if (e.keyCode == KeyCode.Delete)
                     {
-                        GUI.FocusControl(null);
+                        DoDeleteCommand();
+                        //GUI.FocusControl(null);
 
-                        //Remove start and end node 
-                        if (m_AllSelectedNodes.Contains(StartNode))
-                        {
-                            StartNode.DeselectNode();
-                        }
+                        ////Remove start and end node 
+                        //if (m_AllSelectedNodes.Contains(StartNode))
+                        //{
+                        //    StartNode.DeselectNode();
+                        //}
 
-                        CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                        //CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
                         //Skip everything else and repaint
                         e.Use();
                     }
@@ -1002,59 +1220,48 @@ namespace LEM_Editor
                         //Copy
                         else if (e.keyCode == KeyCode.C)
                         {
-                            //Remove start and end node 
-                            if (m_AllSelectedNodes.Contains(StartNode))
-                            {
-                                StartNode.DeselectNode();
-                            }
+                            DoCopy();
+                            ////Remove start and end node 
+                            //if (m_AllSelectedNodes.Contains(StartNode))
+                            //{
+                            //    StartNode.DeselectNode();
+                            //}
 
-                            CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                            ////CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
+                            //CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
+
                             e.Use();
                         }
                         //Cut
                         else if (e.keyCode == KeyCode.X)
                         {
-                            //Remove start and end node 
-                            if (m_AllSelectedNodes.Contains(StartNode))
-                            {
-                                StartNode.DeselectNode();
-                            }
-
-                            CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
+                            DoCutCommand();
                             //e.Use();
                             GUI.changed = true;
                         }
                         //Paste only when there is no foccus on anyother keyboard demanding control,
                         else if (e.keyCode == KeyCode.V && GUIUtility.keyboardControl == 0)
                         {
+                            DoPasteCommand();
+                            ////Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
+                            //if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
+                            //{
+                            //    //If player had cut 
+                            //    if (CommandInvoker.m_HasCutButNotCutPaste)
+                            //    {
+                            //        CommandInvoker.InvokeCommand(new CutPasteCommand());
+                            //        GUI.changed = true;
+                            //        return;
+                            //    }
 
-                            //Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
-                            if (NodeCommandInvoker.s_ClipBoard.Count > 0)
-                            {
-                                //If player had cut 
-                                if (CommandInvoker.m_HasCutButNotCutPaste)
-                                {
-                                    CommandInvoker.InvokeCommand(new CutPasteCommand());
-                                    GUI.changed = true;
-                                    return;
-                                }
-
-                                CommandInvoker.InvokeCommand(new PasteCommand());
-                                GUI.changed = true;
-                            }
-
-
+                            //    CommandInvoker.InvokeCommand(new PasteCommand());
+                            //    GUI.changed = true;
+                            //}
                         }
                         //Select all
                         else if (e.keyCode == KeyCode.A)
                         {
-                            m_AllSelectedNodes.Clear();
-
-                            for (int i = 0; i < m_AllNodesInEditor.Count; i++)
-                            {
-                                m_AllNodesInEditor[i].SelectNode();
-                            }
-
+                            SelectAllNodes();
                             GUI.changed = true;
 
                         }
@@ -1064,6 +1271,13 @@ namespace LEM_Editor
                             SaveToLinearEvent();
                             e.Use();
                         }
+                        //Group Comment
+                        else if (s_HaveMultipleNodeSelected && e.keyCode == KeyCode.G)
+                        {
+                            //CreateGroupRectNode(AllSelectedNodes.Select(x => x.m_TotalRect).ToArray(), AllSelectedNodes);
+                            CommandInvoker.InvokeCommand(new GroupCommand(AllSelectedNodes.Select(x => x.m_TotalRect).ToArray(), AllSelectedNodes));
+                            GUI.changed = true;
+                        }
                     }
 
                     break;
@@ -1072,39 +1286,99 @@ namespace LEM_Editor
 
         void ProcessNodeEvents(Event e)
         {
+            if (AllConnectableNodesInEditor.Count <= 0)
+                return;
+
             //Check current event once and then tell all the nodes to handle that event so they dont have to check
             switch (e.type)
             {
                 case EventType.MouseDown:
-
-                    for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
-                        if (AllNodesInEditor[i].HandleMouseDown(e))
-                            GUI.changed = true;
+                    //Check if it is the left mousebutton that was pressed
+                    if (e.button == 0)
+                    {
+                        for (int i = AllConnectableNodesInEditor.Count - 1; i >= 0; i--)
+                            if (AllConnectableNodesInEditor[i].HandleLeftMouseDown(e))
+                                GUI.changed = true;
+                    }
                     break;
 
                 case EventType.MouseUp:
-                    for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
-                        if (AllNodesInEditor[i].HandleMouseUp())
+                    for (int i = AllConnectableNodesInEditor.Count - 1; i >= 0; i--)
+                        if (AllConnectableNodesInEditor[i].HandleMouseUp())
                             GUI.changed = true;
                     break;
 
                 case EventType.MouseDrag:
-                    Vector2 convertedDelta = e.delta / ScaleFactor;
+                    if (e.button == 0)
+                    {
+                        Vector2 convertedDelta = e.delta / ScaleFactor;
 
-                    for (int i = AllNodesInEditor.Count - 1; i >= 0; i--)
-                        if (AllNodesInEditor[i].HandleMouseDrag(e, convertedDelta))
-                            GUI.changed = true;
+                        for (int i = AllConnectableNodesInEditor.Count - 1; i >= 0; i--)
+                            if (AllConnectableNodesInEditor[i].HandleLeftMouseButtonDrag(e, convertedDelta))
+                                GUI.changed = true;
+                    }
                     break;
 
             }
         }
 
+        void ProcessGroupRectEvents(Event e)
+        {
+            if (AllGroupRectsInEditorDictionary.Count <= 0)
+                return;
+
+            string[] keys;
+
+
+            //Check current event once and then tell all the nodes to handle that event so they dont have to check
+            switch (e.type)
+            {
+                case EventType.MouseDown:
+
+                    keys = AllGroupRectsInEditorNodeIDs;
+                    //Check if it is the left mousebutton that was pressed
+                    if (e.button == 0)
+                    {
+                        for (int i = keys.Length - 1; i >= 0; i--)
+                            if (AllGroupRectsInEditorDictionary[keys[i]].HandleLeftMouseDown(e))
+                                GUI.changed = true;
+                    }
+                    break;
+
+                case EventType.MouseUp:
+
+                    keys = AllGroupRectsInEditorNodeIDs;
+
+                    for (int i = keys.Length - 1; i >= 0; i--)
+                        if (AllGroupRectsInEditorDictionary[keys[i]].HandleMouseUp())
+                            GUI.changed = true;
+                    break;
+
+                case EventType.MouseDrag:
+                    if (e.button == 0)
+                    {
+                        keys = AllGroupRectsInEditorNodeIDs;
+
+                        Vector2 convertedDelta = e.delta / ScaleFactor;
+
+                        for (int i = keys.Length - 1; i >= 0; i--)
+                            if (AllGroupRectsInEditorDictionary[keys[i]].HandleLeftMouseButtonDrag(e, convertedDelta))
+                                GUI.changed = true;
+                    }
+                    break;
+
+            }
+        }
+
+        #endregion
+
         #region Node Editor Events Functions
 
-        #region Creating and Deleting Node Types
+        #region Creating Node Types
         //This is used for when you wanna create a new node
-        BaseEffectNode CreateEffectNode(Vector2 mousePosition, string nameOfNodeType)
+        public static BaseEffectNode CreateEffectNode(Vector2 mousePosition, string nameOfNodeType)
         {
+            NodeDictionaryStruct nodeStruct = new NodeDictionaryStruct();
             BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
             //Get the respective skin from the collection of nodeskin
@@ -1117,25 +1391,27 @@ namespace LEM_Editor
                 (mousePosition,
                 nodeSkin,
                 LEMStyleLibrary.s_ConnectionPointStyleNormal,
-                OnClickInPoint,
-                OnClickOutPoint,
-                TryToAddNodeToSelectedCollection,
-                TryToRemoveNodeFromSelectedCollection,
+                instance.OnClickInPoint,
+                instance.OnClickOutPoint,
+                instance.TryToAddNodeToSelectedCollection,
+                instance.TryToRemoveNodeFromSelectedCollection,
+                instance.EditEffectNodeStruct,
                 LEMDictionary.GetNodeColour(nameOfNodeType)
                 );
 
-            OutConnectionPoint[] allOutConnections = newEffectNode.GetOutPoints;
+            nodeStruct.effectNode = newEffectNode;
+            nodeStruct.outConnectionPoints = newEffectNode.GetOutConnectionPoints;
 
             //Add the node into collection in editor
-            AllNodesInEditor.Add(newEffectNode);
-            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, newEffectNode);
-            AllOutPointsDictionary.Add(newEffectNode.NodeID, allOutConnections);
+            AllConnectableNodesInEditor.Add(newEffectNode);
+            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, nodeStruct);
             return newEffectNode;
         }
 
         //This is used for loading and probably undoing/redoing from a linear event
-        BaseEffectNode RecreateEffectNode(Vector2 positionToSet, string nameOfNodeType, string idToSet)
+        public static BaseEffectNode RecreateEffectNode(Vector2 positionToSet, string nameOfNodeType, string idToSet)
         {
+            NodeDictionaryStruct nodeStruct = new NodeDictionaryStruct();
             BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
             //Get the respective skin from the collection of nodeskin
@@ -1146,28 +1422,28 @@ namespace LEM_Editor
                 (positionToSet,
                 nodeSkin,
                 LEMStyleLibrary.s_ConnectionPointStyleNormal,
-                OnClickInPoint,
-                OnClickOutPoint,
-                TryToAddNodeToSelectedCollection,
-                TryToRemoveNodeFromSelectedCollection,
+                instance.OnClickInPoint,
+                instance.OnClickOutPoint,
+                instance.TryToAddNodeToSelectedCollection,
+                instance.TryToRemoveNodeFromSelectedCollection,
+                instance.EditEffectNodeStruct,
                 LEMDictionary.GetNodeColour(nameOfNodeType)
                 );
 
             newEffectNode.SetNodeID(idToSet);
-
-            OutConnectionPoint[] allOutConnections = newEffectNode.GetOutPoints;
+            nodeStruct.effectNode = newEffectNode;
+            nodeStruct.outConnectionPoints = newEffectNode.GetOutConnectionPoints;
 
             //Add the node into collection in editor
-            AllNodesInEditor.Add(newEffectNode);
-            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, newEffectNode);
-            AllOutPointsDictionary.Add(newEffectNode.NodeID, allOutConnections);
+            AllConnectableNodesInEditor.Add(newEffectNode);
+            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, nodeStruct);
             return newEffectNode;
         }
 
         //These two functions are mainly used for creating and loading start node
-        void CreateBasicNode(Vector2 mousePosition, string nameOfNodeType, out Node newBasicNode)
+        void CreateConnectableNode(Vector2 mousePosition, string nameOfNodeType, out ConnectableNode newBasicNode)
         {
-            Node basicNode = LEMDictionary.GetNodeObject(nameOfNodeType) as Node;
+            ConnectableNode basicNode = LEMDictionary.GetNodeObject(nameOfNodeType) as ConnectableNode;
 
             //Get the respective skin from the collection of nodeskin
             NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
@@ -1187,14 +1463,14 @@ namespace LEM_Editor
             basicNode.GenerateNodeID();
 
             //Add the node into collection in editor
-            AllNodesInEditor.Add(basicNode);
+            AllConnectableNodesInEditor.Add(basicNode);
 
             newBasicNode = basicNode;
         }
 
-        void RecreateBasicNode(Vector2 positionToSet, string nameOfNodeType, string idToSet, out Node newlyCreatedNode)
+        void RecreateConnectableNode(Vector2 positionToSet, string nameOfNodeType, string idToSet, out ConnectableNode newlyCreatedNode)
         {
-            Node newNode = LEMDictionary.GetNodeObject(nameOfNodeType) as Node;
+            ConnectableNode newNode = LEMDictionary.GetNodeObject(nameOfNodeType) as ConnectableNode;
 
             //Get the respective skin from the collection of nodeskin
             NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
@@ -1214,68 +1490,130 @@ namespace LEM_Editor
             newNode.SetNodeID(idToSet);
 
             //Add the node into collection in editor
-            AllNodesInEditor.Add(newNode);
+            AllConnectableNodesInEditor.Add(newNode);
+
             newlyCreatedNode = newNode;
         }
 
-        void DeleteNodes(NodeBaseData[] nodesToBeDeleted)
+        public static GroupRectNode CreateGroupRectNode(Rect[] allSelectedNodesTotalRect, List<Node> allSelectedNodes)
         {
-            for (int i = 0; i < nodesToBeDeleted.Length; i++)
-                OnClickRemoveNode(nodesToBeDeleted[i]);
+            GroupRectNode.CalculateGroupRectPosition(allSelectedNodesTotalRect, out Vector2 startVector2Pos, out Vector2 endVector2Pos);
+
+            //Filter grouped nodes out 
+            allSelectedNodes.RemoveAll(x => x.IsGrouped);
+            //Get ungrouped ones only
+            Node[] allSelectedNodesWithNoGroups = allSelectedNodes.ToArray();
+
+            //Size vector
+            endVector2Pos.x = Mathf.Abs(endVector2Pos.x - startVector2Pos.x);
+            endVector2Pos.y = Mathf.Abs(endVector2Pos.y - startVector2Pos.y);
+
+            GroupRectNode groupRect = new GroupRectNode();
+            //Get the respective skin from the collection of nodeskin
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+
+            //Initialise the new node 
+            groupRect.Initialise
+                (startVector2Pos,
+                endVector2Pos,
+                allSelectedNodesWithNoGroups,
+                nodeSkin,
+                instance.TryToAddNodeToSelectedCollection,
+                instance.TryToRemoveNodeFromSelectedCollection,
+                LEMStyleLibrary.s_CurrentGroupRectTopSkinColour
+                );
+
+            groupRect.GenerateNodeID();
+
+            //Add the node into collection in editor
+            AllGroupRectsInEditorDictionary.Add(groupRect.NodeID, groupRect);
+
+            return groupRect;
         }
 
+        //Recreategroup if there is nestednodes in this group node
+        public static GroupRectNode ReCreateGroupNode(/*Vector2 rectGroupPos, Vector2 rectGroupSize,*/ string[] allNestedNodesIDs, string idToSet, string labelText)
+        {
+            //Get the respective skin from the collection of nodeskin
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+
+            Node[] allSelectedNodesWithNoGroups = new Node[allNestedNodesIDs.Length];
+            Rect[] allNestedNodesRects = new Rect[allNestedNodesIDs.Length];
+
+            string initials;
+
+            for (int i = 0; i < allSelectedNodesWithNoGroups.Length; i++)
+            {
+                initials = GetInitials(allNestedNodesIDs[i]);
+
+                if (initials == LEMDictionary.NodeIDs_Initials.k_StartNodeInitial)
+                    allSelectedNodesWithNoGroups[i] = StartNode;
+                else if (initials == LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
+                    allSelectedNodesWithNoGroups[i] = AllEffectsNodeInEditor[allNestedNodesIDs[i]].effectNode;
+                else if (initials == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
+                    allSelectedNodesWithNoGroups[i] = AllGroupRectsInEditorDictionary[allNestedNodesIDs[i]];
+
+                allNestedNodesRects[i] = allSelectedNodesWithNoGroups[i].m_TotalRect;
+            }
+
+            GroupRectNode.CalculateGroupRectPosition(allNestedNodesRects, out Vector2 spawnPos, out Vector2 endPos);
+
+            endPos.x = Mathf.Abs(endPos.x - spawnPos.x);
+            endPos.y = Mathf.Abs(endPos.y - spawnPos.y);
+
+
+            GroupRectNode groupRect = new GroupRectNode();
+
+            //Initialise the new node 
+            groupRect.Initialise
+                (spawnPos,
+                endPos,
+                allSelectedNodesWithNoGroups,
+                nodeSkin,
+                instance.TryToAddNodeToSelectedCollection,
+                instance.TryToRemoveNodeFromSelectedCollection,
+                LEMStyleLibrary.s_CurrentGroupRectTopSkinColour
+                );
+
+            groupRect.CommentLabel = labelText;
+            groupRect.SetNodeID(idToSet);
+
+            //Add the node into collection in editor
+            AllGroupRectsInEditorDictionary.Add(groupRect.NodeID, groupRect);
+            return groupRect;
+        }
+
+        //Recreategroup if there is nestednodes in this group node
+        public static GroupRectNode ReCreateGroupNode(Vector2 rectGroupPos, Vector2 rectGroupSize, string idToSet, string labelText)
+        {
+            //Get the respective skin from the collection of nodeskin
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+            GroupRectNode groupRect = new GroupRectNode();
+
+            Node[] noNested = new Node[0];
+            //Initialise the new node 
+            groupRect.Initialise
+                (rectGroupPos,
+                rectGroupSize,
+                noNested
+                ,
+                nodeSkin,
+                instance.TryToAddNodeToSelectedCollection,
+                instance.TryToRemoveNodeFromSelectedCollection,
+                LEMStyleLibrary.s_CurrentGroupRectTopSkinColour
+                );
+
+            groupRect.CommentLabel = labelText;
+            groupRect.SetNodeID(idToSet);
+
+            //Add the node into collection in editor
+            AllGroupRectsInEditorDictionary.Add(groupRect.NodeID, groupRect);
+            return groupRect;
+        }
 
         #endregion
 
-        void SetupProcessNodeContextMenu()
-        {
-            //and then add an button option with the name "Remove node"
-            GenericMenu genericMenu = new GenericMenu();
-
-            //Add remove node function to the context menu option
-            //Remove all the selected nodes 
-            //Remove all the nodes that are selected until there are none left
-            genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate
-            {
-                if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-                CommandInvoker.CopyToClipBoard(Array.ConvertAll(AllSelectedNodes.ToArray(), x => (BaseEffectNode)x)); Repaint();
-            });
-
-            genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate
-            {
-                //Remove start and end node 
-                if (AllSelectedNodes.Contains(StartNode)) { StartNode.DeselectNode(); }
-                CommandInvoker.InvokeCommand(new CutCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
-                Repaint();
-            });
-            genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { CommandInvoker.InvokeCommand(new PasteCommand()); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate
-            {
-                AllSelectedNodes.Clear();
-                for (int i = 0; i < AllNodesInEditor.Count; i++)
-                    AllNodesInEditor[i].SelectNode();
-                Repaint();
-            });
-
-            genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate
-            {
-                GUI.FocusControl(null);
-
-                //Remove start and end node 
-                if (m_AllSelectedNodes.Contains(StartNode))
-                {
-                    StartNode.DeselectNode();
-                }
-
-                CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
-            });
-
-            //Display the editted made menu
-            instance.m_NodeContextMenu = genericMenu;
-        }
-
+        #region General Functions 
         //Drags the window canvas (think like animator window)
         void OnDrag(Vector2 delta)
         {
@@ -1288,74 +1626,89 @@ namespace LEM_Editor
             delta /= ScaleFactor;
 
             //Update all the node's positions as well
-            for (int i = 0; i < AllNodesInEditor.Count; i++)
+            for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
             {
-                AllNodesInEditor[i].Drag(delta);
+                if (!AllConnectableNodesInEditor[i].IsGrouped)
+                    AllConnectableNodesInEditor[i].Drag(delta);
+            }
+
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+
+            //Drag all the group rects
+            for (int i = 0; i < keys.Length; i++)
+            {
+                if (!AllGroupRectsInEditorDictionary[keys[i]].IsGrouped)
+                    AllGroupRectsInEditorDictionary[keys[i]].Drag(delta);
             }
 
         }
 
-        void MoveNodes(string[] nodeIDsMoved, ref Vector2[] previousTopRectPositions, ref Vector2[] previousMidRectPositions, ref Vector2[] previousTotalRectPositions)
-        {
-            Vector2 currentNodePosition;
+        #region Unused Code
 
-            //Firstly, check if there is start node in the nodeidsmoved
-            #region Start Node Revert to avoid O(n^2) operation
+        //void MoveNodes(string[] nodeIDsMoved, ref Vector2[] previousTopRectPositions, ref Vector2[] previousMidRectPositions, ref Vector2[] previousTotalRectPositions)
+        //{
+        //    Vector2 currentNodePosition;
 
-            int startNodeInt = 0;
-            while (startNodeInt < nodeIDsMoved.Length)
-            {
-                if (nodeIDsMoved[startNodeInt] == StartNode.NodeID)
-                    break;
+        //    //Firstly, check if there is start node in the nodeidsmoved
+        //    #region Start Node Revert to avoid O(n^2) operation
 
-                startNodeInt++;
-            }
+        //    int startNodeInt = 0;
+        //    while (startNodeInt < nodeIDsMoved.Length)
+        //    {
+        //        if (nodeIDsMoved[startNodeInt] == StartNode.NodeID)
+        //            break;
 
-            //if startNodeInt is not Length of nodeIDsMoved, that means startNodeint is found inside nodeIDsMoved
-            if (startNodeInt != nodeIDsMoved.Length)
-            {
-                //Do revert/redo movenode command (they r basically the same)
-                currentNodePosition = StartNode.m_TopRect.position;
-                StartNode.m_TopRect.position = previousTopRectPositions[startNodeInt];
-                previousTopRectPositions[startNodeInt] = currentNodePosition;
+        //        startNodeInt++;
+        //    }
 
-                currentNodePosition = StartNode.m_MidRect.position;
-                StartNode.m_MidRect.position = previousMidRectPositions[startNodeInt];
-                previousMidRectPositions[startNodeInt] = currentNodePosition;
+        //    //if startNodeInt is not Length of nodeIDsMoved, that means startNodeint is found inside nodeIDsMoved
+        //    if (startNodeInt != nodeIDsMoved.Length)
+        //    {
+        //        //Do revert/redo movenode command (they r basically the same)
+        //        currentNodePosition = StartNode.m_TopRect.position;
+        //        StartNode.m_TopRect.position = previousTopRectPositions[startNodeInt];
+        //        previousTopRectPositions[startNodeInt] = currentNodePosition;
 
-                currentNodePosition = StartNode.m_TotalRect.position;
-                StartNode.m_TotalRect.position = previousTotalRectPositions[startNodeInt];
-                previousTotalRectPositions[startNodeInt] = currentNodePosition;
-            }
-            else
-            {
-                //If startnode isnt in the array of moved nodes,
-                startNodeInt = -1;
-            }
+        //        currentNodePosition = StartNode.m_MidRect.position;
+        //        StartNode.m_MidRect.position = previousMidRectPositions[startNodeInt];
+        //        previousMidRectPositions[startNodeInt] = currentNodePosition;
 
-            #endregion
+        //        currentNodePosition = StartNode.m_TotalRect.position;
+        //        StartNode.m_TotalRect.position = previousTotalRectPositions[startNodeInt];
+        //        previousTotalRectPositions[startNodeInt] = currentNodePosition;
+        //    }
+        //    else
+        //    {
+        //        //If startnode isnt in the array of moved nodes,
+        //        startNodeInt = -1;
+        //    }
 
-            //All thats left are effect nodes so we can just use the dictionary to get the nodes instead of using AllNodesInEditor.Find()
-            //Revert all the node's positions to the prev positions but before that, save that position in a local var to reassign to prev pos 
-            for (int i = 0; i < nodeIDsMoved.Length; i++)
-            {
-                //Skip startnode id 
-                if (i == startNodeInt)
-                    continue;
+        //    #endregion
 
-                currentNodePosition = AllEffectsNodeInEditor[nodeIDsMoved[i]].m_TopRect.position;
-                AllEffectsNodeInEditor[nodeIDsMoved[i]].m_TopRect.position = previousTopRectPositions[i];
-                previousTopRectPositions[i] = currentNodePosition;
+        //    //All thats left are effect nodes so we can just use the dictionary to get the nodes instead of using AllNodesInEditor.Find()
+        //    //Revert all the node's positions to the prev positions but before that, save that position in a local var to reassign to prev pos 
+        //    for (int i = 0; i < nodeIDsMoved.Length; i++)
+        //    {
+        //        //Skip startnode id 
+        //        if (i == startNodeInt)
+        //            continue;
 
-                currentNodePosition = AllEffectsNodeInEditor[nodeIDsMoved[i]].m_MidRect.position;
-                AllEffectsNodeInEditor[nodeIDsMoved[i]].m_MidRect.position = previousMidRectPositions[i];
-                previousMidRectPositions[i] = currentNodePosition;
+        //        currentNodePosition = AllEffectsNodeInEditor[nodeIDsMoved[i]].effectNode.m_TopRect.position;
+        //        AllEffectsNodeInEditor[nodeIDsMoved[i]].effectNode.m_TopRect.position = previousTopRectPositions[i];
+        //        previousTopRectPositions[i] = currentNodePosition;
 
-                currentNodePosition = AllEffectsNodeInEditor[nodeIDsMoved[i]].m_TotalRect.position;
-                AllEffectsNodeInEditor[nodeIDsMoved[i]].m_TotalRect.position = previousTotalRectPositions[i];
-                previousTotalRectPositions[i] = currentNodePosition;
-            }
-        }
+        //        currentNodePosition = AllEffectsNodeInEditor[nodeIDsMoved[i]].effectNode.m_MidRect.position;
+        //        AllEffectsNodeInEditor[nodeIDsMoved[i]].effectNode.m_MidRect.position = previousMidRectPositions[i];
+        //        previousMidRectPositions[i] = currentNodePosition;
+
+        //        currentNodePosition = AllEffectsNodeInEditor[nodeIDsMoved[i]].effectNode.m_TotalRect.position;
+        //        AllEffectsNodeInEditor[nodeIDsMoved[i]].effectNode.m_TotalRect.position = previousTotalRectPositions[i];
+        //        previousTotalRectPositions[i] = currentNodePosition;
+        //    }
+        //}
+
+        #endregion
+
 
         void TryToRestichConnections(LEM_BaseEffect currentEffect)
         {
@@ -1367,43 +1720,31 @@ namespace LEM_Editor
             {
                 if (!String.IsNullOrEmpty(currentEffect.m_NodeBaseData.m_NextPointsIDs[0])
                     &&
-                    !AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
+                    !AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].outConnectionPoints[0].IsConnected)
                 {
                     CreateConnection(
-                              AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NextPointsIDs[0]].m_InPoint,
-                              AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].m_OutPoint
+                              AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NextPointsIDs[0]].effectNode.m_InPoint,
+                              AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].effectNode.m_OutPoint
                               );
                 }
 
             }
             else
             {
-                //Get each next 
-
                 //that means that this effect node is a special node which has multiple outputs
                 //Restich for those nodes
                 for (int n = 0; n < currentEffect.m_NodeBaseData.m_NextPointsIDs.Length; n++)
-                {
                     //If the keys current next point id is not empty or null and the outpoint  isnt connected,
                     if (!String.IsNullOrEmpty(currentEffect.m_NodeBaseData.m_NextPointsIDs[n])
                         &&
-                        !AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].m_OutPoint.IsConnected)
+                        !AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].outConnectionPoints[n].IsConnected)
                     {
-                        //CreateConnection(
-                        //AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NextPointsIDs[n]].m_InPoint,
-                        //AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].m_OutPoint
-                        //);
-
                         CreateConnection(
-                            AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NextPointsIDs[n]].m_InPoint.m_ParentNode.NodeID,
-                            currentEffect.m_NodeBaseData.m_NodeID,
-                            n);
-
-
-
-
+                        AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NextPointsIDs[n]].effectNode.m_InPoint,
+                        AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].outConnectionPoints[n]
+                        );
                     }
-                }
+
             }
         }
 
@@ -1439,9 +1780,18 @@ namespace LEM_Editor
                           );
                 }
 
-                //Check out point's element index
 
-                CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_Index));
+                //Else check if current outpoint's node is still being connected to the inpoint node (this may be a case in multioutput nodes)
+                if (AllConnectionsDictionary.ContainsKey(new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)))
+                {
+                    //warn the user not to do that n reset the outpoint skin
+                    Debug.LogWarning("Cant have a node with multiple outpoints to have shared inpoint!");
+                    TrySetConnectionPointSkin(m_SelectedOutPoint, 0);
+                }
+                else
+                {
+                    CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
+                }
 
                 ResetDrawingBezierCurve();
             }
@@ -1489,7 +1839,18 @@ namespace LEM_Editor
                        );
                 }
 
-                CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_Index));
+                //Else check if current outpoint's node is still being connected to the inpoint node (this may be a case in multioutput nodes)
+                if (AllConnectionsDictionary.ContainsKey(new Tuple<string, string>(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID)))
+                {
+                    //warn the user not to do that n reset the outpoint skin
+                    Debug.LogWarning("Cant have a node with multiple outpoints to have shared inpoint!");
+                    TrySetConnectionPointSkin(m_SelectedOutPoint, 0);
+                }
+                else
+                {
+                    CommandInvoker.InvokeCommand(new CreateConnectionCommand(m_SelectedInPoint.m_ParentNode.NodeID, m_SelectedOutPoint.m_ParentNode.NodeID, m_SelectedOutPoint.Index));
+                }
+
 
                 ResetDrawingBezierCurve();
             }
@@ -1504,10 +1865,10 @@ namespace LEM_Editor
             }
         }
 
-        void OnClickRemoveNode(Node nodeToRemove)
+        //For now used for startnode removal
+        void OnClickRemoveNode(ConnectableNode nodeToRemove)
         {
             //Check if there is any connections to be removed from this node
-
             TryToRemoveConnection(nodeToRemove.m_OutPoint.GetConnectedNodeID(0), nodeToRemove.NodeID);
 
             //Remove any and allconnections connected to the node's inpoint
@@ -1522,24 +1883,27 @@ namespace LEM_Editor
 
             //O(n) operation only, inother words same as list.Remove( )
             //Need nodeid to be checked cause Node references are lost during command invoker
-            int indexOfNodeToRemove = AllNodesInEditor.FindIndex(x => x.NodeID == nodeToRemove.NodeID);
-            AllNodesInEditor.RemoveEfficiently(indexOfNodeToRemove);
+            int indexOfNodeToRemove = AllConnectableNodesInEditor.FindIndex(x => x.NodeID == nodeToRemove.NodeID);
+            AllConnectableNodesInEditor.RemoveEfficiently(indexOfNodeToRemove);
 
-            //if (AllEffectsNodeInEditor.ContainsKey(nodeToRemove.NodeID))
-            AllEffectsNodeInEditor.Remove(nodeToRemove.NodeID);
-            AllOutPointsDictionary.Remove(nodeToRemove.NodeID);
+            if (AllEffectsNodeInEditor.ContainsKey(nodeToRemove.NodeID))
+                AllEffectsNodeInEditor.Remove(nodeToRemove.NodeID);
         }
 
         //Second form of remove node function where it uses lem_Baseeffects instead of nodes cause nodes' referrecnes arent the same during command invokaton
-        void OnClickRemoveNode(NodeBaseData nB)
+        void DeleteConnectableNode(NodeBaseData nB)
         {
             //Check if there is any connections to be removed from this node's outpoint
-
             if (nB.HasAtLeastOneNextPointNode)
-                TryToRemoveConnection(nB.m_NextPointsIDs[0], nB.m_NodeID);
+            {
+                for (int i = 0; i < nB.m_NextPointsIDs.Length; i++)
+                {
+                    TryToRemoveConnection(nB.m_NextPointsIDs[i], nB.m_NodeID);
+                }
+            }
 
             //Remove any and allconnections connected to the node's inpoint
-            string[] allNodesConnectedToInPoint = AllEffectsNodeInEditor[nB.m_NodeID].m_InPoint.GetAllConnectedNodeIDs();
+            string[] allNodesConnectedToInPoint = AllEffectsNodeInEditor[nB.m_NodeID].effectNode.m_InPoint.GetAllConnectedNodeIDs();
 
             for (int i = 0; i < allNodesConnectedToInPoint.Length; i++)
             {
@@ -1551,63 +1915,11 @@ namespace LEM_Editor
 
             //O(n) operation only, inother words same as list.Remove( )
             //Need nodeid to be checked cause Node references are lost during command invoker
-            int indexOfNodeToRemove = AllNodesInEditor.FindIndex(x => x.NodeID == nB.m_NodeID);
-            AllNodesInEditor.RemoveEfficiently(indexOfNodeToRemove);
+            int indexOfNodeToRemove = AllConnectableNodesInEditor.FindIndex(x => x.NodeID == nB.m_NodeID);
+            AllConnectableNodesInEditor.RemoveEfficiently(indexOfNodeToRemove);
 
-            //if (AllEffectsNodeInEditor.ContainsKey(nB.m_NodeID))
-            AllEffectsNodeInEditor.Remove(nB.m_NodeID);
-            AllOutPointsDictionary.Remove(nB.m_NodeID);
-        }
-
-        //Use this if you know exactly what nodes to connect
-        void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
-        {
-            //Add connection to dual key dictionary
-            AllConnectionsDictionary.Add(
-                new Tuple<string, string>(inPoint.m_ParentNode.NodeID, outPoint.m_ParentNode.NodeID),
-                new Connection(inPoint, outPoint, OnClickRemoveConnection)
-                );
-
-            TrySetConnectionPoint(inPoint);
-            TrySetConnectionPoint(outPoint);
-        }
-
-        //Use this if you have the ID of the nodes you wish to connect but dont know their identities
-        void CreateConnection(string inPointNodeID, string outPointNodeID, int outPointIndex)
-        {
-            ConnectionPoint inPoint = default;
-            ConnectionPoint outPoint = default;
-
-            //Assign the inpoint n outpoint by first checking if either one of them are start nodes
-            if (inPointNodeID == StartNode.NodeID)
-            {
-                inPoint = StartNode.m_InPoint;
-                outPoint = AllEffectsNodeInEditor[outPointNodeID].m_OutPoint;
-            }
-            else if (outPointNodeID == StartNode.NodeID)
-            {
-                outPoint = StartNode.m_OutPoint;
-                inPoint = AllEffectsNodeInEditor[inPointNodeID].m_InPoint;
-            }
-            //Else if both em arent start nodes that means both of em are effecNodes
-            else
-            {
-                OutConnectionPoint[] nodeOutPoints = AllEffectsNodeInEditor[outPointNodeID].GetOutPoints;
-
-                outPoint = nodeOutPoints.Length == 1 ? outPoint = AllEffectsNodeInEditor[outPointNodeID].m_OutPoint : outPoint = nodeOutPoints[outPointIndex];
-
-                inPoint = AllEffectsNodeInEditor[inPointNodeID].m_InPoint;
-
-            }
-
-            //Add connection to dual key dictionary
-            AllConnectionsDictionary.Add(
-                new Tuple<string, string>(inPointNodeID, outPointNodeID),
-                new Connection(inPoint, outPoint, OnClickRemoveConnection)
-                );
-
-            TrySetConnectionPoint(inPoint);
-            TrySetConnectionPoint(outPoint);
+            if (AllEffectsNodeInEditor.ContainsKey(nB.m_NodeID))
+                AllEffectsNodeInEditor.Remove(nB.m_NodeID);
         }
 
         void OnClickRemoveConnection(Connection connectionToRemove)
@@ -1624,18 +1936,6 @@ namespace LEM_Editor
                 new Tuple<string, string>(connectionToRemove.m_InPoint.m_ParentNode.NodeID,
                 connectionToRemove.m_OutPoint.m_ParentNode.NodeID)
                 );
-        }
-
-        void TryToRemoveConnection(string inPointNodeID, string outPointNodeID)
-        {
-            if (AllConnectionsDictionary.TryGetValue(
-               new Tuple<string, string>(inPointNodeID,
-               outPointNodeID),
-               out Connection connectionToRemove))
-            {
-                //Remove any connections that is connected to the node's outpoint
-                OnClickRemoveConnection(connectionToRemove);
-            }
         }
 
         void TryToAddNodeToSelectedCollection(Node nodeToAdd)
@@ -1659,14 +1959,42 @@ namespace LEM_Editor
                 m_AllSelectedNodes.RemoveEfficiently(removeAt);
         }
 
-        void DeselectAllNodes()
+        void SelectAllNodes()
         {
-            for (int i = 0; i < AllNodesInEditor.Count; i++)
-            {
-                AllNodesInEditor[i].DeselectNode();
-            }
+            AllSelectedNodes.Clear();
+
+            for (int i = 0; i < m_AllConnectableNodesInEditor.Count; i++)
+                m_AllConnectableNodesInEditor[i].SelectNode();
+
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+
+            for (int i = 0; i < keys.Length; i++)
+                AllGroupRectsInEditorDictionary[keys[i]].SelectNode();
         }
 
+        Node FindSelectedNode(Vector2 currMousePosition)
+        {
+            Node selectedNode;
+            selectedNode = AllConnectableNodesInEditor.FindFromLastIndex(x => x.m_TotalRect.Contains(currMousePosition));
+
+            //If node was found
+            if (selectedNode != default)
+                return selectedNode;
+
+            //Search for group rects after searching for nodes
+            //return AllGroupRectsInEditor.Find(x => x.m_TotalRect.Contains(currMousePosition));
+
+            string[] keys = AllGroupRectsInEditorNodeIDs;
+            for (int i = 0; i < keys.Length; i++)
+            {
+                if (AllGroupRectsInEditorDictionary[keys[i]].m_TotalRect.Contains(currMousePosition))
+                    return AllGroupRectsInEditorDictionary[keys[i]];
+            }
+
+            return null;
+        }
+
+        #endregion
 
         #endregion
 
@@ -1706,32 +2034,36 @@ namespace LEM_Editor
         {
             m_EditorState = EDITORSTATE.SAVING;
 
-            AllNodesInEditor.Remove(StartNode);
-
-            LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllNodesInEditor.Count];
-            BaseEffectNode[] allEffectNodes = AllNodesInEditor.ConvertAll(x => (BaseEffectNode)x).ToArray();
-
-            //Clear the dictionary of the currently editting linear event
-            //s_CurrentLE.m_AllEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
-            float intToFloatConverter = AllNodesInEditor.Count;
+            LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllEffectsNodeInEditor.Count];
+            BaseEffectNode[] allEffectNodes = AllEffectsNodeInEditor.Values.Select(x => x.effectNode).ToArray();
+            GroupRectNodeBase[] allGroupRects = new GroupRectNodeBase[AllGroupRectsInEditorDictionary.Count];
 
             //This saves all events regardless of whether they are connected singularly, plurally or disconnected
-            for (int i = 0; i < AllNodesInEditor.Count; i++)
+            for (int i = 0; i < lemEffects.Length; i++)
             {
                 lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
             }
 
+            string[] keysForGrp = AllGroupRectsInEditorNodeIDs;
+
+            for (int i = 0; i < keysForGrp.Length; i++)
+            {
+                allGroupRects[i] = AllGroupRectsInEditorDictionary[keysForGrp[i]].SaveGroupRectNodedata();
+            }
+
             //Save to serializable array of effects
             s_CurrentLE.m_AllEffects = lemEffects;
+            s_CurrentLE.m_AllGroupRectNodes = allGroupRects;
 
             //Save start and end node data
             s_CurrentLE.m_StartNodeData = StartNode.SaveNodeData();
 
-            //Saving ends here
-            AllNodesInEditor.Add(StartNode);
-
             //Finished loading
             Repaint();
+
+            if (s_Settings.m_SaveSceneWhenSavingLinearEvent)
+                EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+
             Debug.Log("Saved Linear Event File " + s_CurrentLE.name, s_CurrentLE);
             m_EditorState = EDITORSTATE.SAVED;
         }
@@ -1762,8 +2094,6 @@ namespace LEM_Editor
             #region Loading Events from Dictionary
 
             //Dont do any thing if there is no effects in the dicitionary
-            //s_CurrentLE.PopulateEffectDictionary();
-
             Dictionary<string, LEM_BaseEffect> allEffectsDictInLinearEvent = s_CurrentLE.AllEffectsDictionary;
 
             if (allEffectsDictInLinearEvent == null)
@@ -1794,11 +2124,22 @@ namespace LEM_Editor
             if (StartNode != null && s_CurrentLE.m_StartNodeData.m_NodeID != string.Empty)
             {
                 OnClickRemoveNode(StartNode);
-                RecreateBasicNode(s_CurrentLE.m_StartNodeData.m_Position, "StartNode", s_CurrentLE.m_StartNodeData.m_NodeID, out Node startTempNode);
+                RecreateConnectableNode(s_CurrentLE.m_StartNodeData.m_Position, "StartNode", s_CurrentLE.m_StartNodeData.m_NodeID, out ConnectableNode startTempNode);
                 StartNode = startTempNode;
             }
 
-            #region Loading Connections From Dictionary
+            //Recr8 group nodes
+            for (int i = 0; i < s_CurrentLE.m_AllGroupRectNodes.Length; i++)
+            {
+                if (s_CurrentLE.m_AllGroupRectNodes[i].HasAtLeastOneNestedNode)
+                    ReCreateGroupNode(s_CurrentLE.m_AllGroupRectNodes[i].m_NestedNodeIDs, s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID, s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
+                else
+                    ReCreateGroupNode(s_CurrentLE.m_AllGroupRectNodes[i].m_Position, s_CurrentLE.m_AllGroupRectNodes[i].m_Size, s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID, s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
+
+            }
+
+
+            #region Stitch Connections
 
             //Stitch dictionary's their connnection back
             for (int i = 0; i < allKeys.Length; i++)
@@ -1810,8 +2151,6 @@ namespace LEM_Editor
                 TryToRestichConnections(allEffectsDictInLinearEvent[allKeys[i]]);
             }
 
-            #endregion
-
             //Dont stitch up start node if it isnt connected to at least one point
             if (s_CurrentLE.m_StartNodeData.HasAtLeastOneNextPointNode)
             {
@@ -1822,20 +2161,165 @@ namespace LEM_Editor
                 {
                     //Else just find the next node from the dictionary of all effects node
                     CreateConnection(
-                                     AllEffectsNodeInEditor[s_CurrentLE.m_StartNodeData.m_NextPointsIDs[0]].m_InPoint,
+                                     AllEffectsNodeInEditor[s_CurrentLE.m_StartNodeData.m_NextPointsIDs[0]].effectNode.m_InPoint,
                                      StartNode.m_OutPoint
                                     );
                 }
             }
+            #endregion
 
             Repaint();
             m_EditorState = EDITORSTATE.LOADED;
         }
 
-        LEM_BaseEffect CompileNodeToEffect(string nodeID)
+        #endregion
+
+        #region Static Functions
+        public static LEM_BaseEffect GetNodeEffectFromID(string nodeID)
         {
-            return AllEffectsNodeInEditor[nodeID].CompileToBaseEffect();
+            return AllEffectsNodeInEditor[nodeID].effectNode.CompileToBaseEffect();
         }
+
+        public static GroupRectNodeBase GetGroupRectDataFromID(string nodeID)
+        {
+            return AllGroupRectsInEditorDictionary[nodeID].SaveGroupRectNodedata();
+        }
+
+
+        public static void DeselectAllNodes()
+        {
+            while (AllSelectedNodes.Count > 0)
+            {
+                AllSelectedNodes[0].DeselectNode();
+            }
+
+            //for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
+            //    AllConnectableNodesInEditor[i].DeselectNode();
+
+            //string[] keys = AllGroupRectsInEditorNodeIDs;
+
+            //for (int i = 0; i < keys.Length; i++)
+            //    AllGroupRectsInEditorDictionary[keys[i]].DeselectNode();
+        }
+
+
+        #region Create Functions
+
+        //Use this if you know exactly what nodes to connect
+        //For now only used for saving and loading
+        public static void CreateConnection(ConnectionPoint inPoint, ConnectionPoint outPoint)
+        {
+            //Add connection to dual key dictionary
+            AllConnectionsDictionary.Add(
+                new Tuple<string, string>(inPoint.m_ParentNode.NodeID, outPoint.m_ParentNode.NodeID),
+                new Connection(inPoint, outPoint, instance.OnClickRemoveConnection)
+                );
+
+            instance.TrySetConnectionPoint(inPoint);
+            instance.TrySetConnectionPoint(outPoint);
+        }
+
+        //Use this if you have the ID of the nodes you wish to connect but dont know their identities
+        public static void CreateConnection(string inPointNodeID, string outPointNodeID, int outPointIndex)
+        {
+            ConnectionPoint inPoint = default;
+            ConnectionPoint outPoint = default;
+
+            //Assign the inpoint n outpoint by first checking if either one of them are start nodes
+            if (inPointNodeID == StartNode.NodeID)
+            {
+                inPoint = StartNode.m_InPoint;
+                outPoint = AllEffectsNodeInEditor[outPointNodeID].outConnectionPoints[0];
+            }
+            else if (outPointNodeID == StartNode.NodeID)
+            {
+                outPoint = StartNode.m_OutPoint;
+                inPoint = AllEffectsNodeInEditor[inPointNodeID].effectNode.m_InPoint;
+            }
+            //Else if both em arent start nodes that means both of em are effecNodes
+            else
+            {
+                OutConnectionPoint[] outs = AllEffectsNodeInEditor[outPointNodeID].outConnectionPoints;
+                outPoint = outs.Length == 1 ? AllEffectsNodeInEditor[outPointNodeID].effectNode.m_OutPoint : AllEffectsNodeInEditor[outPointNodeID].outConnectionPoints[outPointIndex];
+                inPoint = AllEffectsNodeInEditor[inPointNodeID].effectNode.m_InPoint;
+            }
+
+            //Add connection to dual key dictionary
+            AllConnectionsDictionary.Add(
+                new Tuple<string, string>(inPointNodeID, outPointNodeID),
+                new Connection(inPoint, outPoint, instance.OnClickRemoveConnection)
+                );
+
+            instance.TrySetConnectionPoint(inPoint);
+            instance.TrySetConnectionPoint(outPoint);
+        }
+
+        #endregion
+
+
+        #region Delete Functions
+        public static void DeleteGroupRects(GroupRectNodeBase[] groupRectNodes)
+        {
+            for (int i = 0; i < groupRectNodes.Length; i++)
+            {
+                DeleteGroupRect(groupRectNodes[i]);
+            }
+        }
+
+        public static void DeleteGroupRect(GroupRectNodeBase groupRectNodes)
+        {
+            Node[] nestedNodes = new Node[groupRectNodes.m_NestedNodeIDs.Length];
+
+            NodeDictionaryStruct dummy1;
+            GroupRectNode dummy2;
+
+            for (int i = 0; i < nestedNodes.Length; i++)
+            {
+                //If this node is the start node,
+                if (StartNode.NodeID == groupRectNodes.m_NestedNodeIDs[i])
+                {
+                    nestedNodes[i] = StartNode;
+                    nestedNodes[i].m_GroupedParent = null;
+                    continue;
+                }
+                else
+                if (AllEffectsNodeInEditor.TryGetValue(groupRectNodes.m_NestedNodeIDs[i], out dummy1))
+                {
+                    nestedNodes[i] = dummy1.effectNode;
+                    nestedNodes[i].m_GroupedParent = null;
+                    continue;
+                }
+                else if (AllGroupRectsInEditorDictionary.TryGetValue(groupRectNodes.m_NestedNodeIDs[i], out dummy2))
+                {
+                    nestedNodes[i] = dummy2;
+                    nestedNodes[i].m_GroupedParent = null;
+                    continue;
+                }
+                //Debug.LogError("Element " + i + " of NestedNodeIDs does not belong to any of the dictionaries in NodeLEM_Editor");
+            }
+            instance.TryToRemoveNodeFromSelectedCollection(groupRectNodes.m_NodeID);
+            AllGroupRectsInEditorDictionary.Remove(groupRectNodes.m_NodeID);
+        }
+
+        public static void DeleteConnectableNodes(NodeBaseData[] nodesToBeDeleted)
+        {
+            for (int i = 0; i < nodesToBeDeleted.Length; i++)
+                instance.DeleteConnectableNode(nodesToBeDeleted[i]);
+        }
+
+        public static void TryToRemoveConnection(string inPointNodeID, string outPointNodeID)
+        {
+            if (AllConnectionsDictionary.TryGetValue(
+               new Tuple<string, string>(inPointNodeID,
+               outPointNodeID),
+               out Connection connectionToRemove))
+            {
+                //Remove any connections that is connected to the node's outpoint
+                instance.OnClickRemoveConnection(connectionToRemove);
+            }
+        }
+
+        #endregion
 
         #endregion
 

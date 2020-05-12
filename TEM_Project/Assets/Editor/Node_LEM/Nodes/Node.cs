@@ -27,18 +27,15 @@ namespace LEM_Editor
         }
 
         protected bool m_IsDragged = default;
-        public Node m_GroupedParent = default;
+        public GroupRectNode m_GroupedParent = default;
+        public Node GetTopParent => IsGrouped ? m_GroupedParent.GetTopParent : this;
+
 
         public abstract string ID_Initial { get; }
-        //public abstract BaseNodeType BaseNodeType { get; }
-        //protected bool m_IsGrouped = false;
         public bool IsGrouped => m_GroupedParent != null;
-        //public bool IsGrouped { get { return m_IsGrouped; } set { m_IsGrouped = value; } }
+
         protected bool m_IsSelected = false;
         public bool IsSelected { get { return m_IsSelected; } }
-
-        //public InConnectionPoint m_InPoint = new InConnectionPoint();
-        //public OutConnectionPoint m_OutPoint = new OutConnectionPoint();
 
         protected NodeSkinCollection m_NodeSkin = default;
         //Top skin will pull from a static cache
@@ -145,7 +142,7 @@ namespace LEM_Editor
                         return true;
                     }
 
-                    DeselectAllParentGroupNodes();
+                    //DeselectAllParentGroupNodes();
                     // or i want to drag this selected nodes 
                     m_IsDragged = true;
                     return false;
@@ -164,18 +161,23 @@ namespace LEM_Editor
 
                     //Deselect if this node is selected but there isnt multiple selected nodes
                     // or if there is no node clicked
-                    if (currentClickedNode.m_IsSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
+
+                    if (currentClickedNode.m_IsSelected)
                     {
-                        DeselectNode();
-                        return true;
+                        if (NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
+                        {
+                            DeselectAllParentGroupNodes();
+                            DeselectNode();
+                            return true;
+                        }
+                        //when there is another node clicked in the window,
+                        //as well as having multiple nodes selected
+                        else if (NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
+                        {
+                            m_IsDragged = true;
+                        }
                     }
-                    //when there is another node clicked in the window,
-                    //as well as having multiple nodes selected
-                    else if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
-                    {
-                        DeselectAllParentGroupNodes();
-                        m_IsDragged = true;
-                    }
+
 
                 }
 
@@ -202,7 +204,8 @@ namespace LEM_Editor
 
         public virtual bool HandleLeftMouseButtonDrag(Event e, Vector2 dragDelta)
         {
-            if (m_IsDragged)
+            //You can only drag this node when node is not grouped or the parent is not selected
+            if (m_IsDragged && (!IsGrouped|| !m_GroupedParent.IsSelected))
             {
                 Drag(dragDelta);
                 //Drag(e.delta);

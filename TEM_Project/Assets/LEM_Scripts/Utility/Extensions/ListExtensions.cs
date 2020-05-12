@@ -99,7 +99,7 @@ public static class ListExtensions
     /// <returns></returns>
     public static T FindFromLastIndex<T>(this List<T> list,Predicate<T> match)
     {
-        for (int i = list.Count-1; i >= 0; i--)
+        for (int i = list.Count-1; i >-1; i--)
         {
             //If current list element matches predicate's descripttion
             if (match(list[i]))
@@ -109,6 +109,27 @@ public static class ListExtensions
         }
 
         return default;
+    }
+
+    /// <summary>
+    /// Finds an element in the reverse order.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    /// <param name="match"></param>
+    /// <returns></returns>
+    public static int FindIndexFromLastIndex<T>(this List<T> list, Predicate<T> match)
+    {
+        for (int i = list.Count - 1; i > -1; i--)
+        {
+            //If current list element matches predicate's descripttion
+            if (match(list[i]))
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
 

@@ -35,9 +35,9 @@ namespace LEM_Editor
         public string CommentLabel { set { m_CommentLabel = value; } }
 
         Dictionary<string, Node> m_NestedNodesDictionary = new Dictionary<string, Node>();
+        public Dictionary<string, Node> NestedNodesDictionary => m_NestedNodesDictionary;
         public string[] NestedNodesNodeIDs => m_NestedNodesDictionary.Keys.ToArray();
         public Node[] NestedNodes => m_NestedNodesDictionary.Values.ToArray();
-
 
         public override string ID_Initial => LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial;
 
@@ -142,6 +142,20 @@ namespace LEM_Editor
 
         void UpdateNestedNodes()
         {
+
+            //Add any nodes whose rects do overlap which at the same time are not inside the nested dictionary and is not grouped b4
+            for (int i = 0; i < NodeLEM_Editor.AllGroupRectNodesInEditor.Count; i++)
+            {
+                if (NodeLEM_Editor.AllGroupRectNodesInEditor[i] != this && !NodeLEM_Editor.AllGroupRectNodesInEditor[i].IsGrouped && NodeLEM_Editor.AllGroupRectNodesInEditor[i] != m_GroupedParent &&
+                   !m_NestedNodesDictionary.ContainsKey(NodeLEM_Editor.AllGroupRectNodesInEditor[i].NodeID) &&
+                   m_TotalRect.Overlaps(NodeLEM_Editor.AllGroupRectNodesInEditor[i].m_TotalRect))
+                {
+                    NodeLEM_Editor.AllGroupRectNodesInEditor[i].m_GroupedParent = this;
+                    m_NestedNodesDictionary.Add(NodeLEM_Editor.AllGroupRectNodesInEditor[i].NodeID, NodeLEM_Editor.AllGroupRectNodesInEditor[i]);
+                }
+            }
+
+
             string[] keys = NestedNodesNodeIDs;
 
             //Remove any nodes whose rects do not overlap
@@ -154,7 +168,7 @@ namespace LEM_Editor
                     forceUpdateGrpNode.UpdateNestedNodes();
                 }
 
-                if (!m_TotalRect.Overlaps(m_NestedNodesDictionary[keys[i]].m_TotalRect, true))
+                if (!m_TotalRect.Overlaps(m_NestedNodesDictionary[keys[i]].m_TotalRect))
                 {
                     m_NestedNodesDictionary[keys[i]].m_GroupedParent = null;
                     m_NestedNodesDictionary.Remove(keys[i]);
@@ -164,7 +178,7 @@ namespace LEM_Editor
             //Add any nodes whose rects do overlap which at the same time are not inside the nested dictionary and is not grouped b4
             for (int i = 0; i < NodeLEM_Editor.AllConnectableNodesInEditor.Count; i++)
             {
-                if (!NodeLEM_Editor.AllConnectableNodesInEditor[i].IsGrouped && 
+                if (!NodeLEM_Editor.AllConnectableNodesInEditor[i].IsGrouped &&
                     !m_NestedNodesDictionary.ContainsKey(NodeLEM_Editor.AllConnectableNodesInEditor[i].NodeID) &&
                     m_TotalRect.Overlaps(NodeLEM_Editor.AllConnectableNodesInEditor[i].m_TotalRect))
                 {
@@ -173,28 +187,22 @@ namespace LEM_Editor
                 }
             }
 
-            //keys = NodeLEM_Editor.AllGroupRectsInEditorNodeIDs;
-
-            //for (int i = 0; i < keys.Length; i++)
-            //{
-            //    if (keys[i] != NodeID &&
-            //        !NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]].IsGrouped &&
-            //        !m_NestedNodesDictionary.ContainsKey(keys[i]) &&
-            //        m_TotalRect.Overlaps(NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]].m_TotalRect))
-            //    {
-            //        NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]].m_GroupedParent = this;
-            //        m_NestedNodesDictionary.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]].NodeID, NodeLEM_Editor.AllGroupRectsInEditorDictionary[keys[i]]);
-            //    }
-            //}
 
         }
 
         void DeselectNestedNodes()
         {
+            GroupRectNode gr;
             string[] keys = NestedNodesNodeIDs;
             for (int i = 0; i < keys.Length; i++)
             {
-                m_NestedNodesDictionary[keys[i]].DeselectNode();
+                if (m_NestedNodesDictionary[keys[i]].ID_Initial == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
+                {
+                    gr = m_NestedNodesDictionary[keys[i]] as GroupRectNode;
+                    gr.DeselectNestedNodes();
+                }
+                else
+                    m_NestedNodesDictionary[keys[i]].DeselectNode();
             }
         }
 
@@ -216,8 +224,8 @@ namespace LEM_Editor
                     if (!m_IsSelected)
                     {
                         SelectByClicking();
-                        UpdateNestedNodes();
-                        //DeselectNestedNodes();
+                        //UpdateNestedNodes();
+                        DeselectNestedNodes();
                         return true;
                     }
 
@@ -231,9 +239,9 @@ namespace LEM_Editor
                     }
 
                     // or i want to drag this selected nodes 
-                    m_IsDragged = true;
-                    UpdateNestedNodes();
                     DeselectNestedNodes();
+                    m_IsDragged = true;
+                    //UpdateNestedNodes();
                     return false;
                 }
 
@@ -263,12 +271,9 @@ namespace LEM_Editor
                             m_IsDragged = true;
                         }
                     }
-
-                    DeselectNode();
-                    UpdateNestedNodes();
                 }
 
-                UpdateNestedNodes();
+                //UpdateNestedNodes();
                 return false;
             }
 

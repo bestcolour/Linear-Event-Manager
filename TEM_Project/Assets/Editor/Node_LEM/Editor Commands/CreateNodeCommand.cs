@@ -68,13 +68,8 @@ namespace LEM_Editor
 
         public DeleteNodeCommand(string[] deletedNodesID)
         {
-            //m_DeletedNodeIDs = deletedNodesID;
-
             List<LEM_BaseEffect> nodesEffects = new List<LEM_BaseEffect>();
             List<GroupRectNodeBase> groupRectNodeBases = new List<GroupRectNodeBase>();
-
-            //NodeDictionaryStruct dummy1;
-            //GroupRectNode dummy2;
 
             string idInit;
             for (int i = 0; i < deletedNodesID.Length; i++)
@@ -91,36 +86,24 @@ namespace LEM_Editor
                         groupRectNodeBases.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[deletedNodesID[i]].SaveGroupRectNodedata());
                         continue;
                 }
-
-                //if (NodeLEM_Editor.AllEffectsNodeInEditor.TryGetValue(deletedNodesID[i], out dummy1))
-                //{
-                //    nodesEffects.Add(dummy1.effectNode.CompileToBaseEffect());
-                //    continue;
-                //}
-                //else if (NodeLEM_Editor.AllGroupRectsInEditorDictionary.TryGetValue(deletedNodesID[i], out dummy2))
-                //{
-                //    groupRectNodeBases.Add(dummy2.SaveGroupRectNodedata());
-                //    continue;
-                //}
             }
 
             m_DeletedNodesEffects = nodesEffects.ToArray();
+
+
+            //Sort the array of deleted grouprect nodebase
+            //groupRectNodeBases.Sort();
+
             m_DeletedGroupRectNodeBases = groupRectNodeBases.ToArray();
+
+
 
         }
 
 
         public void Execute()
         {
-            ////Save before deleting the node
-            //for (int i = 0; i < m_DeletedNodesEffects.Length; i++)
-            //{
-            //    m_DeletedNodesEffects[i] = NodeLEM_Editor.GetNodeIDCompiledNodeToEffect(m_DeletedNodeIDs[i]);
-            //    //m_NodesEffects[i] = NodeCommandInvoker.d_CompileNodeEffect(m_DeletedNodeIDs[i]);
-            //}
-
             //Delete the nodes
-            //NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_NodesEffects.Select(x => x.m_NodeBaseData).ToArray());
             NodeLEM_Editor.DeleteConnectableNodes(m_DeletedNodesEffects.Select(x => x.m_NodeBaseData).ToArray());
             NodeLEM_Editor.DeleteGroupRects(m_DeletedGroupRectNodeBases);
             NodeLEM_Editor.DeselectAllNodes();
@@ -141,13 +124,6 @@ namespace LEM_Editor
 
                 dummy.LoadFromBaseEffect(m_DeletedNodesEffects[i]);
                 dummy.SelectNode();
-                ////Recreate and load the node's effects
-                //NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(
-                //    m_NodesEffects[i].m_NodeBaseData.m_Position,
-                //    m_NodesEffects[i].m_NodeEffectType,
-                //    m_NodesEffects[i].m_NodeBaseData.m_NodeID).
-                //    LoadFromBaseEffect(m_NodesEffects[i]);
-
             }
 
             //Restitch the nodes' connections ONLY after all the nodes hv been recreated
@@ -159,14 +135,16 @@ namespace LEM_Editor
             //Recreate group rectnode
             for (int i = 0; i < m_DeletedGroupRectNodeBases.Length; i++)
             {
+                //If this is the parent node
                 if (m_DeletedGroupRectNodeBases[i].HasAtLeastOneNestedNode)
+                {
                     NodeLEM_Editor.ReCreateGroupNode(
-                        //m_DeletedGroupRectNodeBases[i].m_Position,
-                        //m_DeletedGroupRectNodeBases[i].m_Size,
-                        m_DeletedGroupRectNodeBases[i].m_NestedNodeIDs,
-                        m_DeletedGroupRectNodeBases[i].m_NodeID,
-                        m_DeletedGroupRectNodeBases[i].m_LabelText
-                        ).SelectNode();
+                       m_DeletedGroupRectNodeBases[i].m_NestedNodeIDs,
+                       m_DeletedGroupRectNodeBases[i].m_NodeID,
+                       m_DeletedGroupRectNodeBases[i].m_LabelText
+                       ).SelectNode();
+                }
+                   
                 else
                     NodeLEM_Editor.ReCreateGroupNode(m_DeletedGroupRectNodeBases[i].m_Position, m_DeletedGroupRectNodeBases[i].m_Size, m_DeletedGroupRectNodeBases[i].m_NodeID, m_DeletedGroupRectNodeBases[i].m_LabelText);
             }
@@ -246,10 +224,7 @@ namespace LEM_Editor
 
         public void Undo()
         {
-            //NodeCommandInvoker.d_MoveNodes(m_NodeIDsMoved, ref m_PreviousTopRectPositions, ref m_PreviousMidRectPositions, ref m_PreviousTotalRectPositions);
             Vector2 currentNodePosition;
-            //NodeDictionaryStruct dummyStruct;
-            //GroupRectNode dummyGroupRect;
             string initials;
 
             //Firstly, check if there is start node in the nodeidsmoved
@@ -326,38 +301,6 @@ namespace LEM_Editor
                     NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_NodeIDsMoved[i]].m_TotalRect.position = m_PreviousTotalRectPositions[i];
                     m_PreviousTotalRectPositions[i] = currentNodePosition;
                 }
-
-                ////Check if current node is a effect node else check if its a group rect node
-                //if (NodeLEM_Editor.AllEffectsNodeInEditor.TryGetValue(m_NodeIDsMoved[i], out dummyStruct))
-                //{
-                //    currentNodePosition = dummyStruct.effectNode.m_TopRect.position;
-                //    dummyStruct.effectNode.m_TopRect.position = m_PreviousTopRectPositions[i];
-                //    m_PreviousTopRectPositions[i] = currentNodePosition;
-
-                //    currentNodePosition = dummyStruct.effectNode.m_MidRect.position;
-                //    dummyStruct.effectNode.m_MidRect.position = m_PreviousMidRectPositions[i];
-                //    m_PreviousMidRectPositions[i] = currentNodePosition;
-
-                //    currentNodePosition = dummyStruct.effectNode.m_TotalRect.position;
-                //    dummyStruct.effectNode.m_TotalRect.position = m_PreviousTotalRectPositions[i];
-                //    m_PreviousTotalRectPositions[i] = currentNodePosition;
-                //}
-                ////Else if node id belongs to a group rect
-                //else if (NodeLEM_Editor.AllGroupRectsInEditorDictionary.TryGetValue(m_NodeIDsMoved[i], out dummyGroupRect))
-                //{
-                //    currentNodePosition = dummyGroupRect.m_TopRect.position;
-                //    dummyGroupRect.m_TopRect.position = m_PreviousTopRectPositions[i];
-                //    m_PreviousTopRectPositions[i] = currentNodePosition;
-
-                //    currentNodePosition = dummyGroupRect.m_MidRect.position;
-                //    dummyGroupRect.m_MidRect.position = m_PreviousMidRectPositions[i];
-                //    m_PreviousMidRectPositions[i] = currentNodePosition;
-
-                //    currentNodePosition = dummyGroupRect.m_TotalRect.position;
-                //    dummyGroupRect.m_TotalRect.position = m_PreviousTotalRectPositions[i];
-                //    m_PreviousTotalRectPositions[i] = currentNodePosition;
-                //}
-
             }
         }
 
@@ -386,20 +329,17 @@ namespace LEM_Editor
 
         public void Execute()
         {
-            //NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID, m_OutPointIndex);
             NodeLEM_Editor.CreateConnection(m_InPointNodeID, m_OutPointNodeID, m_OutPointIndex);
         }
 
         public void Undo()
         {
             NodeLEM_Editor.TryToRemoveConnection(m_InPointNodeID, m_OutPointNodeID);
-            //NodeCommandInvoker.d_RemoveConnection(m_InPointNodeID, m_OutPointNodeID);
         }
 
         public void Redo()
         {
             NodeLEM_Editor.CreateConnection(m_InPointNodeID, m_OutPointNodeID, m_OutPointIndex);
-            //NodeCommandInvoker.d_CreateConnection(m_InPointNodeID, m_OutPointNodeID, m_OutPointIndex);
         }
     }
 
@@ -441,14 +381,6 @@ namespace LEM_Editor
                 dummy = NodeCommandInvoker.s_Effect_ClipBoard[i].ShallowClone();
                 m_PastedEffectDictionary.Add(dummy.m_NodeBaseData.m_NodeID, dummy);
             }
-
-            //for (int i = 0; i < NodeCommandInvoker.s_Effect_ClipBoard.Count; i++)
-            //{
-            //    //baseEffectNode = NodeLEM_Editor.AllEffectsNodeInEditor[NodeCommandInvoker.s_NodesIds_ClipBoard[i]].effectNode;
-            //    //dummy = baseEffectNode.CompileToBaseEffect().ShallowClone();
-            //    m_PastedEffectDictionary.Add(dummy.m_NodeBaseData.m_NodeID, dummy);
-            //}
-
         }
 
         public void Execute()
@@ -527,12 +459,6 @@ namespace LEM_Editor
                 dummy1.m_NodeID = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NodeID;
                 dummy1.m_NextPointsIDs = dummy;
 
-                //dummyPasteCommandData = m_PastedEffectStructDictionary[allKeys[i]];
-                //dummyPasteCommandData.baseEffect.m_NodeBaseData = dummy1;
-                //dummyPasteCommandData.baseEffect.m_NodeBaseData.ResetNextPointsIDsIfEmpty();
-
-                //m_PastedEffectStructDictionary[allKeys[i]] = dummyPasteCommandData;
-
                 m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.ResetNextPointsIDsIfEmpty();
                 m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData = dummy1;
             }
@@ -550,7 +476,6 @@ namespace LEM_Editor
                 dummyPasteCommandData.baseEffect.m_NodeBaseData = dummy1;
 
                 m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData = dummy1;
-                //m_PastedEffectStructDictionary[allKeys[i]] = dummyPasteCommandData;
             }
 
             #endregion
@@ -558,7 +483,6 @@ namespace LEM_Editor
 
             //Deselect all nodes 
             NodeLEM_Editor.DeselectAllNodes();
-            //NodeCommandInvoker.d_DeselectAllNodes();
 
             m_PastedEffectDictionary.Clear();
 
@@ -586,11 +510,9 @@ namespace LEM_Editor
             //Save before deleting the node
             for (int i = 0; i < allKeys.Length; i++)
                 m_PastedEffectDictionary[allKeys[i]] = NodeLEM_Editor.GetNodeEffectFromID(m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
-            //m_PastedEffectDictionary[allKeys[i]] = NodeCommandInvoker.d_CompileNodeEffect(m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
 
             //Delete the nodes
             NodeLEM_Editor.DeleteConnectableNodes(m_PastedEffectDictionary.Select(x => x.Value.m_NodeBaseData).ToArray());
-            //NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_PastedEffectDictionary.Select(x => x.Value.m_NodeBaseData).ToArray());
         }
 
         public void Redo()
@@ -607,11 +529,6 @@ namespace LEM_Editor
                        (m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_Position + s_PasteOffsetValue,
                        m_PastedEffectDictionary[allKeys[i]].m_NodeEffectType,
                        m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
-                ////Create a duplicate node with a new node id and load
-                //effNode = NodeCommandInvoker.d_ReCreateEffectNode
-                //(m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_Position + s_PasteOffsetValue,
-                //m_PastedEffectDictionary[allKeys[i]].m_NodeEffectType,
-                //m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
 
                 effNode.LoadFromBaseEffect(m_PastedEffectDictionary[allKeys[i]]);
                 effNode.SelectNode();
@@ -640,14 +557,6 @@ namespace LEM_Editor
         {
             m_PastedEffects = new LEM_BaseEffect[NodeCommandInvoker.s_Effect_ClipBoard.Count];
             m_PastedGroupRects = new GroupRectNodeBase[NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.Count];
-            //List<GroupRectNodeBase> groupRectNodeBases = new List<GroupRectNodeBase>();
-            //List<LEM_BaseEffect> pastedEffectsList = new List<LEM_BaseEffect>();
-
-            //m_PastedEffects = new LEM_BaseEffect[NodeCommandInvoker.s_Effect_ClipBoard.Count];
-            //BaseEffectNode be;
-            //NodeDictionaryStruct ds;
-            //GroupRectNode gr;
-            //string initials;
 
 
             for (int i = 0; i < m_PastedEffects.Length; i++)
@@ -659,36 +568,8 @@ namespace LEM_Editor
             {
                 m_PastedGroupRects[i] = NodeCommandInvoker.s_GroupRectNodeData_ClipBoard[i];
             }
-            ////Copy pasted effects
-            //for (int i = 0; i < NodeCommandInvoker.s_NodesIds_ClipBoard.Count; i++)
-            //{
-            //    initials = NodeLEM_Editor.GetInitials(NodeCommandInvoker.s_NodesIds_ClipBoard[i]);
-            //    if (initials == LEMDictionary.NodeIDs_Initials.k_BaseEffectInital/*NodeLEM_Editor.AllEffectsNodeInEditor.TryGetValue(NodeCommandInvoker.s_NodesIds_ClipBoard[i], out ds)*/)
-            //    {
-            //        pastedEffectsList.Add(NodeLEM_Editor.AllEffectsNodeInEditor[NodeCommandInvoker.s_NodesIds_ClipBoard[i]].effectNode.CompileToBaseEffect());
-            //    }
-            //    else /*if (NodeLEM_Editor.AllGroupRectsInEditorDictionary.TryGetValue(NodeCommandInvoker.s_NodesIds_ClipBoard[i], out gr))*/
-            //    {
-            //        groupRectNodeBases.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[NodeCommandInvoker.s_NodesIds_ClipBoard[i]].SaveGroupRectNodedata()/*gr.SaveGroupRectNodedata()*/);
-            //    }
 
-
-            //    //if (NodeCommandInvoker.s_NodesIds_ClipBoard[i].BaseNodeType == BaseNodeType.EffectNode)
-            //    //{
-            //    //    be = NodeCommandInvoker.s_Nodes_ClipBoard[i] as BaseEffectNode;
-            //    //    pastedEffectsList.Add(be.CompileToBaseEffect());
-            //    //}
-            //    //else
-            //    //{
-            //    //    gr = NodeCommandInvoker.s_Nodes_ClipBoard[i] as GroupRectNode;
-            //    //    groupRectNodeBases.Add(gr.SaveGroupRectNodedata());
-            //    //}
-            //}
-
-            //m_PastedEffects = pastedEffectsList.ToArray();
-            //m_PastedGroupRects = groupRectNodeBases.ToArray();
             NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.Clear();
-            //NodeCommandInvoker.s_NodesIds_ClipBoard.RemoveAll(x=> NodeLEM_Editor.GetInitials(x) == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial);
         }
 
         public void Execute()
@@ -711,7 +592,6 @@ namespace LEM_Editor
 
             //Deselect all nodes 
             NodeLEM_Editor.DeselectAllNodes();
-            //NodeCommandInvoker.d_DeselectAllNodes();
 
             //Restitch after all the node identity crisis has been settled
             //Then copy over all the lemEffect related data after all the reseting and stuff
@@ -751,7 +631,6 @@ namespace LEM_Editor
             //Delete the nodes
             NodeLEM_Editor.DeleteConnectableNodes(m_PastedEffects.Select(x => x.m_NodeBaseData).ToArray());
             NodeLEM_Editor.DeleteGroupRects(m_PastedGroupRects);
-            //NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_PastedEffects.Select(x => x.m_NodeBaseData).ToArray());
         }
 
         public void Redo()
@@ -798,8 +677,6 @@ namespace LEM_Editor
         GroupRectNodeBase[] m_PastedGroupRects = default;
 
 
-        //string[] m_CutNodesIDS = default;
-
         public int CommandType => NodeCommandType.CUT;
 
         public CutCommand(Node[] cutNodes)
@@ -809,10 +686,6 @@ namespace LEM_Editor
 
             BaseEffectNode baseEff;
             GroupRectNode grpRectNode;
-            //Copy pasted nodes
-            //m_CutNodesIDS = cutNodes;
-
-            //m_CutEffects = new LEM_BaseEffect[cutNodesIDs.Length];
 
             //Save before deleting the node
             for (int i = 0; i < cutNodes.Length; i++)
@@ -833,24 +706,15 @@ namespace LEM_Editor
             m_CutEffects = listOfEffects.ToArray();
             m_PastedGroupRects = listOfRectGroupData.ToArray();
 
-            //Copy the nodes/effects to the clipboard
-            //NodeCommandInvoker.s_Nodes_ClipBoard.Clear();
-            //NodeCommandInvoker.s_NodesIds_ClipBoard.Clear();
             NodeCommandInvoker.s_Effect_ClipBoard.Clear();
             NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.Clear();
 
-            //NodeCommandInvoker.s_Nodes_ClipBoard.AddRange(cutNodes);
-            //NodeCommandInvoker.s_NodesIds_ClipBoard.AddRange(cutNodes.Select(x => x.NodeID));
             NodeCommandInvoker.s_Effect_ClipBoard.AddRange(m_CutEffects);
             NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.AddRange(m_PastedGroupRects);
         }
 
         public void Execute()
         {
-            //Copy the nodes/effects to the clipboard
-            //NodeCommandInvoker.s_Effect_ClipBoard.Clear();
-            //NodeCommandInvoker.s_Effect_ClipBoard.AddRange(m_CutEffects);
-
             //Delete the nodes
             NodeLEM_Editor.DeleteConnectableNodes(m_CutEffects.Select(x => x.m_NodeBaseData).ToArray());
             NodeLEM_Editor.DeleteGroupRects(m_PastedGroupRects);
@@ -895,7 +759,6 @@ namespace LEM_Editor
             for (int i = 0; i < m_CutEffects.Length; i++)
             {
                 m_CutEffects[i] = NodeLEM_Editor.GetNodeEffectFromID(m_CutEffects[i].m_NodeBaseData.m_NodeID);
-                //m_CutEffects[i] = NodeCommandInvoker.d_CompileNodeEffect(m_CutNodesIDS[i]);
             }
             for (int i = 0; i < m_PastedGroupRects.Length; i++)
             {
@@ -906,7 +769,6 @@ namespace LEM_Editor
             NodeLEM_Editor.DeleteConnectableNodes(m_CutEffects.Select(x => x.m_NodeBaseData).ToArray());
             NodeLEM_Editor.DeleteGroupRects(m_PastedGroupRects);
 
-            //NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(m_CutEffects.Select(x => x.m_NodeBaseData).ToArray());
 
         }
 
@@ -922,7 +784,6 @@ namespace LEM_Editor
         public GroupCommand(Rect[] allSelectedNodesTotalRect, List<Node> allSelectedNodes)
         {
             m_GroupRectNode = NodeLEM_Editor.CreateGroupRectNode(allSelectedNodesTotalRect, allSelectedNodes);
-            //m_GroupRectNode = NodeCommandInvoker.d_CreateGroupRectNode(allSelectedNodesTotalRect, allSelectedNodes);
         }
 
         public void Execute() { }
@@ -938,9 +799,6 @@ namespace LEM_Editor
         public void Redo()
         {
             m_GroupRectNode = NodeLEM_Editor.ReCreateGroupNode(/*m_DeletedNodeData.m_Position, m_DeletedNodeData.m_Size,*/ m_DeletedNodeData.m_NestedNodeIDs, m_DeletedNodeData.m_NodeID, m_DeletedNodeData.m_LabelText);
-            ////Recreate and load the effect data
-            //NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(m_NodeEffect.m_NodeBaseData.m_Position, m_NodeEffect.m_NodeEffectType, m_NodeEffect.m_NodeBaseData.m_NodeID)
-            //.LoadFromBaseEffect(m_NodeEffect);
         }
 
 
