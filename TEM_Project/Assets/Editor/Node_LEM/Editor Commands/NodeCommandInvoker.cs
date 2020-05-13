@@ -156,7 +156,7 @@ namespace LEM_Editor
             if(PreviousAction == NodeCommandActionType.Undo)
             {
                 //If the previous command is a movenode command, that means you are overwriting this move command with a new command
-                if(m_CommandHistory[Counter].CommandType == NodeCommandType.MOVE)
+                if(m_CommandHistory[Counter]?.CommandType == NodeCommandType.MOVE)
                 {
                     s_MoveNodeCommands.RemoveEfficiently(s_MoveNodeCommands.FindIndexFromLastIndex(x => x == m_CommandHistory[Counter]));
                 }

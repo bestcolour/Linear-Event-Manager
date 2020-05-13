@@ -40,10 +40,23 @@ namespace LEM_Editor
         public Node[] NestedNodes => m_NestedNodesDictionary.Values.ToArray();
 
         public new GroupRectNode GetRootParent => IsGrouped ? m_GroupedParent.GetRootParent : this;
+        public Node[] GetAllNestedNodes(ref List<Node> listToBePassed)
+        {
+            Node[] nestedNodes = NestedNodes;
+
+            for (int i = 0; i < nestedNodes.Length; i++)
+            {
+                listToBePassed.Add(nestedNodes[i]);
+                if (nestedNodes[i].ID_Initial == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
+                    NodeLEM_Editor.AllGroupRectsInEditorDictionary[nestedNodes[i].NodeID].GetAllNestedNodes(ref listToBePassed);
+            }
+
+            return listToBePassed.ToArray();
+        }
 
         public override string ID_Initial => LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial;
 
-        Rect m_BorderRect = new Rect();
+        Rect m_BorderRect = default;
 
         public void Initialise(Vector2 startRectPos, Vector2 size, Node[] nestedNodes, NodeSkinCollection nodeSkin, Action<Node> onSelectNode, Action<string> onDeSelectNode, Color topSkinColour)
         {
@@ -304,8 +317,7 @@ namespace LEM_Editor
         public override bool HandleMouseUp()
         {
             //Only update nested nodes from the parent
-            if (!IsGrouped)
-                UpdateNestedNodes();
+            UpdateNestedNodes();
             //Reset draggin bool
             m_IsDragged = false;
             return false;

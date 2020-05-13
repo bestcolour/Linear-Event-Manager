@@ -240,6 +240,7 @@ namespace LEM_Editor
     public class MoveNodeCommand : INodeCommand
     {
         string[] m_NodeIDsMoved = default;
+        string[] m_GroupRectParentsIDs = default;
 
         Vector2[] m_PreviousTopRectPositions = default;
         Vector2[] m_PreviousMidRectPositions = default;
@@ -253,6 +254,7 @@ namespace LEM_Editor
         public MoveNodeCommand(Node[] nodesMovedIDs)
         {
             List<Node> nodesMoved = new List<Node>();
+            List<string> groupRectParentNodes = new List<string>();
             GroupRectNode dummy;
 
             //Expand all the nodes selected and check through all the nested node if the node is a grouprect node
@@ -263,13 +265,18 @@ namespace LEM_Editor
                 if (nodesMovedIDs[i].ID_Initial == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
                 {
                     dummy = nodesMovedIDs[i] as GroupRectNode;
-                    nodesMoved.AddRange(dummy.NestedNodes);
+
+                    if (dummy.IsGrouped)
+                        groupRectParentNodes.Add(dummy.m_GroupedParent.NodeID);
+
+                    dummy.GetAllNestedNodes(ref nodesMoved);
                 }
             }
 
 
             //Get all the nodeids from the passed parameter
             m_NodeIDsMoved = nodesMoved.Select(x => x.NodeID).ToArray();
+            m_GroupRectParentsIDs = groupRectParentNodes.ToArray();
 
             m_PreviousTopRectPositions = new Vector2[m_NodeIDsMoved.Length];
             m_PreviousMidRectPositions = new Vector2[m_NodeIDsMoved.Length];
@@ -281,7 +288,6 @@ namespace LEM_Editor
                 m_PreviousTopRectPositions[i] = nodesMoved[i].m_TopRect.position;
                 m_PreviousMidRectPositions[i] = nodesMoved[i].m_MidRect.position;
                 m_PreviousTotalRectPositions[i] = nodesMoved[i].m_TotalRect.position;
-                Debug.Log("Execution " + m_PreviousTotalRectPositions[i]);
             }
 
         }
@@ -304,7 +310,7 @@ namespace LEM_Editor
             }
         }
 
-        public void Execute() 
+        public void Execute()
         {
             NodeCommandInvoker.s_MoveNodeCommands.Add(this);
         }
@@ -352,7 +358,7 @@ namespace LEM_Editor
 
             //All thats left are effect nodes so we can just use the dictionary to get the nodes instead of using AllNodesInEditor.Find()
             //Revert all the node's positions to the prev positions but before that, save that position in a local var to reassign to prev pos 
-            for (int i = 0; i < m_NodeIDsMoved.Length; i++)
+            for (int i = 0, grpRectIndex = 0; i < m_NodeIDsMoved.Length; i++)
             {
                 //Skip startnode id 
                 if (i == startNodeInt)
@@ -374,7 +380,6 @@ namespace LEM_Editor
                     NodeLEM_Editor.AllEffectsNodeInEditor[m_NodeIDsMoved[i]].effectNode.m_TotalRect.position = m_PreviousTotalRectPositions[i];
                     m_PreviousTotalRectPositions[i] = currentNodePosition;
 
-                    Debug.Log("Undo " + m_PreviousTotalRectPositions[i]);
                 }
                 else
                 {
@@ -390,9 +395,15 @@ namespace LEM_Editor
                     NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_NodeIDsMoved[i]].m_TotalRect.position = m_PreviousTotalRectPositions[i];
                     m_PreviousTotalRectPositions[i] = currentNodePosition;
 
+
+
                     //Forcefully update its current state
-                    //if (NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_NodeIDsMoved[i]].IsGrouped)
-                    NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_NodeIDsMoved[i]].HandleMouseUp();
+                    if (grpRectIndex < m_GroupRectParentsIDs.Length)
+                    {
+                        NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_GroupRectParentsIDs[grpRectIndex]].UpdateNestedNodes();
+                        grpRectIndex++;
+                    }
+
                 }
             }
         }
