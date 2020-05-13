@@ -631,7 +631,7 @@ namespace LEM_Editor
             }
             HandleCurrentLinearEventLabel(dummyRect, currentEvent);
 
-            DrawDebugLists();
+            //DrawDebugLists();
 
             //Then process the events that occured from unity's events (events are like clicks,drag etc)
             ProcessEvents(currentEvent, currMousePos, isMouseInSearchBox);
@@ -1287,11 +1287,11 @@ namespace LEM_Editor
                                 GUI.changed = true;
 
                         for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
-                            if (AllConnectableNodesInEditor[i].HandleLeftMouseDown(e))
+                            if (AllConnectableNodesInEditor[i].IsWorthProcessingEventFor && AllConnectableNodesInEditor[i].HandleLeftMouseDown(e))
                                 GUI.changed = true;
 
                         for (int i = 0; i < AllGroupRectNodesInEditor.Count; i++)
-                            if (AllGroupRectNodesInEditor[i].HandleLeftMouseDown(e))
+                            if (AllGroupRectNodesInEditor[i].IsWorthProcessingEventFor && AllGroupRectNodesInEditor[i].HandleLeftMouseDown(e))
                                 GUI.changed = true;
 
                     }
@@ -1304,11 +1304,11 @@ namespace LEM_Editor
                             GUI.changed = true;
 
                     for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
-                        if (AllConnectableNodesInEditor[i].HandleMouseUp())
+                        if (AllConnectableNodesInEditor[i].IsWorthProcessingEventFor && AllConnectableNodesInEditor[i].HandleMouseUp())
                             GUI.changed = true;
 
                     for (int i = 0; i < AllGroupRectNodesInEditor.Count; i++)
-                        if (AllGroupRectNodesInEditor[i].HandleMouseUp())
+                        if (AllGroupRectNodesInEditor[i].IsWorthProcessingEventFor && AllGroupRectNodesInEditor[i].HandleMouseUp())
                             GUI.changed = true;
 
                     break;
@@ -1324,11 +1324,11 @@ namespace LEM_Editor
                                 GUI.changed = true;
 
                         for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
-                            if (AllConnectableNodesInEditor[i].HandleLeftMouseButtonDrag(e, convertedDelta))
+                            if (AllConnectableNodesInEditor[i].IsWorthProcessingEventFor && AllConnectableNodesInEditor[i].HandleLeftMouseButtonDrag(e, convertedDelta))
                                 GUI.changed = true;
 
                         for (int i = 0; i < AllGroupRectNodesInEditor.Count; i++)
-                            if (AllGroupRectNodesInEditor[i].HandleLeftMouseButtonDrag(e, convertedDelta))
+                            if (AllGroupRectNodesInEditor[i].IsWorthProcessingEventFor && AllGroupRectNodesInEditor[i].HandleLeftMouseButtonDrag(e, convertedDelta))
                                 GUI.changed = true;
 
                     }
@@ -1336,54 +1336,6 @@ namespace LEM_Editor
 
             }
         }
-
-        //void ProcessGroupRectEvents(Event e)
-        //{
-        //    if (AllGroupRectsInEditorDictionary.Count <= 0)
-        //        return;
-
-        //    string[] keys;
-
-
-        //    //Check current event once and then tell all the nodes to handle that event so they dont have to check
-        //    switch (e.type)
-        //    {
-        //        case EventType.MouseDown:
-
-        //            keys = AllGroupRectsInEditorNodeIDs;
-        //            //Check if it is the left mousebutton that was pressed
-        //            if (e.button == 0)
-        //            {
-        //                for (int i = keys.Length - 1; i >= 0; i--)
-        //                    if (AllGroupRectsInEditorDictionary[keys[i]].HandleLeftMouseDown(e))
-        //                        GUI.changed = true;
-        //            }
-        //            break;
-
-        //        case EventType.MouseUp:
-
-        //            keys = AllGroupRectsInEditorNodeIDs;
-
-        //            for (int i = keys.Length - 1; i >= 0; i--)
-        //                if (AllGroupRectsInEditorDictionary[keys[i]].HandleMouseUp())
-        //                    GUI.changed = true;
-        //            break;
-
-        //        case EventType.MouseDrag:
-        //            if (e.button == 0)
-        //            {
-        //                keys = AllGroupRectsInEditorNodeIDs;
-
-        //                Vector2 convertedDelta = e.delta / ScaleFactor;
-
-        //                for (int i = keys.Length - 1; i >= 0; i--)
-        //                    if (AllGroupRectsInEditorDictionary[keys[i]].HandleLeftMouseButtonDrag(e, convertedDelta))
-        //                        GUI.changed = true;
-        //            }
-        //            break;
-
-        //    }
-        //}
 
         #endregion
 
@@ -1661,6 +1613,7 @@ namespace LEM_Editor
                     AllGroupRectNodesInEditor[i].Drag(delta);
             }
 
+            CommandInvoker.ProcessHandleDrag(delta);
 
         }
 
@@ -2104,10 +2057,16 @@ namespace LEM_Editor
             for (int i = 0; i < s_CurrentLE.m_AllGroupRectNodes.Length; i++)
             {
                 if (s_CurrentLE.m_AllGroupRectNodes[i].HasAtLeastOneNestedNode)
-                    ReCreateGroupNode(s_CurrentLE.m_AllGroupRectNodes[i].m_NestedNodeIDs, s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID, s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
+                    ReCreateGroupNode(
+                        s_CurrentLE.m_AllGroupRectNodes[i].m_NestedNodeIDs, 
+                        s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID,
+                        s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
                 else
-                    ReCreateGroupNode(s_CurrentLE.m_AllGroupRectNodes[i].m_Position, s_CurrentLE.m_AllGroupRectNodes[i].m_Size, s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID, s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
-
+                    ReCreateGroupNode(
+                        s_CurrentLE.m_AllGroupRectNodes[i].m_Position,
+                        s_CurrentLE.m_AllGroupRectNodes[i].m_Size,
+                        s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID,
+                        s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
             }
 
 
@@ -2246,8 +2205,7 @@ namespace LEM_Editor
                     nestedNodes[i].m_GroupedParent = null;
                     continue;
                 }
-                else
-                if (AllEffectsNodeInEditor.TryGetValue(groupRectNodes.m_NestedNodeIDs[i], out dummy1))
+                else if(AllEffectsNodeInEditor.TryGetValue(groupRectNodes.m_NestedNodeIDs[i], out dummy1))
                 {
                     nestedNodes[i] = dummy1.effectNode;
                     nestedNodes[i].m_GroupedParent = null;
@@ -2259,7 +2217,6 @@ namespace LEM_Editor
                     nestedNodes[i].m_GroupedParent = null;
                     continue;
                 }
-                //Debug.LogError("Element " + i + " of NestedNodeIDs does not belong to any of the dictionaries in NodeLEM_Editor");
             }
             instance.TryToRemoveNodeFromSelectedCollection(groupRectNodes.m_NodeID);
 

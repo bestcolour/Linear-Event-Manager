@@ -59,19 +59,26 @@ namespace LEM_Editor
 
             #endregion
 
-            #region Debugging Visuals
+            //#region Debugging Visuals
+            //LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             ////Debugging
-            //LEMStyleLibrary.s_GUIPreviousColour = LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor;
-            //LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = Color.magenta;
-            //m_TopRect.y -= 30f;
-            //GUI.Label(m_TopRect, "NodeID : " + NodeID, LEMStyleLibrary.s_NodeHeaderStyle);
-            //m_TopRect.y -= 15f;
-            //////GUI.Label(m_TopRect, "OutPoint : " + m_OutPoint.GetConnectedNodeID(0), LEMStyleLibrary.s_NodeHeaderStyle);
-            //////m_TopRect.y -= 15f;
-            //////GUI.Label(m_TopRect, "InPoint : " + m_InPoint.GetConnectedNodeID(0), LEMStyleLibrary.s_NodeHeaderStyle);
-            //LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
-            //m_TopRect.y += 60;
-            #endregion
+            //Rect debugRect = m_TopRect;
+            //debugRect.y -= 20f;
+            //debugRect.width += 500;
+            //EditorGUI.LabelField(debugRect, "Current total rect position " + m_TotalRect);
+            //LEMStyleLibrary.EndEditorLabelColourChange();
+
+            ////LEMStyleLibrary.s_GUIPreviousColour = LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor;
+            ////LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = Color.magenta;
+            ////m_TopRect.y -= 30f;
+            ////GUI.Label(m_TopRect, "NodeID : " + NodeID, LEMStyleLibrary.s_NodeHeaderStyle);
+            ////m_TopRect.y -= 15f;
+            ////////GUI.Label(m_TopRect, "OutPoint : " + m_OutPoint.GetConnectedNodeID(0), LEMStyleLibrary.s_NodeHeaderStyle);
+            ////////m_TopRect.y -= 15f;
+            ////////GUI.Label(m_TopRect, "InPoint : " + m_InPoint.GetConnectedNodeID(0), LEMStyleLibrary.s_NodeHeaderStyle);
+            ////LEMStyleLibrary.s_NodeHeaderStyle.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+            ////m_TopRect.y += 60;
+            //#endregion
 
 
             //Draw the description text field

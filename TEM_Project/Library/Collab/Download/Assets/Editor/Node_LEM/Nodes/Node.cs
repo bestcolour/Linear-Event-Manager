@@ -27,22 +27,22 @@ namespace LEM_Editor
         }
 
         protected bool m_IsDragged = default;
-        public Node m_GroupedParent = default;
+        public GroupRectNode m_GroupedParent = default;
+
 
         public abstract string ID_Initial { get; }
-        //public abstract BaseNodeType BaseNodeType { get; }
-        //protected bool m_IsGrouped = false;
         public bool IsGrouped => m_GroupedParent != null;
-        //public bool IsGrouped { get { return m_IsGrouped; } set { m_IsGrouped = value; } }
-        protected bool m_IsSelected = false;
-        public bool IsSelected { get { return m_IsSelected; } }
 
-        //public InConnectionPoint m_InPoint = new InConnectionPoint();
-        //public OutConnectionPoint m_OutPoint = new OutConnectionPoint();
+        protected bool m_IsSelected = false;
+
+        public bool IsWorthProcessingEventFor => IsWithinWindowScreen || (!IsWithinWindowScreen && (IsSelected || (IsGrouped && GetRootParent.IsSelected)));
+        public bool IsSelected { get { return m_IsSelected; } }
 
         protected NodeSkinCollection m_NodeSkin = default;
         //Top skin will pull from a static cache
         protected Color m_TopSkinColour = default;
+
+        public virtual Node GetRootParent => IsGrouped ? m_GroupedParent.GetRootParent : this;
 
         protected Action<Node> d_OnSelectNode = null;
         protected Action<string> d_OnDeselectNode = null;
@@ -66,10 +66,6 @@ namespace LEM_Editor
             this.d_OnSelectNode = onSelectNode;
             this.d_OnDeselectNode = onDeSelectNode;
 
-            ////Initialise in and out points
-            //m_InPoint.Initialise(this, connectionPointStyle, onClickInPoint);
-            //m_OutPoint.Initialise(this, connectionPointStyle, onClickOutPoint);
-
             m_TopSkinColour = topSkinColour;
         }
 
@@ -90,8 +86,8 @@ namespace LEM_Editor
                 float newWidth = m_TotalRect.width * NodeGUIConstants.k_SelectedNodeTextureScale;
                 float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale;
                 GUI.DrawTexture(new Rect(
-                    m_TotalRect.x - /*NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.x*/(newWidth - m_TotalRect.width) * 0.5f,
-                    m_TotalRect.y -/* NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.y*/  (newHeight - m_TotalRect.height) * 0.5f,
+                    m_TotalRect.x - (newWidth - m_TotalRect.width) * 0.5f,
+                    m_TotalRect.y -(newHeight - m_TotalRect.height) * 0.5f,
                     newWidth, newHeight),
                     m_NodeSkin.m_SelectedMidOutline);
             }
@@ -106,10 +102,6 @@ namespace LEM_Editor
             GUI.color = LEMStyleLibrary.s_CurrentMidSkinColour;
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
             GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
-
-            ////Draw the in out points as well
-            //m_InPoint.Draw();
-            //m_OutPoint.Draw();
 
         }
 
@@ -145,7 +137,7 @@ namespace LEM_Editor
                         return true;
                     }
 
-                    DeselectAllParentGroupNodes();
+                    //DeselectAllParentGroupNodes();
                     // or i want to drag this selected nodes 
                     m_IsDragged = true;
                     return false;
@@ -164,18 +156,23 @@ namespace LEM_Editor
 
                     //Deselect if this node is selected but there isnt multiple selected nodes
                     // or if there is no node clicked
-                    if (currentClickedNode.m_IsSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
+
+                    if (currentClickedNode.m_IsSelected)
                     {
-                        DeselectNode();
-                        return true;
+                        if (NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
+                        {
+                            DeselectAllParentGroupNodes();
+                            DeselectNode();
+                            return true;
+                        }
+                        //when there is another node clicked in the window,
+                        //as well as having multiple nodes selected
+                        else if (NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
+                        {
+                            m_IsDragged = true;
+                        }
                     }
-                    //when there is another node clicked in the window,
-                    //as well as having multiple nodes selected
-                    else if (currentClickedNode.m_IsSelected && NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
-                    {
-                        DeselectAllParentGroupNodes();
-                        m_IsDragged = true;
-                    }
+
 
                 }
 
@@ -202,7 +199,8 @@ namespace LEM_Editor
 
         public virtual bool HandleLeftMouseButtonDrag(Event e, Vector2 dragDelta)
         {
-            if (m_IsDragged)
+            //You can only drag this node when node is not grouped or the parent is not selected
+            if (m_IsDragged && (!IsGrouped || !m_GroupedParent.IsSelected))
             {
                 Drag(dragDelta);
                 //Drag(e.delta);
@@ -229,9 +227,6 @@ namespace LEM_Editor
 
         protected void SelectBySelectionBox()
         {
-            //Change the visual to indicate that node has been selected
-            //m_NodeSkin.textureToRender = m_NodeSkin.m_SelectedOutline;
-
             //Invoke onselect delegate
             d_OnSelectNode?.Invoke(this);
 
@@ -241,10 +236,6 @@ namespace LEM_Editor
 
         protected void SelectByClicking()
         {
-            //Change the visual to indicate that node has been selected
-            //nodeSkin.style = nodeSkin.light_selected;
-            //m_NodeSkin.textureToRender = m_NodeSkin.m_SelectedOutline;
-
             m_IsDragged = true;
 
             //Invoke onselect delegate
@@ -259,7 +250,6 @@ namespace LEM_Editor
             d_OnDeselectNode?.Invoke(NodeID);
             m_IsSelected = false;
             m_IsDragged = false;
-            //m_NodeSkin.textureToRender = m_NodeSkin.m_NodeBackground;
         }
 
         public virtual void DeselectAllParentGroupNodes()
@@ -304,10 +294,7 @@ namespace LEM_Editor
         //Returns only NodeBaseData (use for non effect nodes)
         public virtual NodeBaseData SaveNodeData()
         {
-            //string[] connectedNextNodeIDs = TryToSaveNextPointNodeID();
-            //string[] connectedPrevNodeIDs = TryToSavePrevPointNodeID();
-
-            return new NodeBaseData(m_MidRect.position, NodeID, /*connectedNextNodeIDs*/new string[0]);
+            return new NodeBaseData(m_MidRect.position, NodeID, new string[0]);
         }
 
         //Change values here
@@ -348,8 +335,6 @@ namespace LEM_Editor
             m_TopRect.size += topSizeAddition;
             m_TotalRect.size = new Vector2(m_MidRect.size.x, m_MidRect.size.y + m_TopRect.size.y - 2);
         }
-
-        public virtual void DeleteNodes() { }
 
     }
 

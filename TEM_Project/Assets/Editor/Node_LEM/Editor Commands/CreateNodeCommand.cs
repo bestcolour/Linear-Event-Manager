@@ -70,8 +70,10 @@ namespace LEM_Editor
         {
             List<LEM_BaseEffect> nodesEffects = new List<LEM_BaseEffect>();
             List<GroupRectNodeBase> groupRectNodeBases = new List<GroupRectNodeBase>();
+            Queue<string> searchFrontier = new Queue<string>();
 
             string idInit;
+            //Record all the effect nodes 
             for (int i = 0; i < deletedNodesID.Length; i++)
             {
                 idInit = NodeLEM_Editor.GetInitials(deletedNodesID[i]);
@@ -80,23 +82,77 @@ namespace LEM_Editor
                 {
                     case LEMDictionary.NodeIDs_Initials.k_BaseEffectInital:
                         nodesEffects.Add(NodeLEM_Editor.AllEffectsNodeInEditor[deletedNodesID[i]].effectNode.CompileToBaseEffect());
-                        continue;
+                        break;
 
                     case LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial:
-                        groupRectNodeBases.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[deletedNodesID[i]].SaveGroupRectNodedata());
-                        continue;
+                        searchFrontier.Enqueue(deletedNodesID[i]);
+                        //searchFrontier.Enqueue(NodeLEM_Editor.AllGroupRectsInEditorDictionary[deletedNodesID[i]].GetRootParent.NodeID);
+                        break;
                 }
             }
 
             m_DeletedNodesEffects = nodesEffects.ToArray();
 
+            int numberOfGroupRectToBeDeleted = searchFrontier.Count;
+            for (int i = 0; i < numberOfGroupRectToBeDeleted; i++)
+            {
+                idInit = searchFrontier.Dequeue();
 
-            //Sort the array of deleted grouprect nodebase
-            //groupRectNodeBases.Sort();
+                //If a grouprectnode's root parent is also inside of the collection of grouprectnodes to delete, dont queue it agn else add it cause its either an orphan or a single selected
+                if (!searchFrontier.Contains(NodeLEM_Editor.AllGroupRectsInEditorDictionary[idInit].GetRootParent.NodeID))
+                    searchFrontier.Enqueue(idInit);
+            }
+
+            //By now, the queue should have only 
+            //1) Any orphan group rect node which was in the array of selected node
+            //2) The root parent of the grouprect cluster which was entirely selected
+            //3) If the group rect is part of a grouprect cluster but was just singlely selected, it would be in the queue as well
+
+
+            deletedNodesID = searchFrontier.ToArray();
+            //deletedNodesID = searchFrontier.Distinct().ToArray();
+
+            //searchFrontier.Clear();
+
+            //Sort the array of deleted grouprect nodebase by getting all the rootparent first
+            for (int i = 0; i < deletedNodesID.Length; i++)
+            {
+                //IDInit will hold the id of the root parent node id
+                idInit = NodeLEM_Editor.AllGroupRectsInEditorDictionary[deletedNodesID[i]].NodeID;
+                //searchFrontier.Enqueue(idInit);
+                groupRectNodeBases.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[idInit].SaveGroupRectNodedata());
+            }
+
+            //For every root parent there is,keep finding each layer of nested nodes
+            //Reusuing this string var to store current searchFrontier's node id
+
+            idInit = searchFrontier.Dequeue();
+
+            while (NodeLEM_Editor.AllGroupRectsInEditorDictionary[idInit].NestedNodesDictionary.Count > 0)
+            {
+                //Reusuing stirng[] to record the keys for the nestednodes
+                deletedNodesID = NodeLEM_Editor.AllGroupRectsInEditorDictionary[idInit].NestedNodesNodeIDs;
+
+                for (int i = 0; i < deletedNodesID.Length; i++)
+                {
+                    idInit = NodeLEM_Editor.GetInitials(deletedNodesID[i]);
+
+                    //If the nested node is a group rect
+                    if (idInit == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial && NodeLEM_Editor.AllGroupRectsInEditorDictionary[deletedNodesID[i]].IsSelected)
+                    {
+                        groupRectNodeBases.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[deletedNodesID[i]].SaveGroupRectNodedata());
+                        //Add it to the queue
+                        searchFrontier.Enqueue(deletedNodesID[i]);
+                    }
+                }
+
+                if (searchFrontier.Count > 0)
+                    idInit = searchFrontier.Dequeue();
+                else
+                    break;
+            }
 
             m_DeletedGroupRectNodeBases = groupRectNodeBases.ToArray();
-
-
 
         }
 
@@ -132,8 +188,8 @@ namespace LEM_Editor
                 NodeCommandInvoker.d_RestitchConnections(m_DeletedNodesEffects[i]);
             }
 
-            //Recreate group rectnode
-            for (int i = 0; i < m_DeletedGroupRectNodeBases.Length; i++)
+            //Recreate all the group rectnodes
+            for (int i = m_DeletedGroupRectNodeBases.Length - 1; i > -1; i--)
             {
                 //If this is the parent node
                 if (m_DeletedGroupRectNodeBases[i].HasAtLeastOneNestedNode)
@@ -144,11 +200,20 @@ namespace LEM_Editor
                        m_DeletedGroupRectNodeBases[i].m_LabelText
                        ).SelectNode();
                 }
-                   
                 else
-                    NodeLEM_Editor.ReCreateGroupNode(m_DeletedGroupRectNodeBases[i].m_Position, m_DeletedGroupRectNodeBases[i].m_Size, m_DeletedGroupRectNodeBases[i].m_NodeID, m_DeletedGroupRectNodeBases[i].m_LabelText);
+                    NodeLEM_Editor.ReCreateGroupNode(
+                        m_DeletedGroupRectNodeBases[i].m_Position,
+                        m_DeletedGroupRectNodeBases[i].m_Size,
+                        m_DeletedGroupRectNodeBases[i].m_NodeID,
+                        m_DeletedGroupRectNodeBases[i].m_LabelText);
             }
 
+            //Restitch their parent connections
+            for (int i = 0; i < m_DeletedGroupRectNodeBases.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(m_DeletedGroupRectNodeBases[i].m_ParentNodeID))
+                    NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_DeletedGroupRectNodeBases[i].m_NodeID].m_GroupedParent = NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_DeletedGroupRectNodeBases[i].m_ParentNodeID];
+            }
 
         }
 
@@ -216,11 +281,33 @@ namespace LEM_Editor
                 m_PreviousTopRectPositions[i] = nodesMoved[i].m_TopRect.position;
                 m_PreviousMidRectPositions[i] = nodesMoved[i].m_MidRect.position;
                 m_PreviousTotalRectPositions[i] = nodesMoved[i].m_TotalRect.position;
+                Debug.Log("Execution " + m_PreviousTotalRectPositions[i]);
             }
 
         }
 
-        public void Execute() { }
+        public void HandleDrag(Vector2 delta)
+        {
+            for (int i = 0; i < m_PreviousTopRectPositions.Length; i++)
+            {
+                m_PreviousTopRectPositions[i] += delta;
+            }
+
+            for (int i = 0; i < m_PreviousMidRectPositions.Length; i++)
+            {
+                m_PreviousMidRectPositions[i] += delta;
+            }
+
+            for (int i = 0; i < m_PreviousTotalRectPositions.Length; i++)
+            {
+                m_PreviousTotalRectPositions[i] += delta;
+            }
+        }
+
+        public void Execute() 
+        {
+            NodeCommandInvoker.s_MoveNodeCommands.Add(this);
+        }
 
         public void Undo()
         {
@@ -286,6 +373,8 @@ namespace LEM_Editor
                     currentNodePosition = NodeLEM_Editor.AllEffectsNodeInEditor[m_NodeIDsMoved[i]].effectNode.m_TotalRect.position;
                     NodeLEM_Editor.AllEffectsNodeInEditor[m_NodeIDsMoved[i]].effectNode.m_TotalRect.position = m_PreviousTotalRectPositions[i];
                     m_PreviousTotalRectPositions[i] = currentNodePosition;
+
+                    Debug.Log("Undo " + m_PreviousTotalRectPositions[i]);
                 }
                 else
                 {
@@ -300,6 +389,10 @@ namespace LEM_Editor
                     currentNodePosition = NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_NodeIDsMoved[i]].m_TotalRect.position;
                     NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_NodeIDsMoved[i]].m_TotalRect.position = m_PreviousTotalRectPositions[i];
                     m_PreviousTotalRectPositions[i] = currentNodePosition;
+
+                    //Forcefully update its current state
+                    //if (NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_NodeIDsMoved[i]].IsGrouped)
+                    NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_NodeIDsMoved[i]].HandleMouseUp();
                 }
             }
         }
@@ -605,9 +698,17 @@ namespace LEM_Editor
             {
 
                 if (m_PastedGroupRects[i].HasAtLeastOneNestedNode)
-                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_NestedNodeIDs, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText).SelectNode();
+                    NodeLEM_Editor.ReCreateGroupNode(
+                        m_PastedGroupRects[i].m_NestedNodeIDs,
+                        m_PastedGroupRects[i].m_NodeID,
+                        m_PastedGroupRects[i].m_LabelText)
+                        .SelectNode();
                 else
-                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_Position, m_PastedGroupRects[i].m_Size, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText);
+                    NodeLEM_Editor.ReCreateGroupNode(
+                        m_PastedGroupRects[i].m_Position,
+                        m_PastedGroupRects[i].m_Size,
+                        m_PastedGroupRects[i].m_NodeID,
+                        m_PastedGroupRects[i].m_LabelText);
             }
         }
 
@@ -662,9 +763,16 @@ namespace LEM_Editor
             for (int i = 0; i < m_PastedGroupRects.Length; i++)
             {
                 if (m_PastedGroupRects[i].HasAtLeastOneNestedNode)
-                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_NestedNodeIDs, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText).SelectNode();
+                    NodeLEM_Editor.ReCreateGroupNode(
+                        m_PastedGroupRects[i].m_NestedNodeIDs,
+                        m_PastedGroupRects[i].m_NodeID,
+                        m_PastedGroupRects[i].m_LabelText).SelectNode();
                 else
-                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_Position, m_PastedGroupRects[i].m_Size, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText);
+                    NodeLEM_Editor.ReCreateGroupNode(
+                        m_PastedGroupRects[i].m_Position,
+                        m_PastedGroupRects[i].m_Size,
+                        m_PastedGroupRects[i].m_NodeID,
+                        m_PastedGroupRects[i].m_LabelText);
             }
 
         }
@@ -743,10 +851,17 @@ namespace LEM_Editor
             //Recreate the groups
             for (int i = 0; i < m_PastedGroupRects.Length; i++)
             {
-                if(m_PastedGroupRects[i].HasAtLeastOneNestedNode)
-                NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_NestedNodeIDs, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText);
+                if (m_PastedGroupRects[i].HasAtLeastOneNestedNode)
+                    NodeLEM_Editor.ReCreateGroupNode(
+                        m_PastedGroupRects[i].m_NestedNodeIDs,
+                        m_PastedGroupRects[i].m_NodeID,
+                        m_PastedGroupRects[i].m_LabelText);
                 else
-                    NodeLEM_Editor.ReCreateGroupNode(m_PastedGroupRects[i].m_Position, m_PastedGroupRects[i].m_Size, m_PastedGroupRects[i].m_NodeID, m_PastedGroupRects[i].m_LabelText);
+                    NodeLEM_Editor.ReCreateGroupNode(
+                        m_PastedGroupRects[i].m_Position,
+                        m_PastedGroupRects[i].m_Size,
+                        m_PastedGroupRects[i].m_NodeID,
+                        m_PastedGroupRects[i].m_LabelText);
 
             }
 
@@ -798,7 +913,12 @@ namespace LEM_Editor
 
         public void Redo()
         {
-            m_GroupRectNode = NodeLEM_Editor.ReCreateGroupNode(/*m_DeletedNodeData.m_Position, m_DeletedNodeData.m_Size,*/ m_DeletedNodeData.m_NestedNodeIDs, m_DeletedNodeData.m_NodeID, m_DeletedNodeData.m_LabelText);
+            m_GroupRectNode = NodeLEM_Editor.ReCreateGroupNode(
+                m_DeletedNodeData.m_NestedNodeIDs,
+                m_DeletedNodeData.m_NodeID,
+                m_DeletedNodeData.m_LabelText);
+
+            m_GroupRectNode.m_GroupedParent = string.IsNullOrEmpty(m_DeletedNodeData.m_ParentNodeID) ? null : NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_DeletedNodeData.m_ParentNodeID];
         }
 
 

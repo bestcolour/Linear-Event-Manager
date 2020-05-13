@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using LEM_Effects;
+using UnityEngine.Windows.Speech;
+
 namespace LEM_Editor
 {
 
@@ -13,6 +15,13 @@ namespace LEM_Editor
     public struct NodeCommandType
     {
         public const int CREATENODE = 0, DELETE = 1, MOVE = 2, CREATECONNECTION = 3, CUT = 4, PASTE = 5, CUTPASTE = 6, DUPLICATE = 7, GROUP = 8;
+    }
+
+    public enum NodeCommandActionType
+    {
+        Invoke,
+        Undo,
+        Redo
     }
 
     public class NodeCommandInvoker
@@ -32,8 +41,10 @@ namespace LEM_Editor
         //public delegate void DeselectAllNodes();
         #endregion
 
-
+        public static List<MoveNodeCommand> s_MoveNodeCommands = new List<MoveNodeCommand>();
         INodeCommand[] m_CommandHistory = null;
+
+        public static NodeCommandActionType PreviousAction = default;
 
         //Copy feature
         public static List<LEM_BaseEffect> s_Effect_ClipBoard = new List<LEM_BaseEffect>();
@@ -130,18 +141,32 @@ namespace LEM_Editor
 
         #endregion
 
+        public void ProcessHandleDrag(Vector2 delta)
+        {
+            for (int i = 0; i < s_MoveNodeCommands.Count; i++)
+            {
+                s_MoveNodeCommands[i].HandleDrag(delta);
+            }
+        }
+
 
         public void InvokeCommand(INodeCommand commandToAdd)
         {
+            //If u chose to undo previously b4 invoking a new command,
+            if(PreviousAction == NodeCommandActionType.Undo)
+            {
+                //If the previous command is a movenode command, that means you are overwriting this move command with a new command
+                if(m_CommandHistory[Counter].CommandType == NodeCommandType.MOVE)
+                {
+                    s_MoveNodeCommands.RemoveEfficiently(s_MoveNodeCommands.FindIndexFromLastIndex(x => x == m_CommandHistory[Counter]));
+                }
+            }
+
             //Check if currently user is cutting to prepare for next Paste to be a CutPaste
             if (commandToAdd.CommandType == NodeCommandType.CUT)
-            {
                 m_HasCutButNotCutPaste = true;
-            }
             else if (commandToAdd.CommandType == NodeCommandType.CUTPASTE)
-            {
                 m_HasCutButNotCutPaste = false;
-            }
 
             //Adds command into a queue
             commandToAdd.Execute();
@@ -153,6 +178,7 @@ namespace LEM_Editor
             m_CommandHistory[Counter] = null;
 
             d_OnCommand?.Invoke();
+            PreviousAction = NodeCommandActionType.Invoke;
         }
 
         public void UndoCommand()
@@ -170,11 +196,12 @@ namespace LEM_Editor
             }
 
             d_OnCommand?.Invoke();
-
+            PreviousAction = NodeCommandActionType.Undo;
         }
 
         public void RedoCommand()
         {
+
             //If max redo hasnt been reached (that means user has hit the top of the history)
             if (m_CommandHistory[Counter] != null)
             {
@@ -187,6 +214,7 @@ namespace LEM_Editor
             }
 
             d_OnCommand?.Invoke();
+            PreviousAction = NodeCommandActionType.Redo;
         }
 
         //public void CopyToClipBoard(BaseEffectNode[] copiedEffectNodes)
