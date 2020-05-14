@@ -236,6 +236,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &514623470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: AddDelay
+  m_UpdateCycle: 0
+  m_NodeBaseData:
+    m_Position: {x: 651.3517, y: 536.1281}
+    m_NodeID: BEN_5c59e06c-af86-4a9a-a569-e7339aa826fe
+    m_NextPointsIDs: []
+  m_DelayTime: 0
 --- !u!1 &682789792
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,25 +438,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &878905138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 155.31172, y: 541.5089}
-    m_NodeID: BEN_85ffb56c-9987-4783-a425-84ac595c812b
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,7 +594,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114990028}
   m_CullTransparentMesh: 0
---- !u!114 &1150565515
+--- !u!114 &1189375239
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -609,8 +609,8 @@ MonoBehaviour:
   m_NodeEffectType: AddDelay
   m_UpdateCycle: 0
   m_NodeBaseData:
-    m_Position: {x: 190.06175, y: 715.1965}
-    m_NodeID: BEN_200c61c7-b95f-4792-a384-5a868d34309b
+    m_Position: {x: 416.33353, y: 647.3334}
+    m_NodeID: BEN_ad4dcc04-008f-4213-93f2-025869a14321
     m_NextPointsIDs: []
   m_DelayTime: 0
 --- !u!1 &1337597659
@@ -706,25 +706,6 @@ Transform:
   m_Father: {fileID: 1681769661}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1459982844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 656.6002, y: 608.8576}
-    m_NodeID: BEN_e8c4a434-9190-4f0d-823c-5fc4e678b4c1
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1114,37 +1095,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LinearEventName: 
   m_AllEffects:
-  - {fileID: 878905138}
-  - {fileID: 1150565515}
-  - {fileID: 1459982844}
+  - {fileID: 1189375239}
+  - {fileID: 514623470}
   m_AllGroupRectNodes:
-  - m_Position: {x: 135.31172, y: 488.5089}
-    m_Size: {x: 319.75, y: 346.68756}
-    m_ParentNodeID: GRN_538c6ec6-aa7a-4ff7-b153-24978eefc338
-    m_NodeID: GRN_7e98c7cf-0c25-4d71-b051-4d45492eb837
+  - m_Position: {x: 631.3517, y: 376.77515}
+    m_Size: {x: 285, y: 279.35297}
+    m_ParentNodeID: GRN_1677fe27-2ceb-49cd-9890-5f4578ce97db
+    m_NodeID: GRN_4036c5c5-3a57-4e74-bff1-44db0767cfbd
     m_NestedNodeIDs:
-    - BEN_200c61c7-b95f-4792-a384-5a868d34309b
-    - BEN_85ffb56c-9987-4783-a425-84ac595c812b
+    - BEN_5c59e06c-af86-4a9a-a569-e7339aa826fe
+    - SN_4d24de0c-f11c-4b0d-9ec1-e5c74aaee59c
     m_LabelText: 
-  - m_Position: {x: 115.31172, y: 321.50882}
-    m_Size: {x: 440, y: 533.68756}
-    m_ParentNodeID: GRN_53151090-f5af-4d5d-9a50-d4924123ea7f
-    m_NodeID: GRN_538c6ec6-aa7a-4ff7-b153-24978eefc338
-    m_NestedNodeIDs:
-    - SN_b1d7fc67-c349-45ac-9b9a-257b2aa0e568
-    - GRN_7e98c7cf-0c25-4d71-b051-4d45492eb837
-    m_LabelText: 
-  - m_Position: {x: 95.31172, y: 268.50888}
-    m_Size: {x: 826.28845, y: 606.68756}
+  - m_Position: {x: 396.33353, y: 323.77515}
+    m_Size: {x: 540.0182, y: 443.55823}
     m_ParentNodeID: 
-    m_NodeID: GRN_53151090-f5af-4d5d-9a50-d4924123ea7f
+    m_NodeID: GRN_1677fe27-2ceb-49cd-9890-5f4578ce97db
     m_NestedNodeIDs:
-    - BEN_e8c4a434-9190-4f0d-823c-5fc4e678b4c1
-    - GRN_538c6ec6-aa7a-4ff7-b153-24978eefc338
+    - BEN_ad4dcc04-008f-4213-93f2-025869a14321
+    - GRN_4036c5c5-3a57-4e74-bff1-44db0767cfbd
     m_LabelText: 
   m_StartNodeData:
-    m_Position: {x: 425.3117, y: 341.50882}
-    m_NodeID: SN_b1d7fc67-c349-45ac-9b9a-257b2aa0e568
+    m_Position: {x: 738.6459, y: 396.77515}
+    m_NodeID: SN_4d24de0c-f11c-4b0d-9ec1-e5c74aaee59c
     m_NextPointsIDs: []
 --- !u!4 &2127555589
 Transform:

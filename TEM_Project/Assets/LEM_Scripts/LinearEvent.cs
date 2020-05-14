@@ -18,6 +18,7 @@ namespace LEM_Effects
         public LEM_BaseEffect[] m_AllEffects = default;
 
 #if UNITY_EDITOR
+        [HideInInspector]
         public GroupRectNodeBase[] m_AllGroupRectNodes = default;
 #endif
 

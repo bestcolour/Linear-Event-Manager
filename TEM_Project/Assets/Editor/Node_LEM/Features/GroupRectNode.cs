@@ -160,7 +160,6 @@ namespace LEM_Editor
         public void UpdateNestedNodes()
         {
             string[] keys = NestedNodesNodeIDs;
-            //Debug.Log("Getting keys");
 
             GroupRectNode forceUpdateGrpNode;
 
@@ -217,7 +216,7 @@ namespace LEM_Editor
 
         }
 
-        void DeselectNestedNodes()
+        void DeselectAllNestedNodes()
         {
             GroupRectNode gr;
             string[] keys = NestedNodesNodeIDs;
@@ -226,7 +225,8 @@ namespace LEM_Editor
                 if (m_NestedNodesDictionary[keys[i]].ID_Initial == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
                 {
                     gr = m_NestedNodesDictionary[keys[i]] as GroupRectNode;
-                    gr.DeselectNestedNodes();
+                    gr.DeselectNode();
+                    gr.DeselectAllNestedNodes();
                 }
                 else
                     m_NestedNodesDictionary[keys[i]].DeselectNode();
@@ -252,7 +252,7 @@ namespace LEM_Editor
                     {
                         SelectByClicking();
                         //UpdateNestedNodes();
-                        DeselectNestedNodes();
+                        //DeselectAllNestedNodes();
                         return true;
                     }
 
@@ -266,7 +266,9 @@ namespace LEM_Editor
                     }
 
                     // or i want to drag this selected nodes 
-                    DeselectNestedNodes();
+                    //deselect all nested nodes
+                    DeselectAllNestedNodes();
+
                     m_IsDragged = true;
                     //UpdateNestedNodes();
                     return false;
@@ -295,6 +297,10 @@ namespace LEM_Editor
                         //as well as having multiple nodes selected
                         else if (NodeLEM_Editor.s_HaveMultipleNodeSelected && NodeLEM_Editor.CurrentNodeLastRecordedSelectState == true)
                         {
+                            //If this selected group rect doesnt belong to that currentlyselected node,
+                            if (GetRootParent != currentClickedNode)
+                                DeselectAllNestedNodes();
+
                             m_IsDragged = true;
                         }
                     }
@@ -325,13 +331,14 @@ namespace LEM_Editor
 
         public GroupRectNodeBase SaveGroupRectNodedata()
         {
-            GroupRectNodeBase g = new GroupRectNodeBase();
-            g.m_NodeID = NodeID;
-            g.m_Position = m_MidRect.position;
-            g.m_Size = m_MidRect.size;
-            g.m_NestedNodeIDs = NestedNodesNodeIDs;
-            g.m_LabelText = m_CommentLabel;
-            g.m_ParentNodeID = IsGrouped ? m_GroupedParent.NodeID : "";
+            string parentNodeiD = IsGrouped ? m_GroupedParent.NodeID : "";
+            GroupRectNodeBase g = new GroupRectNodeBase(m_MidRect.position,m_MidRect.size,NodeID,NestedNodesNodeIDs,m_CommentLabel,parentNodeiD);
+            //g.m_NodeID = NodeID;
+            //g.m_Position = m_MidRect.position;
+            //g.m_Size = m_MidRect.size;
+            //g.m_NestedNodeIDs = NestedNodesNodeIDs;
+            //g.m_LabelText = m_CommentLabel;
+            //g.m_ParentNodeID = IsGrouped ? m_GroupedParent.NodeID : "";
             return g;
         }
 

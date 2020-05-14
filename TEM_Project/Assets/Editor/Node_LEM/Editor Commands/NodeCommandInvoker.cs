@@ -245,14 +245,11 @@ namespace LEM_Editor
             for (int i = 0; i < copiedNodesId.Length; i++)
             {
                 initials = NodeLEM_Editor.GetInitials(copiedNodesId[i]);
+
                 if(initials == LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
-                {
                     s_Effect_ClipBoard.Add(NodeLEM_Editor.GetNodeEffectFromID(copiedNodesId[i]));
-                }
                 else
-                {
                     s_GroupRectNodeData_ClipBoard.Add(NodeLEM_Editor.GetGroupRectDataFromID(copiedNodesId[i]));
-                }
                 //s_NodesIds_ClipBoard.Add(copiedNodesId[i]);
             }
         }

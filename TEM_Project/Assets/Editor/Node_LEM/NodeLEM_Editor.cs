@@ -5,6 +5,7 @@ using UnityEditor;
 using System;
 using LEM_Effects;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace LEM_Editor
 {
@@ -1464,10 +1465,26 @@ namespace LEM_Editor
 
         public static GroupRectNode CreateGroupRectNode(Rect[] allSelectedNodesTotalRect, List<Node> allSelectedNodes)
         {
+            GroupRectNode groupRect;
+
             GroupRectNode.CalculateGroupRectPosition(allSelectedNodesTotalRect, out Vector2 startVector2Pos, out Vector2 endVector2Pos);
 
-            //Filter grouped nodes out 
-            allSelectedNodes.RemoveAll(x => x.IsGrouped);
+            //Filter all grouprect nodes out so that this group rect doesnt steal their children
+
+
+            Node[] allSelectedGroupedNodes = allSelectedNodes.FindAll(x => x.IsGrouped).ToArray();
+
+            for (int i = 0; i < allSelectedGroupedNodes.Length; i++)
+            {
+                //Get the parent node of these selected nodes who r grouped
+                groupRect = allSelectedGroupedNodes[i].m_GroupedParent as GroupRectNode;
+                //Unchild that child
+                groupRect.NestedNodesDictionary.Remove(allSelectedGroupedNodes[i].NodeID);
+            }
+
+
+            //allSelectedNodes.RemoveAll(x => x.IsGrouped);
+            //allSelectedNodes.RemoveAll(x => x.ID_Initial == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial);
             //Get ungrouped ones only
             Node[] allSelectedNodesWithNoGroups = allSelectedNodes.ToArray();
 
@@ -1475,9 +1492,10 @@ namespace LEM_Editor
             endVector2Pos.x = Mathf.Abs(endVector2Pos.x - startVector2Pos.x);
             endVector2Pos.y = Mathf.Abs(endVector2Pos.y - startVector2Pos.y);
 
-            GroupRectNode groupRect = new GroupRectNode();
             //Get the respective skin from the collection of nodeskin
             NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+
+            groupRect = new GroupRectNode();
 
             //Initialise the new node 
             groupRect.Initialise
@@ -2058,7 +2076,7 @@ namespace LEM_Editor
             {
                 if (s_CurrentLE.m_AllGroupRectNodes[i].HasAtLeastOneNestedNode)
                     ReCreateGroupNode(
-                        s_CurrentLE.m_AllGroupRectNodes[i].m_NestedNodeIDs, 
+                        s_CurrentLE.m_AllGroupRectNodes[i].m_NestedNodeIDs,
                         s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID,
                         s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
                 else
@@ -2205,7 +2223,7 @@ namespace LEM_Editor
                     nestedNodes[i].m_GroupedParent = null;
                     continue;
                 }
-                else if(AllEffectsNodeInEditor.TryGetValue(groupRectNodes.m_NestedNodeIDs[i], out dummy1))
+                else if (AllEffectsNodeInEditor.TryGetValue(groupRectNodes.m_NestedNodeIDs[i], out dummy1))
                 {
                     nestedNodes[i] = dummy1.effectNode;
                     nestedNodes[i].m_GroupedParent = null;
