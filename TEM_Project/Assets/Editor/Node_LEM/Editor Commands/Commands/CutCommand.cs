@@ -39,14 +39,16 @@ namespace LEM_Editor
             }
 
             //List<GroupRectNodeBase> listOfRectGroupData = new List<GroupRectNodeBase>();
-            GroupRectNodeBase[] rectGroupData = DeleteGroupRectNodeData.SortGroupRectNodeBases(listOfGroupRectNodeIDs.ToArray());
-
-
             if (listOfEffects.Count > 0)
                 deletionData.Add(new DeleteConnectableNodeData(listOfEffects.ToArray()));
 
-            if(rectGroupData.Length > 0)
+            if(listOfGroupRectNodeIDs.Count > 0)
+            {
+                GroupRectNodeBase[] rectGroupData = DeleteGroupRectNodeData.SortGroupRectNodeBases(listOfGroupRectNodeIDs.ToArray());
                 deletionData.Add(new DeleteGroupRectNodeData(rectGroupData.ToArray()));
+                NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.Clear();
+                NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.AddRange(rectGroupData);
+            }
 
             m_DeletionData = deletionData.ToArray();
 
@@ -54,10 +56,7 @@ namespace LEM_Editor
             //m_PastedGroupRects = listOfRectGroupData.ToArray();
 
             NodeCommandInvoker.s_Effect_ClipBoard.Clear();
-            NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.Clear();
-
             NodeCommandInvoker.s_Effect_ClipBoard.AddRange(listOfEffects);
-            NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.AddRange(rectGroupData);
         }
 
         public void Execute()

@@ -105,11 +105,13 @@ namespace LEM_Editor
             //}
             #endregion
 
-            GroupRectNodeBase[] groupRectNodeBases = DeleteGroupRectNodeData.SortGroupRectNodeBases(groupRectNodeIDs.ToArray());
 
             //m_DeletedGroupRectNodeBases = groupRectNodeBases.ToArray();
-            if (groupRectNodeBases.Length > 0)
+            if (groupRectNodeIDs.Count > 0)
+            {
+                GroupRectNodeBase[] groupRectNodeBases = DeleteGroupRectNodeData.SortGroupRectNodeBases(groupRectNodeIDs.ToArray());
                 deleteData.Add(new DeleteGroupRectNodeData(groupRectNodeBases.ToArray()));
+            }
 
 
             m_ConnectableNodesData = deleteData.ToArray();
