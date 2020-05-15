@@ -63,6 +63,7 @@ namespace LEM_Editor
              { "ReRotTrans", new NodeDictionaryDefinition(new ReRotateTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
              { "ReSizeRectTrans", new NodeDictionaryDefinition(new ReSizeRectTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
              { "SetTransParent", new NodeDictionaryDefinition(new SetTransformParentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "StopRepeatNode", new NodeDictionaryDefinition(new StopRepeatNode(),new Color(0.19f ,0.74f,0.67f)) },
              { "RepeatLerpRectransToPosNode", new NodeDictionaryDefinition(new RepeatLerpRectransformToPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
             
         };

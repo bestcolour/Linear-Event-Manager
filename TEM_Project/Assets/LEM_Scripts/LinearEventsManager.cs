@@ -13,6 +13,7 @@ public class LinearEventsManager : MonoBehaviour
     public static LinearEventsManager Instance;
 
     Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>> m_AllLinearEventsEffectsDictionary = new Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>>();
+    public static Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>> AllLinearEventsEffectsDictionary => Instance.m_AllLinearEventsEffectsDictionary;
 
     #region Linear Events
     [Header("Initialisation Settings"), Tooltip("Should LinearEventManager find all LinearEvents in the scene automatically on Initialisation?")]
@@ -297,15 +298,6 @@ public class LinearEventsManager : MonoBehaviour
         if (maxEffectsPerFrame > 0)
             LoadNextEffect(maxEffectsPerFrame);
 
-
-        //        //Stop loading effect if there is no next effect
-        //        if (!m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode)
-        //        {
-        //#if UNITY_EDITOR
-        //            Debug.LogWarning("Effect " + m_PreviousEffectPlayed.name + " does not have any effect to play!", m_PreviousEffectPlayed);
-        //#endif
-        //            return;
-        //        }
 
     }
 

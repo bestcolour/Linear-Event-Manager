@@ -72,9 +72,6 @@ namespace LEM_Editor
             propertyRect.y += 15f;
             propertyRect.width -= 20f;
             propertyRect.height =EditorGUIUtility.singleLineHeight;
-            //m_LemEffectDescription = EditorGUI.TextArea(propertyRect, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
-            //m_LemEffectDescription = EditorGUI.TextField(propertyRect, m_LemEffectDescription, LEMStyleLibrary.s_NodeTextInputStyle);
-            ///*m_LemEffectDescription =*/ EditorGUI.TextField(propertyRect, NodeID);
 
             //Draw UpdateCycle enum
 

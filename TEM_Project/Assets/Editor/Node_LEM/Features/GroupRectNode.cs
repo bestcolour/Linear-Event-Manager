@@ -145,11 +145,11 @@ namespace LEM_Editor
             m_CommentLabel = EditorGUI.DelayedTextField(m_TopRect, m_CommentLabel, LEMStyleLibrary.s_NodeHeaderStyle);
 
             #region Debug
-            Rect debugRect = m_TopRect;
-            debugRect.y -= 20f;
-            EditorGUI.LabelField(debugRect, "Is Grouped to " + m_GroupedParent?.NodeID);
-            debugRect.y -= 20f;
-            EditorGUI.LabelField(debugRect, "Node ID " + NodeID);
+            //Rect debugRect = m_TopRect;
+            //debugRect.y -= 20f;
+            //EditorGUI.LabelField(debugRect, "Is Grouped to " + m_GroupedParent?.NodeID);
+            //debugRect.y -= 20f;
+            //EditorGUI.LabelField(debugRect, "Node ID " + NodeID);
             #endregion
 
 

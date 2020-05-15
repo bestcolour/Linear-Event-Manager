@@ -53,7 +53,7 @@ namespace LEM_Effects
         public virtual string GetNextNodeID() { return m_NodeBaseData.m_NextPointsIDs[0]; }
 
         /// <summary>
-        /// Forcibly stop the effect if they are the UpdateEffect
+        /// To be called when to forcibly stop the effect if they are the UpdateEffect
         /// </summary>
         public virtual void ForceStop() { }
 
