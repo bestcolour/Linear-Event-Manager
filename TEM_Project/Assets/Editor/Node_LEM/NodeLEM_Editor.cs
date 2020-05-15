@@ -271,6 +271,11 @@ namespace LEM_Editor
 
         }
 
+        void DoGroup()
+        {
+            CommandInvoker.InvokeCommand(new GroupCommand( AllSelectedNodes));
+        }
+
         #endregion
 
         Texture2D m_EditorBackGroundTexture = default;
@@ -490,6 +495,7 @@ namespace LEM_Editor
 
             genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
             genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
+            genericMenu.AddItem(new GUIContent("Group   (Crlt + G)"), false, delegate { DoGroup(); Repaint(); });
             genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate { DoCopy(); Repaint(); });
             genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate { DoCutCommand(); Repaint(); });
             genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { DoPasteCommand(); Repaint(); });
@@ -839,20 +845,6 @@ namespace LEM_Editor
                     SaveToLinearEvent();
                     //m_EditorState = EDITORSTATE.SAVED;
                 }
-                ////Prevents double clicking on saving
-                //if (m_EditorState == EDITORSTATE.LOADED)
-                //{
-
-                //}
-                ////else if m_EditorState == EditorState.Saved cause for Unloaded to occur u have no linear event 
-                ////but that means save button wont even be drawn due to it not belonging in the same delegate
-                //else
-                //{
-                //    bool wasEnabled = GUI.enabled;
-                //    GUI.enabled = false;
-                //    GUI.Button(propertyRect, EDITORSTATE.SAVED_STRING);
-                //    GUI.enabled = wasEnabled;
-                //}
             }
             else
             {
@@ -872,21 +864,6 @@ namespace LEM_Editor
             if (GUI.Button(propertyRect, "Paste"))
             {
                 DoPasteCommand();
-                ////Else if there is stuff copied on the clipboard of the nodeinvoker then you can paste 
-                //if (NodeCommandInvoker.s_Effect_ClipBoard.Count > 0)
-                //{
-                //    //If player had cut 
-                //    if (CommandInvoker.m_HasCutButNotCutPaste)
-                //    {
-                //        CommandInvoker.InvokeCommand(new CutPasteCommand());
-                //        GUI.changed = true;
-                //        return;
-                //    }
-
-                //    CommandInvoker.InvokeCommand(new PasteCommand());
-                //    GUI.changed = true;
-                //}
-
             }
 
             propertyRect.x -= buttonWidth;
@@ -894,15 +871,6 @@ namespace LEM_Editor
             if (GUI.Button(propertyRect, "Copy"))
             {
                 DoCopy();
-                ////Remove start and end node 
-                //if (m_AllSelectedNodes.Contains(StartNode))
-                //{
-                //    StartNode.DeselectNode();
-                //}
-
-                ////CommandInvoker.CopyToClipBoard(Array.ConvertAll(m_AllSelectedNodes.ToArray(), x => (BaseEffectNode)x));
-                //CommandInvoker.CopyToClipBoard(AllSelectedNodes.ToArray());
-
                 e.Use();
             }
 
@@ -920,19 +888,16 @@ namespace LEM_Editor
             if (GUI.Button(propertyRect, "Delete"))
             {
                 DoDeleteCommand();
-
-                //GUI.FocusControl(null);
-
-                ////Remove start and end node 
-                //if (m_AllSelectedNodes.Contains(StartNode))
-                //{
-                //    StartNode.DeselectNode();
-                //}
-
-                //CommandInvoker.InvokeCommand(new DeleteNodeCommand(m_AllSelectedNodes.Select(x => x.NodeID).ToArray()));
-                //Skip everything else and repaint
                 e.Use();
 
+            }
+
+            propertyRect.x -= buttonWidth;
+
+            if (GUI.Button(propertyRect, "Group"))
+            {
+                DoGroup();
+                GUI.changed = true;
             }
 
             propertyRect.x -= buttonWidth;
@@ -950,6 +915,7 @@ namespace LEM_Editor
                 CommandInvoker.UndoCommand();
                 GUI.changed = true;
             }
+
 
         }
 
@@ -1264,7 +1230,7 @@ namespace LEM_Editor
                         //Group Comment
                         else if (s_HaveMultipleNodeSelected && e.keyCode == KeyCode.G)
                         {
-                            CommandInvoker.InvokeCommand(new GroupCommand(/*AllSelectedNodes.Select(x => x.m_TotalRect).ToArray(),*/ AllSelectedNodes));
+                            DoGroup();
                             GUI.changed = true;
                         }
                     }

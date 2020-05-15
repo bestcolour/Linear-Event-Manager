@@ -170,25 +170,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &34916957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c67f364e87fad08429149ab0ff0c73a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: CustomVoidFunction
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 1053.376, y: 820.81494}
-    m_NodeID: BEN_57a39079-1eac-492e-9d18-a09f509edb69
-    m_NextPointsIDs: []
-  m_EventObject: {fileID: 439628121}
 --- !u!1 &178400244
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,21 +236,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &439628121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1128bd146c84af2438b96cb4e339c001, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UnityEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &682789792
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,25 +419,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &789579184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 1097.5575, y: 1615.1626}
-    m_NodeID: BEN_7ef51ee6-b5bc-45f7-93d5-88aa618e4811
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,25 +502,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &972444299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 2225.9836, y: 1169.2365}
-    m_NodeID: BEN_85b2b6fb-c66c-4605-a8ae-15733373aae1
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &1114990028
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,25 +668,6 @@ Transform:
   m_Father: {fileID: 1681769661}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1499865448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 1602.3882, y: 1743.3479}
-    m_NodeID: BEN_669db6c5-de15-4217-aed9-d16ced2ca9d1
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,25 +728,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1662587073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 1548.7104, y: 1591.4358}
-    m_NodeID: BEN_750cd31d-050b-405e-b310-787ac5d35f64
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &1681769660
 GameObject:
   m_ObjectHideFlags: 0
@@ -1037,25 +927,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1858252088}
   m_CullTransparentMesh: 0
---- !u!114 &1859606532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 976.6828, y: 1741.4172}
-    m_NodeID: BEN_9b2a0657-83e1-4d40-8123-8b76df434506
-    m_NextPointsIDs: []
-  m_DelayTime: 0
 --- !u!1 &2039914929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,65 +1056,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LinearEventName: 
-  m_AllEffects:
-  - {fileID: 1859606532}
-  - {fileID: 1499865448}
-  - {fileID: 1662587073}
-  - {fileID: 972444299}
-  - {fileID: 34916957}
-  - {fileID: 789579184}
-  m_AllGroupRectNodes:
-  - m_Position: {x: 728.42505, y: 684.09955}
-    m_Size: {x: 988.2041, y: 665.519}
-    m_ParentNodeID: 
-    m_NodeID: GRN_38b40f26-d04f-4f02-868e-e4e0492fafbe
-    m_NestedNodeIDs:
-    - GRN_78aa1ff0-f70b-4562-87b7-ef48ac95650d
-    m_LabelText: 
-  - m_Position: {x: 916.68286, y: 1063.2373}
-    m_Size: {x: 1594.2994, y: 838.18036}
-    m_ParentNodeID: GRN_38b40f26-d04f-4f02-868e-e4e0492fafbe
-    m_NodeID: GRN_78aa1ff0-f70b-4562-87b7-ef48ac95650d
-    m_NestedNodeIDs:
-    - GRN_089fdd34-1414-47a1-9e82-bc8ec5878885
-    - GRN_ff25725d-4139-4782-a74e-312e54c5f94b
-    - GRN_55921755-cc5e-4f81-ae30-e0b3a1ecbd5f
-    m_LabelText: 
-  - m_Position: {x: 2205.9836, y: 1116.2363}
-    m_Size: {x: 285, y: 173}
-    m_ParentNodeID: GRN_78aa1ff0-f70b-4562-87b7-ef48ac95650d
-    m_NodeID: GRN_089fdd34-1414-47a1-9e82-bc8ec5878885
-    m_NestedNodeIDs:
-    - BEN_85b2b6fb-c66c-4605-a8ae-15733373aae1
-    m_LabelText: 
-  - m_Position: {x: 936.68286, y: 1451.417}
-    m_Size: {x: 930.70496, y: 429.99994}
-    m_ParentNodeID: GRN_78aa1ff0-f70b-4562-87b7-ef48ac95650d
-    m_NodeID: GRN_ff25725d-4139-4782-a74e-312e54c5f94b
-    m_NestedNodeIDs:
-    - GRN_cde2c02d-9b82-481c-8c62-e78753242bf8
-    - BEN_669db6c5-de15-4217-aed9-d16ced2ca9d1
-    - BEN_750cd31d-050b-405e-b310-787ac5d35f64
-    m_LabelText: 
-  - m_Position: {x: 1033.376, y: 767.81494}
-    m_Size: {x: 285, y: 273}
-    m_ParentNodeID: GRN_78aa1ff0-f70b-4562-87b7-ef48ac95650d
-    m_NodeID: GRN_55921755-cc5e-4f81-ae30-e0b3a1ecbd5f
-    m_NestedNodeIDs:
-    - BEN_57a39079-1eac-492e-9d18-a09f509edb69
-    m_LabelText: 
-  - m_Position: {x: 956.68286, y: 1504.417}
-    m_Size: {x: 538.00006, y: 356.99988}
-    m_ParentNodeID: GRN_ff25725d-4139-4782-a74e-312e54c5f94b
-    m_NodeID: GRN_cde2c02d-9b82-481c-8c62-e78753242bf8
-    m_NestedNodeIDs:
-    - BEN_9b2a0657-83e1-4d40-8123-8b76df434506
-    - SN_ab9c3031-05cd-42c7-b009-bcacf624de21
-    - BEN_7ef51ee6-b5bc-45f7-93d5-88aa618e4811
-    m_LabelText: 
+  m_AllEffects: []
+  m_AllGroupRectNodes: []
   m_StartNodeData:
-    m_Position: {x: 1364.6827, y: 1524.417}
-    m_NodeID: SN_ab9c3031-05cd-42c7-b009-bcacf624de21
+    m_Position: {x: 0, y: 0}
+    m_NodeID: 
     m_NextPointsIDs: []
 --- !u!4 &2127555589
 Transform:
