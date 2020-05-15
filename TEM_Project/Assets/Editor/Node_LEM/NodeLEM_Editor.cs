@@ -273,7 +273,7 @@ namespace LEM_Editor
 
         void DoGroup()
         {
-            CommandInvoker.InvokeCommand(new GroupCommand( AllSelectedNodes));
+            CommandInvoker.InvokeCommand(new GroupCommand(AllSelectedNodes));
         }
 
         #endregion
@@ -329,7 +329,6 @@ namespace LEM_Editor
             EditorApplication.playModeStateChanged += SaveBeforeEnterPlayMode;
             EditorApplication.playModeStateChanged += LoadAfterExitingPlayMode;
             EditorApplication.quitting += TryToSaveLinearEvent;
-            //EditorApplication.quitting += SaveToLinearEvent;
 
         }
 
@@ -1113,14 +1112,6 @@ namespace LEM_Editor
                             }
 
                         }
-                        ////Else if current clicked node isnt null
-                        //else
-                        //{
-                        //    //ResetSelectedNode();
-                        //    ////Only rearrange when currentclicked node is not grouprect node
-                        //    //if (s_CurrentClickedNode.ID_Initial != LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial)
-                        //    //    AllConnectableNodesInEditor.RearrangeElement(s_CurrentClickedNode, AllConnectableNodesInEditor.Count - 1);
-                        //}
 
                         //Remove focus on the controls when user clicks on something regardless if it is a node or not because apparently this doesnt get
                         //called when i click on input/text fields
@@ -1435,9 +1426,6 @@ namespace LEM_Editor
 
             GroupRectNode.CalculateGroupRectPosition(allSelectedNodesTotalRect, out Vector2 startVector2Pos, out Vector2 endVector2Pos);
 
-            //Get ungrouped ones only
-            //Node[] allSelectedNodesWithNoGroups = allSelectedNodes.ToArray();
-
             //Size vector
             endVector2Pos.x = Mathf.Abs(endVector2Pos.x - startVector2Pos.x);
             endVector2Pos.y = Mathf.Abs(endVector2Pos.y - startVector2Pos.y);
@@ -1468,7 +1456,7 @@ namespace LEM_Editor
         }
 
         //Recreategroup if there is nestednodes in this group node
-        public static GroupRectNode ReCreateGroupNode(/*Vector2 rectGroupPos, Vector2 rectGroupSize,*/ string[] allNestedNodesIDs, string idToSet, string labelText)
+        public static GroupRectNode ReCreateGroupNode(string[] allNestedNodesIDs, string idToSet, string labelText)
         {
             //Get the respective skin from the collection of nodeskin
             NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
@@ -1936,13 +1924,14 @@ namespace LEM_Editor
                 lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
             }
 
-
-            //string[] keysForGrp = AllGroupRectsInEditorNodeIDs;
-            GroupRectNodeBase[] allGroupRects = DeleteGroupRectNodeData.SortGroupRectNodeBasesForSaving(AllGroupRectsInEditorNodeIDs);
+            if (AllGroupRectsInEditorDictionary.Count > 0)
+            {
+                GroupRectNodeBase[] allGroupRects = DeleteGroupRectNodeData.SortGroupRectNodeBasesForSaving(AllGroupRectsInEditorNodeIDs);
+                s_CurrentLE.m_AllGroupRectNodes = allGroupRects;
+            }
 
             //Save to serializable array of effects
             s_CurrentLE.m_AllEffects = lemEffects;
-            s_CurrentLE.m_AllGroupRectNodes = allGroupRects;
 
             //Save start and end node data
             s_CurrentLE.m_StartNodeData = StartNode.SaveNodeData();
