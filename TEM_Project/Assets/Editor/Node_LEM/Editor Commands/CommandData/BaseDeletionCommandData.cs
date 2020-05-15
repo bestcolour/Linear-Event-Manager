@@ -180,23 +180,28 @@ namespace LEM_Editor
 
             currentNodeID = searchFrontier.Dequeue();
 
-            while (NodeLEM_Editor.AllGroupRectsInEditorDictionary[currentNodeID].NestedNodesDictionary.Count > 0)
+            while (true)
             {
-                //Reusuing stirng[] to record the keys for the nestednodes
-                unsortedGroupRectNodeIDs = NodeLEM_Editor.AllGroupRectsInEditorDictionary[currentNodeID].NestedNodesNodeIDs;
-
-                for (int i = 0; i < unsortedGroupRectNodeIDs.Length; i++)
+                if (NodeLEM_Editor.AllGroupRectsInEditorDictionary[currentNodeID].NestedNodesDictionary.Count > 0)
                 {
-                    currentNodeID = NodeLEM_Editor.GetInitials(unsortedGroupRectNodeIDs[i]);
+                    //Reusuing stirng[] to record the keys for the nestednodes
+                    unsortedGroupRectNodeIDs = NodeLEM_Editor.AllGroupRectsInEditorDictionary[currentNodeID].NestedNodesNodeIDs;
 
-                    //If the nested node is a group rect
-                    if (currentNodeID == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial && NodeLEM_Editor.AllGroupRectsInEditorDictionary[unsortedGroupRectNodeIDs[i]].IsSelected)
+                    for (int i = 0; i < unsortedGroupRectNodeIDs.Length; i++)
                     {
-                        groupRectNodeBases.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[unsortedGroupRectNodeIDs[i]].SaveGroupRectNodedata());
-                        //Add it to the queue
-                        searchFrontier.Enqueue(unsortedGroupRectNodeIDs[i]);
+                        currentNodeID = NodeLEM_Editor.GetInitials(unsortedGroupRectNodeIDs[i]);
+
+                        //If the nested node is a group rect
+                        if (currentNodeID == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial && NodeLEM_Editor.AllGroupRectsInEditorDictionary[unsortedGroupRectNodeIDs[i]].IsSelected)
+                        {
+                            groupRectNodeBases.Add(NodeLEM_Editor.AllGroupRectsInEditorDictionary[unsortedGroupRectNodeIDs[i]].SaveGroupRectNodedata());
+                            //Add it to the queue
+                            searchFrontier.Enqueue(unsortedGroupRectNodeIDs[i]);
+                        }
                     }
+
                 }
+
 
                 if (searchFrontier.Count > 0)
                     currentNodeID = searchFrontier.Dequeue();

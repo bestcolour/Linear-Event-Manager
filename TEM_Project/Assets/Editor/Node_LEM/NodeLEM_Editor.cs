@@ -5,7 +5,6 @@ using UnityEditor;
 using System;
 using LEM_Effects;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace LEM_Editor
 {
@@ -532,6 +531,7 @@ namespace LEM_Editor
 
             m_AllConnectableNodesInEditor = new List<Node>();
             m_AllGroupRectNodesInEditor = new List<Node>();
+            m_AllGroupRectsInEditorDictionary = new Dictionary<string, GroupRectNode>();
             //m_AllNodesInEditor = new Dictionary<int, Node>();
 
             m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
@@ -1264,7 +1264,7 @@ namespace LEM_Editor
                         //Group Comment
                         else if (s_HaveMultipleNodeSelected && e.keyCode == KeyCode.G)
                         {
-                            CommandInvoker.InvokeCommand(new GroupCommand(AllSelectedNodes.Select(x => x.m_TotalRect).ToArray(), AllSelectedNodes));
+                            CommandInvoker.InvokeCommand(new GroupCommand(/*AllSelectedNodes.Select(x => x.m_TotalRect).ToArray(),*/ AllSelectedNodes));
                             GUI.changed = true;
                         }
                     }
@@ -1463,30 +1463,14 @@ namespace LEM_Editor
             newlyCreatedNode = newNode;
         }
 
-        public static GroupRectNode CreateGroupRectNode(Rect[] allSelectedNodesTotalRect, List<Node> allSelectedNodes)
+        public static GroupRectNode CreateGroupRectNode(Rect[] allSelectedNodesTotalRect, Node[] allSelectedNodes)
         {
             GroupRectNode groupRect;
 
             GroupRectNode.CalculateGroupRectPosition(allSelectedNodesTotalRect, out Vector2 startVector2Pos, out Vector2 endVector2Pos);
 
-            //Filter all grouprect nodes out so that this group rect doesnt steal their children
-
-
-            Node[] allSelectedGroupedNodes = allSelectedNodes.FindAll(x => x.IsGrouped).ToArray();
-
-            for (int i = 0; i < allSelectedGroupedNodes.Length; i++)
-            {
-                //Get the parent node of these selected nodes who r grouped
-                groupRect = allSelectedGroupedNodes[i].m_GroupedParent as GroupRectNode;
-                //Unchild that child
-                groupRect.NestedNodesDictionary.Remove(allSelectedGroupedNodes[i].NodeID);
-            }
-
-
-            //allSelectedNodes.RemoveAll(x => x.IsGrouped);
-            //allSelectedNodes.RemoveAll(x => x.ID_Initial == LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial);
             //Get ungrouped ones only
-            Node[] allSelectedNodesWithNoGroups = allSelectedNodes.ToArray();
+            //Node[] allSelectedNodesWithNoGroups = allSelectedNodes.ToArray();
 
             //Size vector
             endVector2Pos.x = Mathf.Abs(endVector2Pos.x - startVector2Pos.x);
@@ -1501,7 +1485,7 @@ namespace LEM_Editor
             groupRect.Initialise
                 (startVector2Pos,
                 endVector2Pos,
-                allSelectedNodesWithNoGroups,
+                allSelectedNodes,
                 nodeSkin,
                 instance.TryToAddNodeToSelectedCollection,
                 instance.TryToRemoveNodeFromSelectedCollection,
@@ -1979,7 +1963,6 @@ namespace LEM_Editor
 
             LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllEffectsNodeInEditor.Count];
             BaseEffectNode[] allEffectNodes = AllEffectsNodeInEditor.Values.Select(x => x.effectNode).ToArray();
-            GroupRectNodeBase[] allGroupRects = new GroupRectNodeBase[AllGroupRectsInEditorDictionary.Count];
 
             //This saves all events regardless of whether they are connected singularly, plurally or disconnected
             for (int i = 0; i < lemEffects.Length; i++)
@@ -1987,12 +1970,22 @@ namespace LEM_Editor
                 lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
             }
 
-            string[] keysForGrp = AllGroupRectsInEditorNodeIDs;
 
-            for (int i = 0; i < keysForGrp.Length; i++)
+            //string[] keysForGrp = AllGroupRectsInEditorNodeIDs;
+            GroupRectNodeBase[] allGroupRects = DeleteGroupRectNodeData.SortGroupRectNodeBases(AllGroupRectsInEditorNodeIDs);
+
+            for (int i = 0; i < allGroupRects.Length; i++)
             {
-                allGroupRects[i] = AllGroupRectsInEditorDictionary[keysForGrp[i]].SaveGroupRectNodedata();
+                Debug.Log("Node ID : " + allGroupRects[i].m_NodeID + "\n" + " Parent Node ID : " + allGroupRects[i].m_ParentNodeID);
             }
+
+            Debug.Log(allGroupRects.Length);
+
+            //for (int i = 0; i < keysForGrp.Length; i++)
+            //{
+            //    allGroupRects[i] = AllGroupRectsInEditorDictionary[keysForGrp[i]].SaveGroupRectNodedata();
+
+            //}
 
             //Save to serializable array of effects
             s_CurrentLE.m_AllEffects = lemEffects;
@@ -2047,17 +2040,13 @@ namespace LEM_Editor
 
             string[] allKeys = allEffectsDictInLinearEvent.Keys.ToArray();
 
-            BaseEffectNode newEffectNode;
-
             //Recreate all the nodes from the dictionary
             for (int i = 0; i < allKeys.Length; i++)
             {
-                newEffectNode = RecreateEffectNode(allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_Position,
-                    allEffectsDictInLinearEvent[allKeys[i]].m_NodeEffectType,
-                    allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_NodeID);
-
                 //Load the new node with saved node values values
-                newEffectNode.LoadFromBaseEffect(allEffectsDictInLinearEvent[allKeys[i]]);
+                RecreateEffectNode(allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_Position,
+                     allEffectsDictInLinearEvent[allKeys[i]].m_NodeEffectType,
+                     allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_NodeID).LoadFromBaseEffect(allEffectsDictInLinearEvent[allKeys[i]]);
             }
 
             #endregion
@@ -2072,7 +2061,8 @@ namespace LEM_Editor
             }
 
             //Recr8 group nodes
-            for (int i = 0; i < s_CurrentLE.m_AllGroupRectNodes.Length; i++)
+            for (int i = s_CurrentLE.m_AllGroupRectNodes.Length - 1; i > -1; i--)
+            //for (int i = 0; i < s_CurrentLE.m_AllGroupRectNodes.Length; i++)
             {
                 if (s_CurrentLE.m_AllGroupRectNodes[i].HasAtLeastOneNestedNode)
                     ReCreateGroupNode(
@@ -2085,6 +2075,13 @@ namespace LEM_Editor
                         s_CurrentLE.m_AllGroupRectNodes[i].m_Size,
                         s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID,
                         s_CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
+            }
+
+            //Restitch their parent connections
+            for (int i = 0; i < s_CurrentLE.m_AllGroupRectNodes.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(s_CurrentLE.m_AllGroupRectNodes[i].m_ParentNodeID))
+                    AllGroupRectsInEditorDictionary[s_CurrentLE.m_AllGroupRectNodes[i].m_NodeID].m_GroupedParent = AllGroupRectsInEditorDictionary[s_CurrentLE.m_AllGroupRectNodes[i].m_ParentNodeID];
             }
 
 
@@ -2221,20 +2218,18 @@ namespace LEM_Editor
                 {
                     nestedNodes[i] = StartNode;
                     nestedNodes[i].m_GroupedParent = null;
-                    continue;
                 }
                 else if (AllEffectsNodeInEditor.TryGetValue(groupRectNodes.m_NestedNodeIDs[i], out dummy1))
                 {
                     nestedNodes[i] = dummy1.effectNode;
                     nestedNodes[i].m_GroupedParent = null;
-                    continue;
                 }
                 else if (AllGroupRectsInEditorDictionary.TryGetValue(groupRectNodes.m_NestedNodeIDs[i], out dummy2))
                 {
                     nestedNodes[i] = dummy2;
                     nestedNodes[i].m_GroupedParent = null;
-                    continue;
                 }
+
             }
             instance.TryToRemoveNodeFromSelectedCollection(groupRectNodes.m_NodeID);
 
@@ -2242,6 +2237,16 @@ namespace LEM_Editor
             //Need nodeid to be checked cause Node references are lost during command invoker
             int indexOfNodeToRemove = AllGroupRectNodesInEditor.FindIndex(x => x.NodeID == groupRectNodes.m_NodeID);
             AllGroupRectNodesInEditor.RemoveEfficiently(indexOfNodeToRemove);
+
+            //Parent of the group rect to be deleted must be updated before the grouprect node is completely removed
+            if (AllGroupRectsInEditorDictionary[groupRectNodes.m_NodeID].IsGrouped)
+            {
+                dummy2 = AllGroupRectsInEditorDictionary[groupRectNodes.m_NodeID].m_GroupedParent;
+                AllGroupRectsInEditorDictionary.Remove(groupRectNodes.m_NodeID);
+                //Forcefully update
+                dummy2.UpdateNestedNodes();
+                return;
+            }
 
             AllGroupRectsInEditorDictionary.Remove(groupRectNodes.m_NodeID);
         }

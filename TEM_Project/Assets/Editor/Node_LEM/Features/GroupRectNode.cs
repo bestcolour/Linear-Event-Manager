@@ -173,6 +173,12 @@ namespace LEM_Editor
                     {
                         forceUpdateGrpNode.UpdateNestedNodes();
                     }
+                    //Else if there is no such key then remove it from ur nested dictionary
+                    else
+                    {
+                        m_NestedNodesDictionary.Remove(m_NestedNodesDictionary[keys[i]].NodeID);
+                        continue;
+                    }
                 }
 
                 if (!m_TotalRect.Overlaps(m_NestedNodesDictionary[keys[i]].m_TotalRect))
@@ -216,7 +222,7 @@ namespace LEM_Editor
 
         }
 
-        void DeselectAllNestedNodes()
+        public void DeselectAllNestedNodes()
         {
             GroupRectNode gr;
             string[] keys = NestedNodesNodeIDs;

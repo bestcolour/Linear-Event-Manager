@@ -236,7 +236,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &575562645
+--- !u!114 &456039121
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -251,27 +251,8 @@ MonoBehaviour:
   m_NodeEffectType: AddDelay
   m_UpdateCycle: 0
   m_NodeBaseData:
-    m_Position: {x: 689.6667, y: 853.4452}
-    m_NodeID: BEN_9257ca83-d0c3-42b6-ad4b-af301c4dfba3
-    m_NextPointsIDs: []
-  m_DelayTime: 0
---- !u!114 &580425658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NodeEffectType: AddDelay
-  m_UpdateCycle: 0
-  m_NodeBaseData:
-    m_Position: {x: 918.0181, y: 405.57266}
-    m_NodeID: BEN_4133fc66-de72-429b-b9f2-ac76986c209d
+    m_Position: {x: 899.2859, y: 851.14294}
+    m_NodeID: BEN_09686829-a087-434d-bb64-abb6c3915c1b
     m_NextPointsIDs: []
   m_DelayTime: 0
 --- !u!1 &682789792
@@ -891,6 +872,25 @@ Transform:
   m_Father: {fileID: 1681769661}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1793145203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542e2f47da960f24aa81ff82ab2dc214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: AddDelay
+  m_UpdateCycle: 0
+  m_NodeBaseData:
+    m_Position: {x: 1564.8688, y: 1447.1932}
+    m_NodeID: BEN_9e77e5f7-1dc6-44f7-924e-4dd4b2154eea
+    m_NextPointsIDs: []
+  m_DelayTime: 0
 --- !u!1 &1858252088
 GameObject:
   m_ObjectHideFlags: 0
@@ -965,7 +965,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1858252088}
   m_CullTransparentMesh: 0
---- !u!114 &1968374071
+--- !u!114 &2030143626
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -980,8 +980,8 @@ MonoBehaviour:
   m_NodeEffectType: AddDelay
   m_UpdateCycle: 0
   m_NodeBaseData:
-    m_Position: {x: 924.6845, y: 742.2399}
-    m_NodeID: BEN_cfb9facc-833b-47d8-bc4e-ba60b07e6ee9
+    m_Position: {x: 457.72742, y: 1169.4548}
+    m_NodeID: BEN_3de80074-8052-45a1-ac04-e0b864600740
     m_NextPointsIDs: []
   m_DelayTime: 0
 --- !u!1 &2039914929
@@ -1083,7 +1083,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &2056391423
+--- !u!114 &2063082159
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1098,8 +1098,8 @@ MonoBehaviour:
   m_NodeEffectType: AddDelay
   m_UpdateCycle: 0
   m_NodeBaseData:
-    m_Position: {x: 683.00006, y: 516.7781}
-    m_NodeID: BEN_1c406e44-79b2-4c80-83c2-34628ad993d8
+    m_Position: {x: 1135.0005, y: 1376.5004}
+    m_NodeID: BEN_bd63c10c-fdf7-45c3-8681-68ec28ff96ad
     m_NextPointsIDs: []
   m_DelayTime: 0
 --- !u!1 &2127555587
@@ -1133,14 +1133,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LinearEventName: 
   m_AllEffects:
-  - {fileID: 2056391423}
-  - {fileID: 580425658}
-  - {fileID: 575562645}
-  - {fileID: 1968374071}
-  m_AllGroupRectNodes: []
+  - {fileID: 1793145203}
+  - {fileID: 456039121}
+  - {fileID: 2030143626}
+  - {fileID: 2063082159}
+  m_AllGroupRectNodes:
+  - m_Position: {x: 1544.8688, y: 1291.1932}
+    m_Size: {x: 457.9999, y: 276}
+    m_ParentNodeID: 
+    m_NodeID: GRN_ed02c557-ae60-46d3-bf93-dee13ad22ccf
+    m_NestedNodeIDs:
+    - BEN_9e77e5f7-1dc6-44f7-924e-4dd4b2154eea
+    - SN_5c96c16d-cdbb-45cb-bc94-12e6a2918641
+    m_LabelText: 
+  - m_Position: {x: 1557.3687, y: 773.1932}
+    m_Size: {x: 931.91736, y: 349}
+    m_ParentNodeID: 
+    m_NodeID: GRN_ade736ec-1abf-43ac-8624-70f10c088145
+    m_NestedNodeIDs: []
+    m_LabelText: 
+  - m_Position: {x: 432.3686, y: 267.69315}
+    m_Size: {x: 971.91736, y: 636.76154}
+    m_ParentNodeID: 
+    m_NodeID: GRN_bd8ee4be-5daf-4a40-b217-f2efff59adf4
+    m_NestedNodeIDs:
+    - GRN_e5387d60-857b-4ffc-ab4c-30d3b9f00bf4
+    m_LabelText: 
   m_StartNodeData:
-    m_Position: {x: 202.53485, y: 446.77536}
-    m_NodeID: SN_4d24de0c-f11c-4b0d-9ec1-e5c74aaee59c
+    m_Position: {x: 1872.8685, y: 1311.1932}
+    m_NodeID: SN_5c96c16d-cdbb-45cb-bc94-12e6a2918641
     m_NextPointsIDs: []
 --- !u!4 &2127555589
 Transform:

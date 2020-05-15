@@ -152,6 +152,7 @@ public class LinearEventsManager : MonoBehaviour
             if (m_UpdateCycle[i].UpdateEffect())
             {
                 m_UpdateCycle.RemoveEfficiently(i);
+                i--;
             }
         }
 
@@ -179,6 +180,7 @@ public class LinearEventsManager : MonoBehaviour
             if (m_FixedUpdateCycle[i].UpdateEffect())
             {
                 m_FixedUpdateCycle.RemoveEfficiently(i);
+                i--;
             }
         }
     }
@@ -193,6 +195,7 @@ public class LinearEventsManager : MonoBehaviour
             if (m_LateUpdateCycle[i].UpdateEffect())
             {
                 m_LateUpdateCycle.RemoveEfficiently(i);
+                i--;
             }
         }
     }
