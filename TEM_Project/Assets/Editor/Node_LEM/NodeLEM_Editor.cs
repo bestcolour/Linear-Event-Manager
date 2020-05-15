@@ -1972,20 +1972,7 @@ namespace LEM_Editor
 
 
             //string[] keysForGrp = AllGroupRectsInEditorNodeIDs;
-            GroupRectNodeBase[] allGroupRects = DeleteGroupRectNodeData.SortGroupRectNodeBases(AllGroupRectsInEditorNodeIDs);
-
-            for (int i = 0; i < allGroupRects.Length; i++)
-            {
-                Debug.Log("Node ID : " + allGroupRects[i].m_NodeID + "\n" + " Parent Node ID : " + allGroupRects[i].m_ParentNodeID);
-            }
-
-            Debug.Log(allGroupRects.Length);
-
-            //for (int i = 0; i < keysForGrp.Length; i++)
-            //{
-            //    allGroupRects[i] = AllGroupRectsInEditorDictionary[keysForGrp[i]].SaveGroupRectNodedata();
-
-            //}
+            GroupRectNodeBase[] allGroupRects = DeleteGroupRectNodeData.SortGroupRectNodeBasesForSaving(AllGroupRectsInEditorNodeIDs);
 
             //Save to serializable array of effects
             s_CurrentLE.m_AllEffects = lemEffects;

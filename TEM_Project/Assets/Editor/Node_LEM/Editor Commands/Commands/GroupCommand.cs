@@ -14,7 +14,7 @@ namespace LEM_Editor
         //GroupRectNode m_GroupRectNode = default;
         //GroupRectNodeBase m_DeletedNodeData = default;
 
-        public GroupCommand(/*Rect[] allSelectedNodesTotalRect,*/ List<Node> allSelectedNodes)
+        public GroupCommand( List<Node> allSelectedNodes)
         {
             //Sort out all the necessary conditions b4 greating a new grouprectnode
             //Doesnt matter if its grouped or not if it is specifically selected by user

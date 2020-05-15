@@ -44,7 +44,7 @@ namespace LEM_Editor
 
             if(listOfGroupRectNodeIDs.Count > 0)
             {
-                GroupRectNodeBase[] rectGroupData = DeleteGroupRectNodeData.SortGroupRectNodeBases(listOfGroupRectNodeIDs.ToArray());
+                GroupRectNodeBase[] rectGroupData = DeleteGroupRectNodeData.SortGroupRectNodeBasesForDeletion(listOfGroupRectNodeIDs.ToArray());
                 deletionData.Add(new DeleteGroupRectNodeData(rectGroupData.ToArray()));
                 NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.Clear();
                 NodeCommandInvoker.s_GroupRectNodeData_ClipBoard.AddRange(rectGroupData);

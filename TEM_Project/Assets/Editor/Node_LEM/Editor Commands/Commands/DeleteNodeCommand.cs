@@ -109,7 +109,7 @@ namespace LEM_Editor
             //m_DeletedGroupRectNodeBases = groupRectNodeBases.ToArray();
             if (groupRectNodeIDs.Count > 0)
             {
-                GroupRectNodeBase[] groupRectNodeBases = DeleteGroupRectNodeData.SortGroupRectNodeBases(groupRectNodeIDs.ToArray());
+                GroupRectNodeBase[] groupRectNodeBases = DeleteGroupRectNodeData.SortGroupRectNodeBasesForDeletion(groupRectNodeIDs.ToArray());
                 deleteData.Add(new DeleteGroupRectNodeData(groupRectNodeBases.ToArray()));
             }
 
