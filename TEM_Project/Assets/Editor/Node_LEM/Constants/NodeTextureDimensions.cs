@@ -29,7 +29,8 @@ namespace LEM_Editor
         public const float k_SelectedStartNodeTextureScale =1.2f;
 
         //Used for those nodes which just overrides the baseEffect's draw and need to draw a new property with a new Rect. Add this value to m_MidRect's y for the new Rect's y
-        public const float Y_DIST_FROM_MIDRECT = 90f;
+        public const float UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT = 90f;
+        public const float INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT = 50f;
 
         //Used for those nodes which just overrides the baseEffect's draw and need to draw a new property with a new Rect. Add this value to m_MidRect's x for the new Rect's x
         public const float X_DIST_FROM_MIDRECT = 10f;

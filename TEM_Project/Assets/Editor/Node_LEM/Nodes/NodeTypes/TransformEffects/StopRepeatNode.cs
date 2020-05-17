@@ -6,7 +6,7 @@ using UnityEditor;
 namespace LEM_Editor
 {
 
-	public class StopRepeatNode : BaseEffectNode
+	public class StopRepeatNode : InstantEffectNode
 	{
         //The linear event which the effect resides in
         LinearEvent m_EffectLinearEvent = default;
@@ -29,7 +29,7 @@ namespace LEM_Editor
             base.Draw();
 
             //Draw a object field for inputting  the gameobject to destroy
-            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
+            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             EditorGUI.LabelField(propertyRect, "LinearEvent effect resides in");

@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 namespace LEM_Effects
 {
 
     //This lerp has no stop. It will keep lerping until you use Stop Repeat event
-    public class RepeatLerpRectransformToRectransform : LEM_BaseEffect
+    public class RepeatLerpRectransformToRectransform : LEM_BaseEffect,IEffectSavable<RectTransform,RectTransform,float,float>
     {
         [Tooltip("The RectTransform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;
@@ -42,6 +42,22 @@ namespace LEM_Effects
             }
 
             return false;
+        }
+        
+        public void SetUp(RectTransform t1, RectTransform t2, float t3, float t4)
+        {
+            m_TargetRectransform = t1;
+            m_TargetDestination = t2;
+            m_Smoothing = t3;
+            m_SnapDistance = t4;
+        }
+
+        public void UnPack(out RectTransform t1, out RectTransform t2, out float t3, out float t4)
+        {
+            t1 = m_TargetRectransform;
+            t2 = m_TargetDestination;
+            t3 = m_Smoothing;
+            t4 = m_SnapDistance;
         }
 
     } 

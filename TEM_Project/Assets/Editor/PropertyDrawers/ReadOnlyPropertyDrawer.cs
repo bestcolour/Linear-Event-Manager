@@ -15,6 +15,5 @@ public class ReadOnlyPropertyDrawer : PropertyDrawer
         GUI.enabled = prevEnabledState;
     }
 #endif
-
 }
 

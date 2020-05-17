@@ -1,17 +1,17 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace LEM_Effects
 {
     //This move has no stop. It will keep moving until you use Stop Repeat event
-    public class RepeatMoveTowardsTransformToPosition : LEM_BaseEffect
+    public class RepeatMoveTowardsTransformToPosition : LEM_BaseEffect, IEffectSavable<Transform,Vector3,float>
     {
-        [Tooltip("The transform you want to lerp repeatedly")]
+        [Tooltip("The transform you want to move repeatedly")]
         [SerializeField] Transform m_TargetTransform = default;
 
-        [Tooltip("The position you want to lerp to")]
+        [Tooltip("The position you want to move to")]
         [SerializeField] Vector3 m_TargetPosition = default;
 
-        [Tooltip("The time needed for target to reach target position with lerp. Not recommended for constant speed movement.")]
+        [Tooltip("The time needed for target to reach target position with move.")]
         [SerializeField, Range(0.0001f, 1000f)] float m_Duration = 1f;
 
         //Calculate speed for the transform to move
@@ -50,6 +50,21 @@ namespace LEM_Effects
             }
 
             return false;
+        }
+        
+        public void SetUp(Transform t1, Vector3 t2, float t3)
+        {
+            m_TargetTransform = t1;
+            m_TargetPosition = t2;
+            m_Duration = t3;
+          
+        }
+
+        public void UnPack(out Transform t1, out Vector3 t2, out float t3)
+        {
+            t1 = m_TargetTransform;
+            t2 = m_TargetPosition;
+            t3 = m_Duration;
         }
 
     } 

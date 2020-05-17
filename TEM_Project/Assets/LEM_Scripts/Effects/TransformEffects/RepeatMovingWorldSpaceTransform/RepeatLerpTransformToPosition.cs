@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 namespace LEM_Effects
 {
 
     //This lerp has no stop. It will keep lerping until you use Stop Repeat event
-    public class RepeatLerpTransformToPosition : LEM_BaseEffect
+    public class RepeatLerpTransformToPosition : LEM_BaseEffect,IEffectSavable<Transform,Vector3,float,float>
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -44,6 +44,25 @@ namespace LEM_Effects
 
             return false;
         }
+        
+        
+        public void SetUp(Transform t1, Vector3 t2, float t3, float t4)
+        {
+            m_TargetTransform = t1;
+            m_TargetPosition = t2;
+            m_Smoothing = t3;
+            m_SnapDistance = t4;
+        }
+
+        public void UnPack(out Transform t1, out Vector3 t2, out float t3, out float t4)
+        {
+            t1 = m_TargetTransform;
+            t2 = m_TargetPosition;
+            t3 = m_Smoothing;
+            t4 = m_SnapDistance;
+        }
+        
+        
 
     } 
 }

@@ -23,7 +23,7 @@ namespace LEM_Editor
 
         //Delegates
         Action<string> d_OnInputChange = null;
-        Action<string, Vector2> d_OnConfirm = null;
+        Action<string, Vector2, bool> d_OnConfirm = null;
 
         //Variables
         SearchField m_SearchField = new SearchField();
@@ -46,7 +46,7 @@ namespace LEM_Editor
         Vector2 m_ScrollVector = Vector2.zero;
 
         #region Constructors
-        public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2> OnConfirm/*, int maxResults*/)
+        public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2,bool > OnConfirm)
         {
             InitialiseStyles();
 
@@ -58,7 +58,7 @@ namespace LEM_Editor
             m_SearchField.downOrUpArrowKeyPressed += SearchField_downOrUpArrowKeyPressed;
         }
 
-        public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2> OnConfirm/*, int maxResults*/, float width, float height)
+        public LEM_SearchBox(Action<string> OnInputChange, Action<string, Vector2,bool> OnConfirm,  float width, float height)
         {
             InitialiseStyles();
 
@@ -249,7 +249,11 @@ namespace LEM_Editor
 
                     if (e.type == EventType.MouseDown)
                     {
-                        OnConfirm(m_AllResults[i], m_PositionToDrawAt);
+                        //If user is pressing down on control
+                        if (e.control)
+                            OnConfirm(m_AllResults[i], m_PositionToDrawAt,true);
+                        else
+                            OnConfirm(m_AllResults[i], m_PositionToDrawAt,false);
                     }
                 }
 
@@ -262,7 +266,7 @@ namespace LEM_Editor
             //Handle for enter keycode when choose on a selected result
             if (e.type == EventType.KeyUp && e.keyCode == KeyCode.Return && m_CurrSelectedResultIndex >= 0)
             {
-                OnConfirm(m_AllResults[m_CurrSelectedResultIndex], m_PositionToDrawAt);
+                OnConfirm(m_AllResults[m_CurrSelectedResultIndex], m_PositionToDrawAt,false);
             }
 
             if (e.type == EventType.Repaint)
@@ -272,16 +276,19 @@ namespace LEM_Editor
 
         }
 
-        void OnConfirm(string result, Vector2 mousePos)
+        void OnConfirm(string result, Vector2 mousePos,bool searchBoxState)
         {
             m_CurrentStringInSearchBar = result;
 
-            d_OnConfirm?.Invoke(result, mousePos);
-            d_OnInputChange?.Invoke(result);
+            d_OnConfirm?.Invoke(result, mousePos, searchBoxState);
+
+            if(!searchBoxState)
+                d_OnInputChange?.Invoke(result);
 
             GUI.changed = true;
             GUIUtility.keyboardControl = 0; // To avoid Unity sometimes not updating the search field text
         }
+
 
     }
 

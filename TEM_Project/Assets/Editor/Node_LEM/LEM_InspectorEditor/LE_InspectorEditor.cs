@@ -11,9 +11,9 @@ namespace LEM_Editor
     public class LE_InspectorEditor : Editor
     {
         //Declare measurements
-        float m_LineHeight = EditorGUIUtility.singleLineHeight;
         float m_LineHeightSpace = EditorGUIUtility.singleLineHeight * 1.5f;
         //public static bool s_IsLoaded = false;
+        SerializedProperty m_ArraySizeProperty = default;
 
         //OnGUI for inspector
         public override void OnInspectorGUI()
@@ -22,20 +22,18 @@ namespace LEM_Editor
 
             LinearEvent linearEvent = (LinearEvent)target;
 
-            GUILayout.BeginHorizontal();
+            //GUILayout.BeginHorizontal();
 
             DrawLoadButton(linearEvent);
-            DrawRemoveUnusedEventsButton(linearEvent);
+            //DrawRemoveUnusedEventsButton(linearEvent);
 
-            GUILayout.EndHorizontal();
+            //GUILayout.EndHorizontal();
 
             EditorGUILayout.Space();
-
-            //Draw Rest of Default Inspector
-            base.OnInspectorGUI();
+            DrawInspector();
+            //base.OnInspectorGUI();
 
         }
-
 
         void DrawLoadButton(LinearEvent linearEvent)
         {
@@ -46,16 +44,26 @@ namespace LEM_Editor
             }
         }
 
-        void DrawRemoveUnusedEventsButton(LinearEvent linearEvent)
+        //void DrawRemoveUnusedEventsButton(LinearEvent linearEvent)
+        //{
+        //    //Creates a button to load the node editor
+        //    if (GUILayout.Button("Remove Unused Events", GUILayout.Height(m_LineHeightSpace * 2)))
+        //    {
+        //        linearEvent.RemoveUnusedEvents();
+        //    }
+        //}
+
+        void DrawInspector()
         {
-            //Creates a button to load the node editor
-            if (GUILayout.Button("Remove Unused Events", GUILayout.Height(m_LineHeightSpace * 2)))
-            {
-                linearEvent.RemoveUnusedEvents();
-            }
+            bool wasEnabled = GUI.enabled;
+            GUI.enabled = false;
+
+            EditorGUILayout.LabelField("Number of Events");
+            EditorGUILayout.IntField(serializedObject.FindProperty("m_AllEffects").arraySize);
+
+            GUI.enabled = wasEnabled;
+            //EditorGUILayout.PropertyField(serializedObject.FindProperty("m_AllEffects"));
         }
-
-
 
 
     }

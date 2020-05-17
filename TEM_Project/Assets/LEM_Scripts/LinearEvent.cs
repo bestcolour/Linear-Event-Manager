@@ -7,14 +7,15 @@ namespace LEM_Effects
     [CanEditMultipleObjects,System.Serializable]
     public class LinearEvent : MonoBehaviour
     {
-        [Header("Name of This String of Events ")]
-        public string m_LinearEventName = default;
+
+        //[Header("Name of This String of Events ")]
+        //public string m_LinearEventName = default;
 
         //public bool m_SelfInitialising = true;
 
         //For testing purposes only, remove once if else node and switch case node has been introduced
         //Comment this out after you are done
-        [Header("Cached Values")]
+        [Header("DONT TOUCH! Cached Values!"),ReadOnly]
         public LEM_BaseEffect[] m_AllEffects = default;
 
 #if UNITY_EDITOR
@@ -22,6 +23,7 @@ namespace LEM_Effects
         public GroupRectNodeBase[] m_AllGroupRectNodes = default;
 #endif
 
+        [HideInInspector]
         public NodeBaseData m_StartNodeData = default;
 
         //[SerializeField, ReadOnly]

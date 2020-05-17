@@ -199,11 +199,11 @@ namespace LEM_Editor
             }
         }
 
-        void OnConfirm(string result, Vector2 mousePos)
+        void OnConfirm(string result, Vector2 mousePos, bool searchBoxState)
         {
             mousePos *= 1 / ScaleFactor;
             CommandInvoker.InvokeCommand(new CreateNodeCommand(mousePos, result));
-            instance.m_IsSearchBoxActive = false;
+            instance.m_IsSearchBoxActive = searchBoxState;
         }
 
         GenericMenu m_NodeContextMenu = default;
@@ -1055,8 +1055,8 @@ namespace LEM_Editor
 
                     if (!isMouseInSearchBox)
                     {
-                        int signOfChange = 0;
-                        float changeRate = 0f;
+                        int signOfChange;
+                        float changeRate;
 
                         signOfChange = e.delta.y > 0 ? -1 : 1;
                         //If alt key is pressed,
@@ -1117,7 +1117,8 @@ namespace LEM_Editor
                         //called when i click on input/text fields
                         GUI.FocusControl(null);
 
-                        m_IsSearchBoxActive = false;
+                        if (!isMouseInSearchBox)
+                            m_IsSearchBoxActive = false;
 
                     }
 

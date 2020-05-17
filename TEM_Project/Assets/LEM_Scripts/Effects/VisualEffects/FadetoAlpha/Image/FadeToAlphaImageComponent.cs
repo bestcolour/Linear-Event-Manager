@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaImageComponent : LEM_BaseEffect
+    public class FadeToAlphaImageComponent : LEM_BaseEffect,IEffectSavable<Image,float,float>
     {
         //target
         [Tooltip("The image you want to fade")]
@@ -59,6 +59,23 @@ namespace LEM_Effects
             }
 
             return false;
+        }
+        
+        
+        public void SetUp(Image t1, float t2, float t3)
+        {
+            m_TargetImage = t1;
+            m_TargetAlpha = t2;
+            m_Duration = t3;
+         
+        }
+
+        public void UnPack(out Image t1, out float t2, out float t3)
+        {
+            t1 = m_TargetImage;
+            t2 = m_TargetAlpha;
+            t3 = m_Duration;
+           
         }
 
     }

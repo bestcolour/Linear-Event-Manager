@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -63,9 +63,25 @@ namespace LEM_Editor
              { "ReRotTrans", new NodeDictionaryDefinition(new ReRotateTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
              { "ReSizeRectTrans", new NodeDictionaryDefinition(new ReSizeRectTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
              { "SetTransParent", new NodeDictionaryDefinition(new SetTransformParentNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "StopRepeatNode", new NodeDictionaryDefinition(new StopRepeatNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "StopRepeatNode", new NodeDictionaryDefinition(new StopRepeatNode(),new Color(1f ,0.55f,0f)) },
              { "RepeatLerpRectransToPosNode", new NodeDictionaryDefinition(new RepeatLerpRectransformToPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
-            
+             { "RepeatMoveTowTransToTrans", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "RepeatMoveTowTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "RepeatMoveTowRectransToRectrans", new NodeDictionaryDefinition(new RepeatMoveTowardsRectransformToRectransformNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "RepeatMoveTowRectTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsRectTransformToPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "RepeatLerpTransToTrans", new NodeDictionaryDefinition(new RepeatLerpTransformToTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "RepeatLerpTransToPos", new NodeDictionaryDefinition(new RepeatLerpTransformToPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "RepeatLerpRectTransToRectTrans", new NodeDictionaryDefinition(new RepeatLerpRectTransformToRectTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaImages", new NodeDictionaryDefinition(new FadeToAlphaImagesComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaRenderer", new NodeDictionaryDefinition(new FadeToAlphaRendererComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaRenderers", new NodeDictionaryDefinition(new FadeToAlphaRenderersComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaSpriteRenderer", new NodeDictionaryDefinition(new FadeToAlphaSpriteRendererComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaSpriteRenderers", new NodeDictionaryDefinition(new FadeToAlphaSpriteRenderersComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaText", new NodeDictionaryDefinition(new /*FadeToAlphaTextComponentNode*/ FadeToAlphaTextsComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaTexts", new NodeDictionaryDefinition(new FadeToAlphaTextsComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaTextMeshPro", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
+             
         };
 
         public static void LoadDictionary()

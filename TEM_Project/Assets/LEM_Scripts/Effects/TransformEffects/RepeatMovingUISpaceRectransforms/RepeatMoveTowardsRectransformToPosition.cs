@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 namespace LEM_Effects
 {
 
     //This move has no stop. It will keep moving until you use Stop Repeat event
-    public class RepeatMoveTowardsRectransformToPosition : LEM_BaseEffect
+    public class RepeatMoveTowardsRectransformToPosition : LEM_BaseEffect,IEffectSavable<RectTransform,Vector3,float>
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;
@@ -49,6 +49,21 @@ namespace LEM_Effects
             }
 
             return false;
+        }
+        
+        public void SetUp(RectTransform t1, Vector3 t2, float t3)
+        {
+            m_TargetRectransform = t1;
+            m_TargetPosition = t2;
+            m_Duration = t3;
+          
+        }
+
+        public void UnPack(out RectTransform t1, out Vector3 t2, out float t3)
+        {
+            t1 = m_TargetRectransform;
+            t2 = m_TargetPosition;
+            t3 = m_Duration;
         }
 
     } 

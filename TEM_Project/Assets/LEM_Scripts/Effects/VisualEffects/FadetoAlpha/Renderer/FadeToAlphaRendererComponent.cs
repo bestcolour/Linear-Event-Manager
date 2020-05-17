@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 namespace LEM_Effects
 {
-    public class FadeToAlphaRendererComponent : LEM_BaseEffect
+    public class FadeToAlphaRendererComponent : LEM_BaseEffect,IEffectSavable<Renderer,float,float>
     {
         //target
         [Tooltip("The renderers you want to fade")]
@@ -69,6 +69,24 @@ namespace LEM_Effects
 
             return false;
         }
+
+public void SetUp(Renderer t1, float t2,float t3)
+        {
+            m_TargetRenderer = t1;
+         
+            m_TargetAlpha = t2;
+            m_Duration = t3;
+        }
+
+        public void UnPack(out Renderer t1, out float t2, out float t3)
+        {
+            t1 = m_TargetRenderer;
+            
+            t2 = m_TargetAlpha;
+            t3 = m_Duration;
+        }
+
+
 
     }
 

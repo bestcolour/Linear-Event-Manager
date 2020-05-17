@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaTextComponent : LEM_BaseEffect
+    public class FadeToAlphaTextComponent : LEM_BaseEffect, IEffectSavable<Text, float, float>
     {
         //target
         [Tooltip("The text you want to fade")]
@@ -60,5 +60,23 @@ namespace LEM_Effects
 
             return false;
         }
-    } 
+
+        public void SetUp(Text t1, float t2, float t3)
+        {
+            m_TargetText = t1;
+            m_TargetAlpha = t2;
+            m_Duration = t3;
+
+        }
+
+        public void UnPack(out Text t1, out float t2, out float t3)
+        {
+            t1 = m_TargetText;
+            t2 = m_TargetAlpha;
+            t3 = m_Duration;
+
+        }
+
+
+    }
 }
