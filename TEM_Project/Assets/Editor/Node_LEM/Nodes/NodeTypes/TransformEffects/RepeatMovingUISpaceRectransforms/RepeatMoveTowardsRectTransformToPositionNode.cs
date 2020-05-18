@@ -9,7 +9,7 @@ namespace LEM_Editor
     {
         RectTransform m_TargetRectTransform = default;
         Vector3 m_TargetPosition = default;
-        float m_Duration = 1f;
+        float m_Duration = 0f;
 
         protected override string EffectTypeName => "RepeatMoveTowRectTransToPos";
 
@@ -29,14 +29,18 @@ namespace LEM_Editor
             //Draw a object field for inputting  the gameobject to destroy
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
-            EditorGUI.TextField(propertyRect, "Node ID : ", NodeID);
+           // EditorGUI.TextField(propertyRect, "Node ID : ", NodeID);
             propertyRect.y += 20f;
             m_TargetRectTransform = (RectTransform)EditorGUI.ObjectField(propertyRect, "Target Transform", m_TargetRectTransform, typeof(RectTransform), true);
             propertyRect.y += 20f;
             m_TargetPosition = EditorGUI.Vector3Field(propertyRect, "Target Position", m_TargetPosition);
             propertyRect.y += 40f;
-            m_Duration = EditorGUI.Slider(propertyRect, "Duration", m_Duration, 0.0001f, 1000f);
-      
+            m_Duration = EditorGUI.FloatField(propertyRect, "Duration", m_Duration);
+
+            if (m_Duration< 0)
+                m_Duration = 0;
+
+
             LEMStyleLibrary.EndEditorLabelColourChange();
 
 

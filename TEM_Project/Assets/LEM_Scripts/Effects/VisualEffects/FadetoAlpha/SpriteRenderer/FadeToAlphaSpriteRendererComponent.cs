@@ -29,6 +29,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+        bool m_IsFinished = false;
+
         public override void Initialise()
         {
             //Record initial alpha first
@@ -54,10 +56,10 @@ namespace LEM_Effects
                 //Set the targetimage as the actual targetted colour
                 m_NextColour.a = m_TargetAlpha;
                 m_TargetSpriteRenderer.color = m_NextColour;
-                return true;
+                m_IsFinished = true;
             }
 
-            return false;
+            return m_IsFinished;
         }
 
         public void SetUp(SpriteRenderer t1, float t2, float t3)
@@ -76,7 +78,10 @@ namespace LEM_Effects
             t3 = m_Duration;
         }
 
-
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
+        }
 
     }
 }

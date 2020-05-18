@@ -2,7 +2,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //This move has no stop. It will keep moving until you use Stop Repeat event
-    public class RepeatMoveTowardsTransformToTransform : LEM_BaseEffect, IEffectSavable<Transform,Transform,float,float>
+    public class RepeatMoveTowardsTransformToTransform : LEM_BaseEffect, IEffectSavable<Transform, Transform, float, float>
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -20,6 +20,8 @@ namespace LEM_Effects
         Vector3 m_InitialPosition = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
+
+        bool m_IsFinished = false;
 
         public override void Initialise()
         {
@@ -40,26 +42,31 @@ namespace LEM_Effects
                 m_TargetTransform.position = m_InitialPosition;
             }
 
-            return false;
+            return m_IsFinished;
         }
-            public void SetUp(Transform t1,Transform t2,float t3 ,float t4)
-            {
-m_TargetTransform =t1;
-m_TargetDestination =t2;
-m_Speed = t3;
-m_SnapDistance = t4;
-}
-            
-            public void UnPack(out Transform t1,out Transform t2,out float t3,out float t4)
-            {
-t1 = m_TargetTransform;
-t2 = m_TargetDestination;
-t3 = m_Speed;
-t4 = m_SnapDistance;
+        public void SetUp(Transform t1, Transform t2, float t3, float t4)
+        {
+            m_TargetTransform = t1;
+            m_TargetDestination = t2;
+            m_Speed = t3;
+            m_SnapDistance = t4;
+        }
 
-}
-            
-            
-            
-    } 
+        public void UnPack(out Transform t1, out Transform t2, out float t3, out float t4)
+        {
+            t1 = m_TargetTransform;
+            t2 = m_TargetDestination;
+            t3 = m_Speed;
+            t4 = m_SnapDistance;
+
+        }
+
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
+        }
+
+
+
+    }
 }

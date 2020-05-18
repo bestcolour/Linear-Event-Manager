@@ -9,8 +9,8 @@ namespace LEM_Editor
     {
         RectTransform m_RectTransformFollower = default;
         RectTransform m_RectTransformToFollow = default;
-        float m_Speed = 1f;
-        float m_SnapDistance =1f;
+        float m_Speed = 0f;
+        float m_SnapDistance = 0f;
 
         protected override string EffectTypeName => "RepeatMoveTowRectransToRectrans";
 
@@ -30,7 +30,7 @@ namespace LEM_Editor
             //Draw a object field for inputting  the gameobject to destroy
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
-            EditorGUI.TextField(propertyRect, "Node ID : ", NodeID);
+           // EditorGUI.TextField(propertyRect, "Node ID : ", NodeID);
             propertyRect.y += 20f;
             m_RectTransformFollower = (RectTransform)EditorGUI.ObjectField(propertyRect, "RectTransform Follower", m_RectTransformFollower, typeof(RectTransform), true);
             propertyRect.y += 20f;
@@ -38,10 +38,13 @@ namespace LEM_Editor
 
             //m_TargetPosition = EditorGUI.Vector3Field(propertyRect, "Target Position", m_TargetPosition);
             propertyRect.y += 20f;
-            m_Speed = EditorGUI.Slider(propertyRect, "Speed", m_Speed, 0.0001f, 1000f);
+            m_Speed = EditorGUI.FloatField(propertyRect, "Speed", m_Speed);
               propertyRect.y += 20f;
-            m_Speed = EditorGUI.Slider(propertyRect, "Snap Distance", m_SnapDistance, 0.0001f, 1000f);
-      
+            m_SnapDistance = EditorGUI.FloatField(propertyRect, "Snap Distance", m_SnapDistance);
+
+            if (m_Speed < 0)
+                m_Speed = 0;
+
             LEMStyleLibrary.EndEditorLabelColourChange();
 
 

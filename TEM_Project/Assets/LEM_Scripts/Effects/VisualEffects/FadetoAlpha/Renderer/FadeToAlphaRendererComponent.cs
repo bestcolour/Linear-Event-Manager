@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class FadeToAlphaRendererComponent : LEM_BaseEffect,IEffectSavable<Renderer,float,float>
+    public class FadeToAlphaRendererComponent : LEM_BaseEffect, IEffectSavable<Renderer, float, float>
     {
         //target
         [Tooltip("The renderers you want to fade")]
@@ -24,16 +24,27 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+        bool m_IsFinished = false;
+
         public override void Initialise()
         {
 
             m_InitialAlphas = new float[m_TargetRenderer.materials.Length];
             m_NextColours = new Color[m_TargetRenderer.materials.Length];
+            int fadeModeInt = (int)UnityEngine.Rendering.RenderQueue.Geometry;
 
             for (int i = 0; i < m_TargetRenderer.materials.Length; i++)
             {
                 //Record initial alpha first for each of the targetimages
                 m_InitialAlphas[i] = m_TargetRenderer.materials[i].color.a;
+
+#if UNITY_EDITOR
+                Debug.Assert(
+                    m_TargetRenderer.materials[i].renderQueue != fadeModeInt,
+                    "Material " + m_TargetRenderer.materials[i] + " is not set to Fade/Transparent Rendering Mode",
+                     m_TargetRenderer.materials[i]);
+#endif
+
                 m_NextColours[i] = new Color(m_TargetRenderer.materials[i].color.r, m_TargetRenderer.materials[i].color.g, m_TargetRenderer.materials[i].color.b, m_TargetRenderer.materials[i].color.a);
             }
 
@@ -64,16 +75,15 @@ namespace LEM_Effects
                     m_TargetRenderer.materials[i].color = m_NextColours[i];
                 }
 
-                return true;
+                m_IsFinished = true;
             }
 
-            return false;
+            return m_IsFinished;
         }
 
-public void SetUp(Renderer t1, float t2,float t3)
+        public void SetUp(Renderer t1, float t2, float t3)
         {
             m_TargetRenderer = t1;
-         
             m_TargetAlpha = t2;
             m_Duration = t3;
         }
@@ -81,12 +91,14 @@ public void SetUp(Renderer t1, float t2,float t3)
         public void UnPack(out Renderer t1, out float t2, out float t3)
         {
             t1 = m_TargetRenderer;
-            
             t2 = m_TargetAlpha;
             t3 = m_Duration;
         }
 
-
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
+        }
 
     }
 

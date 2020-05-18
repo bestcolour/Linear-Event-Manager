@@ -22,6 +22,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+        bool m_IsFinished = false;
+
         public override void Initialise()
         {
             //Calculate speed in initialise
@@ -40,7 +42,7 @@ namespace LEM_Effects
                 m_TargetRectransform.anchoredPosition3D = m_InitialPosition;
             }
 
-            return false;
+            return m_IsFinished;
         }
         
         public void SetUp(RectTransform t1, RectTransform t2, float t3, float t4)
@@ -57,6 +59,11 @@ namespace LEM_Effects
             t2 = m_TargetDestination;
             t3 = m_Speed;
             t4 = m_SnapDistance;
+        }
+
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
         }
 
     }

@@ -37,6 +37,9 @@ namespace LEM_Editor
             propertyRect.y += 40f;
             m_Duration = EditorGUI.FloatField(propertyRect,"Time needed", m_Duration);
 
+            if (m_Duration < 0)
+                m_Duration = 0;
+
             LEMStyleLibrary.EndEditorLabelColourChange();
 
 

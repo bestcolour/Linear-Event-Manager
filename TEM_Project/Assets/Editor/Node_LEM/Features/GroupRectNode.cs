@@ -123,8 +123,8 @@ namespace LEM_Editor
                 float newWidth = m_TotalRect.width * NodeGUIConstants.k_SelectedNodeTextureScale;
                 float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale;
                 GUI.DrawTexture(new Rect(
-                    m_TotalRect.x - /*NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.x*/(newWidth - m_TotalRect.width) * 0.5f,
-                    m_TotalRect.y -/* NodeTextureDimensions.EFFECT_NODE_OUTLINE_OFFSET.y*/  (newHeight - m_TotalRect.height) * 0.5f,
+                    m_TotalRect.x - (newWidth - m_TotalRect.width) * 0.5f,
+                    m_TotalRect.y - (newHeight - m_TotalRect.height) * 0.5f,
                     newWidth, newHeight),
                     m_NodeSkin.m_SelectedMidOutline);
             }
@@ -142,7 +142,7 @@ namespace LEM_Editor
 
             //Rect labelRect = m_TopRect;
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
-            m_CommentLabel = EditorGUI.DelayedTextField(m_TopRect, m_CommentLabel, LEMStyleLibrary.s_NodeHeaderStyle);
+            m_CommentLabel = EditorGUI.TextField(m_TopRect, m_CommentLabel, LEMStyleLibrary.s_GroupLabelStyle);
 
             #region Debug
             //Rect debugRect = m_TopRect;
@@ -338,7 +338,7 @@ namespace LEM_Editor
         public GroupRectNodeBase SaveGroupRectNodedata()
         {
             string parentNodeiD = IsGrouped ? m_GroupedParent.NodeID : "";
-            GroupRectNodeBase g = new GroupRectNodeBase(m_MidRect.position,m_MidRect.size,NodeID,NestedNodesNodeIDs,m_CommentLabel,parentNodeiD);
+            GroupRectNodeBase g = new GroupRectNodeBase(m_MidRect.position, m_MidRect.size, NodeID, NestedNodesNodeIDs, m_CommentLabel, parentNodeiD);
             //g.m_NodeID = NodeID;
             //g.m_Position = m_MidRect.position;
             //g.m_Size = m_MidRect.size;

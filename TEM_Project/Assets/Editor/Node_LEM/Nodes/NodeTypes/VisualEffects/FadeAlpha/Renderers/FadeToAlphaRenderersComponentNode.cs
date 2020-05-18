@@ -9,7 +9,7 @@ namespace LEM_Editor
     {
 
         ArrayObjectDrawer<Renderer> m_ArrayOfGameObjects = new ArrayObjectDrawer<Renderer>();
-        float m_TargetAlpha =0f,m_Duration =1f;
+        float m_TargetAlpha = 0f, m_Duration = 0f;
         
 
 
@@ -33,12 +33,15 @@ namespace LEM_Editor
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
-   
-            propertyRect.y += EditorGUIUtility.singleLineHeight;
-            m_TargetAlpha =  EditorGUI.Slider(propertyRect, "Target Alpha", m_TargetAlpha, 0, 255);
-            propertyRect.y += EditorGUIUtility.singleLineHeight;
-            m_Duration = EditorGUI.FloatField(propertyRect,"Target Duration" ,m_Duration);
+
             propertyRect.y += 20f;
+            m_TargetAlpha =  EditorGUI.Slider(propertyRect, "Target Alpha", m_TargetAlpha, 0, 255);
+            propertyRect.y += 20f;
+            m_Duration = EditorGUI.FloatField(propertyRect,"Duration" ,m_Duration);
+            propertyRect.y += 20f;
+
+            if (m_Duration < 0)
+                m_Duration = 0;
 
             //If there is change in array size, update rect
             if (m_ArrayOfGameObjects.HandleDrawAndProcess(propertyRect, out float propertyHeight))

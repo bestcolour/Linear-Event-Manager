@@ -3,7 +3,7 @@ using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaImagesComponent : LEM_BaseEffect,IEffectSavable<Image[],float,float>
+    public class FadeToAlphaImagesComponent : LEM_BaseEffect, IEffectSavable<Image[], float, float>
     {
         //target
         [Tooltip("The images you want to fade")]
@@ -26,6 +26,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+        bool m_IsFinished = false;
+
         public override void Initialise()
         {
             m_InitialAlphas = new float[m_TargetImages.Length];
@@ -39,7 +41,7 @@ namespace LEM_Effects
             }
 
             //Recalculate the target alpha (convert to normalized value)
-            m_TargetAlpha /=  255f;
+            m_TargetAlpha /= 255f;
         }
 
         public override bool UpdateEffect()
@@ -63,16 +65,16 @@ namespace LEM_Effects
                     //Set the targetimages as the actual targetted colour
                     m_TargetImages[i].color = m_NextColour[i];
                 }
-                return true;
+                m_IsFinished = true;
             }
 
-            return false;
+            return m_IsFinished;
         }
 
-public void SetUp(Image[] t1, float t2,float t3)
+        public void SetUp(Image[] t1, float t2, float t3)
         {
             m_TargetImages = t1;
-         
+
             m_TargetAlpha = t2;
             m_Duration = t3;
         }
@@ -80,12 +82,15 @@ public void SetUp(Image[] t1, float t2,float t3)
         public void UnPack(out Image[] t1, out float t2, out float t3)
         {
             t1 = m_TargetImages;
-            
+
             t2 = m_TargetAlpha;
             t3 = m_Duration;
         }
 
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
+        }
 
-
-    } 
+    }
 }

@@ -12,9 +12,9 @@ namespace LEM_Editor
         //width, height
         public static readonly Vector2 START_END_NODE = new Vector2(110, 70);
         public static readonly Vector2 SMALL_MID_SIZE = new Vector2(245, 100);
-        public static readonly Vector2 SMALLL_TOP_SIZE = new Vector2(245, 35);
-        public static readonly Vector2 NORMAL_MID_SIZE = new Vector2(245, 200);
-        public static readonly Vector2 NORMAL_TOP_SIZE = new Vector2(245, 35);
+        public static readonly Vector2 SMALL_TOP_SIZE = new Vector2(245, 35);
+        public static readonly Vector2 NORMAL_MID_SIZE = new Vector2(275, 200);
+        public static readonly Vector2 NORMAL_TOP_SIZE = new Vector2(275, 35);
         public static readonly Vector2 BIG_MID_SIZE = new Vector2(275, 280);
         public static readonly Vector2 BIG_TOP_SIZE = new Vector2(275, 35);
     } 
@@ -29,7 +29,7 @@ namespace LEM_Editor
         public const float k_SelectedStartNodeTextureScale =1.2f;
 
         //Used for those nodes which just overrides the baseEffect's draw and need to draw a new property with a new Rect. Add this value to m_MidRect's y for the new Rect's y
-        public const float UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT = 90f;
+        public const float UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT = 110f;
         public const float INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT = 50f;
 
         //Used for those nodes which just overrides the baseEffect's draw and need to draw a new property with a new Rect. Add this value to m_MidRect's x for the new Rect's x

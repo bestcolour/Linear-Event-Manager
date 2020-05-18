@@ -20,6 +20,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+        bool m_IsFinished = false;
+
         public override void Initialise()
         {
             //Calculate speed in initialise
@@ -55,10 +57,15 @@ namespace LEM_Effects
                 //Snap the position to the targetposition
                 m_TargetTransform.position = m_TargetPosition;
                 m_Time = 0f;
-                return true;
+                m_IsFinished = true;
             }
 
-            return false;
+            return m_IsFinished;
+        }
+
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
         }
 
     } 

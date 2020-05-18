@@ -22,7 +22,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_StopEffect = false;
+        bool m_IsFinished = false;
 
         public override void Initialise()
         {
@@ -42,12 +42,12 @@ namespace LEM_Effects
                 m_TargetRectransform.anchoredPosition3D = m_IntialPosition;
             }
 
-            return m_StopEffect;
+            return m_IsFinished;
         }
 
         public override void ForceStop()
         {
-            m_StopEffect = true;
+            m_IsFinished = true;
         }
 
         public void SetUp(RectTransform t1, Vector3 t2, float t3, float t4)

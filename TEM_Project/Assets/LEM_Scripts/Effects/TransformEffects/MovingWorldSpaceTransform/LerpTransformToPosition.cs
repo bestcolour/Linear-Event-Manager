@@ -17,6 +17,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+        bool m_IsFinished = false;
+
         public void SetUp(Transform t1, Vector3 t2, float t3, float t4)
         {
             m_TargetTransform = t1;
@@ -44,10 +46,15 @@ namespace LEM_Effects
                 //Snap the position to the targetposition
                 m_TargetTransform.position = m_TargetPosition;
                 //finish this effect
-                return true;
+                m_IsFinished = true;
             }
 
-            return false;
+            return m_IsFinished;
+        }
+
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
         }
 
     } 

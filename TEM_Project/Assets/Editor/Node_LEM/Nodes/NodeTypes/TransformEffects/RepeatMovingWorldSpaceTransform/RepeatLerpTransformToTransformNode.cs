@@ -9,7 +9,7 @@ namespace LEM_Editor
     {
         Transform m_TransformFollower= default;
         Transform m_TransformToFollow = default;
-        float m_Smoothing = 0.0001f, m_SnapDistance = 0.0001f;
+        float m_Smoothing = 0f, m_SnapDistance = 0f;
 
         protected override string EffectTypeName => "RepeatLerpTransToTrans";
 
@@ -29,15 +29,15 @@ namespace LEM_Editor
             //Draw a object field for inputting  the gameobject to destroy
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
-            EditorGUI.TextField(propertyRect, "Node ID : ", NodeID);
+           // EditorGUI.TextField(propertyRect, "Node ID : ", NodeID);
             propertyRect.y += 20f;
             m_TransformFollower = (Transform)EditorGUI.ObjectField(propertyRect, "Transform Follower", m_TransformFollower, typeof(Transform), true);
             propertyRect.y += 20f;
              m_TransformToFollow = (Transform)EditorGUI.ObjectField(propertyRect, "Transform To Follow", m_TransformToFollow, typeof(Transform), true);
-            propertyRect.y += 40f;
-            m_Smoothing = EditorGUI.Slider(propertyRect, "Smoothing", m_Smoothing, 0.0001f, 1000f);
             propertyRect.y += 20f;
-            m_SnapDistance = EditorGUI.Slider(propertyRect, "SnapDistance", m_SnapDistance, 0.0001f, 1000f);
+            m_Smoothing = EditorGUI.Slider(propertyRect, "Smoothing", m_Smoothing, 0f, 1f);
+            propertyRect.y += 20f;
+            m_SnapDistance = EditorGUI.FloatField(propertyRect, "SnapDistance", m_SnapDistance);
 
             LEMStyleLibrary.EndEditorLabelColourChange();
 

@@ -125,7 +125,6 @@ namespace LEM_Editor
         static readonly Color s_SelectionBoxColour = new Color(0.6f, 0.8f, 1f, .2f);
         static readonly Color s_SelectionBoxOutlineColour = new Color(0f, 0.298f, 0.6f, 1f);
 
-
         #region Connection Point Variables
         /// <summary>
         /// Sets the skin of a connection point without checking if it is connected. 
@@ -471,6 +470,7 @@ namespace LEM_Editor
             //Regardless, just initialise strt end nodes
             instance.InitialiseStartEndNodes();
             instance.LoadFromLinearEvent();
+            GUIUtility.keyboardControl = 0;
 
             //After finishing all the intialisation and loading of linearevent,
             d_OnGUI = UpdateGUI;
@@ -616,7 +616,7 @@ namespace LEM_Editor
             DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
             DrawGrid(100 * ScaleFactor, 0.4f, Color.gray);
             //Draw graphics that are zoomable
-            EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f,0f, Screen.width, Screen.height));
+            EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
             Vector2 currMousePos = currentEvent.mousePosition;
 
             //Draw the rect grpsfirst
@@ -1115,6 +1115,7 @@ namespace LEM_Editor
 
                         //Remove focus on the controls when user clicks on something regardless if it is a node or not because apparently this doesnt get
                         //called when i click on input/text fields
+                        GUIUtility.keyboardControl = 0;
                         GUI.FocusControl(null);
 
                         if (!isMouseInSearchBox)
@@ -1209,8 +1210,13 @@ namespace LEM_Editor
                         //Select all
                         else if (e.keyCode == KeyCode.A)
                         {
-                            SelectAllNodes();
-                            GUI.changed = true;
+                            //Only when the focused control is null,
+                            Debug.Log(GUIUtility.keyboardControl);
+                            if (GUIUtility.keyboardControl == 0)
+                            {
+                                SelectAllNodes();
+                                GUI.changed = true;
+                            }
 
                         }
                         //Save
@@ -1448,7 +1454,6 @@ namespace LEM_Editor
                 );
 
             groupRect.GenerateNodeID();
-
             //Add the node into collection in editor
             AllGroupRectNodesInEditor.Add(groupRect);
             AllGroupRectsInEditorDictionary.Add(groupRect.NodeID, groupRect);
@@ -1546,7 +1551,7 @@ namespace LEM_Editor
         {
             //Record the amount of drag there is changed 
             //Convert delta value for canvas dragging
-            delta /= ScaleFactor;
+            //delta /= ScaleFactor;
             m_AmountOfMouseDragThisUpdate = delta;
 
             //Convert once more for node drag (idk but its a magic number)

@@ -11,7 +11,7 @@ namespace LEM_Editor
 
         Transform m_FollowerTransform = default;
         Transform m_FollowingTransform = default;
-        float m_Smoothing = 1f, m_SnapDistance = 1f;
+        float m_Smoothing = 0f, m_SnapDistance = 0f;
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -35,14 +35,13 @@ namespace LEM_Editor
             m_FollowerTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Follower Transform", m_FollowerTransform, typeof(Transform), true);
             propertyRect.y += 20f;
             m_FollowingTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Following Transform", m_FollowingTransform, typeof(Transform), true);
-            propertyRect.y += 40f;
-            m_Smoothing = EditorGUI.Slider(propertyRect, "Smoothing", m_Smoothing, 0.0001f, 1000f);
             propertyRect.y += 20f;
-            m_SnapDistance = EditorGUI.Slider(propertyRect, "SnapDistance", m_SnapDistance, 0.0001f, 1000f);
+            m_Smoothing = EditorGUI.Slider(propertyRect, "Smoothing", m_Smoothing, 0f, 1f);
+            propertyRect.y += 20f;
+            m_SnapDistance = EditorGUI.FloatField(propertyRect, "SnapDistance", m_SnapDistance);
 
             LEMStyleLibrary.EndEditorLabelColourChange();
-
-
+          
         }
 
         public override LEM_BaseEffect CompileToBaseEffect()

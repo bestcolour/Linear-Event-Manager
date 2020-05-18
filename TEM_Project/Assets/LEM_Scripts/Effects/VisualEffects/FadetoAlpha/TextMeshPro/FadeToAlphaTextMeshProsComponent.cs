@@ -26,6 +26,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+        bool m_IsFinished = false;
+
         public override void Initialise()
         {
             m_InitialAlphas = new float[m_TargetTextMeshPros.Length];
@@ -63,10 +65,10 @@ namespace LEM_Effects
                     //Set the targetimages as the actual targetted colour
                     m_TargetTextMeshPros[i].color = m_NextColour[i];
                 }
-                return true;
+                m_IsFinished = true;
             }
 
-            return false;
+            return m_IsFinished;
         }
 
 
@@ -85,6 +87,11 @@ namespace LEM_Effects
             t2 = m_TargetAlpha;
             t3 = m_Duration;
 
+        }
+
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
         }
     }
 }

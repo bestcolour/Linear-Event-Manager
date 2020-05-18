@@ -4,7 +4,7 @@ namespace LEM_Effects
 {
 
 
-    public class ReWordTextMeshProComponent : LEM_BaseEffect
+    public class ReWordTextMeshProComponent : LEM_BaseEffect, IEffectSavable<TextMeshPro, string>
     {
         //target
         [Tooltip("The TextMeshPro you want to reword")]
@@ -21,5 +21,16 @@ namespace LEM_Effects
             m_TargetText.text = m_NewText;
         }
 
-    } 
+        public void SetUp(TextMeshPro t1, string t2)
+        {
+            m_TargetText = t1;
+            m_NewText = t2;
+        }
+
+        public void UnPack(out TextMeshPro t1, out string t2)
+        {
+            t1 = m_TargetText;
+            t2 = m_NewText;
+        }
+    }
 }

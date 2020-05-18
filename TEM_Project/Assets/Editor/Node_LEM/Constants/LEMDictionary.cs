@@ -31,11 +31,11 @@ namespace LEM_Editor
         {
              { "StartNode", new NodeDictionaryDefinition(new StartNode(),  new Color(0.11f, 0.937f, 0.11f)) },
 
-#region On their own for now
-            { "EqualRandomOutCome", new NodeDictionaryDefinition(new EqualRandomOutComeNode(),new Color(0.302f,0.216f,0.851f)) },
-             { "CustomVoidFunction", new NodeDictionaryDefinition(new CustomVoidFunctionNode(),new Color(0.76f,0.15f,0.7f)) },
-             { "SetButtonInteractivityState", new NodeDictionaryDefinition(new SetButtonInteractivityStateNode(),new Color(0.4f,0.66f,0.18f)) },
-	#endregion
+        #region On their own for now
+             { "EqualRandomOutCome", new NodeDictionaryDefinition(new EqualRandomOutComeNode()                      ,new Color(0.302f,0.216f,0.851f)) },
+             { "CustomVoidFunction", new NodeDictionaryDefinition(new CustomVoidFunctionNode()                      ,new Color(0.76f,0.15f,0.7f)) },
+             { "SetButtonInteractivityState", new NodeDictionaryDefinition(new SetButtonInteractivityStateNode()    ,new Color(0.4f,0.66f,0.18f)) },
+	    #endregion
 
          #region GameObject
 		    { "InstantiateGameObject", new NodeDictionaryDefinition(   new InstantiateGameObjectNode(),new Color(0.04f,0.65f,0.2f)) },
@@ -46,79 +46,96 @@ namespace LEM_Editor
 
 	#endregion
 
-#region SetTransform
-             { "ReposTrans", new NodeDictionaryDefinition(new RepositionTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "ReposRectTrans", new NodeDictionaryDefinition(new RepositionRectTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "ReScaleTrans", new NodeDictionaryDefinition(new RescaleTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "ReRotTrans", new NodeDictionaryDefinition(new ReRotateTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "ReSizeRectTrans", new NodeDictionaryDefinition(new ReSizeRectTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "SetTransParent", new NodeDictionaryDefinition(new SetTransformParentNode(),new Color(0.19f ,0.74f,0.67f)) },
+        #region SetTransform
+             { "ReposTrans", new NodeDictionaryDefinition(new RepositionTransformNode()         ,new Color(0.15f ,0.68f,0.38f)) },
+             { "ReposRectTrans", new NodeDictionaryDefinition(new RepositionRectTransformNode() ,new Color(0.15f ,0.68f,0.38f)) },
+             { "ReScaleTrans", new NodeDictionaryDefinition(new RescaleTransformNode()          ,new Color(0.15f ,0.68f,0.38f)) },
+             { "ReRotTrans", new NodeDictionaryDefinition(new ReRotateTransformNode()           ,new Color(0.15f ,0.68f,0.38f)) },
+             { "ReSizeRectTrans", new NodeDictionaryDefinition(new ReSizeRectTransformNode()    ,new Color(0.15f ,0.68f,0.38f)) },
+             { "SetTransParent", new NodeDictionaryDefinition(new SetTransformParentNode()      ,new Color(0.15f ,0.68f,0.38f)) },
 
-	#endregion
+	    #endregion
 
              
-#region OffSet Transform
+        #region OffSet Transform
+             { "OffsetTransPos", new NodeDictionaryDefinition(new OffsetTransformPositionNode()         ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetTransRot", new NodeDictionaryDefinition(new OffsetTransformRotationNode()         ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetTransScale", new NodeDictionaryDefinition(new OffsetTransformScaleNode()          ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetRectTransSize", new NodeDictionaryDefinition(new OffsetRectTransformSizeNode()    ,new Color(0.12f ,0.52f,0.29f)) },
 
-             { "OffsetTransPos", new NodeDictionaryDefinition(new OffsetTransformPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "OffsetTransRot", new NodeDictionaryDefinition(new OffsetTransformRotationNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "OffsetTransScale", new NodeDictionaryDefinition(new OffsetTransformScaleNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "OffsetRectTransSize", new NodeDictionaryDefinition(new OffsetRectTransformSizeNode(),new Color(0.19f ,0.74f,0.67f)) },
-
-	#endregion
-
-
-#region Halt
-             { "AddDelay",  new NodeDictionaryDefinition(    new AddDelayNode() , new Color(0.85f,0.64f,0.13f))},
-             { "ToggleListenToClick",   new NodeDictionaryDefinition( new ToggleListenToClickNode(), new Color(0.59f,0.24f,0.75f)) },
-             { "ToggleListenToTrigger", new NodeDictionaryDefinition(new ToggleListenToTriggerNode(),new Color(0.25f,0.54f,0.75f)) },
-
-            #endregion
-
-#region Animator
-             { "SetAnimatorBool", new NodeDictionaryDefinition(new SetAnimatorBoolNode(),new Color(0.64f,0.55f,0.76f)) },
-             { "SetAnimatorFloat", new NodeDictionaryDefinition(new SetAnimatorFloatNode(),new Color(0.64f,0.55f,0.76f)) },
-             { "SetAnimatorInt", new NodeDictionaryDefinition(new SetAnimatorIntNode(),new Color(0.64f,0.55f,0.76f)) },
-             { "SetAnimatorTrigger", new NodeDictionaryDefinition(new SetAnimatorTriggerNode(),new Color(0.64f,0.55f,0.76f)) },
-
-	#endregion
-
-           #region Lerp and Move
-		     { "LerpRectransToPos", new NodeDictionaryDefinition(new LerpRectransToPosNode(),new Color(0.09f,0.34f,0.75f)) },
-             { "LerpRectransToRectrans", new NodeDictionaryDefinition(new LerpRectransToRectransNode(),new Color(0.09f,0.34f,0.75f)) },
-             { "LerpTransToPos", new NodeDictionaryDefinition(new LerpTransformToPositionNode(),new Color(0.48f,0.04f,0.69f)) },
-             { "LerpTransToTrans", new NodeDictionaryDefinition(new LerpTransformToTransformNode(),new Color(0.48f,0.04f,0.69f)) },
+	    #endregion
 
 
-             { "MoveTowRectransToPos", new NodeDictionaryDefinition(new MoveTowRectransToPosNode(),new Color(0.09f,0.34f,0.75f)) },
-             { "MoveTowRectransToRectrans", new NodeDictionaryDefinition(new MoveTowRectransToRectransNode(),new Color(0.09f,0.34f,0.75f)) },
-             { "MoveTowTransToPos", new NodeDictionaryDefinition(new MoveTowardsTransformToPositionNode(),new Color(0.48f,0.04f,0.69f)) },
-             { "MoveTowTransToTrans", new NodeDictionaryDefinition(new MoveTowardsTransformToTransformNode(),new Color(0.48f,0.04f,0.69f)) }, 
-	#endregion
+        #region Halt
+             { "AddDelay",  new NodeDictionaryDefinition(    new AddDelayNode()                         ,new Color(0.85f,0.64f,0.13f))},
+             { "ToggleListenToClick",   new NodeDictionaryDefinition( new ToggleListenToClickNode()     ,new Color(0.59f,0.24f,0.75f)) },
+             { "ToggleListenToTrigger", new NodeDictionaryDefinition(new ToggleListenToTriggerNode()    ,new Color(0.25f,0.54f,0.75f)) },
+             { "StopUpdateEffect", new NodeDictionaryDefinition(new StopUpdateEffectNode()              ,new Color(1f ,0.55f,0f)) },
 
-           
+        #endregion
+
+        #region Animator
+             { "SetAnimatorBool", new NodeDictionaryDefinition(new SetAnimatorBoolNode()            ,new Color(0.64f,0.55f,0.76f)) },
+             { "SetAnimatorFloat", new NodeDictionaryDefinition(new SetAnimatorFloatNode()          ,new Color(0.64f,0.55f,0.76f)) },
+             { "SetAnimatorInt", new NodeDictionaryDefinition(new SetAnimatorIntNode()              ,new Color(0.64f,0.55f,0.76f)) },
+             { "SetAnimatorTrigger", new NodeDictionaryDefinition(new SetAnimatorTriggerNode()      ,new Color(0.64f,0.55f,0.76f)) },
+
+	    #endregion
+
+        #region Lerp and Move
+             { "LerpRectransToPos", new NodeDictionaryDefinition(new LerpRectransToPosNode()            ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpRectransToRectrans", new NodeDictionaryDefinition(new LerpRectransToRectransNode()  ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpTransToPos", new NodeDictionaryDefinition(new LerpTransformToPositionNode()         ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpTransToTrans", new NodeDictionaryDefinition(new LerpTransformToTransformNode()      ,new Color(0.14f,0.44f,0.64f)) },
+
+             { "MoveTowRectransToPos", new NodeDictionaryDefinition(new MoveTowRectransToPosNode()              ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowRectransToRectrans", new NodeDictionaryDefinition(new MoveTowRectransToRectransNode()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowTransToPos", new NodeDictionaryDefinition(new MoveTowardsTransformToPositionNode()       ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowTransToTrans", new NodeDictionaryDefinition(new MoveTowardsTransformToTransformNode()    ,new Color(0.49f,0.24f,0.60f)) }, 
+	    #endregion
 
         #region Repeat Transform
-		     { "RepeatLerpRectransToPosNode", new NodeDictionaryDefinition(new RepeatLerpRectransformToPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "RepeatMoveTowTransToTrans", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "RepeatMoveTowTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "RepeatMoveTowRectransToRectrans", new NodeDictionaryDefinition(new RepeatMoveTowardsRectransformToRectransformNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "RepeatMoveTowRectTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsRectTransformToPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "RepeatLerpTransToTrans", new NodeDictionaryDefinition(new RepeatLerpTransformToTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "RepeatLerpTransToPos", new NodeDictionaryDefinition(new RepeatLerpTransformToPositionNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "RepeatLerpRectTransToRectTrans", new NodeDictionaryDefinition(new RepeatLerpRectTransformToRectTransformNode(),new Color(0.19f ,0.74f,0.67f)) },
-               { "StopRepeatNode", new NodeDictionaryDefinition(new StopRepeatNode(),new Color(1f ,0.55f,0f)) },
+             { "RepeatLerpRectransToPosNode", new NodeDictionaryDefinition(new RepeatLerpRectransformToPositionNode()                   ,new Color(0.12f ,0.38f,0.55f)) },
+             { "RepeatLerpTransToTrans", new NodeDictionaryDefinition(new RepeatLerpTransformToTransformNode()                          ,new Color(0.12f ,0.38f,0.55f)) },
+             { "RepeatLerpTransToPos", new NodeDictionaryDefinition(new RepeatLerpTransformToPositionNode()                             ,new Color(0.12f ,0.38f,0.55f)) },
+             { "RepeatLerpRectTransToRectTrans", new NodeDictionaryDefinition(new RepeatLerpRectTransformToRectTransformNode()          ,new Color(0.12f ,0.38f,0.55f)) },
+
+             { "RepeatMoveTowTransToTrans", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToTransformNode()                ,new Color(0.36f ,0.17f,0.44f)) },
+             { "RepeatMoveTowTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToPositionNode()                   ,new Color(0.36f ,0.17f,0.44f)) },
+             { "RepeatMoveTowRectransToRectrans", new NodeDictionaryDefinition(new RepeatMoveTowardsRectransformToRectransformNode()    ,new Color(0.36f ,0.17f,0.44f)) },
+             { "RepeatMoveTowRectTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsRectTransformToPositionNode()           ,new Color(0.36f ,0.17f,0.44f)) },
+
+	    #endregion
+
+        #region Fade Alpha
+		     { "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageComponentNode()                                     ,new Color(0.19f ,0.74f,0.67f)) },
+             { "FadeToAlphaImages", new NodeDictionaryDefinition(new FadeToAlphaImagesComponentNode()                                   ,new Color(0.19f ,0.74f,0.67f)) },
+
+             { "FadeToAlphaRenderer", new NodeDictionaryDefinition(new FadeToAlphaRendererComponentNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
+             { "FadeToAlphaRenderers", new NodeDictionaryDefinition(new FadeToAlphaRenderersComponentNode()                             ,new Color(0.07f ,0.55f,0.46f)) },
+             { "FadeToAlphaSpriteRenderer", new NodeDictionaryDefinition(new FadeToAlphaSpriteRendererComponentNode()                   ,new Color(0.067f ,0.48f,0.4f)) },
+             { "FadeToAlphaSpriteRenderers", new NodeDictionaryDefinition(new FadeToAlphaSpriteRenderersComponentNode()                 ,new Color(0.067f ,0.48f,0.4f)) },
+
+             { "FadeToAlphaText", new NodeDictionaryDefinition(new  FadeToAlphaTextComponentNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "FadeToAlphaTexts", new NodeDictionaryDefinition(new FadeToAlphaTextsComponentNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+
+             { "FadeToAlphaTextMeshPro", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProComponentNode()                         ,new Color(0.13f ,0.38f,0.55f)) },
+             { "FadeToAlphaTextMeshPros", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProsComponentNode()                       ,new Color(0.13f ,0.38f,0.55f)) },
+
+             { "FadeToAlphaTextMeshProGUI", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIComponentNode()                   ,new Color(0.11f ,0.31f,0.45f)) },
+             { "FadeToAlphaTextMeshProGUIs", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIsComponentNode()                 ,new Color(0.11f ,0.31f,0.45f)) }, 
+       
+
+	    #endregion
+
+#region Reword
+             { "ReWordText", new NodeDictionaryDefinition(new ReWordTextComponentNode()                             ,new Color(0.16f ,0.45f,0.65f)) },
+
+             { "ReWordTextMeshPro", new NodeDictionaryDefinition(new ReWordTextMeshProComponentNode()               ,new Color(0.13f ,0.38f,0.55f)) },
+
+             { "ReWordTextMeshProGUI", new NodeDictionaryDefinition(new ReWordTextMeshProGUIComponentNode()         ,new Color(0.11f ,0.31f,0.45f)) }, 
 	#endregion
-          #region Fade Alpha
-		     { "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "FadeToAlphaImages", new NodeDictionaryDefinition(new FadeToAlphaImagesComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "FadeToAlphaRenderer", new NodeDictionaryDefinition(new FadeToAlphaRendererComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "FadeToAlphaRenderers", new NodeDictionaryDefinition(new FadeToAlphaRenderersComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "FadeToAlphaSpriteRenderer", new NodeDictionaryDefinition(new FadeToAlphaSpriteRendererComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "FadeToAlphaSpriteRenderers", new NodeDictionaryDefinition(new FadeToAlphaSpriteRenderersComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "FadeToAlphaText", new NodeDictionaryDefinition(new /*FadeToAlphaTextComponentNode*/ FadeToAlphaTextsComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "FadeToAlphaTexts", new NodeDictionaryDefinition(new FadeToAlphaTextsComponentNode(),new Color(0.19f ,0.74f,0.67f)) },
-             { "FadeToAlphaTextMeshPro", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProComponentNode(),new Color(0.19f ,0.74f,0.67f)) }, 
-	#endregion
+
 
         };
 

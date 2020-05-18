@@ -9,7 +9,7 @@ namespace LEM_Editor
     {
         Transform m_FollowerTransform = default;
         Transform m_FollowingTransform = default;
-        float m_Speed = 1f, m_SnapDistance = 1f;
+        float m_Speed = 0f, m_SnapDistance = 0f;
 
         protected override string EffectTypeName => "MoveTowTransToTrans";
 
@@ -36,12 +36,14 @@ namespace LEM_Editor
             propertyRect.y += 20f;
             m_FollowingTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Following Transform", m_FollowingTransform, typeof(Transform), true);
             propertyRect.y += 40f;
-            m_Speed = EditorGUI.Slider(propertyRect, "Speed", m_Speed, 0.0001f, 1000f);
+            m_Speed = EditorGUI.FloatField(propertyRect, "Speed", m_Speed);
             propertyRect.y += 20f;
-            m_SnapDistance = EditorGUI.Slider(propertyRect, "SnapDistance", m_SnapDistance, 0.0001f, 1000f);
+            m_SnapDistance = EditorGUI.FloatField(propertyRect, "SnapDistance", m_SnapDistance);
+
+            if (m_Speed < 0)
+                m_Speed = 0;
 
             LEMStyleLibrary.EndEditorLabelColourChange();
-
 
         }
 

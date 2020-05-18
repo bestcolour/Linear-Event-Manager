@@ -247,7 +247,7 @@ namespace LEM_Editor
                         m_CurrSelectedResultIndex = i;
                     }
 
-                    if (e.type == EventType.MouseDown)
+                    if (e.type == EventType.MouseDown && e.button == 0)
                     {
                         //If user is pressing down on control
                         if (e.control)

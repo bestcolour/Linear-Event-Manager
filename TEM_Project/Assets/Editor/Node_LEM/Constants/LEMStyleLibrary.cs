@@ -22,6 +22,7 @@ namespace LEM_Editor
 
         //Node fontstyles
         public static readonly GUIStyle s_NodeHeaderStyle = new GUIStyle();
+        public static readonly GUIStyle s_GroupLabelStyle = new GUIStyle();
         public static readonly GUIStyle s_StartEndStyle = new GUIStyle();
         //public static GUIStyle s_NodeTextInputStyle = null;
         public static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
@@ -69,29 +70,23 @@ namespace LEM_Editor
             s_ConnectionPointStyleSelected.normal.background = s_ConnectionPointStyleNormal.active.background;
             s_ConnectionPointStyleSelected.active.background = s_ConnectionPointStyleNormal.normal.background;
 
-
-            ////Load the in and out point gui styles
-            //s_InPointStyle = new GUIStyle();
-            //s_InPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
-            //s_InPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
-
-            //s_OutPointStyle = new GUIStyle();
-            //s_OutPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
-            //s_OutPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
-
             s_WhiteBackGroundSkin = new NodeSkinCollection();
             s_WhiteBackGroundSkin.m_MidBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround.png", typeof(Texture2D)) as Texture2D;
             s_WhiteBackGroundSkin.m_SelectedMidOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround_Selected.png", typeof(Texture2D)) as Texture2D;
             s_WhiteBackGroundSkin.m_TopBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top.png", typeof(Texture2D)) as Texture2D;
             s_WhiteBackGroundSkin.m_SelectedTopOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top_Selected.png", typeof(Texture2D)) as Texture2D;
 
-        
+
 
             //s_NodeHeaderStyle.normal.textColor = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
             s_NodeHeaderStyle.fontSize = 13;
             s_NodeHeaderStyle.alignment = TextAnchor.MiddleCenter;
             s_NodeHeaderStyle.wordWrap = true;
+
+            s_GroupLabelStyle.fontSize = 20;
+            s_GroupLabelStyle.alignment = TextAnchor.MiddleCenter;
+            s_GroupLabelStyle.wordWrap = true;
 
             //s_NodeTextInputStyle = GUI.skin.GetStyle("textField");
             //s_NodeTextInputStyle.fontSize = 10;
@@ -112,6 +107,7 @@ namespace LEM_Editor
             {
                 s_NodeHeaderStyle.normal.textColor = Color.white;
                 s_NodeParagraphStyle.normal.textColor = Color.white;
+                s_GroupLabelStyle.normal.textColor = Color.white;
                 s_CurrentLabelColour = Color.white;
                 s_CurrentMidSkinColour = new Color(0.164f, 0.164f, 0.164f);
                 s_CurrentBezierColour = Color.white;
@@ -121,13 +117,14 @@ namespace LEM_Editor
             }
             else
             {
-                s_NodeHeaderStyle.normal.textColor = Color.black;
+                s_NodeHeaderStyle.normal.textColor = Color.white;
+                s_GroupLabelStyle.normal.textColor = new Color(0.152f, 0.152f, 0.152f);
                 s_NodeParagraphStyle.normal.textColor = Color.black;
                 s_CurrentLabelColour = Color.black;
                 s_CurrentMidSkinColour = Color.white;
                 s_CurrentBezierColour = new Color(0.152f, 0.152f, 0.152f);
                 s_CurrentGroupRectMidSkinColour = new Color(1, 1, 1, 0.5f);
-                s_CurrentGroupRectTopSkinColour = new Color(1,1,1, 0.5f);
+                s_CurrentGroupRectTopSkinColour = new Color(1, 1, 1, 0.5f);
             }
 
             //s_CurrentMidSkinColour = settings.m_EditorTheme == EditorTheme.Dark ? new Color(0.164f, 0.164f, 0.164f) : Color.white;

@@ -9,7 +9,7 @@ namespace LEM_Editor
     {
         Transform m_TargetTransform = default;
         Vector3 m_TargetPosition = default;
-        float m_Duration = 1f;
+        float m_Duration = 0f;
         protected override string EffectTypeName => "MoveTowTransToPos";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
@@ -35,7 +35,10 @@ namespace LEM_Editor
             propertyRect.y += 20f;
             m_TargetPosition = EditorGUI.Vector3Field(propertyRect, "Target Position", m_TargetPosition);
             propertyRect.y += 40f;
-            m_Duration = EditorGUI.Slider(propertyRect, "Duration", m_Duration, 0.0001f, 1000f);
+            m_Duration = EditorGUI.FloatField(propertyRect, "Duration", m_Duration);
+
+            if (m_Duration < 0)
+                m_Duration = 0;
 
             LEMStyleLibrary.EndEditorLabelColourChange();
 

@@ -3,7 +3,7 @@ using TMPro;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaTextMeshProGUIsComponent : LEM_BaseEffect
+    public class FadeToAlphaTextMeshProGUIsComponent : LEM_BaseEffect,IEffectSavable<TextMeshProUGUI[],float ,float>
     {
         //target
         [Tooltip("The TextMeshProUGUIs you want to fade")]
@@ -26,6 +26,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+        bool m_IsFinished = false;
+
         public override void Initialise()
         {
             m_InitialAlphas = new float[m_TargetTexts.Length];
@@ -40,6 +42,20 @@ namespace LEM_Effects
 
             //Recalculate the target alpha (convert to normalized value)
             m_TargetAlpha /= 255f;
+        }
+
+        public void SetUp(TextMeshProUGUI[] t1, float t2, float t3)
+        {
+            m_TargetTexts = t1;
+            m_TargetAlpha = t2;
+            m_Duration = t3;
+        }
+
+        public void UnPack(out TextMeshProUGUI[] t1, out float t2, out float t3)
+        {
+            t1 = m_TargetTexts;
+            t2 = m_TargetAlpha;
+            t3 = m_Duration;
         }
 
         public override bool UpdateEffect()
@@ -63,11 +79,18 @@ namespace LEM_Effects
                     //Set the targetimages as the actual targetted colour
                     m_TargetTexts[i].color = m_NextColour[i];
                 }
-                return true;
+                m_IsFinished = true;
             }
 
-            return false;
+            return m_IsFinished;
         }
+
+
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
+        }
+
     }
 
 }

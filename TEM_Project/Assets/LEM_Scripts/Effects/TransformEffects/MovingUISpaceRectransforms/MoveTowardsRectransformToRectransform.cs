@@ -16,6 +16,8 @@ namespace LEM_Effects
         [Tooltip("This is the distance between the target transform and the target position for the target transform to be considered at the targetposition.")]
         [SerializeField, Range(0.0001f, 1000f)] float m_SnapDistance = 1f;
 
+        bool m_IsFinished = false;
+
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
         public void SetUp(RectTransform t1, RectTransform t2, float t3, float t4)
@@ -44,11 +46,16 @@ namespace LEM_Effects
             {
                 //Snap the position to the targetposition
                 m_TargetRectransform.anchoredPosition3D = m_TargetDestination.anchoredPosition3D;
-                return true;
+                m_IsFinished = true;
+
             }
 
+            return m_IsFinished;
+        }
 
-            return false;
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
         }
 
     } 

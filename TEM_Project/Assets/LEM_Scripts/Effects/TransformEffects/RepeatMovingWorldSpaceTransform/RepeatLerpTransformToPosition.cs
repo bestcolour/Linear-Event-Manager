@@ -22,6 +22,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType =>EffectFunctionType.UpdateEffect;
 
+        bool m_IsFinished = false;
+
         public override void Initialise()
         {
             //Record the intiial position for repeated process
@@ -42,7 +44,7 @@ namespace LEM_Effects
                 //return base.UpdateEffect();
             }
 
-            return false;
+            return m_IsFinished;
         }
         
         
@@ -61,8 +63,11 @@ namespace LEM_Effects
             t3 = m_Smoothing;
             t4 = m_SnapDistance;
         }
-        
-        
+
+        public override void ForceStop()
+        {
+            m_IsFinished = true;
+        }
 
     } 
 }

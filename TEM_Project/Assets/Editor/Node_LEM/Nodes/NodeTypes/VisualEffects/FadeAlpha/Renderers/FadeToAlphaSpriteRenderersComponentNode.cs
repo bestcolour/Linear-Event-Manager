@@ -9,10 +9,8 @@ namespace LEM_Editor
     {
 
         ArrayObjectDrawer<SpriteRenderer> m_ArrayOfGameObjects = new ArrayObjectDrawer<SpriteRenderer>();
-        float m_TargetAlpha =0f,m_Duration =1f;
+        float m_TargetAlpha = 0f, m_Duration = 0f;
         
-
-
         protected override string EffectTypeName => "FadeToAlphaSpriteRenderers";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
@@ -37,8 +35,11 @@ namespace LEM_Editor
             propertyRect.y += EditorGUIUtility.singleLineHeight;
             m_TargetAlpha =  EditorGUI.Slider(propertyRect, "Target Alpha", m_TargetAlpha, 0, 255);
             propertyRect.y += EditorGUIUtility.singleLineHeight;
-            m_Duration = EditorGUI.FloatField(propertyRect,"Target Duration" ,m_Duration);
+            m_Duration = EditorGUI.FloatField(propertyRect,"Duration" ,m_Duration);
             propertyRect.y += 20f;
+
+            if (m_Duration < 0)
+                m_Duration = 0;
 
             //If there is change in array size, update rect
             if (m_ArrayOfGameObjects.HandleDrawAndProcess(propertyRect, out float propertyHeight))

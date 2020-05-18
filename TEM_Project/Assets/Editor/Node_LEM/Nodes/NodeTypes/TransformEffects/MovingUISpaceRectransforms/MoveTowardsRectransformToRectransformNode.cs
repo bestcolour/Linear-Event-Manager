@@ -12,7 +12,7 @@ namespace LEM_Editor
 
         RectTransform m_TargetRectransform = default;
         RectTransform m_TargetPosition = default;
-        float m_Speed = 1f, m_SnapDistance = 1f;
+        float m_Speed = 0f, m_SnapDistance =0f;
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -36,13 +36,16 @@ namespace LEM_Editor
             m_TargetRectransform = (RectTransform)EditorGUI.ObjectField(propertyRect, "Follower RectTransform", m_TargetRectransform, typeof(RectTransform), true);
             propertyRect.y += 20f;
             m_TargetPosition = (RectTransform)EditorGUI.ObjectField(propertyRect, "Following RectTransform", m_TargetPosition, typeof(RectTransform), true);
-            propertyRect.y += 40f;
-            m_Speed = EditorGUI.Slider(propertyRect, "Speed", m_Speed, 0.0001f, 1000f);
             propertyRect.y += 20f;
-            m_SnapDistance = EditorGUI.Slider(propertyRect, "SnapDistance", m_SnapDistance, 0.0001f, 1000f);
+            m_Speed = EditorGUI.FloatField(propertyRect, "Speed", m_Speed);
+            propertyRect.y += 20f;
+            m_SnapDistance = EditorGUI.FloatField(propertyRect, "SnapDistance", m_SnapDistance);
+
+            if (m_Speed < 0)
+                m_Speed = 0;
 
             LEMStyleLibrary.EndEditorLabelColourChange();
-
+            
 
         }
 
