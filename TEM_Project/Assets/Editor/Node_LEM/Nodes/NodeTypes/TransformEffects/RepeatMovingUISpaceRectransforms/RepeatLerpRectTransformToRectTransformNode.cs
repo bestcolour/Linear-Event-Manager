@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class RepeatLerpRectTransformToRectTransformNode: BaseEffectNode
+    public class RepeatLerpRectTransformToRectTransformNode: UpdateEffectNode
     {
         RectTransform m_RectTransformFollower= default;
         RectTransform m_RectTransformToFollow = default;

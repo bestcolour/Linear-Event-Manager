@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class OffsetTransformScaleNode : BaseEffectNode
+    public class OffsetTransformScaleNode : InstantEffectNode
     {
         protected override string EffectTypeName => "OffsetTransScale";
 
@@ -26,7 +26,7 @@ namespace LEM_Editor
             base.Draw();
 
             //Draw a object field for inputting  the gameobject to destroy
-            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
+            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Target Transform", m_TargetTransform, typeof(Transform), true);

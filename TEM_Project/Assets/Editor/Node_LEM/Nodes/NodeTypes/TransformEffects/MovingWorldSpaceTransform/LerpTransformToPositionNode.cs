@@ -6,7 +6,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class LerpTransformToPositionNode : BaseEffectNode
+    public class LerpTransformToPositionNode : UpdateEffectNode
     {
         protected override string EffectTypeName => "LerpTransToPos";
         Transform m_TargetTransform = default;

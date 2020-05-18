@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class RepeatLerpRectransformToPositionNode : BaseEffectNode
+    public class RepeatLerpRectransformToPositionNode : UpdateEffectNode
     {
         RectTransform m_TargetRectransform = default;
         Vector3 m_TargetPosition = default;

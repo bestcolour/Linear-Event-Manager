@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class RepeatMoveTowardsTransformToPositionNode : BaseEffectNode
+    public class RepeatMoveTowardsTransformToPositionNode : UpdateEffectNode
     {
         Transform m_TargetTransform = default;
         Vector3 m_TargetPosition = default;

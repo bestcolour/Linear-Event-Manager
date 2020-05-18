@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class FadeToAlphaSpriteRendererComponentNode : BaseEffectNode
+    public class FadeToAlphaSpriteRendererComponentNode : UpdateEffectNode
     {
         SpriteRenderer  m_TargetSpriteRenderer = default;
         

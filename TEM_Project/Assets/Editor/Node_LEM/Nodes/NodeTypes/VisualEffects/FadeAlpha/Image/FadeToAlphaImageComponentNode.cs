@@ -6,7 +6,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class FadeToAlphaImageComponentNode : BaseEffectNode
+    public class FadeToAlphaImageComponentNode : UpdateEffectNode
     {
         Image m_TargetImage = default;
         

@@ -616,7 +616,7 @@ namespace LEM_Editor
             DrawGrid(20 * ScaleFactor, 0.2f, Color.gray);
             DrawGrid(100 * ScaleFactor, 0.4f, Color.gray);
             //Draw graphics that are zoomable
-            EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
+            EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f,0f, Screen.width, Screen.height));
             Vector2 currMousePos = currentEvent.mousePosition;
 
             //Draw the rect grpsfirst

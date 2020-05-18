@@ -6,7 +6,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class LerpRectransToPosNode : BaseEffectNode
+    public class LerpRectransToPosNode : UpdateEffectNode
     {
         protected override string EffectTypeName => "LerpRectransToPos";
 

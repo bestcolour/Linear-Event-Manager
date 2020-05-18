@@ -6,7 +6,7 @@ using TMPro;
 namespace LEM_Editor
 {
 
-    public class FadeToAlphaTextMeshProsComponentNode : BaseEffectNode
+    public class FadeToAlphaTextMeshProsComponentNode : UpdateEffectNode
     {
 
         ArrayObjectDrawer<TextMeshPro> m_ArrayOfGameObjects = new ArrayObjectDrawer<TextMeshPro>();

@@ -7,7 +7,7 @@ using TMPro;
 namespace LEM_Editor
 {
 
-    public class FadeToAlphaTextMeshProComponentNode : BaseEffectNode
+    public class FadeToAlphaTextMeshProComponentNode : UpdateEffectNode
     {
         TextMeshPro m_TargetText = default;
         

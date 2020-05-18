@@ -15,7 +15,6 @@ namespace LEM_Editor
         const float k_ScreenHeightConversionMultiplier = 1.2875f;
         const float k_ScreenConversionMarginOfError = 2.25f;
 
-
         public static Vector2 ConvertScreenSpaceToZoomSpace(float scaleFactor, Vector2 screenPointToConvert, Vector2 zoomAreaOrigin, Vector2 zoomCoordsOrigin)
         {
             return (screenPointToConvert - zoomAreaOrigin) / scaleFactor + zoomCoordsOrigin;
@@ -26,7 +25,7 @@ namespace LEM_Editor
             //End group since editor window begins group naturally during onGUI
             GUI.EndGroup();
 
-
+            //s_ScreenOffSet = screenCoordsArea.position - screenCoordsArea.TopLeft();
             //Clipping is basically cropping out things that are not inside the rect
             Rect clippedRect = screenCoordsArea.ScaleSizeBy(1.0f / scale, screenCoordsArea.TopLeft());
 

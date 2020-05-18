@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class FadeToAlphaRendererComponentNode : BaseEffectNode
+    public class FadeToAlphaRendererComponentNode : UpdateEffectNode
     {
         Renderer  m_TargetRenderer = default;
         

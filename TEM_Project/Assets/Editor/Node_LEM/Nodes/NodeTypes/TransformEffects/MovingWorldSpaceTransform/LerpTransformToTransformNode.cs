@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class LerpTransformToTransformNode : BaseEffectNode
+    public class LerpTransformToTransformNode : UpdateEffectNode
     {
         protected override string EffectTypeName => "LerpTransToTrans";
 

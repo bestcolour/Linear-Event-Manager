@@ -5,7 +5,7 @@ using UnityEditor;
 namespace LEM_Editor
 {
 
-    public class FadeToAlphaSpriteRenderersComponentNode : BaseEffectNode
+    public class FadeToAlphaSpriteRenderersComponentNode : UpdateEffectNode
     {
 
         ArrayObjectDrawer<SpriteRenderer> m_ArrayOfGameObjects = new ArrayObjectDrawer<SpriteRenderer>();
