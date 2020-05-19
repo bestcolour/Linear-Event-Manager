@@ -1978,7 +1978,7 @@ namespace LEM_Editor
             #region Loading Events from Dictionary
 
             //Dont do any thing if there is no effects in the dicitionary
-            Dictionary<string, LEM_BaseEffect> allEffectsDictInLinearEvent = s_CurrentLE.AllEffectsDictionary;
+            Dictionary<string, LEM_BaseEffect> allEffectsDictInLinearEvent = s_CurrentLE.GetAllEffectsDictionary;
 
             if (allEffectsDictInLinearEvent == null)
             {

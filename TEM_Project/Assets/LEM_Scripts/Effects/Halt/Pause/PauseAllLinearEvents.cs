@@ -1,17 +1,18 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class ToggleListenToClick : LEM_BaseEffect, IEffectSavable<bool>
+    public class PauseAllLinearEvents : LEM_BaseEffect, IEffectSavable<bool>
     {
         [SerializeField]
-        bool m_State = true;
+        bool m_State = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.HaltEffect;
 
         public override void Initialise()
         {
-            LinearEventsManager.Instance.ListeningForClick = m_State;
+            LinearEventsManager.Instance.PauseAllRunningLinearEvents = m_State;
         }
 
         public void SetUp(bool t1)
@@ -19,10 +20,10 @@ namespace LEM_Effects
             m_State = t1;
         }
 
-
         public void UnPack(out bool t1)
         {
             t1 = m_State;
         }
     }
+
 }
