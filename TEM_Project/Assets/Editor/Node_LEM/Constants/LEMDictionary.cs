@@ -79,7 +79,7 @@ namespace LEM_Editor
 
              { "GlobalPause", new NodeDictionaryDefinition(new PauseAllLinearEventsNode()               ,new Color(1f ,0.55f,0f)) },
              { "Pause", new NodeDictionaryDefinition(new PauseCurrentLinearEventNode()                  ,new Color(1f ,0.55f,0f)) },
-             { "PauseLinearEvent", new NodeDictionaryDefinition(new PauseLinearEventNode()               ,new Color(1f ,0.55f,0f)) },
+             { "PauseLinearEvent", new NodeDictionaryDefinition(new PauseLinearEventNode()              ,new Color(1f ,0.55f,0f)) },
 
         #endregion
 

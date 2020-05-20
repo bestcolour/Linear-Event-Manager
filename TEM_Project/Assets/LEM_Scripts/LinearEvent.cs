@@ -7,6 +7,9 @@ namespace LEM_Effects
     [CanEditMultipleObjects, System.Serializable]
     public class LinearEvent : MonoBehaviour
     {
+        [SerializeField]
+        ListenData m_Listen = default;
+
         #region Cached Values
         [Header("DONT TOUCH! Cached Values!"), ReadOnly]
         public LEM_BaseEffect[] m_AllEffects = default;
@@ -18,9 +21,6 @@ namespace LEM_Effects
 
         [HideInInspector]
         public NodeBaseData m_StartNodeData = default;
-
-        //[SerializeField, ReadOnly]
-        //string m_CurrentEffect = default;
 
         //Runtime values
         public Dictionary<string, LEM_BaseEffect> GetAllEffectsDictionary
@@ -242,10 +242,6 @@ namespace LEM_Effects
         //the LE will handle that
         void LoadNextEffect(int maxEffectsPerFrame)
         {
-            ////Stop loading effect if there is no next effect
-            //if (!m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode)
-            //return;
-
             //Record next effect
             m_PreviousEffectPlayed = m_EffectsDictionary[m_PreviousEffectPlayed.GetNextNodeID()];
 

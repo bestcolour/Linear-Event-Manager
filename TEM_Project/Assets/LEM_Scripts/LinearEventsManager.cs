@@ -11,9 +11,6 @@ public class LinearEventsManager : MonoBehaviour
 {
     public static LinearEventsManager Instance;
 
-    //Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>> m_AllLinearEventsEffectsDictionary = new Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>>();
-    //public static Dictionary<LinearEvent, Dictionary<string, LEM_BaseEffect>> AllLinearEventsEffectsDictionary => Instance.m_AllLinearEventsEffectsDictionary;
-
     #region Linear Events Settings
     [Header("Events to Play"), SerializeField, Tooltip("Should LinearEventManager find all LinearEvents in the scene automatically on Initialisation?")] 
     bool m_AutoFindLinearEvents = false;
@@ -34,10 +31,6 @@ public class LinearEventsManager : MonoBehaviour
     [Tooltip("Should the LEM Manager start playing an event on Awake after self-initialisation?")]
     [SerializeField] bool m_PlayOnAwake = default;
 
-    //[Tooltip("Is used as the first event to play. Leave empty if not needed. Is also used to show the current event playing."), SerializeField]
-    //LinearEvent m_PlayingEvent = default;
-    //public LinearEvent CurrentEvent { set { m_PlayingEvent = value; } }
-
     [Tooltip("What is the expected amount of effects to run at one time? Increase this if you feel like there will be many effects running over a short period of time"), SerializeField]
     int m_StartingUpdateEffectCapacity = 5;
     public static int StartingUpdateEffectCapacity => Instance.m_StartingUpdateEffectCapacity;
@@ -54,28 +47,6 @@ public class LinearEventsManager : MonoBehaviour
 
     [ReadOnly] bool m_PauseAllRunningLinearEvents = true;
     public bool PauseAllRunningLinearEvents { set { m_PauseAllRunningLinearEvents = value; } }
-
-    //[ReadOnly, SerializeField]
-    //LEM_BaseEffect m_PreviousEffectPlayed = null;
-
-    //[ReadOnly, SerializeField]
-    //float m_DelayBeforeNextEffect = default;
-    //public float TimeToAddToDelay { set { m_DelayBeforeNextEffect += value; } }
-
-    //[ReadOnly, SerializeField]      //Listening for trigger is just a test for many other things to come can remove if you havent thought things thru for trigger
-
-    //bool m_ListeningForClick = default, m_ListeningForTrigger = default;
-    //public bool ListeningForClick { set { m_ListeningForClick = value; } }
-    //public bool ListeningForTrigger { set { m_ListeningForTrigger = value; } }
-
-    //[SerializeField, ReadOnly, Header("RunTime Cycles (Do not touch)"), Space(15)]
-    //List<LEM_BaseEffect> m_UpdateCycle = new List<LEM_BaseEffect>();
-
-    //[SerializeField, ReadOnly]
-    //List<LEM_BaseEffect> m_FixedUpdateCycle = new List<LEM_BaseEffect>(), m_LateUpdateCycle = new List<LEM_BaseEffect>();
-
-    
-
 
     //Call this if you dont want the manager to be initialised on awake
     public void Initialise()
@@ -113,12 +84,7 @@ public class LinearEventsManager : MonoBehaviour
 #endif
             m_AllLinearEventsInScene[i].m_LinearEventIndex = i;
             m_AllLinearEventsInScene[i].InitialiseLinearEvent();
-            //m_AllLinearEventsEffectsDictionary.Add(m_AllLinearEventsInScene[i], m_AllLinearEventsInScene[i].GetAllEffectsDictionary);
         }
-
-        //m_UpdateCycle = new List<LEM_BaseEffect>(m_StartingUpdateEffectCapacity);
-        //m_FixedUpdateCycle = new List<LEM_BaseEffect>(m_StartingUpdateEffectCapacity);
-        //m_LateUpdateCycle = new List<LEM_BaseEffect>(m_StartingUpdateEffectCapacity);
 
         m_IsInitialised = true;
         m_PauseAllRunningLinearEvents = false;
@@ -148,7 +114,6 @@ public class LinearEventsManager : MonoBehaviour
 #endif
                     m_RunningLinearEvents[i].OnStartPlayingLinearEvent();
                 }
-                //LoadNextEffect(m_InstantEffectCapacity, m_PlayingEvent.m_StartNodeData.m_NextPointsIDs[0]);
             }
 
         }
@@ -165,48 +130,17 @@ public class LinearEventsManager : MonoBehaviour
         if (!m_IsInitialised || m_PauseAllRunningLinearEvents)
             return;
 
-        //for (int i = 0; i < m_UpdateCycle.Count; i++)
-        //{
-        //    if (m_UpdateCycle[i].UpdateEffect())
-        //    {
-        //        m_UpdateCycle.RemoveEfficiently(i);
-        //        i--;
-        //    }
-        //}
-
         //No removal of linear event from the list will be done in either update or fixed update, rather it will be done in LateUpdate
         for (int i = 0; i < m_RunningLinearEvents.Count; i++)
         {
             m_RunningLinearEvents[i].CycleUpdate();
         }
-
-        ////Dont load new effect if there is a delay
-        //if (m_DelayBeforeNextEffect > 0)
-        //{
-        //    m_DelayBeforeNextEffect -= Time.deltaTime;
-        //    return;
-        //}
-
-        //if (m_PlayingEvent)
-        //{
-        //    ListenToLoadNextEffect();
-        //}
-
     }
 
     void FixedUpdate()
     {
         if (!m_IsInitialised || m_PauseAllRunningLinearEvents)
             return;
-
-        //for (int i = 0; i < m_FixedUpdateCycle.Count; i++)
-        //{
-        //    if (m_FixedUpdateCycle[i].UpdateEffect())
-        //    {
-        //        m_FixedUpdateCycle.RemoveEfficiently(i);
-        //        i--;
-        //    }
-        //}
 
         //No removal of linear event from the list will be done in either update or fixed update, rather it will be done in LateUpdate
         for (int i = 0; i < m_RunningLinearEvents.Count; i++)
@@ -221,15 +155,6 @@ public class LinearEventsManager : MonoBehaviour
         if (!m_IsInitialised || m_PauseAllRunningLinearEvents)
             return;
 
-        //for (int i = 0; i < m_LateUpdateCycle.Count; i++)
-        //{
-        //    if (m_LateUpdateCycle[i].UpdateEffect())
-        //    {
-        //        m_LateUpdateCycle.RemoveEfficiently(i);
-        //        i--;
-        //    }
-        //}
-
         //No removal of linear event from the list will be done in either update or fixed update, rather it will be done in LateUpdate
         for (int i = 0; i < m_RunningLinearEvents.Count; i++)
         {
@@ -242,107 +167,5 @@ public class LinearEventsManager : MonoBehaviour
         }
 
     }
-
-    //void AddEffectToCycle(LEM_BaseEffect effectToAdd)
-    //{
-    //    switch (effectToAdd.m_UpdateCycle)
-    //    {
-    //        case UpdateCycle.Update:
-    //            m_UpdateCycle.Add(effectToAdd);
-    //            break;
-
-    //        case UpdateCycle.FixedUpdate:
-    //            m_FixedUpdateCycle.Add(effectToAdd);
-    //            break;
-
-    //        case UpdateCycle.LateUpdate:
-    //            m_LateUpdateCycle.Add(effectToAdd);
-    //            break;
-
-    //        default:
-    //            m_UpdateCycle.Add(effectToAdd);
-    //            break;
-
-    //    }
-    //}
-
-    //void ListenToLoadNextEffect()
-    //{
-    //    //If manager is listening for a click
-    //    if (m_ListeningForClick)
-    //        return;
-
-    //    if (m_ListeningForTrigger)
-    //        return;
-
-    //    LoadNextEffect(m_InstantEffectCapacity);
-
-    //}
-
-    ////Linear Events Manager will not handle any loading of next effects
-    ////the LE will handle that
-    //void LoadNextEffect(int maxEffectsPerFrame)
-    //{
-    //    //Stop loading effect if there is no next effect
-    //    if (!m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode)
-    //        return;
-
-    //    //Record next effect
-    //    m_PreviousEffectPlayed = m_PlayingEvent.m_EffectsDictionary[m_PreviousEffectPlayed.GetNextNodeID()];
-
-    //    maxEffectsPerFrame--;
-
-    //    m_PreviousEffectPlayed.Initialise();
-
-    //    switch (m_PreviousEffectPlayed.FunctionType)
-    //    {
-    //        //Effect type that are instantaneously settled 
-    //        case LEM_BaseEffect.EffectFunctionType.InstantEffect:
-    //            break;
-
-    //        //Effect type that are supposed to be updated everyframe
-    //        case LEM_BaseEffect.EffectFunctionType.UpdateEffect:
-    //            AddEffectToCycle(m_PreviousEffectPlayed);
-    //            break;
-
-    //        //If effect type is a halt effect type (delay time, listen for trigger, listen for mouse etc.
-    //        case LEM_BaseEffect.EffectFunctionType.HaltEffect:
-    //            return;
-    //    }
-
-    //    if (maxEffectsPerFrame > 0)
-    //        LoadNextEffect(maxEffectsPerFrame);
-    //}
-
-    //void LoadNextEffect(int maxEffectsPerFrame, string nextEffect)
-    //{
-    //    //Load next effect
-    //    if (!m_PlayingEvent.m_EffectsDictionary.TryGetValue(nextEffect, out m_PreviousEffectPlayed))
-    //        return;
-
-    //    m_PreviousEffectPlayed.Initialise();
-    //    maxEffectsPerFrame--;
-
-    //    switch (m_PreviousEffectPlayed.FunctionType)
-    //    {
-    //        //Effect type that are instantaneously settled 
-    //        case LEM_BaseEffect.EffectFunctionType.InstantEffect:
-    //            break;
-
-    //        //Effect type that are supposed to be updated everyframe
-    //        case LEM_BaseEffect.EffectFunctionType.UpdateEffect:
-    //            AddEffectToCycle(m_PreviousEffectPlayed);
-    //            break;
-
-    //        //If effect type is a halt effect type (delay time, listen for trigger, listen for mouse etc.
-    //        case LEM_BaseEffect.EffectFunctionType.HaltEffect:
-    //            return;
-    //    }
-
-    //    if (maxEffectsPerFrame > 0)
-    //        LoadNextEffect(maxEffectsPerFrame);
-
-
-    //}
 
 }
