@@ -74,7 +74,7 @@ namespace LEM_Editor
 
             allKeys = m_PastedEffectStructDictionary.Keys.ToArray();
 
-            #region Old Identity Crisis Management 
+            #region Identity Crisis Management 
 
             //SINCE lem_baseeffects are references, if i change pastedEffect's list elements values, the m_PastedEffects's elements' values also change too
             NodeBaseData dummy1 = new NodeBaseData();

@@ -32,7 +32,7 @@ namespace LEM_Effects
 
         bool m_IsFinished = false;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Record initial alpha first
             m_InitialAlpha = m_TargetText.color.a;
@@ -43,7 +43,7 @@ namespace LEM_Effects
             m_NextColour = new Color(m_TargetText.color.r, m_TargetText.color.g, m_TargetText.color.b, m_TargetText.color.a);
         }
 
-        public override bool UpdateEffect()
+        public override bool OnUpdateEffect()
         {
             m_Time += Time.deltaTime;
 

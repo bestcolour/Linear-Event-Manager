@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine;
-using UnityEngine;
 
 namespace LEM_Effects
 {
@@ -12,9 +10,9 @@ namespace LEM_Effects
         [SerializeField]
         LinearEvent m_TargetLinearEvent = default;
 
-        public override EffectFunctionType FunctionType => EffectFunctionType.HaltEffect;
+        public override EffectFunctionType FunctionType => EffectFunctionType.InstantHaltEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             m_TargetLinearEvent.AddDelayBeforeNextEffect = m_DelayTime;
         }

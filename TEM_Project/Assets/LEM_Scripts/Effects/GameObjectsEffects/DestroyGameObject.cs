@@ -11,7 +11,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Destroy the targetted object
             GameObject.Destroy(m_TargetObject);

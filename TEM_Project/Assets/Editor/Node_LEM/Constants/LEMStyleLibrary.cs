@@ -7,7 +7,10 @@ namespace LEM_Editor
     {
         public static bool m_SkinsLoaded = false;
 
+        //PreviousColour is used by EditorGUI.LabelField and GUI.color (to draw different coloured node skins)
         public static Color s_GUIPreviousColour = default;
+        public static Color s_GUIPreviousColour_BoldLabel = default;
+        public static Color s_GUIPreviousColour_MiniLabel = default;
         //To be pulled by all nodes with top textures 
         public static Color s_CurrentMidSkinColour = default;
         public static Color s_CurrentBezierColour = default;
@@ -44,12 +47,37 @@ namespace LEM_Editor
         public static void BeginEditorLabelColourChange(Color colourToChangeTo)
         {
             s_GUIPreviousColour = EditorStyles.label.normal.textColor;
-            EditorStyles.label.normal.textColor = s_CurrentLabelColour;
+            EditorStyles.label.normal.textColor = colourToChangeTo;
         }
         public static void EndEditorLabelColourChange()
         {
             EditorStyles.label.normal.textColor = s_GUIPreviousColour;
         }
+
+        public static void BeginEditorBoldLabelColourChange(Color colourToChangeTo)
+        {
+            s_GUIPreviousColour_BoldLabel = EditorStyles.boldLabel.normal.textColor;
+            EditorStyles.boldLabel.normal.textColor = colourToChangeTo;
+        }
+
+        public static void EndEditorBoldLabelColourChange()
+        {
+            EditorStyles.boldLabel.normal.textColor = s_GUIPreviousColour_BoldLabel;
+        }
+
+        public static void BeginEditorFoldOutLabelColourChange(Color colourToChangeTo)
+        {
+            s_GUIPreviousColour_MiniLabel = EditorStyles.foldout.normal.textColor;
+            EditorStyles.foldout.normal.textColor = colourToChangeTo;
+            EditorStyles.foldout.onNormal.textColor = colourToChangeTo;
+        }
+
+        public static void EndEditorFoldOutLabelColourChange()
+        {
+            EditorStyles.foldout.normal.textColor = s_GUIPreviousColour_MiniLabel;
+            EditorStyles.foldout.onNormal.textColor = s_GUIPreviousColour_MiniLabel;
+        }
+
 
 
         static void LoadingNodeSkins(NodeLEM_Settings settings)

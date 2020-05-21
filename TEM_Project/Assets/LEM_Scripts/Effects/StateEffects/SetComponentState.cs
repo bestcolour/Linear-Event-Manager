@@ -14,7 +14,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Get monobehaviour component from the targeted object
             MonoBehaviour monobehaviourScript = m_TargetObject.GetComponent(m_ScriptTypeName) as MonoBehaviour;

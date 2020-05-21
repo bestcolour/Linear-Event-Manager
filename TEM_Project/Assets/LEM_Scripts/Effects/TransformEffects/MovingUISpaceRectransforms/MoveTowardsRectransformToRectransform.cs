@@ -36,7 +36,7 @@ namespace LEM_Effects
             t4 = m_SnapDistance;
         }
 
-        public override bool UpdateEffect()
+        public override bool OnUpdateEffect()
         {
             //meanwhile, move the transform to the target
             m_TargetRectransform.anchoredPosition3D = Vector3.MoveTowards(m_TargetRectransform.anchoredPosition3D, m_TargetDestination.anchoredPosition3D, Time.deltaTime * m_Speed);

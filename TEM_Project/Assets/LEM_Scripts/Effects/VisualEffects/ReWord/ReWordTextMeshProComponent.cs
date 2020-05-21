@@ -15,7 +15,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Retext 
             m_TargetText.text = m_NewText;

@@ -35,7 +35,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            PauseAllLinearEvents myEffect = ScriptableObject.CreateInstance<PauseAllLinearEvents>();
+            PauseAllRunningLinearEvents myEffect = ScriptableObject.CreateInstance<PauseAllRunningLinearEvents>();
             myEffect.m_NodeEffectType = EffectTypeName;
             //myEffect.m_Description = m_LemEffectDescription;
             myEffect.m_UpdateCycle = m_UpdateCycle;
@@ -51,7 +51,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            PauseAllLinearEvents loadFrom = effectToLoadFrom as PauseAllLinearEvents;
+            PauseAllRunningLinearEvents loadFrom = effectToLoadFrom as PauseAllRunningLinearEvents;
             loadFrom.UnPack(out m_State);
 
             //Important

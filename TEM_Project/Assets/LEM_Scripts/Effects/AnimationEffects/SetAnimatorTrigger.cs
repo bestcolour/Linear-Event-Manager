@@ -14,7 +14,7 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
         //Set trigger name
-        public override void Initialise() { m_TargetAnimator.SetTrigger(m_ParameterName); }
+        public override void OnInitialiseEffect() { m_TargetAnimator.SetTrigger(m_ParameterName); }
 
         public void SetUp(Animator t1, string t2)
         {

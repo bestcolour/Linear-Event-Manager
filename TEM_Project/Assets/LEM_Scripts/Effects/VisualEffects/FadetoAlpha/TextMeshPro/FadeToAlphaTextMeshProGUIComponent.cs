@@ -32,7 +32,7 @@ namespace LEM_Effects
 
         bool m_IsFinished = false;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Record initial alpha first
             m_InitialAlpha = m_TargetTextMeshProUGUI.color.a;
@@ -57,7 +57,7 @@ namespace LEM_Effects
             t3 = m_Duration;
         }
 
-        public override bool UpdateEffect()
+        public override bool OnUpdateEffect()
         {
             m_Time += Time.deltaTime;
 

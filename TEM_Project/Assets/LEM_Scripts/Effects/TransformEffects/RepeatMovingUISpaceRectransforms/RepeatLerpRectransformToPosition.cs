@@ -24,13 +24,13 @@ namespace LEM_Effects
 
         bool m_IsFinished = false;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Record the intiial position for repeated process
             m_IntialPosition = m_TargetRectransform.anchoredPosition3D;
         }
 
-        public override bool UpdateEffect()
+        public override bool OnUpdateEffect()
         {
             //meanwhile, lerp the transform to the target
             m_TargetRectransform.anchoredPosition3D = Vector3.Lerp(m_TargetRectransform.anchoredPosition3D, m_TargetPosition, m_Smoothing * Time.deltaTime);

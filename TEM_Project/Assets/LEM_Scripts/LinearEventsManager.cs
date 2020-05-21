@@ -37,7 +37,7 @@ public class LinearEventsManager : MonoBehaviour
 
     [SerializeField, Tooltip("How many effects should be executed in a single frame?")]
     int m_InstantEffectCapacity = 10;
-    public static int InstantEffectCapacity => Instance.m_StartingUpdateEffectCapacity;
+    public static int InstantEffectCapacity => Instance.m_InstantEffectCapacity;
     #endregion
 
 

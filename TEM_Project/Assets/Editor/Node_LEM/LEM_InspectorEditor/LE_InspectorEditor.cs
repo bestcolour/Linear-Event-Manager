@@ -12,8 +12,6 @@ namespace LEM_Editor
     {
         //Declare measurements
         float m_LineHeightSpace = EditorGUIUtility.singleLineHeight * 1.5f;
-        //public static bool s_IsLoaded = false;
-        SerializedProperty m_ArraySizeProperty = default;
 
         //OnGUI for inspector
         public override void OnInspectorGUI()

@@ -28,7 +28,7 @@ namespace LEM_Effects
 
         bool m_IsFinished = false;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             m_InitialAlphas = new float[m_TargetTexts.Length];
             m_NextColour = new Color[m_TargetTexts.Length];
@@ -58,7 +58,7 @@ namespace LEM_Effects
             t3 = m_Duration;
         }
 
-        public override bool UpdateEffect()
+        public override bool OnUpdateEffect()
         {
             m_Timer += Time.deltaTime;
 

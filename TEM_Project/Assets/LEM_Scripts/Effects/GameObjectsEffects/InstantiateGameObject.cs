@@ -38,7 +38,7 @@ namespace LEM_Effects
             targetScale = m_TargetScale;
         }
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Create a dummy variable outside of the loop so that we dont create 
             //a new var every loop (optimise)

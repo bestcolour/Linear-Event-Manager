@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class PauseAllLinearEvents : LEM_BaseEffect, IEffectSavable<bool>
+    public class PauseAllRunningLinearEvents : LEM_BaseEffect, IEffectSavable<bool>
     {
         [SerializeField]
         bool m_State = default;
 
-        public override EffectFunctionType FunctionType => EffectFunctionType.HaltEffect;
+        public override EffectFunctionType FunctionType => EffectFunctionType.InstantHaltEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             LinearEventsManager.Instance.PauseAllRunningLinearEvents = m_State;
         }

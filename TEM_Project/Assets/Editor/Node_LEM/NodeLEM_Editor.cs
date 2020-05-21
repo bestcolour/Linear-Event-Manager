@@ -925,10 +925,10 @@ namespace LEM_Editor
             propertyRect.x = 0;
             propertyRect.y = 0;
 
-            LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
-            GUI.skin.label.normal.textColor = Color.red;
-            GUI.Label(propertyRect, label);
-            GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+            LEMStyleLibrary.BeginEditorLabelColourChange(Color.red);
+            EditorGUI.LabelField(propertyRect, label);
+            LEMStyleLibrary.EndEditorLabelColourChange();
+
             //If current event type is a mouse click and mouse click is within the propertyrect,
             if (currentEvent.type == EventType.MouseDown && propertyRect.Contains(currentEvent.mousePosition))
             {

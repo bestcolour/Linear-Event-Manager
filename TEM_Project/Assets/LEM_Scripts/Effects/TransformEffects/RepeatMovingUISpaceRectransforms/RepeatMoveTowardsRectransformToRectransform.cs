@@ -24,13 +24,13 @@ namespace LEM_Effects
 
         bool m_IsFinished = false;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Calculate speed in initialise
             m_InitialPosition = m_TargetRectransform.anchoredPosition3D;
         }
 
-        public override bool UpdateEffect()
+        public override bool OnUpdateEffect()
         {
             //meanwhile, move the transform to the target
             m_TargetRectransform.anchoredPosition3D = Vector3.MoveTowards(m_TargetRectransform.anchoredPosition3D, m_TargetDestination.anchoredPosition3D, Time.deltaTime * m_Speed);

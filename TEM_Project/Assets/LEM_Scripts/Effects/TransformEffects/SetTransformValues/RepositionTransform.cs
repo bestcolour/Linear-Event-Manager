@@ -16,7 +16,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType =>EffectFunctionType.InstantEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //If set to local is true, set transform scale as local scale
             if (m_RelativeToLocal)

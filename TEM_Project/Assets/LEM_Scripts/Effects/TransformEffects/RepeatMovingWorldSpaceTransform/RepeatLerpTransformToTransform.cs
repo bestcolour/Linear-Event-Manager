@@ -23,13 +23,13 @@ namespace LEM_Effects
 
         bool m_IsFinished = false;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Record the intiial position for repeated process
             m_InitialPosition = m_TargetTransform.position;
         }
 
-        public override bool UpdateEffect()
+        public override bool OnUpdateEffect()
         {
 
             //meanwhile, lerp the transform to the target

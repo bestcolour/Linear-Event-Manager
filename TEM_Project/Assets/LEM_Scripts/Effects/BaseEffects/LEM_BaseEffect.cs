@@ -17,7 +17,7 @@ namespace LEM_Effects
     [Serializable]
     public abstract class LEM_BaseEffect : ScriptableObject
     {
-        public enum EffectFunctionType { InstantEffect, UpdateEffect, HaltEffect}
+        public enum EffectFunctionType { InstantEffect, UpdateEffect, InstantHaltEffect,UpdateHaltEffect}
 
         public abstract EffectFunctionType FunctionType { get; }
 
@@ -37,14 +37,14 @@ namespace LEM_Effects
 
         public virtual LEM_BaseEffect ShallowClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
 
-        public virtual void Initialise() { }
+        public virtual void OnInitialiseEffect() { }
 
         //Update event for the event inheriting this
         /// <summary>
         /// Returns true when the effect has finished executing else return false to keep updating the effect
         /// </summary>
         /// <returns></returns>
-        public virtual bool UpdateEffect() { return true; }
+        public virtual bool OnUpdateEffect() { return true; }
 
         /// <summary>
         /// To be called before loading the next effect
@@ -57,7 +57,10 @@ namespace LEM_Effects
         /// </summary>
         public virtual void ForceStop() { }
 
-
+        /// <summary>
+        /// To be called when the effect is removed
+        /// </summary>
+        public virtual void OnEndEffect() { }
     }
 
 }

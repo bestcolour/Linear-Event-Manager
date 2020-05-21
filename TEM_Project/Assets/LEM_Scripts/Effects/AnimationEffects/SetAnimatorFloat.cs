@@ -16,7 +16,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
-        public override void Initialise() { m_TargetAnimator.SetFloat(m_ParameterName, m_FloatValue); }
+        public override void OnInitialiseEffect() { m_TargetAnimator.SetFloat(m_ParameterName, m_FloatValue); }
 
         public void SetUp(Animator t1, string t2, float t3)
         {

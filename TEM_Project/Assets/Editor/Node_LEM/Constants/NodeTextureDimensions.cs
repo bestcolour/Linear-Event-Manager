@@ -17,6 +17,8 @@ namespace LEM_Editor
         public static readonly Vector2 NORMAL_TOP_SIZE = new Vector2(275, 35);
         public static readonly Vector2 BIG_MID_SIZE = new Vector2(275, 280);
         public static readonly Vector2 BIG_TOP_SIZE = new Vector2(275, 35);
+        public static readonly Vector2 LARGE_MID_SIZE = new Vector2(275, 325);
+        public static readonly Vector2 LARGE_TOP_SIZE = new Vector2(275, 35);
     } 
 
 

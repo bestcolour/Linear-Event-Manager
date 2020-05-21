@@ -10,10 +10,11 @@ namespace LEM_Effects
         [SerializeField]
         LinearEvent m_TargetLinearEvent = default;
 
-        public override EffectFunctionType FunctionType => EffectFunctionType.HaltEffect;
+        public override EffectFunctionType FunctionType => EffectFunctionType.InstantHaltEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
+            //WARNING IF YOU PAUSE THIS LINEAREVENT, ALL THE EFFECTS ON THE LINEAREVENT WILL NOT GET UPDATED (INCLUDING LISTENING TO TRIGGER INPUTS LIKE AXIS OR KEYCODE INPUT , ETC)
             m_TargetLinearEvent.PauseLinearEvent = m_State;
         }
 

@@ -101,16 +101,20 @@ namespace LEM_Effects
 
         float m_DelayBeforeNextEffect = 0f;
         public float AddDelayBeforeNextEffect { set { m_DelayBeforeNextEffect += value; } }
+        public float SetDelayBeforeNextEffect { set { m_DelayBeforeNextEffect = value; } }
+
         bool m_PauseLinearEvent = true;
         public bool PauseLinearEvent { set { m_PauseLinearEvent = value; } }
 
         #region Bool Conditions
-        public bool m_ListeningForClick = false;
+        int m_NumOfAwaitingInput = default;
+        public int AddNumberOfAwaitingInput { set { m_NumOfAwaitingInput += value; } }
+        //public bool m_ListeningForClick = false;
         //public bool m_ListeningForTrigger = false;
 
 
         #endregion
-        [SerializeField,ReadOnly]
+        [SerializeField, ReadOnly]
         LEM_BaseEffect m_PreviousEffectPlayed = default;
         public bool HasAnymoreEffectsToLoad => !m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode;
         public bool HasNoEffectsPlaying => m_UpdateCycle.Count == 0 && m_FixedUpdateCycle.Count == 0 && m_LateUpdateCycle.Count == 0;
@@ -125,6 +129,7 @@ namespace LEM_Effects
         public Dictionary<string, LEM_BaseEffect> m_EffectsDictionary = default;
 
         #endregion
+        #region Initialisation Methods
 
         public void InitialiseLinearEvent()
         {
@@ -147,8 +152,8 @@ namespace LEM_Effects
 #if UNITY_EDITOR
             else
             {
-                Debug.LogWarning("LinearEvent "+  name + " does not have any effect connected to its start ndoe!", this);
-            } 
+                Debug.LogWarning("LinearEvent " + name + " does not have any effect connected to its start ndoe!", this);
+            }
 #endif
         }
 
@@ -157,6 +162,9 @@ namespace LEM_Effects
             LoadStartingEffect(LinearEventsManager.InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
         }
 
+        #endregion
+
+        #region Main Update Methods
 
         public void CycleUpdate()
         {
@@ -165,8 +173,9 @@ namespace LEM_Effects
 
             for (int i = 0; i < m_UpdateCycle.Count; i++)
             {
-                if (m_UpdateCycle[i].UpdateEffect())
+                if (m_UpdateCycle[i].OnUpdateEffect())
                 {
+                    m_UpdateCycle[i].OnEndEffect();
                     m_UpdateCycle.RemoveEfficiently(i);
                     i--;
                 }
@@ -181,8 +190,9 @@ namespace LEM_Effects
 
             for (int i = 0; i < m_FixedUpdateCycle.Count; i++)
             {
-                if (m_FixedUpdateCycle[i].UpdateEffect())
+                if (m_FixedUpdateCycle[i].OnUpdateEffect())
                 {
+                    m_FixedUpdateCycle[i].OnEndEffect();
                     m_FixedUpdateCycle.RemoveEfficiently(i);
                     i--;
                 }
@@ -197,8 +207,9 @@ namespace LEM_Effects
 
             for (int i = 0; i < m_LateUpdateCycle.Count; i++)
             {
-                if (m_LateUpdateCycle[i].UpdateEffect())
+                if (m_LateUpdateCycle[i].OnUpdateEffect())
                 {
+                    m_LateUpdateCycle[i].OnEndEffect();
                     m_LateUpdateCycle.RemoveEfficiently(i);
                     i--;
                 }
@@ -216,20 +227,26 @@ namespace LEM_Effects
             return ListenToLoadNextEffect() && HasNoEffectsPlaying;
         }
 
+        #endregion
 
+        #region Supporting Methods
         //Checks if this LinearEvent needs a click or some trigger b4 it can load next effect
         //Returns true if there is no more possible effects that can be loaded
         bool ListenToLoadNextEffect()
         {
             //If LE is listening for a click
-            if (m_ListeningForClick)
-                return false;
+            //if (m_ListeningForClick)
+            //return false;
 
             //if (m_ListeningForTrigger)
-                //return false;
+            //return false;
+
+
+            if (m_NumOfAwaitingInput > 0)
+                return false;
 
             //If LE isnt finished loading all the effects
-            if (!HasAnymoreEffectsToLoad)
+            else if (!HasAnymoreEffectsToLoad)
             {
                 LoadNextEffect(LinearEventsManager.InstantEffectCapacity);
                 return false;
@@ -247,7 +264,7 @@ namespace LEM_Effects
 
             maxEffectsPerFrame--;
 
-            m_PreviousEffectPlayed.Initialise();
+            m_PreviousEffectPlayed.OnInitialiseEffect();
 
             switch (m_PreviousEffectPlayed.FunctionType)
             {
@@ -261,8 +278,14 @@ namespace LEM_Effects
                     break;
 
                 //If effect type is a halt effect type (delay time, listen for trigger, listen for mouse etc.
-                case LEM_BaseEffect.EffectFunctionType.HaltEffect:
+                case LEM_BaseEffect.EffectFunctionType.InstantHaltEffect:
                     return;
+
+                case LEM_BaseEffect.EffectFunctionType.UpdateHaltEffect:
+                    AddEffectToCycle(m_PreviousEffectPlayed);
+                    return;
+
+
             }
 
             if (maxEffectsPerFrame > 0 && !HasAnymoreEffectsToLoad)
@@ -280,7 +303,7 @@ namespace LEM_Effects
                 return;
             }
 
-            m_PreviousEffectPlayed.Initialise();
+            m_PreviousEffectPlayed.OnInitialiseEffect();
             maxEffectsPerFrame--;
 
             switch (m_PreviousEffectPlayed.FunctionType)
@@ -295,8 +318,12 @@ namespace LEM_Effects
                     break;
 
                 //If effect type is a halt effect type (delay time, listen for trigger, listen for mouse etc.
-                case LEM_BaseEffect.EffectFunctionType.HaltEffect:
+                case LEM_BaseEffect.EffectFunctionType.InstantHaltEffect:
                     return;
+
+                case LEM_BaseEffect.EffectFunctionType.UpdateHaltEffect:
+                    AddEffectToCycle(m_PreviousEffectPlayed);
+                    break;
             }
 
             if (maxEffectsPerFrame > 0 && !HasAnymoreEffectsToLoad)
@@ -329,6 +356,7 @@ namespace LEM_Effects
         }
 
 
+        #endregion
 
     }
 

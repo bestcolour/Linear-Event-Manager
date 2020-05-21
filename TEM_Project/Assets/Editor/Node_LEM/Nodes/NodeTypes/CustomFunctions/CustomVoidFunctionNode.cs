@@ -27,7 +27,7 @@ namespace LEM_Editor
             SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
 
             //m_CustomFunction = ScriptableObject.CreateInstance<UnityEventObject>();
-            m_EventSerializedObject = new SerializedObject(ScriptableObject.CreateInstance<UnityEventObject>());
+            m_EventSerializedObject = new SerializedObject(ScriptableObject.CreateInstance<UnityEventData>());
             m_EventSerializedProperty = m_EventSerializedObject.FindProperty("m_UnityEvent");
             m_EventCallbackArray = m_EventSerializedProperty.FindPropertyRelative("m_PersistentCalls.m_Calls");
             m_PreviousSize = m_EventCallbackArray.arraySize;

@@ -20,7 +20,7 @@ namespace LEM_Effects
 
         bool m_IsFinished = false;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Calculate speed in initialise
             m_Speed = Vector3.Distance(m_TargetRectransform.anchoredPosition3D, m_TargetPosition) / m_Duration;
@@ -40,7 +40,7 @@ namespace LEM_Effects
             t3 = m_Duration;
         }
 
-        public override bool UpdateEffect()
+        public override bool OnUpdateEffect()
         {
             //Increment the time variable by division of duration from delta time
             m_Time += Time.deltaTime; 

@@ -1,23 +1,19 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System;
-using UnityEngine.Events;
-using System.Reflection;
 
 namespace LEM_Effects
 {
-
-
     public class CustomVoidFunction : LEM_BaseEffect, IEffectSavable<SerializedObject>
     {
-        public UnityEventObject m_EventObject = default;
+        public UnityEventData m_EventObject = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
         public override LEM_BaseEffect ShallowClone()
         {
             CustomVoidFunction dummy = (CustomVoidFunction)MemberwiseClone();
-            dummy.m_EventObject = ScriptableObject.CreateInstance<UnityEventObject>();
+            dummy.m_EventObject = ScriptableObject.CreateInstance<UnityEventData>();
 
             //int delegateCount = m_EventObject.m_UnityEvent.GetPersistentEventCount();
             //ParameterInfo[] paraInfo;
@@ -80,14 +76,14 @@ namespace LEM_Effects
 
         //}
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             m_EventObject.m_UnityEvent.Invoke();
         }
 
         public void SetUp(SerializedObject t1)
         {
-            m_EventObject = (UnityEventObject)t1.targetObject;
+            m_EventObject = (UnityEventData)t1.targetObject;
         }
 
         public void UnPack(out SerializedObject t1)

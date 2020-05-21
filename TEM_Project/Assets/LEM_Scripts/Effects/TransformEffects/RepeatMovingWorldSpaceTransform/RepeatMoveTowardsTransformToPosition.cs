@@ -26,14 +26,14 @@ namespace LEM_Effects
 
         bool m_IsFinished = false;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Calculate speed in initialise
             m_IntiialPosition = m_TargetTransform.position;
             m_Speed = Vector3.Distance(m_TargetTransform.position, m_TargetPosition) / m_Duration;
         }
 
-        public override bool UpdateEffect()
+        public override bool OnUpdateEffect()
         {
             //Increment the time variable by division of duration from delta time
             float delta = Time.deltaTime;

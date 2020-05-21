@@ -11,7 +11,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //If set to local is true, set transform scale as local scale
             m_TargetRectTransform.sizeDelta += m_OffSetDimensions;

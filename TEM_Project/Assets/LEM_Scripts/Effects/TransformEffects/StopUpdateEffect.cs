@@ -14,26 +14,11 @@ namespace LEM_Effects
 		[SerializeField,Tooltip("The Node ID of the effect which you intend to stop")]
 		string m_EffectIDToStop = default;
 
-		public override void Initialise()
+		public override void OnInitialiseEffect()
 		{
 
 			//Do multiple layer of checks for Key's presence in the Dictionary in Editor mode but in build mode, this code wont run
 #if UNITY_EDITOR
-			//if (LinearEventsManager.AllLinearEventsEffectsDictionary.TryGetValue(m_EffectLinearEvent, out Dictionary<string, LEM_BaseEffect> dictionary))
-			//{
-			//	if (dictionary.TryGetValue(m_EffectIDToStop, out LEM_BaseEffect effect))
-			//	{
-			//		effect.ForceStop();
-			//		return;
-			//	}
-
-			//	Debug.LogError("Effect Node ID " + m_EffectIDToStop + " is not present in dictionary of " + m_EffectLinearEvent.name, m_EffectLinearEvent);
-			//	return;
-			//}
-
-			//Debug.LogError("Linear Event " + m_EffectLinearEvent.name + " is not present in the LinearEventsManager of " + LinearEventsManager.Instance.name, LinearEventsManager.Instance);
-			//return;
-
 			//If the event that you try to get is null or  index of the linear event is out of bounds
 			if (m_EffectLinearEvent.m_LinearEventIndex >= LinearEventsManager.AllLinearEventsInScene.Length || LinearEventsManager.AllLinearEventsInScene[m_EffectLinearEvent.m_LinearEventIndex] == null)
 			{
@@ -49,12 +34,10 @@ namespace LEM_Effects
 
 			effect.ForceStop();
 			return;
-#endif
-
+#else
 			//This will handle the actual running in build version of the game
-			//LinearEventsManager.AllLinearEventsEffectsDictionary[m_EffectLinearEvent][m_EffectIDToStop].ForceStop();
 			LinearEventsManager.AllLinearEventsInScene[m_EffectLinearEvent.m_LinearEventIndex].m_EffectsDictionary[m_EffectIDToStop].ForceStop();
-
+#endif
 		}
 
 		public void SetUp(LinearEvent t1, string t2)

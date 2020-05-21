@@ -12,7 +12,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Set the target object to true or false
             m_TargetObject.SetActive(m_State);

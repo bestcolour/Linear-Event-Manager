@@ -14,7 +14,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //Set the parent of the child as the parent transform
             m_ChildTransform.SetParent(m_ParentTransform);

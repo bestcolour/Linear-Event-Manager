@@ -68,18 +68,19 @@ namespace LEM_Editor
 
         #region Halt
              //{ "AddGlobalDelay",  new NodeDictionaryDefinition(    new AddGlobalDelayNode()             ,new Color(0.85f,0.64f,0.13f))},
-             { "AddDelay",  new NodeDictionaryDefinition(    new AddDelayNode()                         ,new Color(0.85f,0.64f,0.13f))},
-             { "AddDelayAt",  new NodeDictionaryDefinition(    new AddDelayAtNode()                     ,new Color(0.85f,0.64f,0.13f))},
+             { "AddDelay",  new NodeDictionaryDefinition(    new AddDelayNode()                                         ,new Color(0.85f,0.64f,0.13f))},
+             { "AddDelayAt",  new NodeDictionaryDefinition(    new AddDelayAtNode()                                     ,new Color(0.85f,0.64f,0.13f))},
 
-             { "ListenToClick",   new NodeDictionaryDefinition( new ToggleListenToClickNode()     ,new Color(0.59f,0.24f,0.75f)) },
-             { "ListenToLinearEventClick",   new NodeDictionaryDefinition( new ToggleLinearEventListenToClickNode()     ,new Color(0.59f,0.24f,0.75f)) },
+             { "AwaitKeyCodeInput",   new NodeDictionaryDefinition( new AwaitKeyCodeInputNode()                           ,new Color(0.59f,0.24f,0.75f)) },
+             { "AwaitAxisInput",   new NodeDictionaryDefinition( new AwaitAxisInputNode()                           ,new Color(0.59f,0.24f,0.75f)) },
+             //{ "ListenToLinearEventClick",   new NodeDictionaryDefinition( new ToggleLinearEventListenToClickNode()     ,new Color(0.59f,0.24f,0.75f)) },
              //{ "ToggleListenToTrigger", new NodeDictionaryDefinition(new ToggleListenToTriggerNode()    ,new Color(0.25f,0.54f,0.75f)) },
 
-             { "StopUpdateEffect", new NodeDictionaryDefinition(new StopUpdateEffectNode()              ,new Color(1f ,0.55f,0f)) },
+             { "StopUpdateEffect", new NodeDictionaryDefinition(new StopUpdateEffectNode()                              ,new Color(1f ,0.55f,0f)) },
 
-             { "GlobalPause", new NodeDictionaryDefinition(new PauseAllLinearEventsNode()               ,new Color(1f ,0.55f,0f)) },
-             { "Pause", new NodeDictionaryDefinition(new PauseCurrentLinearEventNode()                  ,new Color(1f ,0.55f,0f)) },
-             { "PauseLinearEvent", new NodeDictionaryDefinition(new PauseLinearEventNode()              ,new Color(1f ,0.55f,0f)) },
+             { "GlobalPause", new NodeDictionaryDefinition(new PauseAllLinearEventsNode()                               ,new Color(1f ,0.55f,0f)) },
+             { "Pause", new NodeDictionaryDefinition(new PauseCurrentLinearEventNode()                                  ,new Color(1f ,0.55f,0f)) },
+             { "PauseLinearEvent", new NodeDictionaryDefinition(new PauseLinearEventNode()                              ,new Color(1f ,0.55f,0f)) },
 
         #endregion
 

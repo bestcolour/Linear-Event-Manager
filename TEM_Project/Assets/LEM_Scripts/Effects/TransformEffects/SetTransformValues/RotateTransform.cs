@@ -30,7 +30,7 @@ namespace LEM_Effects
             t3 = m_RelativeToLocal;
         }
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //If set to local is true, set transform scale as local scale
             if (m_RelativeToLocal)
