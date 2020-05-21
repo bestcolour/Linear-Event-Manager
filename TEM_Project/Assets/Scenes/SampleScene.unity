@@ -163,8 +163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e497938d38cb74492560adb572c903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Listen:
-    m_KeycodeToListenTo: 
   m_AllEffects:
   - {fileID: 335080494}
   - {fileID: 640504465}
@@ -813,6 +811,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114990028}
   m_CullTransparentMesh: 0
+--- !u!114 &1159619744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 969ce930444a2d94db4205b19c159c8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NodeEffectType: AwaitAxisInput
+  m_UpdateCycle: 0
+  m_NodeBaseData:
+    m_Position: {x: 646.6666, y: 169}
+    m_NodeID: BEN_49c2a28d-deb8-4216-88f9-574c2712a0a5
+    m_NextPointsIDs: []
+  m_AxisInputData: {fileID: 1366573317}
+  m_TargetLinearEvent: {fileID: 2127555588}
 --- !u!1 &1187796888
 GameObject:
   m_ObjectHideFlags: 0
@@ -1227,6 +1245,21 @@ Transform:
   m_Father: {fileID: 1681769661}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1366573317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1eed07882382a459559f30ce52076e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MoreThanAxises: []
+  m_LessThanAxises: []
+  m_ApproxEqualToAxises: []
 --- !u!114 &1388599387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1960,13 +1993,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e497938d38cb74492560adb572c903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Listen:
-    m_KeycodeToListenTo: 
-  m_AllEffects: []
+  m_AllEffects:
+  - {fileID: 1159619744}
   m_AllGroupRectNodes: []
   m_StartNodeData:
-    m_Position: {x: 0, y: 0}
-    m_NodeID: 
+    m_Position: {x: 418, y: 50}
+    m_NodeID: SN_a8caa1d0-6efa-406b-b528-17d6a4d10951
     m_NextPointsIDs: []
   m_LinearEventIndex: -1
   m_PreviousEffectPlayed: {fileID: 0}

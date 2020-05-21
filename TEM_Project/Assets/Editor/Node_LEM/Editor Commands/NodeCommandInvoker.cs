@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using LEM_Effects;
-using UnityEngine.Windows.Speech;
+using LEM_Effects.Extensions;
 
 namespace LEM_Editor
 {

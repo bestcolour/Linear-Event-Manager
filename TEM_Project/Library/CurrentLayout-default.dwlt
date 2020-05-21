@@ -43,10 +43,10 @@ MonoBehaviour:
     y: 30
     width: 1536
     height: 731
-  m_MinSize: {x: 743, y: 494}
-  m_MaxSize: {x: 24008, y: 14044}
+  m_MinSize: {x: 681, y: 494}
+  m_MaxSize: {x: 18008, y: 14044}
   vertical: 1
-  controlID: 164
+  controlID: 186
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -158,10 +158,10 @@ MonoBehaviour:
     y: 0
     width: 1536
     height: 731
-  m_MinSize: {x: 743, y: 494}
-  m_MaxSize: {x: 24008, y: 14044}
+  m_MinSize: {x: 681, y: 494}
+  m_MaxSize: {x: 18008, y: 14044}
   vertical: 0
-  controlID: 165
+  controlID: 187
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -183,8 +183,8 @@ MonoBehaviour:
     y: 0
     width: 1142
     height: 731
-  m_MinSize: {x: 466, y: 494}
-  m_MaxSize: {x: 20006, y: 14044}
+  m_MinSize: {x: 404, y: 494}
+  m_MaxSize: {x: 14006, y: 14044}
   vertical: 1
   controlID: 57
 --- !u!114 &9
@@ -286,10 +286,10 @@ MonoBehaviour:
     y: 447
     width: 1142
     height: 284
-  m_MinSize: {x: 466, y: 272}
-  m_MaxSize: {x: 20006, y: 10022}
+  m_MinSize: {x: 336, y: 272}
+  m_MaxSize: {x: 14006, y: 10022}
   vertical: 0
-  controlID: 121
+  controlID: 142
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -309,15 +309,15 @@ MonoBehaviour:
     y: 0
     width: 655
     height: 284
-  m_MinSize: {x: 232, y: 272}
-  m_MaxSize: {x: 10002, y: 10022}
-  m_ActualView: {fileID: 23}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 23}
   - {fileID: 18}
   - {fileID: 24}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -371,7 +371,7 @@ MonoBehaviour:
   m_MinSize: {x: 277, y: 294}
   m_MaxSize: {x: 4002, y: 8044}
   vertical: 1
-  controlID: 166
+  controlID: 188
 --- !u!114 &16
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -562,8 +562,8 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
+      m_SelectedIDs: 60320000
+      m_LastClickedID: 12896
       m_ExpandedIDs: 6afbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
@@ -752,20 +752,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Editor/Node_LEM/Nodes/NodeTypes/VisualEffects/FadeAlpha/Text/TextMeshProGUI
+    - Assets/Editor/Node_LEM/Editor Commands
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Editor/Node_LEM/Nodes/NodeTypes/VisualEffects/FadeAlpha/Text/TextMeshProGUI
+  - Assets/Editor/Node_LEM/Editor Commands
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project
   m_LockTracker:
     m_IsLocked: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 487}
-    m_SelectedIDs: 7c300000
-    m_LastClickedID: 12412
-    m_ExpandedIDs: 000000000c2e0000282e0000382e0000642e00009e2e0000402f0000e42f000040300000a2300000ca300000e0300000e2300000f2300000fa30000000310000163100001831000038310000b8320000ba320000bc3200006234000000ca9a3b
+    scrollPos: {x: 0, y: 159}
+    m_SelectedIDs: 8a2e0000
+    m_LastClickedID: 11914
+    m_ExpandedIDs: 00000000082e0000242e0000342e0000602e00009a2e00003e2f0000e42f00003830000042300000a2300000ca300000de300000e0300000f0300000f8300000fe300000123100001431000034310000b4320000b6320000b832000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -793,7 +793,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000000c2e0000282e0000382e0000642e00009e2e0000042f000040300000a2300000ca300000e0300000f230000000310000163100001831000038310000b8320000ba320000bc320000
+    m_ExpandedIDs: 00000000082e0000242e0000342e0000602e00009a2e00003830000042300000a2300000ca300000de300000e0300000f0300000fe300000123100001431000034310000b4320000b6320000b8320000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -818,8 +818,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: 60320000
+    m_LastClickedInstanceID: 12896
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c62300001ecfffff282f00009a310000e632000000000000fe670000ce400000f8330000d8310000ba3f0000
     m_RenameOverlay:
@@ -877,7 +877,7 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 12888
+  m_LastSelectedObjectID: 12896
 --- !u!114 &25
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -914,7 +914,7 @@ MonoBehaviour:
     m_ControlHash: 1412526313
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
-  m_LastInspectedObjectInstanceID: 9682
+  m_LastInspectedObjectInstanceID: 12896
   m_LastVerticalScrollValue: 0
 --- !u!114 &26
 MonoBehaviour:
@@ -1137,20 +1137,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/LEM_Scripts/Unused
+    - Assets/LEM_Scripts/Effects/Halt/AwaitTrigger
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/LEM_Scripts/Unused
+  - Assets/LEM_Scripts/Effects/Halt/AwaitTrigger
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project
   m_LockTracker:
     m_IsLocked: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 903}
-    m_SelectedIDs: e2350000
-    m_LastClickedID: 13794
-    m_ExpandedIDs: 000000000c2e0000282e0000382e0000642e00009e2e0000042f000040300000a2300000ca300000e0300000f230000000310000163100001831000038310000b8320000ba320000bc32000000ca9a3b
+    scrollPos: {x: 0, y: 735}
+    m_SelectedIDs: b82e0000
+    m_LastClickedID: 11960
+    m_ExpandedIDs: 00000000082e0000242e0000342e0000602e00009a2e00003830000042300000a2300000ca300000de300000e0300000f0300000fe300000123100001431000034310000b4320000b6320000b832000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1178,7 +1178,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000000c2e0000282e0000382e0000642e00009e2e0000042f000040300000a2300000ca300000e0300000f230000000310000163100001831000038310000b8320000ba320000bc320000
+    m_ExpandedIDs: 00000000082e0000242e0000342e0000602e00009a2e00003830000042300000a2300000ca300000de300000e0300000f0300000fe300000123100001431000034310000b4320000b6320000b8320000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1209,18 +1209,18 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: 56af00001a3100005a2f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: ListExtensions
+      m_OriginalName: ListExtensions
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 11174
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 14}
     m_CreateAssetUtility:

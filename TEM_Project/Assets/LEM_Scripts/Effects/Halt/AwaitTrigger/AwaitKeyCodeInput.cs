@@ -21,13 +21,16 @@ namespace LEM_Effects
 
             AwaitKeyCodeInputData newDataInstance = ScriptableObject.CreateInstance<AwaitKeyCodeInputData>();
 
-            newDataInstance.m_GetkeyDownKeyCodes = new KeyCode[m_InputData.m_GetkeyDownKeyCodes.Length];
-            newDataInstance.m_GetkeyKeyCodes = new KeyCode[m_InputData.m_GetkeyKeyCodes.Length];
+            int length = m_InputData.m_GetkeyDownKeyCodes != null ? m_InputData.m_GetkeyDownKeyCodes.Length : 0;
+            newDataInstance.m_GetkeyDownKeyCodes = new KeyCode[length];
 
-            for (int i = 0; i < m_InputData.m_GetkeyDownKeyCodes.Length; i++)
+            length = m_InputData.m_GetkeyKeyCodes != null ? m_InputData.m_GetkeyKeyCodes.Length : 0;
+            newDataInstance.m_GetkeyKeyCodes = new KeyCode[length];
+
+            for (int i = 0; i < newDataInstance.m_GetkeyDownKeyCodes.Length; i++)
                 newDataInstance.m_GetkeyDownKeyCodes[i] = m_InputData.m_GetkeyDownKeyCodes[i];
 
-            for (int i = 0; i < m_InputData.m_GetkeyKeyCodes.Length; i++)
+            for (int i = 0; i < newDataInstance.m_GetkeyKeyCodes.Length; i++)
                 newDataInstance.m_GetkeyKeyCodes[i] = m_InputData.m_GetkeyKeyCodes[i];
 
             newClone.m_InputData = newDataInstance;

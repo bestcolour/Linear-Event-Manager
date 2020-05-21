@@ -1,6 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+
+//Namespace can be removed if u wish to use the extensions for ur own purpose :D
+//and feel free to add to it!
 namespace LEM_Editor
 {
     public static class RectExtensions

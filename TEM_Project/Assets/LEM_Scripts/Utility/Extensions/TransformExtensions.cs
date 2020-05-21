@@ -2,17 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class TransformExtensions
+//Namespace can be removed if u wish to use the extensions for ur own purpose :D
+//and feel free to add to it!
+namespace LEM_Effects.Extensions
 {
-    public static string GetGameObjectPath(this Transform transform)
-    {
-        string scenePath = transform.name;
 
-        while (transform.parent != null)
+    public static class TransformExtensions
+    {
+        public static string GetGameObjectPath(this Transform transform)
         {
-            transform = transform.parent;
-            scenePath = transform.name + "/" + scenePath;
+            string scenePath = transform.name;
+
+            while (transform.parent != null)
+            {
+                transform = transform.parent;
+                scenePath = transform.name + "/" + scenePath;
+            }
+            return scenePath;
         }
-        return scenePath;
     }
+
 }

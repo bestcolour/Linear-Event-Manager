@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using LEM_Effects;
+using LEM_Effects.Extensions;
 using System.Linq;
 
 namespace LEM_Editor

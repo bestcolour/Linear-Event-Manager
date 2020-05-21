@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using LEM_Effects;
+using LEM_Effects.Extensions;
 
 /// <summary>
 /// © 2020 Lee Kee Shen All Rights Reserved

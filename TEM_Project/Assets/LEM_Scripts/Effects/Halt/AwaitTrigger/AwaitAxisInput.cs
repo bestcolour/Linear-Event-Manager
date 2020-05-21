@@ -21,17 +21,22 @@ namespace LEM_Effects
 
             AwaitAxisInputData newDataInstance = ScriptableObject.CreateInstance<AwaitAxisInputData>();
 
-            newDataInstance.m_MoreThanAxises = new AwaitAxisInputData.AxisData[m_AxisInputData.m_MoreThanAxises.Length];
-            newDataInstance.m_LessThanAxises = new AwaitAxisInputData.AxisData[m_AxisInputData.m_LessThanAxises.Length];
-            newDataInstance.m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[m_AxisInputData.m_ApproxEqualToAxises.Length];
+            int length = m_AxisInputData.m_MoreThanAxises != null ? m_AxisInputData.m_MoreThanAxises.Length : 0;
+            newDataInstance.m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
 
-            for (int i = 0; i < m_AxisInputData.m_MoreThanAxises.Length; i++)
+            length = m_AxisInputData.m_LessThanAxises != null ? m_AxisInputData.m_LessThanAxises.Length : 0;
+            newDataInstance.m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
+
+            length = m_AxisInputData.m_ApproxEqualToAxises != null ? m_AxisInputData.m_ApproxEqualToAxises.Length : 0;
+            newDataInstance.m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
+
+            for (int i = 0; i < newDataInstance.m_MoreThanAxises.Length; i++)
                 newDataInstance.m_MoreThanAxises[i] = m_AxisInputData.m_MoreThanAxises[i];
 
-            for (int i = 0; i < m_AxisInputData.m_LessThanAxises.Length; i++)
+            for (int i = 0; i < newDataInstance.m_LessThanAxises.Length; i++)
                 newDataInstance.m_LessThanAxises[i] = m_AxisInputData.m_LessThanAxises[i]; 
             
-            for (int i = 0; i < m_AxisInputData.m_ApproxEqualToAxises.Length; i++)
+            for (int i = 0; i < newDataInstance.m_ApproxEqualToAxises.Length; i++)
                 newDataInstance.m_ApproxEqualToAxises[i] = m_AxisInputData.m_ApproxEqualToAxises[i];
 
 
