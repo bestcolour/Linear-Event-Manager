@@ -7,8 +7,6 @@ namespace LEM_Effects
     [CanEditMultipleObjects, System.Serializable]
     public class LinearEvent : MonoBehaviour
     {
-        [SerializeField]
-        ListenData m_Listen = default;
 
         #region Cached Values
         [Header("DONT TOUCH! Cached Values!"), ReadOnly]
@@ -129,6 +127,7 @@ namespace LEM_Effects
         public Dictionary<string, LEM_BaseEffect> m_EffectsDictionary = default;
 
         #endregion
+
         #region Initialisation Methods
 
         public void InitialiseLinearEvent()
