@@ -169,4 +169,10 @@ public class LinearEventsManager : MonoBehaviour
 
     }
 
+    public static void LoadLinearEvent(LinearEvent linearEventToLoad)
+    {
+        Instance.m_RunningLinearEvents.Add(linearEventToLoad);
+        linearEventToLoad.OnStartPlayingLinearEvent();
+    }
+
 }

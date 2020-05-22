@@ -33,6 +33,11 @@ namespace LEM_Editor
 
         #region On their own for now
              { "CustomVoidFunction", new NodeDictionaryDefinition(new CustomVoidFunctionNode()                      ,new Color(0.76f,0.15f,0.7f)) },
+
+             { "LoadLinearEvent", new NodeDictionaryDefinition(new LoadNewLinearEventNode()                      ,new Color(0.76f,0.15f,0.7f)) },
+             { "LoadLinearEvents", new NodeDictionaryDefinition(new LoadNewLinearEventsNode()                      ,new Color(0.76f,0.15f,0.7f)) },
+
+
              { "SetButtonInteractivityState", new NodeDictionaryDefinition(new SetButtonInteractivityStateNode()    ,new Color(0.4f,0.66f,0.18f)) },
 	    #endregion
 
@@ -43,7 +48,7 @@ namespace LEM_Editor
 	#endregion
 
 
-         #region GameObject
+        #region GameObject
 		    { "InstantiateGameObject", new NodeDictionaryDefinition(   new InstantiateGameObjectNode(),new Color(0.04f,0.65f,0.2f)) },
              { "DestroyGameObject", new NodeDictionaryDefinition(  new DestroyGameObjectNode(),  new Color(0.796f,0.098f,0.098f)) },
              { "DestroyGameObjects", new NodeDictionaryDefinition(  new DestroyGameObjectsNode(),  new Color(0.796f,0.098f,0.098f)) },
@@ -77,10 +82,11 @@ namespace LEM_Editor
              { "AddDelay",  new NodeDictionaryDefinition(    new AddDelayNode()                                         ,new Color(0.85f,0.64f,0.13f))},
              { "AddDelayAt",  new NodeDictionaryDefinition(    new AddDelayAtNode()                                     ,new Color(0.85f,0.64f,0.13f))},
 
+             { "SetDelay",  new NodeDictionaryDefinition(    new SetDelayNode()                                     ,new Color(0.85f,0.64f,0.13f))},
+             { "SetDelayAt",  new NodeDictionaryDefinition(    new SetDelayAtNode()                                     ,new Color(0.85f,0.64f,0.13f))},
+
              { "AwaitKeyCodeInput",   new NodeDictionaryDefinition( new AwaitKeyCodeInputNode()                           ,new Color(0.59f,0.24f,0.75f)) },
              { "AwaitAxisInput",   new NodeDictionaryDefinition( new AwaitAxisInputNode()                           ,new Color(0.59f,0.24f,0.75f)) },
-             //{ "ListenToLinearEventClick",   new NodeDictionaryDefinition( new ToggleLinearEventListenToClickNode()     ,new Color(0.59f,0.24f,0.75f)) },
-             //{ "ToggleListenToTrigger", new NodeDictionaryDefinition(new ToggleListenToTriggerNode()    ,new Color(0.25f,0.54f,0.75f)) },
 
              { "StopUpdateEffect", new NodeDictionaryDefinition(new StopUpdateEffectNode()                              ,new Color(1f ,0.55f,0f)) },
 
@@ -144,7 +150,7 @@ namespace LEM_Editor
 
 	    #endregion
 
-#region Reword
+        #region Reword
              { "ReWordText", new NodeDictionaryDefinition(new ReWordTextComponentNode()                             ,new Color(0.16f ,0.45f,0.65f)) },
 
              { "ReWordTextMeshPro", new NodeDictionaryDefinition(new ReWordTextMeshProComponentNode()               ,new Color(0.13f ,0.38f,0.55f)) },

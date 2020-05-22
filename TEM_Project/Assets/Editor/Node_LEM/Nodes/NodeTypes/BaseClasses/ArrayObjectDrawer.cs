@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Runtime.InteropServices.WindowsRuntime;
+
 namespace LEM_Editor
 {
     public class ArrayObjectDrawer<T> where T : UnityEngine.Object
@@ -34,7 +36,56 @@ namespace LEM_Editor
                         //If user selected more than 0 gameobjects, and drag dropped it to this rect,
                         if (DragAndDrop.objectReferences.Length > 0)
                         {
-                            AddToObjectArray(Array.ConvertAll(DragAndDrop.objectReferences, x => (T)x));
+                            T[] data;
+                            Type genericType = typeof(T);
+
+                            //If Type is a component, 
+                            if (typeof(Component).IsAssignableFrom(genericType))
+                            {
+                                data = new T[DragAndDrop.objectReferences.Length];
+
+                                //If currently selected object is of gameobject type
+                                if (DragAndDrop.objectReferences[0].GetType() == typeof(GameObject))
+                                {
+                                    GameObject go;
+
+                                    for (int i = 0; i < data.Length; i++)
+                                    {
+                                        //If currently selected object is of gameobject type
+                                        go = DragAndDrop.objectReferences[i] as GameObject;
+                                        if (!go.TryGetComponent(out data[i]))
+                                        {
+                                            //There is a object that does not hv the component on it so return
+                                            Debug.LogWarning("GameObject " + DragAndDrop.objectReferences[i].name + " does not have the component " + genericType + " on it!", DragAndDrop.objectReferences[i]);
+                                            return false;
+                                        }
+                                    }
+                                }
+                                //Else that means they r probably selecting the component themselves to drag n drop so 
+                                else
+                                {
+                                    Component dummy;
+                                    for (int i = 0; i < data.Length; i++)
+                                    {
+                                        //Else that means they r probably selecting the component themselves to drag n drop so 
+                                        dummy = DragAndDrop.objectReferences[i] as Component;
+
+                                        if (!dummy.TryGetComponent(out data[i]))
+                                        {
+                                            //There is a object that does not hv the component on it so return
+                                            Debug.LogWarning("Object " + DragAndDrop.objectReferences[i].name +" does not have the component " + genericType + " on it!", DragAndDrop.objectReferences[i]);
+                                            return false;
+                                        }
+                                    }
+                                }
+
+
+                            }
+                            else
+                                data = Array.ConvertAll(DragAndDrop.objectReferences, x => (T)x);
+
+
+                            AddToObjectArray(data);
                             propertyHeight = EditorGUIUtility.singleLineHeight * m_ArraySize;
                             return true;
                         }
@@ -50,7 +101,7 @@ namespace LEM_Editor
 
             #region Drawing
 
-            m_ArraySize = EditorGUI.IntField(propertyRect,"Size", m_ArraySize);
+            m_ArraySize = EditorGUI.DelayedIntField(propertyRect, "Size", m_ArraySize);
 
             propertyRect.y += 20f;
 

@@ -6,7 +6,7 @@ using TMPro;
 namespace LEM_Editor
 {
 
-    public class ReWordTextMeshProGUIComponentNode : UpdateEffectNode
+    public class ReWordTextMeshProGUIComponentNode : InstantEffectNode
     {
         TextMeshProUGUI m_TargetText = default;
 
@@ -19,7 +19,7 @@ namespace LEM_Editor
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             //Override the rect size n pos
-            SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
+            SetNodeRects(position, NodeTextureDimensions.SMALL_MID_SIZE, NodeTextureDimensions.SMALL_TOP_SIZE);
 
         }
 
@@ -28,10 +28,8 @@ namespace LEM_Editor
             base.Draw();
 
             //Draw a object field for inputting  the gameobject to destroy
-            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
+            Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
-           // EditorGUI.TextField(propertyRect, "Node ID : ", NodeID);
-            propertyRect.y += 20f;
             m_TargetText = (TextMeshProUGUI)EditorGUI.ObjectField(propertyRect, "Target Text", m_TargetText, typeof(TextMeshProUGUI), true);
             propertyRect.y += 20f;
             m_NewString = EditorGUI.TextField(propertyRect, "New Text", m_NewString);

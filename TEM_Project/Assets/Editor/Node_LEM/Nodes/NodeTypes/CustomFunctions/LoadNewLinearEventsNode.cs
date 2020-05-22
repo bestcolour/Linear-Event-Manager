@@ -1,18 +1,16 @@
-﻿using UnityEngine.UI;
+﻿using LEM_Effects;
+using System;
 using UnityEngine;
 using UnityEditor;
-using System;
-using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class ReWordTextComponentNode : InstantEffectNode
+    public class LoadNewLinearEventsNode : InstantEffectNode
     {
-        Text m_TargetText = default;
 
-        string m_NewString = default;
+        ArrayObjectDrawer<LinearEvent> m_ArrayOfGameObjects = new ArrayObjectDrawer<LinearEvent>();
 
-        protected override string EffectTypeName => "ReWordText";
+        protected override string EffectTypeName => "LoadLinearEvents";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -27,24 +25,28 @@ namespace LEM_Editor
         {
             base.Draw();
 
+
             //Draw a object field for inputting  the gameobject to destroy
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
-            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
-           // EditorGUI.TextField(propertyRect, "Node ID : ", NodeID);
-            m_TargetText = (Text)EditorGUI.ObjectField(propertyRect, "Target Text", m_TargetText, typeof(Text), true);
-            propertyRect.y += 20f;
-            m_NewString = EditorGUI.TextField(propertyRect, "New Text", m_NewString);
 
-           
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
+            EditorGUI.LabelField(propertyRect, "Linear Events To Load");
+
+            propertyRect.y += 20f;
+
+            //If there is change in array size, update rect
+            if (m_ArrayOfGameObjects.HandleDrawAndProcess(propertyRect, out float propertyHeight))
+            {
+                SetMidRectSize(NodeTextureDimensions.SMALL_MID_SIZE + Vector2.up * propertyHeight);
+            }
 
             LEMStyleLibrary.EndEditorLabelColourChange();
-
 
         }
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            ReWordTextComponent myEffect = ScriptableObject.CreateInstance<ReWordTextComponent>();
+            LoadNewLinearEvents myEffect = ScriptableObject.CreateInstance<LoadNewLinearEvents>();
             myEffect.m_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -53,16 +55,21 @@ namespace LEM_Editor
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
-            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetText, m_NewString);
+            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs);
+            myEffect.SetUp(m_ArrayOfGameObjects.GetObjectArray());
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            ReWordTextComponent loadFrom = effectToLoadFrom as ReWordTextComponent;
-            loadFrom.UnPack(out m_TargetText, out m_NewString);
+            LoadNewLinearEvents loadFrom = effectToLoadFrom as LoadNewLinearEvents;
+            loadFrom.UnPack(out LinearEvent[] t1);
+            m_ArrayOfGameObjects.SetObjectArray(t1, out float changeInRectHeight);
+            SetMidRectSize(NodeTextureDimensions.SMALL_MID_SIZE + Vector2.up * changeInRectHeight);
+
+            //Important
+            //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
 
         }
