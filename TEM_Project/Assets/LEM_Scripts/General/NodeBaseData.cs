@@ -37,20 +37,20 @@ namespace LEM_Effects
         public bool HasOnlyOneNextPointNode => m_NextPointsIDs.Length == 1 ? true : false;
         public bool HasAtLeastOneNextPointNode => m_NextPointsIDs.Length > 0 ? true : false;
 
-        public void ResetNextPointsIDsIfEmpty()
-        {
-            bool isEmpty = true;
+        //public void ResetNextPointsIDsIfEmpty()
+        //{
+        //    bool isEmpty = true;
 
-            for (int i = 0; i < m_NextPointsIDs.Length; i++)
-                if (m_NextPointsIDs[i] != null)
-                    isEmpty = false;
+        //    for (int i = 0; i < m_NextPointsIDs.Length; i++)
+        //        if (!string.IsNullOrEmpty(m_NextPointsIDs[i]))
+        //            isEmpty = false;
 
-            if (isEmpty)
-            {
-                m_NextPointsIDs = new string[0];
-            }
+        //    if (isEmpty)
+        //    {
+        //        m_NextPointsIDs = new string[0];
+        //    }
 
-        }
+        //}
     }
 
 

@@ -115,7 +115,7 @@ namespace LEM_Effects
         #endregion
         [SerializeField, ReadOnly]
         LEM_BaseEffect m_PreviousEffectPlayed = default;
-        public bool HasAnymoreEffectsToLoad => !m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode;
+        //public bool HasAnymoreEffectsToLoad => m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode;
         public bool HasNoEffectsPlaying => m_UpdateCycle.Count == 0 && m_FixedUpdateCycle.Count == 0 && m_LateUpdateCycle.Count == 0;
 
         //Update cycles
@@ -234,33 +234,28 @@ namespace LEM_Effects
         //Returns true if there is no more possible effects that can be loaded
         bool ListenToLoadNextEffect()
         {
-            //If LE is listening for a click
-            //if (m_ListeningForClick)
-            //return false;
-
-            //if (m_ListeningForTrigger)
-            //return false;
-
-
             if (m_NumOfAwaitingInput > 0)
                 return false;
 
             //If LE isnt finished loading all the effects
-            else if (!HasAnymoreEffectsToLoad)
+            else if (!TryLoadNextEffect(LinearEventsManager.InstantEffectCapacity))
             {
-                LoadNextEffect(LinearEventsManager.InstantEffectCapacity);
                 return false;
-            }
+            }   
             else
                 return true;
         }
 
+        //Returns true when there is still effects to load
         //Linear Events Manager will not handle any loading of next effects
         //the LE will handle that
-        void LoadNextEffect(int maxEffectsPerFrame)
+        bool TryLoadNextEffect(int maxEffectsPerFrame)
         {
-            //Record next effect
-            m_PreviousEffectPlayed = m_EffectsDictionary[m_PreviousEffectPlayed.GetNextNodeID()];
+            //if the next nodeid or the previous effect played is null, that means thats the end of the linear event. No more events to load.
+            //we need to check if prev node atleast hv one nextpoint node due to nodes that can give multiple outcomes
+            if (m_PreviousEffectPlayed == null || !m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode || !m_EffectsDictionary.TryGetValue(m_PreviousEffectPlayed.GetNextNodeID(), out m_PreviousEffectPlayed))
+                return true;
+
 
             maxEffectsPerFrame--;
 
@@ -279,17 +274,21 @@ namespace LEM_Effects
 
                 //If effect type is a halt effect type (delay time, listen for trigger, listen for mouse etc.
                 case LEM_BaseEffect.EffectFunctionType.InstantHaltEffect:
-                    return;
+                    return false;
 
                 case LEM_BaseEffect.EffectFunctionType.UpdateHaltEffect:
                     AddEffectToCycle(m_PreviousEffectPlayed);
-                    return;
+                    return false;
 
 
             }
 
-            if (maxEffectsPerFrame > 0 && !HasAnymoreEffectsToLoad)
-                LoadNextEffect(maxEffectsPerFrame);
+            //If there is still effects to spare to tryload, load it and if that is the straw that breaks the camel's back, then this entire shit will return true
+            if (maxEffectsPerFrame > 0)
+                return TryLoadNextEffect(maxEffectsPerFrame);
+
+            //Else lets be conservative n return a false
+            return false;
         }
 
         void LoadStartingEffect(int maxEffectsPerFrame, string nextEffect)
@@ -326,8 +325,8 @@ namespace LEM_Effects
                     break;
             }
 
-            if (maxEffectsPerFrame > 0 && !HasAnymoreEffectsToLoad)
-                LoadNextEffect(maxEffectsPerFrame);
+            if (maxEffectsPerFrame > 0/* && !HasAnymoreEffectsToLoad*/)
+                TryLoadNextEffect(maxEffectsPerFrame);
 
         }
 

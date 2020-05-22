@@ -44,6 +44,7 @@ namespace LEM_Editor
         public const float k_ConnectionPointHeight = 20f;
 
 
+        public static readonly Vector2 k_MultiOutComesNodeIncrements = new Vector2(0f, 35f);
 
 
     }

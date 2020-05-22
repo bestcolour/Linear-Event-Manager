@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace LEM_Editor
 {
-    public class EqualRandomOutComeNode : MultiOutBaseEffectNode
+    public class EqualProbabilityOutComeNode : MultiOutBaseEffectNode
     {
         protected override string EffectTypeName => "EqualRandomOutCome";
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            EqualRandomOutCome myEffect = ScriptableObject.CreateInstance<EqualRandomOutCome>();
+            EqualProbabilityOutCome myEffect = ScriptableObject.CreateInstance<EqualProbabilityOutCome>();
             myEffect.m_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;
@@ -19,6 +19,7 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
+            //myEffect.m_NodeBaseData.ResetNextPointsIDsIfEmpty();
             myEffect.SetUp(m_NumberOfOutcomes);
             return myEffect;
 
@@ -26,7 +27,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            EqualRandomOutCome loadFrom = effectToLoadFrom as EqualRandomOutCome;
+            EqualProbabilityOutCome loadFrom = effectToLoadFrom as EqualProbabilityOutCome;
             loadFrom.UnPack(out m_NumberOfOutcomes);
 
             //Just to make sure that the visuals r drawn
