@@ -13,19 +13,25 @@ public class LinearEventsManager : MonoBehaviour
     public static LinearEventsManager Instance;
 
     #region Linear Events Settings
-    [Header("Events to Play"), SerializeField, Tooltip("Should LinearEventManager find all LinearEvents in the scene automatically on Initialisation?")] 
+    [Header("Events to Play (Hover over Fields for ToolTips!)"), SerializeField, Tooltip("Should LinearEventManager find all LinearEvents in a LinearEvent Container automatically on Initialisation?")] 
     bool m_AutoFindLinearEvents = false;
 
-    [SerializeField, Tooltip("This array is supposed to represent all the Linear Events in the scene."), ConditionalReadOnly("m_AutoFindLinearEvents", m_ConditionToMeet = false)]
-    LinearEvent[] m_AllLinearEventsInScene = default;
-    public static LinearEvent[] AllLinearEventsInScene => Instance.m_AllLinearEventsInScene;
+    [SerializeField, Tooltip("The Container GameObject that stores all the LinearEvents in the scene"), ConditionalReadOnly("m_AutoFindLinearEvents", m_ConditionToMeet = true)]
+    GameObject m_LinearEventHolder = default;
+
+    [SerializeField, Tooltip("This array is supposed to represent all the Linear Events in the scene. If you enable AutoFindLinearEvents, make sure that the only LinearEvents dragged and dropped in this array are NOT inisde the Container ")/*, ConditionalReadOnly("m_AutoFindLinearEvents", m_ConditionToMeet = false)*/]
+    //LinearEvent[] m_AllLinearEventsInScene = default;
+    List<LinearEvent> m_AllLinearEventsInScene = default;
+
+    //public static LinearEvent[] AllLinearEventsInScene => Instance.m_AllLinearEventsInScene;
+    public static List<LinearEvent> AllLinearEventsInScene => Instance.m_AllLinearEventsInScene;
 
     //The linear events currently running
-    [Tooltip("Is used as the first events to play. Is also used to determine what LinearEvents are currently playing."), SerializeField]
+    [Space(10f), Tooltip("Is used as the first events to play. Is also used to determine what LinearEvents are currently playing."), SerializeField]
     List<LinearEvent> m_RunningLinearEvents = new List<LinearEvent>();
     public List<LinearEvent> RunningLinearEvents => m_RunningLinearEvents;
 
-    [Header("Initialisation Settings")]
+    [Header("Initialisation Settings"),Space(15f)]
     [Tooltip("Should the LEM Manager initialise itself on Awake or let other scripts initialise it?")]
     [SerializeField] bool m_InitialiseOnAwake = default;
 
@@ -60,18 +66,21 @@ public class LinearEventsManager : MonoBehaviour
     {
         //Change this to getcomponentsfromchildren later
         if (m_AutoFindLinearEvents)
-            m_AllLinearEventsInScene = FindObjectsOfType<LinearEvent>();
+        {
+            m_AllLinearEventsInScene.AddRange(m_LinearEventHolder.GetComponentsInChildren<LinearEvent>());
+        }
+            //m_AllLinearEventsInScene = FindObjectsOfType<LinearEvent>();
 
         //Check if there is any linear event in the scene
 #if UNITY_EDITOR
-        if (m_AllLinearEventsInScene == null || m_AllLinearEventsInScene.Length <= 0)
+        if (m_AllLinearEventsInScene == null || m_AllLinearEventsInScene.Count <= 0)
         {
             Debug.LogWarning("There is no Linear Events in this scene!", this);
             return;
         }
 #endif
 
-        for (int i = 0; i < m_AllLinearEventsInScene.Length; i++)
+        for (int i = 0; i < m_AllLinearEventsInScene.Count; i++)
         {
             //Check if linearevent is null and that if its LEM_Effects array is null or has a length <= 0
 #if UNITY_EDITOR

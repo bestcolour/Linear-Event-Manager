@@ -20,7 +20,7 @@ namespace LEM_Effects
 			//Do multiple layer of checks for Key's presence in the Dictionary in Editor mode but in build mode, this code wont run
 #if UNITY_EDITOR
 			//If the event that you try to get is null or  index of the linear event is out of bounds
-			if (m_EffectLinearEvent.m_LinearEventIndex >= LinearEventsManager.AllLinearEventsInScene.Length || LinearEventsManager.AllLinearEventsInScene[m_EffectLinearEvent.m_LinearEventIndex] == null)
+			if (m_EffectLinearEvent.m_LinearEventIndex >= LinearEventsManager.AllLinearEventsInScene.Count|| LinearEventsManager.AllLinearEventsInScene[m_EffectLinearEvent.m_LinearEventIndex] == null)
 			{
 				Debug.LogError("Linear Event " + m_EffectLinearEvent.name + " is not present in the LinearEventsManager of " + LinearEventsManager.Instance.name, LinearEventsManager.Instance);
 				return;
