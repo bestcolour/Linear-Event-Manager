@@ -2,21 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-
 namespace LEM_Editor
 {
-    public class ArrayObjectDrawer<T> where T : UnityEngine.Object
+
+    public class AdjustableArrayObjectDrawer<T> where T: UnityEngine.Object
     {
+        int m_MinArraySize = default;
+
+        float m_WidthOfObjectField = default, m_XOffsetOfObjectField = default;
+
+        string m_ObjectFieldLabel  = default;
+
+
         int m_ArraySize = default;
         List<T> m_ListOfObjects = new List<T>();
         int SizeDifference => Mathf.Abs(m_ListOfObjects.Count - m_ArraySize);
 
-        public bool HandleDrawAndProcess(Rect propertyRect, out float propertyHeight)
+        public AdjustableArrayObjectDrawer(int minArraySize = 0, float widthOfObjectField = 150f,float XOffSetObjectField = 75f, string objectFieldLabel ="Element " )
         {
-            return DrawAndProcess(propertyRect,out propertyHeight);
+            m_MinArraySize = minArraySize;
+            if (m_MinArraySize < 0)
+                m_MinArraySize = 0;
+
+            m_WidthOfObjectField = widthOfObjectField;
+            m_XOffsetOfObjectField = XOffSetObjectField;
+            m_ObjectFieldLabel = objectFieldLabel;
         }
 
-        public bool HandleDrawAndProcess(Rect propertyRect, out float propertyHeight,out int size)
+
+        public bool HandleDrawAndProcess(Rect propertyRect, out float propertyHeight)
+        {
+            return DrawAndProcess(propertyRect, out propertyHeight);
+        }
+
+        public bool HandleDrawAndProcess(Rect propertyRect, out float propertyHeight, out int size)
         {
             size = m_ArraySize;
             return DrawAndProcess(propertyRect, out propertyHeight);
@@ -82,7 +101,7 @@ namespace LEM_Editor
                                         if (!dummy.TryGetComponent(out data[i]))
                                         {
                                             //There is a object that does not hv the component on it so return
-                                            Debug.LogWarning("Object " + DragAndDrop.objectReferences[i].name +" does not have the component " + genericType + " on it!", DragAndDrop.objectReferences[i]);
+                                            Debug.LogWarning("Object " + DragAndDrop.objectReferences[i].name + " does not have the component " + genericType + " on it!", DragAndDrop.objectReferences[i]);
                                             return false;
                                         }
                                     }
@@ -112,8 +131,8 @@ namespace LEM_Editor
 
             propertyRect.y += 20f;
 
-            if (m_ArraySize < 0)
-                m_ArraySize = 0;
+            if (m_ArraySize < m_MinArraySize)
+                m_ArraySize = m_MinArraySize;
 
             int sizeDiff = SizeDifference;
 
@@ -135,13 +154,13 @@ namespace LEM_Editor
             for (int i = 0; i < m_ArraySize; i++)
             {
                 propertyRect.width = 75;
-                EditorGUI.LabelField(propertyRect, "Element " + i);
-                propertyRect.width = 150;
-                propertyRect.x += 75;
+                EditorGUI.LabelField(propertyRect, m_ObjectFieldLabel + i);
+                propertyRect.width = m_WidthOfObjectField;
+                propertyRect.x += m_XOffsetOfObjectField;
 
                 m_ListOfObjects[i] = (T)EditorGUI.ObjectField(propertyRect, m_ListOfObjects[i], typeof(T), true);
                 propertyRect.y += EditorGUIUtility.singleLineHeight;
-                propertyRect.x -= 75;
+                propertyRect.x -= m_XOffsetOfObjectField;
 
                 propertyHeight += EditorGUIUtility.singleLineHeight;
             }
@@ -181,6 +200,7 @@ namespace LEM_Editor
                 m_ArraySize++;
             }
         }
+
 
     }
 

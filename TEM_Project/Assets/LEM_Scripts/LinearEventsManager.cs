@@ -122,7 +122,11 @@ public class LinearEventsManager : MonoBehaviour
 
     }
 
-  
+    public static void LoadLinearEvent(LinearEvent linearEventToLoad)
+    {
+        Instance.m_RunningLinearEvents.Add(linearEventToLoad);
+        linearEventToLoad.RunTimeStartLinearEvent();
+    }
 
     //Update loop will be where all the effects will be called and then removed if 
     //their effects are done
@@ -169,10 +173,6 @@ public class LinearEventsManager : MonoBehaviour
 
     }
 
-    public static void LoadLinearEvent(LinearEvent linearEventToLoad)
-    {
-        Instance.m_RunningLinearEvents.Add(linearEventToLoad);
-        linearEventToLoad.OnStartPlayingLinearEvent();
-    }
+   
 
 }
