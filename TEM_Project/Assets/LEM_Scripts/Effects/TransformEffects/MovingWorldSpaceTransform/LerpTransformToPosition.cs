@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class LerpTransformToPosition : LEM_BaseEffect,IEffectSavable<Transform,Vector3,float,float>
+    public class LerpTransformToPosition : UpdateBaseEffect,IEffectSavable<Transform,Vector3,float,float>
     {
         [Tooltip("The transform you want to lerp")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -17,7 +17,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_IsFinished = false;
 
         public void SetUp(Transform t1, Vector3 t2, float t3, float t4)
         {
@@ -52,10 +51,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     } 
 }

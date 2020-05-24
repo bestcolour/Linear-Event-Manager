@@ -32,7 +32,7 @@ namespace LEM_Effects
 				return;
 			}
 
-			effect.ForceStop();
+			effect.OnForceStop();
 			return;
 #else
 			//This will handle the actual running in build version of the game

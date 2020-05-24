@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsTransformToPosition : LEM_BaseEffect,IEffectSavable<Transform,Vector3,float>
+    public class MoveTowardsTransformToPosition : UpdateBaseEffect,IEffectSavable<Transform,Vector3,float>
     {
         [Tooltip("The transform you want to move")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -20,7 +20,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -63,10 +62,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     } 
 }

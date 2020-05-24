@@ -2,7 +2,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //This lerp has no stop. It will keep lerping until you use Stop Repeat event
-    public class RepeatLerpTransformToTransform : LEM_BaseEffect,IEffectSavable<Transform,Transform ,float,float>
+    public class RepeatLerpTransformToTransform : UpdateBaseEffect,IEffectSavable<Transform,Transform ,float,float>
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -21,7 +21,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -61,10 +60,6 @@ namespace LEM_Effects
             t4 = m_SnapDistance;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     } 
 }

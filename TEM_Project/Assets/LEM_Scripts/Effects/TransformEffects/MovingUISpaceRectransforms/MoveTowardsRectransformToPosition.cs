@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsRectransformToPosition : LEM_BaseEffect,IEffectSavable<RectTransform,Vector3,float>
+    public class MoveTowardsRectransformToPosition : UpdateBaseEffect,IEffectSavable<RectTransform,Vector3,float>
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;
@@ -18,7 +18,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -61,10 +60,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     } 
 }

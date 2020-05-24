@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
-    public class AwaitAxisInput : LEM_BaseEffect,IEffectSavable<LinearEvent,SerializedObject>
+    public class AwaitAxisInput : UpdateBaseEffect,IEffectSavable<LinearEvent,SerializedObject>
     {
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateHaltEffect;
 
@@ -13,7 +13,8 @@ namespace LEM_Effects
         [SerializeField]
         LinearEvent m_TargetLinearEvent = default;
 
-        bool m_IsFinished = default;
+        bool m_AllInputConditionsMet = false;
+
 
         public override LEM_BaseEffect ShallowClone()
         {
@@ -52,39 +53,32 @@ namespace LEM_Effects
 
         public override bool OnUpdateEffect()
         {
-            m_IsFinished = true;
+            if (m_IsFinished)
+                return m_IsFinished;
+
+            m_AllInputConditionsMet = true;
 
             for (int i = 0; i < m_AxisInputData.m_MoreThanAxises.Length; i++)
-            {
                 if (!(Input.GetAxisRaw(m_AxisInputData.m_MoreThanAxises[i].axisName) > m_AxisInputData.m_MoreThanAxises[i].value))
-                {
-                    m_IsFinished = false;
-                }
-            }
+                    m_AllInputConditionsMet = false;
 
             for (int i = 0; i < m_AxisInputData.m_LessThanAxises.Length; i++)
-            {
                 if (!(Input.GetAxisRaw(m_AxisInputData.m_LessThanAxises[i].axisName) < m_AxisInputData.m_LessThanAxises[i].value))
-                {
-                    m_IsFinished = false;
-                }
-            }
+                    m_AllInputConditionsMet = false;
 
             for (int i = 0; i < m_AxisInputData.m_ApproxEqualToAxises.Length; i++)
-            {
                 if (!(Mathf.Approximately(Input.GetAxisRaw(m_AxisInputData.m_ApproxEqualToAxises[i].axisName), m_AxisInputData.m_ApproxEqualToAxises[i].value)))
-                {
-                    m_IsFinished = false;
-                }
-            }
+                    m_AllInputConditionsMet = false;
 
-            return m_IsFinished;
-
-
+            //Return when
+            return m_AllInputConditionsMet;
         }
+
+       
 
         public override void OnEndEffect()
         {
+            base.OnEndEffect();
             m_TargetLinearEvent.AddNumberOfAwaitingInput = -1;
         }
 

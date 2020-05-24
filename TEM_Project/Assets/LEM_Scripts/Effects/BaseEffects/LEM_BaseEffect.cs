@@ -24,11 +24,6 @@ namespace LEM_Effects
         //Records the node type this effect belongs to
         [ReadOnly] public string m_NodeEffectType = default;
 
-//#if UNITY_EDITOR
-//        [Tooltip("Write a summary about what this event does if you want to"), TextArea(3, 5)]
-//        public string m_Description = default;
-//#endif
-
         [Tooltip("Which Update Cycle Effect is In")]
         public UpdateCycle m_UpdateCycle = default;
 
@@ -55,7 +50,12 @@ namespace LEM_Effects
         /// <summary>
         /// To be called when to forcibly stop the effect if they are the UpdateEffect
         /// </summary>
-        public virtual void ForceStop() { }
+        public virtual void OnForceStop() { }
+
+        /// <summary>
+        /// To be called to reset a updateEffect to reset the isFinished boolean and maybe some other values if necessary
+        /// </summary>
+        public virtual void OnReset() { }
 
         /// <summary>
         /// To be called when the effect is removed

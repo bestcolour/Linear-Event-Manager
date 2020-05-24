@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class LerpRectransformToRectransform : LEM_BaseEffect, IEffectSavable<RectTransform, RectTransform, float, float>
+    public class LerpRectransformToRectransform : UpdateBaseEffect, IEffectSavable<RectTransform, RectTransform, float, float>
     {
         [Tooltip("The rectransform you want to lerp")]
         [SerializeField] RectTransform m_TargetRectransform = default;
@@ -15,7 +15,6 @@ namespace LEM_Effects
 
         [Tooltip("This is the distance between the target transform and the target position for the target transform to be considered at the targetposition.")]
         [SerializeField, Range(0.0001f, 1000f)] float m_SnapDistance = 1f;
-        bool m_IsFinished = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
@@ -52,10 +51,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     }
 }

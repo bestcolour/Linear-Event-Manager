@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class FadeToAlphaRendererComponent : LEM_BaseEffect, IEffectSavable<Renderer, float, float>
+    public class FadeToAlphaRendererComponent : UpdateBaseEffect, IEffectSavable<Renderer, float, float>
     {
         //target
         [Tooltip("The renderers you want to fade")]
@@ -23,8 +23,6 @@ namespace LEM_Effects
         float m_Timer = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
-
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -95,10 +93,6 @@ namespace LEM_Effects
             t3 = m_Duration;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     }
 

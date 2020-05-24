@@ -2,7 +2,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaSpriteRendererComponent : LEM_BaseEffect, IEffectSavable<SpriteRenderer, float, float>
+    public class FadeToAlphaSpriteRendererComponent : UpdateBaseEffect, IEffectSavable<SpriteRenderer, float, float>
     {
         //target
         [Tooltip("The SpriteRenderer you want to fade")]
@@ -28,8 +28,6 @@ namespace LEM_Effects
         Color m_NextColour = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
-
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -78,10 +76,6 @@ namespace LEM_Effects
             t3 = m_Duration;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     }
 }

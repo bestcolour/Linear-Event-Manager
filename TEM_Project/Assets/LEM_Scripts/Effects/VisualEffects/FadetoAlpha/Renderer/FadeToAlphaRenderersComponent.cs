@@ -2,7 +2,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //Will fade all materials on all the renderers
-    public class FadeToAlphaRenderersComponent : LEM_BaseEffect, IEffectSavable<Renderer[], float, float>
+    public class FadeToAlphaRenderersComponent : UpdateBaseEffect, IEffectSavable<Renderer[], float, float>
     {
         //target
         [Tooltip("The renderers you want to fade")]
@@ -25,7 +25,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -109,12 +108,6 @@ namespace LEM_Effects
             t2 = m_TargetAlpha;
             t3 = m_Duration;
         }
-
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
-
 
 
     }

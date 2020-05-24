@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class AwaitKeyCodeInput : LEM_BaseEffect, IEffectSavable<LinearEvent, SerializedObject>
+    public class AwaitKeyCodeInput : UpdateBaseEffect, IEffectSavable<LinearEvent, SerializedObject>
     {
         [SerializeField]
         AwaitKeyCodeInputData m_InputData = default;
@@ -11,7 +11,7 @@ namespace LEM_Effects
         [SerializeField]
         LinearEvent m_TargetLinearEvent = default;
 
-        bool m_IsFinished = default;
+        bool m_AllInputConditionsMet = false;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateHaltEffect;
 
@@ -46,14 +46,17 @@ namespace LEM_Effects
 
         public override bool OnUpdateEffect()
         {
-            m_IsFinished = true;
+            if (m_IsFinished)
+                return m_IsFinished;
+
+            m_AllInputConditionsMet = true;
 
             for (int i = 0; i < m_InputData.m_GetkeyKeyCodes.Length; i++)
             {
                 //If i didnt press the keycode,
                 if (!Input.GetKey(m_InputData.m_GetkeyKeyCodes[i]))
                 {
-                    m_IsFinished = false;
+                    m_AllInputConditionsMet = false;
                 }
             }
 
@@ -62,16 +65,17 @@ namespace LEM_Effects
                 //If i didnt press the keycode,
                 if (!Input.GetKeyDown(m_InputData.m_GetkeyDownKeyCodes[i]))
                 {
-                    m_IsFinished = false;
+                    m_AllInputConditionsMet = false;
                 }
             }
 
-            return m_IsFinished;
+            return m_AllInputConditionsMet;
 
         }
 
         public override void OnEndEffect()
         {
+            base.OnEndEffect();
             m_TargetLinearEvent.AddNumberOfAwaitingInput = -1;
         }
 

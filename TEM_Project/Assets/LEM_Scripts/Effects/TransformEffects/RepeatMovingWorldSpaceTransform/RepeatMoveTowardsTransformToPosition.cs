@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //This move has no stop. It will keep moving until you use Stop Repeat event
-    public class RepeatMoveTowardsTransformToPosition : LEM_BaseEffect, IEffectSavable<Transform,Vector3,float>
+    public class RepeatMoveTowardsTransformToPosition : UpdateBaseEffect, IEffectSavable<Transform,Vector3,float>
     {
         [Tooltip("The transform you want to move repeatedly")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -23,8 +23,6 @@ namespace LEM_Effects
         Vector3 m_IntiialPosition = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
-
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -67,11 +65,6 @@ namespace LEM_Effects
             t1 = m_TargetTransform;
             t2 = m_TargetPosition;
             t3 = m_Duration;
-        }
-
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
         }
 
     } 

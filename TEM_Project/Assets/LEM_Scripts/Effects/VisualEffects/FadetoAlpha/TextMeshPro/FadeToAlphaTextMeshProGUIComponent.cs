@@ -3,7 +3,7 @@ using TMPro;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaTextMeshProGUIComponent : LEM_BaseEffect,IEffectSavable<TextMeshProUGUI,float,float>
+    public class FadeToAlphaTextMeshProGUIComponent : UpdateBaseEffect,IEffectSavable<TextMeshProUGUI,float,float>
     {
         //target
         [Tooltip("The text you want to fade")]
@@ -30,7 +30,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -77,10 +76,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     } 
 }

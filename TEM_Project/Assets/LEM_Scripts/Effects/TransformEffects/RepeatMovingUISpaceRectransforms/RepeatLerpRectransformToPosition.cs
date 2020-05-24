@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
 
     //This lerp has no stop. It will keep lerping until you use Stop Repeat event
-    public class RepeatLerpRectransformToPosition : LEM_BaseEffect, IEffectSavable<RectTransform, Vector3, float, float>
+    public class RepeatLerpRectransformToPosition : UpdateBaseEffect, IEffectSavable<RectTransform, Vector3, float, float>
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;
@@ -22,7 +22,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -45,10 +44,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
         public void SetUp(RectTransform t1, Vector3 t2, float t3, float t4)
         {

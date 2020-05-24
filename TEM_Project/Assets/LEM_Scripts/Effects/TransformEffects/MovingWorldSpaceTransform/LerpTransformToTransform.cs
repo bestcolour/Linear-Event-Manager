@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class LerpTransformToTransform : LEM_BaseEffect,IEffectSavable<Transform,Transform,float,float>
+    public class LerpTransformToTransform : UpdateBaseEffect,IEffectSavable<Transform,Transform,float,float>
     {
         [Tooltip("The transform you want to lerp")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -18,7 +18,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_IsFinished = false;
 
         public void SetUp(Transform t1, Transform t2, float t3, float t4)
         {
@@ -53,10 +52,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     } 
 }

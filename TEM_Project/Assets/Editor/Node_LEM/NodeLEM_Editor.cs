@@ -206,7 +206,7 @@ namespace LEM_Editor
             instance.m_IsSearchBoxActive = searchBoxState;
         }
 
-        GenericMenu m_NodeContextMenu = default;
+        //GenericMenu m_NodeContextMenu = default;
         #endregion
 
         #endregion
@@ -250,8 +250,8 @@ namespace LEM_Editor
         {
             GUI.FocusControl(null);
 
-            //Remove start and end node 
-            if (m_AllSelectedNodes.Contains(StartNode))
+            //Remove start node
+            if (StartNode.IsSelected)
             {
                 StartNode.DeselectNode();
             }
@@ -463,10 +463,10 @@ namespace LEM_Editor
                 instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 250, 325);
             }
 
-            if (instance.m_NodeContextMenu == null)
-            {
-                SetupProcessNodeContextMenu();
-            }
+            //if (instance.m_NodeContextMenu == null)
+            //{
+            //    SetupProcessNodeContextMenu();
+            //}
 
             //Regardless, just initialise strt end nodes
             instance.InitialiseStartEndNodes();
@@ -488,23 +488,23 @@ namespace LEM_Editor
             }
         }
 
-        void SetupProcessNodeContextMenu()
-        {
-            //and then add an button option with the name "Remove node"
-            GenericMenu genericMenu = new GenericMenu();
+        //void SetupProcessNodeContextMenu()
+        //{
+        //    //and then add an button option with the name "Remove node"
+        //    GenericMenu genericMenu = new GenericMenu();
 
-            genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Group   (Crlt + G)"), false, delegate { DoGroup(); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate { DoCopy(); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate { DoCutCommand(); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { DoPasteCommand(); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate { SelectAllNodes(); Repaint(); });
-            genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate { DoDeleteCommand(); Repaint(); });
+        //    genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
+        //    genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
+        //    genericMenu.AddItem(new GUIContent("Group   (Crlt + G)"), false, delegate { DoGroup(); Repaint(); });
+        //    genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate { DoCopy(); Repaint(); });
+        //    genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate { DoCutCommand(); Repaint(); });
+        //    genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { DoPasteCommand(); Repaint(); });
+        //    genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate { SelectAllNodes(); Repaint(); });
+        //    genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate { DoDeleteCommand(); Repaint(); });
 
-            //Display the editted made menu
-            instance.m_NodeContextMenu = genericMenu;
-        }
+        //    //Display the editted made menu
+        //    instance.m_NodeContextMenu = genericMenu;
+        //}
 
         #endregion
 
@@ -1093,7 +1093,7 @@ namespace LEM_Editor
 
                         //Else, open the node's context menu
                         //ProcessNodeContextMenu();
-                        m_NodeContextMenu.ShowAsContext();
+                        //m_NodeContextMenu.ShowAsContext();
                     }
 
                     else if (e.button == 0)

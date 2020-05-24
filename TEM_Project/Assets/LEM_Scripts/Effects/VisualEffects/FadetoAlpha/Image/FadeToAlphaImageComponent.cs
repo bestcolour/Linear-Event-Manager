@@ -3,7 +3,7 @@ using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaImageComponent : LEM_BaseEffect,IEffectSavable<Image,float,float>
+    public class FadeToAlphaImageComponent : UpdateBaseEffect,IEffectSavable<Image,float,float>
     {
         //target
         [Tooltip("The image you want to fade")]
@@ -29,8 +29,6 @@ namespace LEM_Effects
         Color m_NextColour = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
-
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -80,10 +78,6 @@ namespace LEM_Effects
            
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 namespace LEM_Effects
 {
-    public class FadeToAlphaTextsComponent : LEM_BaseEffect, IEffectSavable<Text[], float, float>
+    public class FadeToAlphaTextsComponent : UpdateBaseEffect, IEffectSavable<Text[], float, float>
     {
         //target
         [Tooltip("The texts you want to fade")]
@@ -25,7 +25,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-        bool m_IsFinished = false;
 
         public override void OnInitialiseEffect()
         {
@@ -86,10 +85,6 @@ namespace LEM_Effects
 
         }
 
-        public override void ForceStop()
-        {
-            m_IsFinished = true;
-        }
 
 
     }
