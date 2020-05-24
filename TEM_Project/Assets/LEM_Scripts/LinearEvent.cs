@@ -269,7 +269,7 @@ namespace LEM_Effects
 
                 case LEM_BaseEffect.EffectFunctionType.UpdateHaltEffect:
                     AddEffectToCycle(m_PreviousEffectPlayed);
-                    break;
+                    return;
             }
 
             if (maxEffectsPerFrame > 0/* && !HasAnymoreEffectsToLoad*/)
