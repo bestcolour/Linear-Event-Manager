@@ -42,7 +42,7 @@ namespace LEM_Effects
             m_NextColour = new Color(m_TargetText.color.r, m_TargetText.color.g, m_TargetText.color.b, m_TargetText.color.a);
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             m_Time += Time.deltaTime;
 

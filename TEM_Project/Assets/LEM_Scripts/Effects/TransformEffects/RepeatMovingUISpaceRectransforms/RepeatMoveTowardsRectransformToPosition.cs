@@ -32,13 +32,13 @@ namespace LEM_Effects
             m_Speed = Vector3.Distance(m_TargetRectransform.anchoredPosition3D, m_TargetPosition) / m_Duration;
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             //Increment the time variable by division of duration from delta time
-            m_Time += Time.deltaTime;
+            m_Time += delta;
 
             //meanwhile, move the transform to the target
-            m_TargetRectransform.anchoredPosition3D = Vector3.MoveTowards(m_TargetRectransform.anchoredPosition3D, m_TargetPosition, Time.deltaTime * m_Speed);
+            m_TargetRectransform.anchoredPosition3D = Vector3.MoveTowards(m_TargetRectransform.anchoredPosition3D, m_TargetPosition,delta * m_Speed);
 
             //Only when the duration is up, then consider the 
             //effect done

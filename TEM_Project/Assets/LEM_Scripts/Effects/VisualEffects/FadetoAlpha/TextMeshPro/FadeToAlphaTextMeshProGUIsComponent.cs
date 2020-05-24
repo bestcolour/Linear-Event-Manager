@@ -56,7 +56,7 @@ namespace LEM_Effects
             t3 = m_Duration;
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             m_Timer += Time.deltaTime;
 

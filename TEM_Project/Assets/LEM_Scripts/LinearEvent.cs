@@ -120,7 +120,7 @@ namespace LEM_Effects
 
             for (int i = 0; i < m_UpdateCycle.Count; i++)
             {
-                if (m_UpdateCycle[i].OnUpdateEffect())
+                if (m_UpdateCycle[i].OnUpdateEffect(Time.deltaTime))
                 {
                     m_UpdateCycle[i].OnEndEffect();
                     m_UpdateCycle.RemoveEfficiently(i);
@@ -137,7 +137,7 @@ namespace LEM_Effects
 
             for (int i = 0; i < m_FixedUpdateCycle.Count; i++)
             {
-                if (m_FixedUpdateCycle[i].OnUpdateEffect())
+                if (m_FixedUpdateCycle[i].OnUpdateEffect(Time.fixedDeltaTime))
                 {
                     m_FixedUpdateCycle[i].OnEndEffect();
                     m_FixedUpdateCycle.RemoveEfficiently(i);
@@ -154,7 +154,7 @@ namespace LEM_Effects
 
             for (int i = 0; i < m_LateUpdateCycle.Count; i++)
             {
-                if (m_LateUpdateCycle[i].OnUpdateEffect())
+                if (m_LateUpdateCycle[i].OnUpdateEffect(Time.deltaTime))
                 {
                     m_LateUpdateCycle[i].OnEndEffect();
                     m_LateUpdateCycle.RemoveEfficiently(i);

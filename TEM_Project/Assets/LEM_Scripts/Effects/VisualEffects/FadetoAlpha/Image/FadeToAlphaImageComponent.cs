@@ -41,7 +41,7 @@ namespace LEM_Effects
             m_NextColour = new Color(m_TargetImage.color.r, m_TargetImage.color.g, m_TargetImage.color.b, m_TargetImage.color.a);
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             m_Time += Time.deltaTime;
 

@@ -51,7 +51,7 @@ namespace LEM_Effects
             m_TargetLinearEvent.AddNumberOfAwaitingInput = 1;
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             if (m_IsFinished)
                 return m_IsFinished;

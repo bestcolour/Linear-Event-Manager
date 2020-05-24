@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 5}
-  m_MinSize: {x: 950, y: 544}
+  m_MinSize: {x: 950, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -115,7 +115,7 @@ MonoBehaviour:
     y: 0
     width: 1536
     height: 781
-  m_MinSize: {x: 950, y: 544}
+  m_MinSize: {x: 950, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &6
 MonoBehaviour:
@@ -254,8 +254,8 @@ MonoBehaviour:
     y: 0
     width: 268
     height: 447
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 222}
+  m_MaxSize: {x: 4002, y: 4022}
   m_ActualView: {fileID: 22}
   m_Panes:
   - {fileID: 22}
@@ -280,8 +280,8 @@ MonoBehaviour:
     y: 0
     width: 874
     height: 447
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 204, y: 222}
+  m_MaxSize: {x: 4004, y: 4022}
   m_ActualView: {fileID: 23}
   m_Panes:
   - {fileID: 23}
@@ -313,7 +313,7 @@ MonoBehaviour:
   m_MinSize: {x: 466, y: 272}
   m_MaxSize: {x: 20006, y: 10022}
   vertical: 0
-  controlID: 128
+  controlID: 130
 --- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -395,7 +395,7 @@ MonoBehaviour:
   m_MinSize: {x: 277, y: 294}
   m_MaxSize: {x: 4002, y: 8044}
   vertical: 1
-  controlID: 175
+  controlID: 200
 --- !u!114 &17
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -415,8 +415,8 @@ MonoBehaviour:
     y: 0
     width: 394
     height: 306
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 222}
+  m_MaxSize: {x: 4002, y: 4022}
   m_ActualView: {fileID: 21}
   m_Panes:
   - {fileID: 21}
@@ -486,7 +486,7 @@ MonoBehaviour:
     m_ControlHash: 1412526313
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
-  m_LastInspectedObjectInstanceID: 9692
+  m_LastInspectedObjectInstanceID: 9870
   m_LastVerticalScrollValue: 0
 --- !u!114 &20
 MonoBehaviour:
@@ -624,9 +624,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 402e0000
+      m_SelectedIDs: 26290000f6270000ea260000aa2b0000
       m_LastClickedID: 0
-      m_ExpandedIDs: 6afbffff82320000
+      m_ExpandedIDs: 6afbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -814,20 +814,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/LEM_Scripts/Effects
+    - Assets/LEM_Scripts/Effects/TransformEffects/MovingWorldSpaceTransform
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/LEM_Scripts/Effects
+  - Assets/LEM_Scripts/Effects/TransformEffects/MovingWorldSpaceTransform
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project
   m_LockTracker:
     m_IsLocked: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 687}
-    m_SelectedIDs: 402e0000
-    m_LastClickedID: 11840
-    m_ExpandedIDs: 00000000242e0000402e0000522e00007e2e0000b82e00005630000060300000c2300000ea300000003100001231000020310000343100003631000056310000fa320000fc320000fe32000000ca9a3b
+    scrollPos: {x: 0, y: 711}
+    m_SelectedIDs: d02f0000
+    m_LastClickedID: 12240
+    m_ExpandedIDs: 00000000262e0000422e0000542e0000802e0000ba2e00005830000062300000c4300000ec30000002310000143100002231000036310000383100005831000006330000083300000a33000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -855,7 +855,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000242e0000402e0000522e00007e2e0000b82e00005630000060300000c2300000ea300000003100001231000020310000343100003631000056310000fa320000fc320000fe320000
+    m_ExpandedIDs: 00000000262e0000422e0000542e0000802e0000ba2e00005830000062300000c4300000ec30000002310000143100002231000036310000383100005831000006330000083300000a330000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -976,7 +976,7 @@ MonoBehaviour:
     m_ControlHash: 1412526313
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
-  m_LastInspectedObjectInstanceID: 9692
+  m_LastInspectedObjectInstanceID: 9870
   m_LastVerticalScrollValue: 0
 --- !u!114 &28
 MonoBehaviour:
@@ -1199,20 +1199,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/LEM_Scripts/Effects/BaseEffects
+    - Assets/LEM_Scripts/Effects/TransformEffects/RepeatMovingWorldSpaceTransform
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/LEM_Scripts/Effects/BaseEffects
+  - Assets/LEM_Scripts/Effects/TransformEffects/RepeatMovingWorldSpaceTransform
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\acer\Documents\GitHub\TEM-NodeEditor\TEM_Project
   m_LockTracker:
     m_IsLocked: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 719}
-    m_SelectedIDs: 26300000
-    m_LastClickedID: 12326
-    m_ExpandedIDs: 00000000242e0000402e0000522e00007e2e0000b82e00005630000060300000c2300000ea300000003100001231000020310000343100003631000056310000fa320000fc320000fe32000000ca9a3b
+    scrollPos: {x: 0, y: 759}
+    m_SelectedIDs: fa300000
+    m_LastClickedID: 12538
+    m_ExpandedIDs: 00000000262e0000422e0000542e0000802e0000ba2e00005830000062300000c4300000ec30000002310000143100002231000036310000383100005831000006330000083300000a33000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1240,7 +1240,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000242e0000402e0000522e00007e2e0000b82e00005630000060300000c2300000ea300000003100001231000020310000343100003631000056310000fa320000fc320000fe320000
+    m_ExpandedIDs: 00000000262e0000422e0000542e0000802e0000ba2e00005830000062300000c4300000ec30000002310000143100002231000036310000383100005831000006330000083300000a330000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1271,15 +1271,15 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: 56af00001a3100005a2f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: ReWord
-      m_OriginalName: ReWord
+      m_Name: MovingWorldSpaceTransform
+      m_OriginalName: MovingWorldSpaceTransform
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 11910
+      m_UserData: 12240
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
@@ -1323,52 +1323,17 @@ MonoBehaviour:
     height: 406
   m_ViewDataDictionary: {fileID: 0}
   m_OpenAddComponentMenu: 0
-  m_ObjectsLockedBeforeSerialization:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  m_InstanceIDsLockedBeforeSerialization: 56320000
+  m_ObjectsLockedBeforeSerialization: []
+  m_InstanceIDsLockedBeforeSerialization: 
   m_LockTracker:
-    m_IsLocked: 1
+    m_IsLocked: 0
   m_PreviewResizer:
     m_CachedPref: -167
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 98
+  m_LastVerticalScrollValue: 0
 --- !u!114 &32
 MonoBehaviour:
   m_ObjectHideFlags: 52

@@ -31,18 +31,17 @@ namespace LEM_Effects
             m_Speed = Vector3.Distance(m_TargetTransform.position, m_TargetPosition) / m_Duration;
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             //Increment the time variable by division of duration from delta time
-            float delta = Time.deltaTime;
-            m_Timer += delta / m_Duration;
+            m_Timer += delta ;
 
             //meanwhile, move the transform to the target
             m_TargetTransform.position = Vector3.MoveTowards(m_TargetTransform.position, m_TargetPosition, delta * m_Speed);
 
             //Only when the duration is up, then consider the 
             //effect done
-            if (m_Timer > 1.0f)
+            if (m_Timer > m_Duration)
             {
                 //Snap the position to the targetposition
                 m_TargetTransform.position = m_IntiialPosition;

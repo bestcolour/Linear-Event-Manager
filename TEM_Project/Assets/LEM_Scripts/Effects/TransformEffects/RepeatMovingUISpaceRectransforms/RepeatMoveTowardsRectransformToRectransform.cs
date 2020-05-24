@@ -29,10 +29,10 @@ namespace LEM_Effects
             m_InitialPosition = m_TargetRectransform.anchoredPosition3D;
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             //meanwhile, move the transform to the target
-            m_TargetRectransform.anchoredPosition3D = Vector3.MoveTowards(m_TargetRectransform.anchoredPosition3D, m_TargetDestination.anchoredPosition3D, Time.deltaTime * m_Speed);
+            m_TargetRectransform.anchoredPosition3D = Vector3.MoveTowards(m_TargetRectransform.anchoredPosition3D, m_TargetDestination.anchoredPosition3D,delta * m_Speed);
 
             //if sqr distance between target transform and targetpos is less than snapping dist^2, 
             if (Vector3.SqrMagnitude(m_TargetDestination.anchoredPosition3D - m_TargetRectransform.anchoredPosition3D) < m_SnapDistance * m_SnapDistance)

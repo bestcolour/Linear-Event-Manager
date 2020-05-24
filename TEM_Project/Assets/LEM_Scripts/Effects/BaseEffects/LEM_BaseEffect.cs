@@ -39,7 +39,7 @@ namespace LEM_Effects
         /// Returns true when the effect has finished executing else return false to keep updating the effect
         /// </summary>
         /// <returns></returns>
-        public virtual bool OnUpdateEffect() { return true; }
+        public virtual bool OnUpdateEffect(float delta) { return true; }
 
         /// <summary>
         /// To be called before loading the next effect

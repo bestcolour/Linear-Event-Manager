@@ -40,7 +40,7 @@ namespace LEM_Effects
             m_NextColour = new Color(m_TargetSpriteRenderer.color.r, m_TargetSpriteRenderer.color.g, m_TargetSpriteRenderer.color.b, m_TargetSpriteRenderer.color.a);
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             m_Time += Time.deltaTime;
 

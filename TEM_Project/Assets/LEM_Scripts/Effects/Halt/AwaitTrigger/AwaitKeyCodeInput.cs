@@ -44,7 +44,7 @@ namespace LEM_Effects
 
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             if (m_IsFinished)
                 return m_IsFinished;

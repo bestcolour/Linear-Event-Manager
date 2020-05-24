@@ -41,13 +41,13 @@ namespace LEM_Effects
             t3 = m_Duration;
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             //Increment the time variable every frame
-            m_Time += Time.deltaTime;
+            m_Time += delta;
 
             //meanwhile, move the transform to the target
-            m_TargetTransform.position = Vector3.MoveTowards(m_TargetTransform.position, m_TargetPosition, Time.deltaTime * m_Speed);
+            m_TargetTransform.position = Vector3.MoveTowards(m_TargetTransform.position, m_TargetPosition,delta * m_Speed);
 
             //Only when the duration is up, then consider the 
             //effect done

@@ -41,7 +41,7 @@ namespace LEM_Effects
             m_TargetAlpha /= 255f;
         }
 
-        public override bool OnUpdateEffect()
+        public override bool OnUpdateEffect(float delta)
         {
             m_Timer += Time.deltaTime;
 
