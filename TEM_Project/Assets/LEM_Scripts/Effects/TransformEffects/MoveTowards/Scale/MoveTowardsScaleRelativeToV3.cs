@@ -3,7 +3,7 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class MoveTowardsScaleRelativeToV3 : UpdateBaseEffect, IEffectSavable<Transform, Vector3, Vector3, float>
+    public class MoveTowardsScaleRelativeToV3 : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, Vector3, float>
     {
 
         [SerializeField]
@@ -15,7 +15,6 @@ namespace LEM_Effects
         [SerializeField]
         float m_Duration = 0f;
 
-        float m_Timer = default;
         Vector3 m_InitialPosition = default, m_InitialScale = default, m_NewScale = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;

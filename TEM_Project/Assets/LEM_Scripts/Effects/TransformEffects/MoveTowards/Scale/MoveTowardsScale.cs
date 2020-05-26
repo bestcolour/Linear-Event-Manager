@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsScale : UpdateBaseEffect, IEffectSavable<Transform, Vector3, float>
+    public class MoveTowardsScale : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, float>
     {
         [SerializeField]
         Transform m_TargetTransform = default;
@@ -13,7 +13,6 @@ namespace LEM_Effects
         float m_Duration = 0f;
 
         Vector3 m_OriginalScale = default;
-        float m_Timer = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 

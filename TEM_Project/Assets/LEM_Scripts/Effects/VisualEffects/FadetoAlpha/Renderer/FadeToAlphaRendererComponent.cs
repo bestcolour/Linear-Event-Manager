@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class FadeToAlphaRendererComponent : UpdateBaseEffect, IEffectSavable<Renderer, float, float>
+    public class FadeToAlphaRendererComponent : TimerBasedUpdateEffect, IEffectSavable<Renderer, float, float>
     {
         //target
         [Tooltip("The renderers you want to fade")]
@@ -19,8 +19,6 @@ namespace LEM_Effects
         [Tooltip("How long it takes for all the sprites' fade to be complete")]
         [SerializeField] float m_Duration = default;
 
-        //How much time passed since this effect was started
-        float m_Timer = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
@@ -52,13 +50,14 @@ namespace LEM_Effects
 
         public override bool OnUpdateEffect(float delta)
         {
-            m_Timer += Time.deltaTime;
+            m_Timer +=delta;
+            delta = m_Timer / m_Duration;
 
             //Lerp all the alphas of the images 
             for (int i = 0; i < m_TargetRenderer.materials.Length; i++)
             {
                 //Set target image colour as new colour value
-                m_NextColours[i].a = Mathf.Lerp(m_InitialAlphas[i], m_TargetAlpha, m_Timer);
+                m_NextColours[i].a = Mathf.Lerp(m_InitialAlphas[i], m_TargetAlpha, delta);
                 m_TargetRenderer.materials[i].color = m_NextColours[i];
             }
 

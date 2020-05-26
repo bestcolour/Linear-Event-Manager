@@ -1922,6 +1922,10 @@ namespace LEM_Editor
         {
             m_EditorState = EDITORSTATE.SAVING;
 
+            //To get rid of all the annoying red errors the editor throws whenever it attempts to save dururing assembly reload
+            if (instance == null)
+                return;
+
             LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllEffectsNodeInEditor.Count];
             BaseEffectNode[] allEffectNodes = AllEffectsNodeInEditor.Values.Select(x => x.effectNode).ToArray();
 

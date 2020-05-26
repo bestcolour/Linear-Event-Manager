@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsRotationRelativeToV3 : UpdateBaseEffect, IEffectSavable<Transform, Vector3, Vector3, bool, float>
+    public class MoveTowardsRotationRelativeToV3 : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, Vector3, bool, float>
     {
         [SerializeField]
         Transform m_TargetTransform = default;
@@ -17,7 +17,6 @@ namespace LEM_Effects
 
 
 
-        float m_Timer = default;
         Quaternion m_OriginalRotation = default;
         Vector3 m_OriginalPosition = default;
 

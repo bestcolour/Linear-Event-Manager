@@ -2,7 +2,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //Will fade all materials on all the renderers
-    public class FadeToAlphaRenderersComponent : UpdateBaseEffect, IEffectSavable<Renderer[], float, float>
+    public class FadeToAlphaRenderersComponent : TimerBasedUpdateEffect, IEffectSavable<Renderer[], float, float>
     {
         //target
         [Tooltip("The renderers you want to fade")]
@@ -20,8 +20,6 @@ namespace LEM_Effects
         [Tooltip("How long it takes for all the sprites' fade to be complete")]
         [SerializeField] float m_Duration = default;
 
-        //How much time passed since this effect was started
-        float m_Timer = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
@@ -60,7 +58,8 @@ namespace LEM_Effects
 
         public override bool OnUpdateEffect(float delta)
         {
-            m_Timer += Time.deltaTime;
+            m_Timer += delta;
+            delta = m_Timer / m_Duration;
 
             //Lerp all the alphas of the images 
             for (int i = 0; i < m_TargetRenderers.Length; i++)
@@ -68,7 +67,7 @@ namespace LEM_Effects
                 for (int r = 0; r < m_TargetRenderers[i].materials.Length; r++)
                 {
                     //Set target image colour as new colour value
-                    m_NextColours[i][r].a = Mathf.Lerp(m_InitialAlphas[i][r], m_TargetAlpha, m_Timer);
+                    m_NextColours[i][r].a = Mathf.Lerp(m_InitialAlphas[i][r], m_TargetAlpha, delta);
                     m_TargetRenderers[i].materials[r].color = m_NextColours[i][r];
                 }
             }

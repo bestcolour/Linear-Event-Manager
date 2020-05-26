@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsTransformToPosition : UpdateBaseEffect, IEffectSavable<Transform, Vector3, float>
+    public class MoveTowardsTransformToPosition : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, float>
     {
         [Tooltip("The transform you want to move")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -15,8 +15,6 @@ namespace LEM_Effects
         //Calculate speed for the transform to move
         //[SerializeField,ReadOnly]
         //float m_Speed = default;
-        [SerializeField, ReadOnly]
-        float m_Time = default;
         [SerializeField, ReadOnly]
         Vector3 m_OriginalPosition = default;
 
@@ -48,9 +46,9 @@ namespace LEM_Effects
         public override bool OnUpdateEffect(float delta)
         {
             //Increment the time variable every frame
-            m_Time += delta;
+            m_Timer += delta;
 
-            delta = m_Time / m_Duration;
+            delta = m_Timer / m_Duration;
 
             //meanwhile, move the transform to the target
             m_TargetTransform.position = Vector3.Lerp(m_OriginalPosition, m_TargetPosition, delta);
@@ -58,11 +56,11 @@ namespace LEM_Effects
 
             //Only when the duration is up, then consider the 
             //effect done
-            if (m_Time > m_Duration)
+            if (m_Timer > m_Duration)
             {
                 //Snap the position to the targetposition
                 m_TargetTransform.position = m_TargetPosition;
-                m_Time = 0f;
+                m_Timer = 0f;
                 return true;
             }
 

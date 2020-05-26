@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsRectransformToPosition : UpdateBaseEffect,IEffectSavable<RectTransform,Vector3,float>
+    public class MoveTowardsRectransformToPosition : TimerBasedUpdateEffect,IEffectSavable<RectTransform,Vector3,float>
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;
@@ -12,9 +12,6 @@ namespace LEM_Effects
         [Tooltip("The time needed for target to reach target position with lerp. Not recommended for constant speed movement.")]
         [SerializeField] float m_Duration = 1f;
 
-        //Calculate speed for the transform to move
-        //float m_Speed = default;
-        float m_Time = default;
         Vector3 m_OriginalPosition = default;
 
 
@@ -24,8 +21,6 @@ namespace LEM_Effects
         public override void OnInitialiseEffect()
         {
             m_OriginalPosition = m_TargetRectransform.anchoredPosition3D;
-            //Calculate speed in initialise
-            //m_Speed = Vector3.Distance(m_TargetRectransform.anchoredPosition3D, m_TargetPosition) / m_Duration;
         }
 
         public void SetUp(RectTransform t1, Vector3 t2, float t3)
@@ -45,16 +40,16 @@ namespace LEM_Effects
         public override bool OnUpdateEffect(float delta)
         {
             //Increment the time variable by division of duration from delta time
-            m_Time += delta;
+            m_Timer += delta;
 
-            delta = m_Time/m_Duration;
+            delta = m_Timer/m_Duration;
 
             //meanwhile, move the transform to the target
             m_TargetRectransform.anchoredPosition3D = Vector3.Lerp(m_OriginalPosition, m_TargetPosition,delta);
 
             //Only when the duration is up, then consider the 
             //effect done
-            if (m_Time > m_Duration)
+            if (m_Timer > m_Duration)
             {
                 //Snap the position to the targetposition
                 m_TargetRectransform.anchoredPosition3D = m_TargetPosition;

@@ -122,8 +122,6 @@ namespace LEM_Editor
              { "LerpRotation", new NodeDictionaryDefinition(new LerpRotationNode()                              ,new Color(0.14f,0.44f,0.64f)) },
              { "LerpRotationRelativeToT", new NodeDictionaryDefinition(new LerpRotationRelativeToTNode()        ,new Color(0.14f,0.44f,0.64f)) },
              { "LerpRotationRelativeToV3", new NodeDictionaryDefinition(new LerpRotationRelativeToV3Node()      ,new Color(0.14f,0.44f,0.64f)) },
-
-
              //Position
              { "MoveTowRectransToPos", new NodeDictionaryDefinition(new MoveTowRectransToPosNode()              ,new Color(0.49f,0.24f,0.60f)) },
              { "MoveTowRectransToRectrans", new NodeDictionaryDefinition(new MoveTowRectransToRectransNode()    ,new Color(0.49f,0.24f,0.60f)) },

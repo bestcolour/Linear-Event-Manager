@@ -3,7 +3,7 @@ using TMPro;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaTextMeshProComponent : UpdateBaseEffect,IEffectSavable<TextMeshPro,float,float>
+    public class FadeToAlphaTextMeshProComponent : TimerBasedUpdateEffect,IEffectSavable<TextMeshPro,float,float>
     {
         //target
         [Tooltip("The TextMeshPro you want to fade")]
@@ -20,10 +20,6 @@ namespace LEM_Effects
         //User inputted alpha value
         [Tooltip("How long it takes for the fade to be complete")]
         [SerializeField] float m_Duration = default;
-
-        //How much time passed since this effect was started
-        [SerializeField, ReadOnly]
-        float m_Time = default;
 
         [SerializeField, ReadOnly]
         Color m_NextColour = default;
@@ -44,14 +40,14 @@ namespace LEM_Effects
 
         public override bool OnUpdateEffect(float delta)
         {
-            m_Time += Time.deltaTime;
+            m_Timer += delta;
 
             //Set target image colour as new colour value
-            m_NextColour.a = Mathf.Lerp(m_InitialAlpha, m_TargetAlpha, m_Time);
+            m_NextColour.a = Mathf.Lerp(m_InitialAlpha, m_TargetAlpha, m_Timer/m_Duration);
             m_TargetText.color = m_NextColour;
 
             //Once the time passed exceeds the assigned duration, end this effect
-            if (m_Time > m_Duration)
+            if (m_Timer > m_Duration)
             {
                 //Set the targetimage as the actual targetted colour
                 m_NextColour.a = m_TargetAlpha;
