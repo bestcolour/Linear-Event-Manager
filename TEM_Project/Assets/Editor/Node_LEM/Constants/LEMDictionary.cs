@@ -44,10 +44,10 @@ namespace LEM_Editor
 	    #endregion
 
 
-#region Random
+        #region Random
              { "EqualRandomOutCome", new NodeDictionaryDefinition(new EqualProbabilityOutComeNode()                 ,new Color(0.302f,0.216f,0.851f)) },
              { "BiasedRandomOutcome", new NodeDictionaryDefinition(new BiasedRandomOutcomeNode()                    ,new Color(0.302f,0.216f,0.851f)) },
-	#endregion
+	    #endregion
 
 
         #region GameObject
@@ -107,57 +107,72 @@ namespace LEM_Editor
 	    #endregion
 
         #region Lerp and Movetowards
+        #region LERP
+		
              //Position
              { "LerpRectransToPos", new NodeDictionaryDefinition(new LerpRectransToPosNode()            ,new Color(0.14f,0.44f,0.64f)) },
              { "LerpRectransToRectrans", new NodeDictionaryDefinition(new LerpRectransToRectransNode()  ,new Color(0.14f,0.44f,0.64f)) },
              { "LerpTransToPos", new NodeDictionaryDefinition(new LerpTransformToPositionNode()         ,new Color(0.14f,0.44f,0.64f)) },
              { "LerpTransToTrans", new NodeDictionaryDefinition(new LerpTransformToTransformNode()      ,new Color(0.14f,0.44f,0.64f)) },
-
-             //Scale
-             { "LerpScale", new NodeDictionaryDefinition(new LerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpScaleRelativeToV3", new NodeDictionaryDefinition(new LerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpScaleRelativeToT", new NodeDictionaryDefinition(new LerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
-
-             //Rotation
-             { "LerpRotation", new NodeDictionaryDefinition(new LerpRotationNode()                              ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpRotationRelativeToT", new NodeDictionaryDefinition(new LerpRotationRelativeToTNode()        ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpRotationRelativeToV3", new NodeDictionaryDefinition(new LerpRotationRelativeToV3Node()      ,new Color(0.14f,0.44f,0.64f)) },
-             //Position
-             { "MoveTowRectransToPos", new NodeDictionaryDefinition(new MoveTowRectransToPosNode()              ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowRectransToRectrans", new NodeDictionaryDefinition(new MoveTowRectransToRectransNode()    ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowTransToPos", new NodeDictionaryDefinition(new MoveTowardsTransformToPositionNode()       ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowTransToTrans", new NodeDictionaryDefinition(new MoveTowardsTransformToTransformNode()    ,new Color(0.49f,0.24f,0.60f)) }, 
-
-             //Scale
-             { "MoveTowardsScale", new NodeDictionaryDefinition(new MoveTowardsScaleNode()                          ,new Color(0.49f,0.24f,0.60f)) }, 
-             { "MoveTowardsScaleRelativeToT", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToTNode()    ,new Color(0.49f,0.24f,0.60f)) }, 
-             { "MoveTowardsScaleRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) }, 
-
-             //Rotation
-             { "MoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToTNode()      ,new Color(0.49f,0.24f,0.60f)) }, 
-             { "MoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) }, 
-             { "MoveTowardsRotation", new NodeDictionaryDefinition(new MoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) }, 
-
-
-	    #endregion
-
-        #region Repeat Transform
+              //Repeat Position
              { "RepeatLerpRectransToPosNode", new NodeDictionaryDefinition(new RepeatLerpRectransformToPositionNode()                   ,new Color(0.12f ,0.38f,0.55f)) },
              { "RepeatLerpTransToTrans", new NodeDictionaryDefinition(new RepeatLerpTransformToTransformNode()                          ,new Color(0.12f ,0.38f,0.55f)) },
              { "RepeatLerpTransToPos", new NodeDictionaryDefinition(new RepeatLerpTransformToPositionNode()                             ,new Color(0.12f ,0.38f,0.55f)) },
              { "RepeatLerpRectTransToRectTrans", new NodeDictionaryDefinition(new RepeatLerpRectTransformToRectTransformNode()          ,new Color(0.12f ,0.38f,0.55f)) },
 
+             //Scale
+             { "LerpScale", new NodeDictionaryDefinition(new LerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpScaleRelativeToV3", new NodeDictionaryDefinition(new LerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpScaleRelativeToT", new NodeDictionaryDefinition(new LerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
+             //RepeatRotation
+             { "RepeatLerpScale", new NodeDictionaryDefinition(new RepeatLerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleRelativeToV3", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleRelativeToT", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
+
+
+             //Rotation
+             { "LerpRotation", new NodeDictionaryDefinition(new LerpRotationNode()                              ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpRotationRelativeToT", new NodeDictionaryDefinition(new LerpRotationRelativeToTNode()        ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpRotationRelativeToV3", new NodeDictionaryDefinition(new LerpRotationRelativeToV3Node()      ,new Color(0.14f,0.44f,0.64f)) },
+              //RepeatRotation
+             { "RepeatLerpRotation", new NodeDictionaryDefinition(new RepeatLerpRotationNode()                                  ,new Color(0.12f ,0.38f,0.55f)) },
+             { "RepeatLerpRotationRelativeToT", new NodeDictionaryDefinition(new RepeatLerpRotationRelativeToTNode()            ,new Color(0.12f ,0.38f,0.55f)) },
+             { "RepeatLerpRotationRelativeToV3", new NodeDictionaryDefinition(new RepeatLerpRotationRelativeToV3Node()          ,new Color(0.12f ,0.38f,0.55f)) },
+
+            
+	    #endregion
+
+        #region MoveTowards
+		
+             //Position
+             { "MoveTowRectransToPos", new NodeDictionaryDefinition(new MoveTowRectransToPosNode()              ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowRectransToRectrans", new NodeDictionaryDefinition(new MoveTowRectransToRectransNode()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowTransToPos", new NodeDictionaryDefinition(new MoveTowardsTransformToPositionNode()       ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowTransToTrans", new NodeDictionaryDefinition(new MoveTowardsTransformToTransformNode()    ,new Color(0.49f,0.24f,0.60f)) }, 
+             //RepeatPosition
              { "RepeatMoveTowTransToTrans", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToTransformNode()                ,new Color(0.36f ,0.17f,0.44f)) },
              { "RepeatMoveTowTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToPositionNode()                   ,new Color(0.36f ,0.17f,0.44f)) },
              { "RepeatMoveTowRectransToRectrans", new NodeDictionaryDefinition(new RepeatMoveTowardsRectransformToRectransformNode()    ,new Color(0.36f ,0.17f,0.44f)) },
              { "RepeatMoveTowRectTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsRectTransformToPositionNode()           ,new Color(0.36f ,0.17f,0.44f)) },
+
+
+             //Scale
+             { "MoveTowardsScale", new NodeDictionaryDefinition(new MoveTowardsScaleNode()                          ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowardsScaleRelativeToT", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToTNode()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowardsScaleRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) }, 
+
+             //Rotation
+             { "MoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToTNode()      ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowardsRotation", new NodeDictionaryDefinition(new MoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) }, 
+
+	    #endregion
 
 	    #endregion
 
         #region Translate Transform
              { "TranslateRelativeToTransform", new NodeDictionaryDefinition(new TranslateRelativeToTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
              { "TranslateRelativeToSpace", new NodeDictionaryDefinition(new TranslateRelativeToSpaceNode()                          ,new Color(0.302f,0.216f,0.851f)) },
-
 	    #endregion
 
         #region Fade Alpha

@@ -26,8 +26,7 @@ namespace LEM_Effects
         Vector3 m_OriginalPosition = default;
 
 
-        Vector3 m_NewEulerRotation = default;
-        Vector3 m_AmountRotated = default;
+        Vector3 m_CurrRot = default;
         Quaternion m_NewOffsetRotation = default;
 
 
@@ -45,14 +44,19 @@ namespace LEM_Effects
             m_OriginalRotation = m_TargetTransform.localRotation;
         }
 
+        public override void OnReset()
+        {
+            base.OnReset();
+            m_CurrRot = Vector3.zero;
+        }
 
         public override bool OnUpdateEffect(float delta)
         {
             //Lerp n get new eulervalue
-            m_NewEulerRotation = Vector3.Lerp(m_AmountRotated, m_AmountToRotate, m_Smoothing * Time.deltaTime);
+            m_CurrRot = Vector3.Lerp(m_CurrRot, m_AmountToRotate, m_Smoothing * Time.deltaTime);
 
             //Apply new eulervalue to origin rot
-            m_NewOffsetRotation = Quaternion.Euler(m_NewEulerRotation);
+            m_NewOffsetRotation = Quaternion.Euler(m_CurrRot);
             m_TargetTransform.localRotation = m_NewOffsetRotation * m_OriginalRotation;
 
             //Apply translation to accomodate rotation about a pivot
@@ -63,11 +67,8 @@ namespace LEM_Effects
 
             m_TargetTransform.localPosition = dir;
 
-            //Update amt rotated
-            m_AmountRotated = m_NewEulerRotation;
-
             //Stop if amount is to rotate is reached
-            if (Vector3.SqrMagnitude(m_AmountRotated - m_AmountToRotate) < m_SnapRange)
+            if (Vector3.SqrMagnitude(m_CurrRot - m_AmountToRotate) < m_SnapRange)
             {
                 m_TargetTransform.localRotation = Quaternion.Euler(m_AmountToRotate) * m_OriginalRotation;
                 return true;

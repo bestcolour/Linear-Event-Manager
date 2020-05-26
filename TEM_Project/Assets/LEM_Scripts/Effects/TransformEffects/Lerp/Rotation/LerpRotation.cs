@@ -21,7 +21,6 @@ namespace LEM_Effects
 
         #region Cached var
 
-        Vector3 m_AmountRotated = default;
         Vector3 m_NewEulerRotation = default;
         Quaternion m_OriginalRotation = default;
 
@@ -40,15 +39,19 @@ namespace LEM_Effects
             m_AmountToRotate = m_WorldRotation ? m_TargetTransform.InverseTransformDirection(m_AmountToRotate) : m_AmountToRotate;
         }
 
+        public override void OnReset()
+        {
+            m_NewEulerRotation = Vector3.zero;
+            base.OnReset();
+        }
+
         public override bool OnUpdateEffect(float delta)
         {
-            m_NewEulerRotation = Vector3.Lerp(m_AmountRotated, m_AmountToRotate, m_Smoothing * delta);
+            m_NewEulerRotation = Vector3.Lerp(m_NewEulerRotation, m_AmountToRotate, m_Smoothing * delta);
             //m_TargetTransform.Rotate(m_NewEulerRotation);
             m_TargetTransform.localRotation = Quaternion.Euler(m_NewEulerRotation) * m_OriginalRotation;
 
-            m_AmountRotated = m_NewEulerRotation;
-
-            if (Vector3.SqrMagnitude(m_AmountRotated - m_AmountToRotate) < m_SnapRange)
+            if (Vector3.SqrMagnitude(m_NewEulerRotation - m_AmountToRotate) < m_SnapRange)
             {
                 m_TargetTransform.localRotation = Quaternion.Euler(m_AmountToRotate) * m_OriginalRotation;
                 return true;

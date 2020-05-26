@@ -18,7 +18,7 @@ namespace LEM_Effects
         [SerializeField]
         float m_SnapRange = 0.025f;
 
-        Vector3 m_InitialPosition = default, m_InitialScale = default, m_NewScale = default;
+        Vector3 m_InitialPosition = default, m_InitialScale = default;/*, m_NewScale = default;*/
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
@@ -31,21 +31,17 @@ namespace LEM_Effects
 
         public override bool OnUpdateEffect(float delta)
         {
-            m_NewScale = Vector3.Lerp(m_TargetTransform.localScale, m_TargetScale, delta * m_Smoothing);
+            m_TargetTransform.localScale = Vector3.Lerp(m_TargetTransform.localScale, m_TargetScale, delta * m_Smoothing);
 
             //Translate pivot point to the origin
             Vector3 dir = m_InitialPosition - m_LocalPivotPosition;
 
             //Scale the point
-            dir = Vector3.Scale(m_NewScale.Divide(m_InitialScale), dir);
+            dir = Vector3.Scale(m_TargetTransform.localScale.Divide(m_InitialScale), dir);
 
             //Translate the dir point back to pivot
             dir += m_LocalPivotPosition;
             m_TargetTransform.localPosition = dir;
-
-
-            m_TargetTransform.localScale = m_NewScale;
-
 
             //Stop updating after target has been reached
             if (Vector3.SqrMagnitude(m_TargetTransform.localScale - m_TargetScale) < m_SnapRange * m_SnapRange)
