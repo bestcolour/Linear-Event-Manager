@@ -55,7 +55,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            LerpRotationRelativeToT myEffect = ScriptableObject.CreateInstance<LerpRotationRelativeToT>();
+            LEM_Effects.LerpRotationRelativeToT myEffect = ScriptableObject.CreateInstance<LEM_Effects.LerpRotationRelativeToT>();
             myEffect.m_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -72,7 +72,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            LerpRotationRelativeToT loadFrom = effectToLoadFrom as LerpRotationRelativeToT;
+            LEM_Effects.LerpRotationRelativeToT loadFrom = effectToLoadFrom as LEM_Effects.LerpRotationRelativeToT;
             loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate,out m_PivotTransform, out m_WorldRotation, out m_Smoothing, out m_SnapRange);
 
             //Important
