@@ -13,16 +13,19 @@ namespace LEM_Effects
         [SerializeField] float m_Duration = 1f;
 
         //Calculate speed for the transform to move
-        float m_Speed = default;
+        //float m_Speed = default;
         float m_Time = default;
+        Vector3 m_OriginalPosition = default;
+
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
 
         public override void OnInitialiseEffect()
         {
+            m_OriginalPosition = m_TargetRectransform.anchoredPosition3D;
             //Calculate speed in initialise
-            m_Speed = Vector3.Distance(m_TargetRectransform.anchoredPosition3D, m_TargetPosition) / m_Duration;
+            //m_Speed = Vector3.Distance(m_TargetRectransform.anchoredPosition3D, m_TargetPosition) / m_Duration;
         }
 
         public void SetUp(RectTransform t1, Vector3 t2, float t3)
@@ -44,8 +47,10 @@ namespace LEM_Effects
             //Increment the time variable by division of duration from delta time
             m_Time += delta;
 
+            delta = m_Time/m_Duration;
+
             //meanwhile, move the transform to the target
-            m_TargetRectransform.anchoredPosition3D = Vector3.MoveTowards(m_TargetRectransform.anchoredPosition3D, m_TargetPosition,delta * m_Speed);
+            m_TargetRectransform.anchoredPosition3D = Vector3.Lerp(m_OriginalPosition, m_TargetPosition,delta);
 
             //Only when the duration is up, then consider the 
             //effect done

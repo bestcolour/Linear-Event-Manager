@@ -119,9 +119,9 @@ namespace LEM_Editor
              { "LerpScaleRelativeToT", new NodeDictionaryDefinition(new LerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
 
              //Rotation
-             { "LerpRotation", new NodeDictionaryDefinition(new LerpRotationNode()                      ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpRotationRelativeToT", new NodeDictionaryDefinition(new LerpRotationRelativeToTNode()                      ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpRotationRelativeToV3", new NodeDictionaryDefinition(new LerpRotationRelativeToV3Node()                      ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpRotation", new NodeDictionaryDefinition(new LerpRotationNode()                              ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpRotationRelativeToT", new NodeDictionaryDefinition(new LerpRotationRelativeToTNode()        ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpRotationRelativeToV3", new NodeDictionaryDefinition(new LerpRotationRelativeToV3Node()      ,new Color(0.14f,0.44f,0.64f)) },
 
 
              //Position

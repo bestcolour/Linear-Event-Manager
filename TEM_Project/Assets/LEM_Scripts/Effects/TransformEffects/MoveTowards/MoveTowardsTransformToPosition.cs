@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsTransformToPosition : UpdateBaseEffect,IEffectSavable<Transform,Vector3,float>
+    public class MoveTowardsTransformToPosition : UpdateBaseEffect, IEffectSavable<Transform, Vector3, float>
     {
         [Tooltip("The transform you want to move")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -13,10 +13,12 @@ namespace LEM_Effects
         [SerializeField, Range(0.0001f, 1000f)] float m_Duration = 1f;
 
         //Calculate speed for the transform to move
-        [SerializeField,ReadOnly]
-        float m_Speed = default;
+        //[SerializeField,ReadOnly]
+        //float m_Speed = default;
         [SerializeField, ReadOnly]
         float m_Time = default;
+        [SerializeField, ReadOnly]
+        Vector3 m_OriginalPosition = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
@@ -24,7 +26,9 @@ namespace LEM_Effects
         public override void OnInitialiseEffect()
         {
             //Calculate speed in initialise
-            m_Speed = Vector3.Distance(m_TargetTransform.position, m_TargetPosition) / m_Duration;
+            //m_Speed = Vector3.Distance(m_TargetTransform.position, m_TargetPosition) / m_Duration;
+            m_OriginalPosition = m_TargetTransform.position;
+
         }
 
         public void SetUp(Transform t1, Vector3 t2, float t3)
@@ -46,8 +50,11 @@ namespace LEM_Effects
             //Increment the time variable every frame
             m_Time += delta;
 
+            delta = m_Time / m_Duration;
+
             //meanwhile, move the transform to the target
-            m_TargetTransform.position = Vector3.MoveTowards(m_TargetTransform.position, m_TargetPosition,delta * m_Speed);
+            m_TargetTransform.position = Vector3.Lerp(m_OriginalPosition, m_TargetPosition, delta);
+            //m_TargetTransform.position = Vector3.MoveTowards(m_TargetTransform.position, m_TargetPosition,delta * m_Speed);
 
             //Only when the duration is up, then consider the 
             //effect done
@@ -56,12 +63,12 @@ namespace LEM_Effects
                 //Snap the position to the targetposition
                 m_TargetTransform.position = m_TargetPosition;
                 m_Time = 0f;
-                m_IsFinished = true;
+                return true;
             }
 
             return m_IsFinished;
         }
 
 
-    } 
+    }
 }

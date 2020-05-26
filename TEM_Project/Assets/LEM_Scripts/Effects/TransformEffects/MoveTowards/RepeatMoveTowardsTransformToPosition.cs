@@ -15,8 +15,8 @@ namespace LEM_Effects
         [SerializeField, Range(0.0001f, 1000f)] float m_Duration = 1f;
 
         //Calculate speed for the transform to move
-        [SerializeField,ReadOnly]
-        float m_Speed = default;
+        //[SerializeField,ReadOnly]
+        //float m_Speed = default;
         [SerializeField, ReadOnly]
         float m_Timer = default;
         [SerializeField, ReadOnly]
@@ -28,7 +28,7 @@ namespace LEM_Effects
         {
             //Calculate speed in initialise
             m_IntiialPosition = m_TargetTransform.position;
-            m_Speed = Vector3.Distance(m_TargetTransform.position, m_TargetPosition) / m_Duration;
+            //m_Speed = Vector3.Distance(m_TargetTransform.position, m_TargetPosition) / m_Duration;
         }
 
         public override bool OnUpdateEffect(float delta)
@@ -36,8 +36,10 @@ namespace LEM_Effects
             //Increment the time variable by division of duration from delta time
             m_Timer += delta ;
 
+            delta = m_Timer / m_Duration;
+
             //meanwhile, move the transform to the target
-            m_TargetTransform.position = Vector3.MoveTowards(m_TargetTransform.position, m_TargetPosition, delta * m_Speed);
+            m_TargetTransform.position = Vector3.Lerp(m_IntiialPosition, m_TargetPosition, delta );
 
             //Only when the duration is up, then consider the 
             //effect done
