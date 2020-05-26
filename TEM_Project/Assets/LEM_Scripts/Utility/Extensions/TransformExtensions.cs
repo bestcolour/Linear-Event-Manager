@@ -22,4 +22,21 @@ namespace LEM_Effects.Extensions
         }
     }
 
+    public static class Vector3Extensions
+    {
+        /// <summary>
+        /// Order: a/b
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Vector3 Divide(this Vector3 a, Vector3 b)
+        {
+            a.x /= b.x;
+            a.y /= b.y;
+            a.z /= b.z;
+            return a;
+        }
+    }
+
 }
