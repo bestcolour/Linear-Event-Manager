@@ -5,16 +5,18 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class MoveTowardsRotationRelativeToV3Node : UpdateEffectNode
+    public class RepeatMoveTowardsScaleRelativeToV3Node : UpdateEffectNode
     {
-        Transform m_TargetTransform = default;
-        Vector3 m_AmountToRotate = default;
-        Vector3 m_PivotLocalPosition = default;
-        bool m_WorldRotation = false;
+        [SerializeField]
+        Transform m_TargetedTransform = default;
+
+        [SerializeField]
+        Vector3 m_TargetScale = default, m_LocalPivot = default;
+
+        [SerializeField]
         float m_Duration = 0f;
 
-
-        protected override string EffectTypeName => "MoveTowardsRotationRelativeToV3";
+        protected override string EffectTypeName => "RepeatMoveTowardsScaleRelativeToV3";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -34,14 +36,12 @@ namespace LEM_Editor
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
 
-            m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Targeted Transform", m_TargetTransform, typeof(Transform), true);
+            m_TargetedTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Targeted Transform", m_TargetedTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Amount To Rotate", m_AmountToRotate);
+            m_TargetScale = EditorGUI.Vector3Field(propertyRect, "Target Scale", m_TargetScale);
             propertyRect.y += 40f;
-            m_PivotLocalPosition = EditorGUI.Vector3Field(propertyRect, "Pivot LocalPosition", m_PivotLocalPosition);
+            m_LocalPivot = EditorGUI.Vector3Field(propertyRect, "LocalPivot Position", m_LocalPivot);
             propertyRect.y += 40f;
-            m_WorldRotation = EditorGUI.Toggle(propertyRect, "Use World Rotation", m_WorldRotation);
-            propertyRect.y += 20f;
             m_Duration = EditorGUI.FloatField(propertyRect, "Duration", m_Duration);
 
 
@@ -52,7 +52,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            MoveTowardsRotationRelativeToV3 myEffect = ScriptableObject.CreateInstance<MoveTowardsRotationRelativeToV3>();
+            RepeatMoveTowardsScaleRelativeToV3 myEffect = ScriptableObject.CreateInstance<RepeatMoveTowardsScaleRelativeToV3>();
             myEffect.m_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -61,16 +61,16 @@ namespace LEM_Editor
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
-            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_AmountToRotate, m_PivotLocalPosition, m_WorldRotation, m_Duration);
+            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs);
+            myEffect.SetUp(m_TargetedTransform, m_TargetScale, m_LocalPivot, m_Duration);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            MoveTowardsRotationRelativeToV3 loadFrom = effectToLoadFrom as MoveTowardsRotationRelativeToV3;
-            loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate, out m_PivotLocalPosition, out m_WorldRotation, out m_Duration);
+            RepeatMoveTowardsScaleRelativeToV3 loadFrom = effectToLoadFrom as RepeatMoveTowardsScaleRelativeToV3;
+            loadFrom.UnPack(out m_TargetedTransform, out m_TargetScale, out m_LocalPivot, out m_Duration);
 
             //Important
             m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;

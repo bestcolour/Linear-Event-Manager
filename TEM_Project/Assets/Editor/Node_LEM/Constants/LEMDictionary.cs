@@ -155,16 +155,26 @@ namespace LEM_Editor
              { "RepeatMoveTowRectransToRectrans", new NodeDictionaryDefinition(new RepeatMoveTowardsRectransformToRectransformNode()    ,new Color(0.36f ,0.17f,0.44f)) },
              { "RepeatMoveTowRectTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsRectTransformToPositionNode()           ,new Color(0.36f ,0.17f,0.44f)) },
 
-
+          
              //Scale
              { "MoveTowardsScale", new NodeDictionaryDefinition(new MoveTowardsScaleNode()                          ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowardsScaleRelativeToT", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToTNode()    ,new Color(0.49f,0.24f,0.60f)) },
              { "MoveTowardsScaleRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) }, 
+             { "MoveTowardsScaleRelativeToT", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToTNode()    ,new Color(0.49f,0.24f,0.60f)) },
+             //Repeat Scale
+             { "RepeatMoveTowardsScale", new NodeDictionaryDefinition(new RepeatMoveTowardsScaleNode()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveTowardsScaleRelativeToV3", new NodeDictionaryDefinition(new RepeatMoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveTowardsScaleRelativeToT", new NodeDictionaryDefinition(new RepeatMoveTowardsScaleRelativeToTNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
 
              //Rotation
-             { "MoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToTNode()      ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
              { "MoveTowardsRotation", new NodeDictionaryDefinition(new MoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) }, 
+             { "MoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToTNode()      ,new Color(0.49f,0.24f,0.60f)) },
+             //Repeat Rotation
+             { "RepeatMoveTowardsRotation", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) }, 
+             { "RepeatMoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationRelativeToV3Node()                            ,new Color(0.49f,0.24f,0.60f)) }, 
+             { "RepeatMoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationRelativeToTNode()                            ,new Color(0.49f,0.24f,0.60f)) }, 
+
 
 	    #endregion
 

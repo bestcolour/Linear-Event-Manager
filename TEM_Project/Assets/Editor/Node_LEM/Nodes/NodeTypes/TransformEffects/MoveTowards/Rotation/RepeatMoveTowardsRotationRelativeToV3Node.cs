@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class MoveTowardsRotationRelativeToV3Node : UpdateEffectNode
+    public class RepeatMoveTowardsRotationRelativeToV3Node : UpdateEffectNode
     {
         Transform m_TargetTransform = default;
         Vector3 m_AmountToRotate = default;
@@ -14,7 +14,7 @@ namespace LEM_Editor
         float m_Duration = 0f;
 
 
-        protected override string EffectTypeName => "MoveTowardsRotationRelativeToV3";
+        protected override string EffectTypeName => "RepeatMoveTowardsRotationRelativeToV3";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -52,7 +52,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            MoveTowardsRotationRelativeToV3 myEffect = ScriptableObject.CreateInstance<MoveTowardsRotationRelativeToV3>();
+            RepeatMoveTowardsRotationRelativeToV3 myEffect = ScriptableObject.CreateInstance<RepeatMoveTowardsRotationRelativeToV3>();
             myEffect.m_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -69,7 +69,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            MoveTowardsRotationRelativeToV3 loadFrom = effectToLoadFrom as MoveTowardsRotationRelativeToV3;
+            RepeatMoveTowardsRotationRelativeToV3 loadFrom = effectToLoadFrom as RepeatMoveTowardsRotationRelativeToV3;
             loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate, out m_PivotLocalPosition, out m_WorldRotation, out m_Duration);
 
             //Important

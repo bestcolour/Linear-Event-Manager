@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsRotation : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, bool, float>
+    public class RepeatMoveTowardsRotation : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, bool, float>
     {
         [SerializeField]
         Transform m_TargetTransform = default;
@@ -48,8 +48,8 @@ namespace LEM_Effects
 
             if (m_Timer >= m_Duration)
             {
-                m_TargetTransform.localRotation = Quaternion.Euler(m_AmountToRotate) * m_OriginalRotation;
-                return true;
+                m_TargetTransform.localRotation = m_OriginalRotation;
+                OnReset();
             }
 
             return m_IsFinished;
