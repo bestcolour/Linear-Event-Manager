@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class RescaleTransform : LEM_BaseEffect,IEffectSavable<Transform,Vector3>
+    public class RescaleTransform : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3> 
+#endif
     {
         [Tooltip("The transform/rectransform you want to change")]
         [SerializeField] Transform m_TargetTransform = default;

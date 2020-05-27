@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class LerpScale : UpdateBaseEffect, IEffectSavable<Transform, Vector3, float, float>
+    public class LerpScale : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, float, float> 
+#endif
     {
         [SerializeField]
         Transform m_TargetTransform = default;

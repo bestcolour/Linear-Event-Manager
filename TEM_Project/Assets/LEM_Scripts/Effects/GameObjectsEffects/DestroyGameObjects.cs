@@ -6,7 +6,10 @@
 /// </summary>
 namespace LEM_Effects
 {
-    public class DestroyGameObjects : LEM_BaseEffect,IEffectSavable<GameObject[]>
+    public class DestroyGameObjects : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<GameObject[]> 
+#endif
     {
         [Tooltip("Object to destroy")]
         [SerializeField] GameObject[] m_TargetObjects = default;

@@ -2,7 +2,10 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //Will fade all materials on all the renderers
-    public class FadeToAlphaRenderersComponent : TimerBasedUpdateEffect, IEffectSavable<Renderer[], float, float>
+    public class FadeToAlphaRenderersComponent : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Renderer[], float, float> 
+#endif
     {
         //target
         [Tooltip("The renderers you want to fade")]

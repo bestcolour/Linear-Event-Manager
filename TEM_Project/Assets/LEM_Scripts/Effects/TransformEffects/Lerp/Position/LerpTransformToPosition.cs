@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class LerpTransformToPosition : UpdateBaseEffect,IEffectSavable<Transform,Vector3,float,float>
+    public class LerpTransformToPosition : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, float, float> 
+#endif
     {
         [Tooltip("The transform you want to lerp")]
         [SerializeField] Transform m_TargetTransform = default;

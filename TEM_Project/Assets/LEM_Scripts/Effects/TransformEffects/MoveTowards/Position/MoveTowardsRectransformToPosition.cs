@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsRectransformToPosition : TimerBasedUpdateEffect,IEffectSavable<RectTransform,Vector3,float>
+    public class MoveTowardsRectransformToPosition : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<RectTransform, Vector3, float> 
+#endif
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;

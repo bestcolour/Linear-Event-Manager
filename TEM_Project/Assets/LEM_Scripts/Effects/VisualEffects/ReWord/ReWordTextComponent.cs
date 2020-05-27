@@ -3,7 +3,10 @@ using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    public class ReWordTextComponent : LEM_BaseEffect, IEffectSavable<Text, string>
+    public class ReWordTextComponent : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Text, string> 
+#endif
     {
         //target
         [Tooltip("The Text you want to reword")]

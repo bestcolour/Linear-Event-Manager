@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class LerpRotation : UpdateBaseEffect, IEffectSavable<Transform, Vector3, bool, float, float>
+    public class LerpRotation : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, bool, float, float> 
+#endif
     {
         [SerializeField]
         Transform m_TargetTransform = default;

@@ -2,7 +2,10 @@
 
 namespace LEM_Effects
 {
-    public class PauseLinearEvent : LEM_BaseEffect, IEffectSavable<LinearEvent,bool>
+    public class PauseLinearEvent : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<LinearEvent, bool> 
+#endif
     {
         [SerializeField]
         bool m_State = default;

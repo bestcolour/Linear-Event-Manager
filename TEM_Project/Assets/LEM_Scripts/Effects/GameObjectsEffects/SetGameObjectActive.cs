@@ -2,7 +2,10 @@
 
 namespace LEM_Effects
 {
-    public class SetGameObjectActive : LEM_BaseEffect,IEffectSavable<GameObject,bool>
+    public class SetGameObjectActive : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<GameObject, bool> 
+#endif
     {
         [Tooltip("Object to set its active state to true or false")]
         [SerializeField] GameObject m_TargetObject = default;

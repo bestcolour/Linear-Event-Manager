@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class LoadBiasedLinearEvent : LEM_BaseEffect, IEffectSavable<LinearEvent[],float[]>
+    public class LoadBiasedLinearEvent : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<LinearEvent[], float[]> 
+#endif
     {
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 

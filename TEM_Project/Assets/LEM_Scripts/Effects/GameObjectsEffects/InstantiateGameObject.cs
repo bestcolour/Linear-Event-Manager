@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class InstantiateGameObject : LEM_BaseEffect, IEffectSavable<GameObject, int, Vector3, Vector3, Vector3>
+    public class InstantiateGameObject : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<GameObject, int, Vector3, Vector3, Vector3> 
+#endif
     {
         [Tooltip("Object to instantiate. Usually the prefab of an object")]
         [SerializeField] GameObject m_TargetObject = default;

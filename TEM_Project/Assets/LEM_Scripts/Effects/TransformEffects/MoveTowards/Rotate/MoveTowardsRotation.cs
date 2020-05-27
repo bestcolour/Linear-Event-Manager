@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsRotation : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, bool, float>
+    public class MoveTowardsRotation : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, bool, float> 
+#endif
     {
         [SerializeField]
         Transform m_TargetTransform = default;

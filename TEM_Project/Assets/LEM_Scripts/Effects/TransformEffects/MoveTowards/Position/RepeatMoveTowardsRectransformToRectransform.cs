@@ -3,7 +3,10 @@ namespace LEM_Effects
 {
 
     //This move has no stop. It will keep moving until you use Stop Repeat event
-    public class RepeatMoveTowardsRectransformToRectransform : UpdateBaseEffect,IEffectSavable<RectTransform,RectTransform,float,float>
+    public class RepeatMoveTowardsRectransformToRectransform : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<RectTransform, RectTransform, float, float> 
+#endif
     {
         [Tooltip("The RectTransform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;

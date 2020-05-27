@@ -5,7 +5,11 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    [CanEditMultipleObjects, System.Serializable]
+    [
+#if UNITY_EDITOR
+        CanEditMultipleObjects, 
+#endif
+        System.Serializable]
     public class LinearEvent : MonoBehaviour
     {
 

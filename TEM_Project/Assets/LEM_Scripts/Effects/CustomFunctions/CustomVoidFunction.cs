@@ -4,7 +4,10 @@ using System;
 
 namespace LEM_Effects
 {
-    public class CustomVoidFunction : LEM_BaseEffect, IEffectSavable<SerializedObject>
+    public class CustomVoidFunction : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<SerializedObject> 
+#endif
     {
         public UnityEventData m_EventObject = default;
 
@@ -81,6 +84,7 @@ namespace LEM_Effects
             m_EventObject.m_UnityEvent.Invoke();
         }
 
+#if UNITY_EDITOR
         public void SetUp(SerializedObject t1)
         {
             m_EventObject = (UnityEventData)t1.targetObject;
@@ -91,6 +95,7 @@ namespace LEM_Effects
             t1 = new SerializedObject(m_EventObject);
         }
 
+#endif
 
     }
 

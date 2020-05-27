@@ -2,7 +2,10 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaSpriteRendererComponent : TimerBasedUpdateEffect, IEffectSavable<SpriteRenderer, float, float>
+    public class FadeToAlphaSpriteRendererComponent : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<SpriteRenderer, float, float> 
+#endif
     {
         //target
         [Tooltip("The SpriteRenderer you want to fade")]

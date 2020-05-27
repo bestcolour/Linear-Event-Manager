@@ -3,7 +3,10 @@
 namespace LEM_Effects
 {
 
-    public class SetAnimatorFloat : LEM_BaseEffect,IEffectSavable<Animator,string,float>
+    public class SetAnimatorFloat : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Animator, string, float> 
+#endif
     {
         [Tooltip("The animator you want to set float")]
         [SerializeField] Animator m_TargetAnimator = default;

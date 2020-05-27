@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class PauseAllRunningLinearEvents : LEM_BaseEffect, IEffectSavable<bool>
+    public class PauseAllRunningLinearEvents : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<bool> 
+#endif
     {
         [SerializeField]
         bool m_State = default;

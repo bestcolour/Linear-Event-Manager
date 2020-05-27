@@ -3,7 +3,10 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class RepeatMoveTowardsScaleRelativeToV3 : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, Vector3, float>
+    public class RepeatMoveTowardsScaleRelativeToV3 : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, Vector3, float> 
+#endif
     {
 
         [SerializeField]

@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class OffsetTransformRotation : LEM_BaseEffect,IEffectSavable<Transform,Vector3,bool>
+    public class OffsetTransformRotation : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, bool> 
+#endif
     {
         [Tooltip("The transform you want to offset")]
         [SerializeField] Transform m_TargetTransform = default;

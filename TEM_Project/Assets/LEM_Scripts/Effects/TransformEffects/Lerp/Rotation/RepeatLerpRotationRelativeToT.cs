@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepeatLerpRotationRelativeToT : UpdateBaseEffect, IEffectSavable<Transform, Vector3, Transform, bool, float, float>
+    public class RepeatLerpRotationRelativeToT : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, Transform, bool, float, float> 
+#endif
     {
 
         [SerializeField]

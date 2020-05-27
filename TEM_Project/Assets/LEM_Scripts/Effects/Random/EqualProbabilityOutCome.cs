@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class EqualProbabilityOutCome : LEM_BaseEffect, IEffectSavable<int>
+    public class EqualProbabilityOutCome : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<int> 
+#endif
     {
         [SerializeField]
         int m_NumberOfOutComes = 2;

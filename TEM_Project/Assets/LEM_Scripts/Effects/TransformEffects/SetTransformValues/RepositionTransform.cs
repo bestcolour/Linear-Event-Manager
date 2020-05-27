@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class RepositionTransform : LEM_BaseEffect,IEffectSavable<Transform,Vector3,bool>
+    public class RepositionTransform : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, bool> 
+#endif
     {
         [Tooltip("The transform you want to change")]
         [SerializeField] Transform m_TargetTransform = default;

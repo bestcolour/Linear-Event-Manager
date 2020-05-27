@@ -2,7 +2,10 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //This lerp has no stop. It will keep lerping until you use Stop Repeat event
-    public class RepeatLerpTransformToTransform : UpdateBaseEffect,IEffectSavable<Transform,Transform ,float,float>
+    public class RepeatLerpTransformToTransform : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Transform, float, float> 
+#endif
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] Transform m_TargetTransform = default;

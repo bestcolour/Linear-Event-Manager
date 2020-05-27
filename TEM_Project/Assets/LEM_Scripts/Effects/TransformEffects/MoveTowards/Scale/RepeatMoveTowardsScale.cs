@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepeatMoveTowardsScale : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, float>
+    public class RepeatMoveTowardsScale : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, float> 
+#endif
     {
         [SerializeField]
         Transform m_TargetTransform = default;

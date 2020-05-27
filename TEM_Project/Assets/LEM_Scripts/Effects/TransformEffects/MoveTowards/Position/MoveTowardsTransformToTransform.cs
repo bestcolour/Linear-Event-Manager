@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsTransformToTransform : UpdateBaseEffect, IEffectSavable<Transform, Transform, float, float>
+    public class MoveTowardsTransformToTransform : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Transform, float, float> 
+#endif
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] Transform m_TargetTransform = default;

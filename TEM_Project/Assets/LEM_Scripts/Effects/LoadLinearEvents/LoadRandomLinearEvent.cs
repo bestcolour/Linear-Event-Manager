@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class LoadRandomLinearEvent : LEM_BaseEffect, IEffectSavable<LinearEvent[]>
+    public class LoadRandomLinearEvent : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<LinearEvent[]> 
+#endif
     {
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 

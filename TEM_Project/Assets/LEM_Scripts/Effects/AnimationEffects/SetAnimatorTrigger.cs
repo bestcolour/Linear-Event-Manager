@@ -3,7 +3,10 @@
 namespace LEM_Effects
 {
 
-    public class SetAnimatorTrigger : LEM_BaseEffect,IEffectSavable<Animator,string>
+    public class SetAnimatorTrigger : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Animator, string> 
+#endif
     {
         [Tooltip("The animator you want to set trigger")]
         [SerializeField] Animator m_TargetAnimator = default;

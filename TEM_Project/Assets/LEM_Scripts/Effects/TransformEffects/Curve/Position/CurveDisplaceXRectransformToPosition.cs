@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class CurveDisplaceXRectransformToPosition : TimerBasedUpdateEffect, IEffectSavable<RectTransform, AnimationCurve>
+    public class CurveDisplaceXRectransformToPosition : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<RectTransform, AnimationCurve> 
+#endif
     {
         [SerializeField] RectTransform m_TargetRectransform = default;
 

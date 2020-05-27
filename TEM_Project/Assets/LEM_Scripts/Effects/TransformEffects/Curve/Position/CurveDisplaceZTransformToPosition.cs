@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class CurveDisplaceZTransformToPosition : TimerBasedUpdateEffect, IEffectSavable<Transform, AnimationCurve, bool>
+    public class CurveDisplaceZTransformToPosition : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, AnimationCurve, bool> 
+#endif
     {
         [SerializeField] Transform m_TargetTransform = default;
 

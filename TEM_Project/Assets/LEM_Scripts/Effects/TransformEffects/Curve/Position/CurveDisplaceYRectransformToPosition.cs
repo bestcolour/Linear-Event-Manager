@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class CurveDisplaceYRectransformToPosition : TimerBasedUpdateEffect, IEffectSavable<RectTransform, AnimationCurve>
+    public class CurveDisplaceYRectransformToPosition : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<RectTransform, AnimationCurve> 
+#endif
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;

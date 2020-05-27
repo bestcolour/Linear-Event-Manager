@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepositionRectTransform : LEM_BaseEffect,IEffectSavable<RectTransform,Vector3>
+    public class RepositionRectTransform : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<RectTransform, Vector3> 
+#endif
     {
         [Tooltip("The transform you want to change")]
         [SerializeField] RectTransform m_TargetRectransform = default;

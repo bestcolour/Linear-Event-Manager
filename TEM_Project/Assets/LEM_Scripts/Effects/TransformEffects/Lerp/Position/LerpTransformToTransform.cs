@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class LerpTransformToTransform : UpdateBaseEffect,IEffectSavable<Transform,Transform,float,float>
+    public class LerpTransformToTransform : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Transform, float, float> 
+#endif
     {
         [Tooltip("The transform you want to lerp")]
         [SerializeField] Transform m_TargetTransform = default;

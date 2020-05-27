@@ -3,7 +3,10 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class LerpScaleRelativeToV3 : UpdateBaseEffect, IEffectSavable<Transform, Vector3, Vector3, float, float>
+    public class LerpScaleRelativeToV3 : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, Vector3, float, float> 
+#endif
     {
 
         [SerializeField]

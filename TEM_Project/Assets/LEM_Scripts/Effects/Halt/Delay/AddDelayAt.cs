@@ -2,7 +2,10 @@
 
 namespace LEM_Effects
 {
-    public class AddDelayAt : LEM_BaseEffect, IEffectSavable<LinearEvent,float>
+    public class AddDelayAt : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<LinearEvent, float> 
+#endif
     {
         [SerializeField]
         float m_DelayTime = default;

@@ -3,7 +3,10 @@ using TMPro;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaTextMeshProGUIComponent : TimerBasedUpdateEffect,IEffectSavable<TextMeshProUGUI,float,float>
+    public class FadeToAlphaTextMeshProGUIComponent : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<TextMeshProUGUI, float, float> 
+#endif
     {
         //target
         [Tooltip("The text you want to fade")]

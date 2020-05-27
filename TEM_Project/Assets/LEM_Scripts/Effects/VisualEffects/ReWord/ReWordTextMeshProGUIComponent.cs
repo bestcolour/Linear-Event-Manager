@@ -3,7 +3,10 @@ using TMPro;
 namespace LEM_Effects
 {
 
-    public class ReWordTextMeshProGUIComponent : LEM_BaseEffect, IEffectSavable<TextMeshProUGUI, string>
+    public class ReWordTextMeshProGUIComponent : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<TextMeshProUGUI, string> 
+#endif
     {
         //target
         [Tooltip("The TextMeshProUGUI you want to reword")]

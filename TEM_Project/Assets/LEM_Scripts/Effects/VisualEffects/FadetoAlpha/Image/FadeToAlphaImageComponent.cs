@@ -3,7 +3,10 @@ using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaImageComponent : TimerBasedUpdateEffect,IEffectSavable<Image,float,float>
+    public class FadeToAlphaImageComponent : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Image, float, float> 
+#endif
     {
         //target
         [Tooltip("The image you want to fade")]

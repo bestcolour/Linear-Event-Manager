@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class LoadNewLinearEvents : LEM_BaseEffect, IEffectSavable<LinearEvent[]>
+    public class LoadNewLinearEvents : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<LinearEvent[]> 
+#endif
     {
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 

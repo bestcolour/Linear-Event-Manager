@@ -2,7 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 namespace LEM_Effects
 {
-    public class FadeToAlphaTextsComponent : TimerBasedUpdateEffect, IEffectSavable<Text[], float, float>
+    public class FadeToAlphaTextsComponent : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Text[], float, float> 
+#endif
     {
         //target
         [Tooltip("The texts you want to fade")]

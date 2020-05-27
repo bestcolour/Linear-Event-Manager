@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-#if UNITY_EDITOR
 
 [AttributeUsage(AttributeTargets.Field, Inherited = true)]
 public class ConditionalReadOnlyAttribute : PropertyAttribute
@@ -25,4 +24,3 @@ public class ConditionalReadOnlyAttribute : PropertyAttribute
     }
 }
 
-#endif

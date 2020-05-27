@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class SetTransformParent : LEM_BaseEffect,IEffectSavable<Transform,Transform,int>
+    public class SetTransformParent : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Transform, int> 
+#endif
     {
         [Tooltip("The transform you want to set as the child transform")]
         [SerializeField] Transform m_ChildTransform = default;

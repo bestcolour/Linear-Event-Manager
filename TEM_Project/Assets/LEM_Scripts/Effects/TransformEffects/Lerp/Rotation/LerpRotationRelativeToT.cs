@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class LerpRotationRelativeToT : UpdateBaseEffect, IEffectSavable<Transform, Vector3, Transform, bool, float, float>
+    public class LerpRotationRelativeToT : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, Transform, bool, float, float> 
+#endif
     {
 
         [SerializeField]

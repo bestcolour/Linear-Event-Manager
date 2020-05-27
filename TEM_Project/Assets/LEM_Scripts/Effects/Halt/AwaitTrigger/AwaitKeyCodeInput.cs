@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class AwaitKeyCodeInput : UpdateBaseEffect, IEffectSavable<LinearEvent, SerializedObject>
+    public class AwaitKeyCodeInput : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<LinearEvent, SerializedObject> 
+#endif
     {
         [SerializeField]
         AwaitKeyCodeInputData m_InputData = default;
@@ -79,6 +82,7 @@ namespace LEM_Effects
             m_TargetLinearEvent.AddNumberOfAwaitingInput = -1;
         }
 
+#if UNITY_EDITOR
         public void SetUp(LinearEvent t1, SerializedObject t2)
         {
             m_TargetLinearEvent = t1;
@@ -89,7 +93,8 @@ namespace LEM_Effects
         {
             t1 = m_TargetLinearEvent;
             t2 = new SerializedObject(m_InputData);
-        }
+        } 
+#endif
     }
 
 }

@@ -3,7 +3,10 @@
 namespace LEM_Effects
 {
 
-    public class SetAnimatorInt : LEM_BaseEffect,IEffectSavable<Animator,string,int>
+    public class SetAnimatorInt : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Animator, string, int> 
+#endif
     {
         [Tooltip("The animator you want to set int")]
         [SerializeField] Animator m_TargetAnimator = default;

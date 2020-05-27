@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class RotateTransform : LEM_BaseEffect,IEffectSavable<Transform,Vector3,bool>
+    public class RotateTransform : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, bool> 
+#endif
     {
         [Tooltip("The transform/rectransform you want to set to. Not add rotation to, but set to")]
         [SerializeField] Transform m_TargetTransform = default;

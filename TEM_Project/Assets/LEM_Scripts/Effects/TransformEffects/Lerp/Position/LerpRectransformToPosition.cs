@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class LerpRectransformToPosition : UpdateBaseEffect,IEffectSavable<RectTransform,Vector3,float,float>
+    public class LerpRectransformToPosition : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<RectTransform, Vector3, float, float> 
+#endif
     {
         [Tooltip("The rectransform you want to lerp")]
         [SerializeField] RectTransform m_TargetRectransform = default;

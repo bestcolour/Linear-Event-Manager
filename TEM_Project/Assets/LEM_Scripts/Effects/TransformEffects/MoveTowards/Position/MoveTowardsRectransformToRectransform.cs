@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class MoveTowardsRectransformToRectransform : UpdateBaseEffect,IEffectSavable<RectTransform,RectTransform,float,float>
+    public class MoveTowardsRectransformToRectransform : UpdateBaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<RectTransform, RectTransform, float, float> 
+#endif
     {
         [Tooltip("The transform you want to lerp repeatedly")]
         [SerializeField] RectTransform m_TargetRectransform = default;

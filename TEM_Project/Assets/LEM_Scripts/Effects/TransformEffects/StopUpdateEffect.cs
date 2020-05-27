@@ -4,7 +4,10 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
-	public class StopUpdateEffect : LEM_BaseEffect,IEffectSavable<LinearEvent,string>
+	public class StopUpdateEffect : LEM_BaseEffect
+#if UNITY_EDITOR
+		, IEffectSavable<LinearEvent, string> 
+#endif
 	{
 		public override EffectFunctionType FunctionType =>  EffectFunctionType.InstantEffect;
 
@@ -36,7 +39,7 @@ namespace LEM_Effects
 			return;
 #else
 			//This will handle the actual running in build version of the game
-			LinearEventsManager.AllLinearEventsInScene[m_EffectLinearEvent.m_LinearEventIndex].m_EffectsDictionary[m_EffectIDToStop].ForceStop();
+			LinearEventsManager.AllLinearEventsInScene[m_EffectLinearEvent.m_LinearEventIndex].m_EffectsDictionary[m_EffectIDToStop].OnForceStop();
 #endif
 		}
 

@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-	public class TranslateRelativeToTransform : UpdateBaseEffect,IEffectSavable<Transform,Vector3,Transform>
+	public class TranslateRelativeToTransform : UpdateBaseEffect
+#if UNITY_EDITOR
+		, IEffectSavable<Transform, Vector3, Transform> 
+#endif
 	{
 		[SerializeField]
 		Transform m_TargetedTransform = default;

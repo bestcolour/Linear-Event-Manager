@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveTowardsTransformToPosition : TimerBasedUpdateEffect, IEffectSavable<Transform, Vector3, float>
+    public class MoveTowardsTransformToPosition : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, float> 
+#endif
     {
         [Tooltip("The transform you want to move")]
         [SerializeField] Transform m_TargetTransform = default;

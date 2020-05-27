@@ -1,7 +1,10 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class FadeToAlphaRendererComponent : TimerBasedUpdateEffect, IEffectSavable<Renderer, float, float>
+    public class FadeToAlphaRendererComponent : TimerBasedUpdateEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Renderer, float, float> 
+#endif
     {
         //target
         [Tooltip("The renderers you want to fade")]
@@ -27,8 +30,10 @@ namespace LEM_Effects
 
             m_InitialAlphas = new float[m_TargetRenderer.materials.Length];
             m_NextColours = new Color[m_TargetRenderer.materials.Length];
-            int fadeModeInt = (int)UnityEngine.Rendering.RenderQueue.Geometry;
 
+#if UNITY_EDITOR
+            int fadeModeInt = (int)UnityEngine.Rendering.RenderQueue.Geometry;
+#endif
             for (int i = 0; i < m_TargetRenderer.materials.Length; i++)
             {
                 //Record initial alpha first for each of the targetimages

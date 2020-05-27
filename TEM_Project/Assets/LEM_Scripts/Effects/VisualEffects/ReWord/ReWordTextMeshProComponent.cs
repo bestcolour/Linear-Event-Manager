@@ -4,7 +4,10 @@ namespace LEM_Effects
 {
 
 
-    public class ReWordTextMeshProComponent : LEM_BaseEffect, IEffectSavable<TextMeshPro, string>
+    public class ReWordTextMeshProComponent : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<TextMeshPro, string> 
+#endif
     {
         //target
         [Tooltip("The TextMeshPro you want to reword")]

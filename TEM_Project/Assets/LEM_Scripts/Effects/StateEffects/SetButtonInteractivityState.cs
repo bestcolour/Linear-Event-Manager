@@ -9,7 +9,10 @@ using UnityEngine.UI;
 
 namespace LEM_Effects
 {
-    public class SetButtonInteractivityState : LEM_BaseEffect,IEffectSavable<Button,bool>
+    public class SetButtonInteractivityState : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Button, bool> 
+#endif
     {
         [Tooltip("The button you want to enable/disable interactivity")]
         [SerializeField] Button m_TargetButton = default;

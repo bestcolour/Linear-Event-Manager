@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class OffsetTransformScale : LEM_BaseEffect,IEffectSavable<Transform,Vector3>
+    public class OffsetTransformScale : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3> 
+#endif
     {
         [Tooltip("The transform you want to offset")]
         [SerializeField] Transform m_TargetTransform = default;
