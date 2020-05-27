@@ -10,7 +10,7 @@ namespace LEM_Effects
         [SerializeField] Vector3 m_TargetPosition = default;
 
         [Tooltip("The time needed for target to reach target position with lerp. Not recommended for constant speed movement.")]
-        [SerializeField] float m_Duration = 1f;
+        [SerializeField] float m_Duration = 0f;
 
         Vector3 m_OriginalPosition = default;
 
