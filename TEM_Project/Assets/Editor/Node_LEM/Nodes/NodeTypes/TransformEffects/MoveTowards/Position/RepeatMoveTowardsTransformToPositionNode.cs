@@ -48,15 +48,15 @@ namespace LEM_Editor
         public override LEM_BaseEffect CompileToBaseEffect()
         {
             RepeatMoveTowardsTransformToPosition myEffect = ScriptableObject.CreateInstance<RepeatMoveTowardsTransformToPosition>();
-            myEffect.m_NodeEffectType = EffectTypeName;
+            myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
-            myEffect.m_UpdateCycle = m_UpdateCycle;
+            myEffect.bm_UpdateCycle = m_UpdateCycle;
 
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
-            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
+            myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
             myEffect.SetUp(m_TargetTransform, m_TargetPosition, m_Duration);
             return myEffect;
 
@@ -66,7 +66,7 @@ namespace LEM_Editor
         {
             RepeatMoveTowardsTransformToPosition loadFrom = effectToLoadFrom as RepeatMoveTowardsTransformToPosition;
             loadFrom.UnPack(out m_TargetTransform, out m_TargetPosition, out m_Duration);
-            m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+            m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
 
         }
     }

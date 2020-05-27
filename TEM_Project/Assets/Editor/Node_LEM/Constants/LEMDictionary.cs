@@ -107,6 +107,10 @@ namespace LEM_Editor
 	    #endregion
 
         #region TransformRelated Effects
+
+             //Note: Effects under lerp, movetowards and Curve are all non-additive effects which means that any other effects which intends to add on to the 
+             //lerp/movetowards effects will result in conflicts in which one effect will dominate over the other and apply its transform value changes over the other's
+
         #region LERP
 		
              //Position
@@ -157,7 +161,7 @@ namespace LEM_Editor
           
              //Scale
              { "MoveTowardsScale", new NodeDictionaryDefinition(new MoveTowardsScaleNode()                          ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowardsScaleRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) }, 
+             { "MoveTowardsScaleRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
              { "MoveTowardsScaleRelativeToT", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToTNode()    ,new Color(0.49f,0.24f,0.60f)) },
              //Repeat Scale
              { "RepeatMoveTowardsScale", new NodeDictionaryDefinition(new RepeatMoveTowardsScaleNode()    ,new Color(0.49f,0.24f,0.60f)) },
@@ -166,14 +170,13 @@ namespace LEM_Editor
 
 
              //Rotation
-             { "MoveTowardsRotation", new NodeDictionaryDefinition(new MoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) }, 
+             { "MoveTowardsRotation", new NodeDictionaryDefinition(new MoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) },
              { "MoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
              { "MoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToTNode()      ,new Color(0.49f,0.24f,0.60f)) },
              //Repeat Rotation
-             { "RepeatMoveTowardsRotation", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) }, 
-             { "RepeatMoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationRelativeToV3Node()                            ,new Color(0.49f,0.24f,0.60f)) }, 
-             { "RepeatMoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationRelativeToTNode()                            ,new Color(0.49f,0.24f,0.60f)) }, 
-
+             { "RepeatMoveTowardsRotation", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationRelativeToV3Node()                            ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationRelativeToTNode()                            ,new Color(0.49f,0.24f,0.60f)) },
 
 	    #endregion
 
@@ -183,12 +186,14 @@ namespace LEM_Editor
 	    #endregion
 
         #region Curve
-             { "CurveZTransformToPosition", new NodeDictionaryDefinition(new CurveZTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveZRectransformToPosition", new NodeDictionaryDefinition(new CurveZRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveYTransformToPosition", new NodeDictionaryDefinition(new CurveYTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveYRectransformToPosition", new NodeDictionaryDefinition(new CurveYRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveXTransformToPosition", new NodeDictionaryDefinition(new CurveXTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveXRectransformToPosition", new NodeDictionaryDefinition(new CurveXRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             //Position
+             { "CurveDisplaceXTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveDisplaceXRectransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveDisplaceYTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceYTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveDisplaceYRectransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceYRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveDisplaceZTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceZTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveDisplaceZRectransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceZRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveDisplaceXYZTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXYZTransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
 	    #endregion
 
 	    #endregion

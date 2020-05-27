@@ -51,15 +51,15 @@ namespace LEM_Editor
         public override LEM_BaseEffect CompileToBaseEffect()
         {
             MoveTowardsScale myEffect = ScriptableObject.CreateInstance<MoveTowardsScale>();
-            myEffect.m_NodeEffectType = EffectTypeName;
+            myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
-            myEffect.m_UpdateCycle = m_UpdateCycle;
+            myEffect.bm_UpdateCycle = m_UpdateCycle;
 
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
-            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
+            myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
             myEffect.SetUp(m_TargetedTransform, m_TargetScale, m_Duration);
             return myEffect;
 
@@ -71,7 +71,7 @@ namespace LEM_Editor
             loadFrom.UnPack(out m_TargetedTransform, out m_TargetScale, out m_Duration);
 
             //Important
-            m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+            m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
 
         }
 

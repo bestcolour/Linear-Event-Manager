@@ -23,7 +23,7 @@ namespace LEM_Editor
 
         public override void Delete()
         {
-            NodeLEM_Editor.DeleteConnectableNodes(m_BaseEffectsData.Select(x => x.m_NodeBaseData).ToArray());
+            NodeLEM_Editor.DeleteConnectableNodes(m_BaseEffectsData.Select(x => x.bm_NodeBaseData).ToArray());
         }
 
 
@@ -32,10 +32,10 @@ namespace LEM_Editor
             ////Save before deleting the node
             for (int i = 0; i < m_BaseEffectsData.Length; i++)
             {
-                m_BaseEffectsData[i] = NodeLEM_Editor.GetNodeEffectFromID(m_BaseEffectsData[i].m_NodeBaseData.m_NodeID);
+                m_BaseEffectsData[i] = NodeLEM_Editor.GetNodeEffectFromID(m_BaseEffectsData[i].bm_NodeBaseData.m_NodeID);
             }
 
-            NodeLEM_Editor.DeleteConnectableNodes(m_BaseEffectsData.Select(x => x.m_NodeBaseData).ToArray());
+            NodeLEM_Editor.DeleteConnectableNodes(m_BaseEffectsData.Select(x => x.bm_NodeBaseData).ToArray());
         }
 
         public override void Recreate()
@@ -46,9 +46,9 @@ namespace LEM_Editor
             {
                 //Recreate and load the node's effects
                 dummy = NodeLEM_Editor.RecreateEffectNode(
-                    m_BaseEffectsData[i].m_NodeBaseData.m_Position,
-                    m_BaseEffectsData[i].m_NodeEffectType,
-                    m_BaseEffectsData[i].m_NodeBaseData.m_NodeID)
+                    m_BaseEffectsData[i].bm_NodeBaseData.m_Position,
+                    m_BaseEffectsData[i].bm_NodeEffectType,
+                    m_BaseEffectsData[i].bm_NodeBaseData.m_NodeID)
                    ;
 
                 dummy.LoadFromBaseEffect(m_BaseEffectsData[i]);

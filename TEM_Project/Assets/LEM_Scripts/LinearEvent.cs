@@ -32,7 +32,7 @@ namespace LEM_Effects
                 Dictionary<string, LEM_BaseEffect> allEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
 
                 for (int i = 0; i < m_AllEffects.Length; i++)
-                    allEffectsDictionary.Add(m_AllEffects[i].m_NodeBaseData.m_NodeID, m_AllEffects[i]);
+                    allEffectsDictionary.Add(m_AllEffects[i].bm_NodeBaseData.m_NodeID, m_AllEffects[i]);
 
                 return allEffectsDictionary;
             }
@@ -200,7 +200,7 @@ namespace LEM_Effects
         {
             //if the next nodeid or the previous effect played is null, that means thats the end of the linear event. No more events to load.
             //we need to check if prev node atleast hv one nextpoint node due to nodes that can give multiple outcomes
-            if (m_PreviousEffectPlayed == null || !m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode || !m_EffectsDictionary.TryGetValue(m_PreviousEffectPlayed.GetNextNodeID(), out m_PreviousEffectPlayed))
+            if (m_PreviousEffectPlayed == null || !m_PreviousEffectPlayed.bm_NodeBaseData.HasAtLeastOneNextPointNode || !m_EffectsDictionary.TryGetValue(m_PreviousEffectPlayed.GetNextNodeID(), out m_PreviousEffectPlayed))
                 return true;
 
 
@@ -280,7 +280,7 @@ namespace LEM_Effects
 
         void AddEffectToCycle(LEM_BaseEffect effectToAdd)
         {
-            switch (effectToAdd.m_UpdateCycle)
+            switch (effectToAdd.bm_UpdateCycle)
             {
                 case UpdateCycle.Update:
                     m_UpdateCycle.Add(effectToAdd);

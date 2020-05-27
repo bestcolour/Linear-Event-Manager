@@ -67,15 +67,15 @@ namespace LEM_Editor
         public override LEM_BaseEffect CompileToBaseEffect()
         {
             AwaitKeyCodeInput myEffect = ScriptableObject.CreateInstance<AwaitKeyCodeInput>();
-            myEffect.m_NodeEffectType = EffectTypeName;
+            myEffect.bm_NodeEffectType = EffectTypeName;
            //myEffect.m_Description = m_LemEffectDescription;
-            myEffect.m_UpdateCycle = m_UpdateCycle;
+            myEffect.bm_UpdateCycle = m_UpdateCycle;
 
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
             //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
 
-            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
+            myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
 
             m_InputDataSerializedObject.ApplyModifiedProperties();
             myEffect.SetUp(NodeLEM_Editor.s_CurrentLE, m_InputDataSerializedObject);
@@ -92,7 +92,7 @@ namespace LEM_Editor
             m_GetkeyDownKeyCodesArray = m_InputDataSerializedObject.FindProperty("m_GetkeyDownKeyCodes");
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;
-            m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+            m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
         }
     }
 

@@ -42,7 +42,7 @@ namespace LEM_Editor
             for (int i = 0; i < NodeCommandInvoker.s_Effect_ClipBoard.Count; i++)
             {
                 dummy = NodeCommandInvoker.s_Effect_ClipBoard[i].ShallowClone();
-                m_PastedEffectDictionary.Add(dummy.m_NodeBaseData.m_NodeID, dummy);
+                m_PastedEffectDictionary.Add(dummy.bm_NodeBaseData.m_NodeID, dummy);
             }
         }
 
@@ -63,13 +63,13 @@ namespace LEM_Editor
                 //Redefine the dictionary's keys to set its index
                 dummyPasteCommandData.baseEffect = m_PastedEffectDictionary[allKeys[i]];
                 dummyPasteCommandData.index = i;
-                m_PastedEffectStructDictionary.Add(dummyPasteCommandData.baseEffect.m_NodeBaseData.m_NodeID, dummyPasteCommandData);
+                m_PastedEffectStructDictionary.Add(dummyPasteCommandData.baseEffect.bm_NodeBaseData.m_NodeID, dummyPasteCommandData);
                 m_PastedEffectDictionary.Remove(allKeys[i]);
 
                 //Create a duplicate node with a new node id
                 pastedNodes[i] = NodeLEM_Editor.CreateEffectNode(
-                    dummyPasteCommandData.baseEffect.m_NodeBaseData.m_Position + s_CurrentPasteOffSet,
-                     dummyPasteCommandData.baseEffect.m_NodeEffectType);
+                    dummyPasteCommandData.baseEffect.bm_NodeBaseData.m_Position + s_CurrentPasteOffSet,
+                     dummyPasteCommandData.baseEffect.bm_NodeEffectType);
             }
 
             allKeys = m_PastedEffectStructDictionary.Keys.ToArray();
@@ -83,22 +83,22 @@ namespace LEM_Editor
             for (int i = 0; i < allKeys.Length; i++)
             {
                 //If this effect's node doesnt have at least one next node connected
-                if (!m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.HasAtLeastOneNextPointNode)
+                if (!m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData.HasAtLeastOneNextPointNode)
                 {
                     continue;
                 }
 
                 //Since there is only one output for now
-                string[] dummy = new string[m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NextPointsIDs.Length];
+                string[] dummy = new string[m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData.m_NextPointsIDs.Length];
                 for (int d = 0; d < dummy.Length; d++)
                 {
-                    dummy[d] = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NextPointsIDs[d];
+                    dummy[d] = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData.m_NextPointsIDs[d];
                 }
 
 
                 //Populate dummy here but i cant think of a way to avoid a O(n^2) situation
                 //the best i can think of is to change this into a O(n log n) situation by using a list which removes its elements as it checks each elements so that we can narrow down our search list
-                if (m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.HasOnlyOneNextPointNode)
+                if (m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData.HasOnlyOneNextPointNode)
                 {
                     //Find the effect which has the old id but dont update the effect's NodeID but instead, update ur current effect which has the OutPoint Connection
 
@@ -118,12 +118,12 @@ namespace LEM_Editor
                 }
 
                 //Reset if dummy is empty
-                dummy1.m_Position = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_Position;
-                dummy1.m_NodeID = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NodeID;
+                dummy1.m_Position = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData.m_Position;
+                dummy1.m_NodeID = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData.m_NodeID;
                 dummy1.m_NextPointsIDs = dummy;
 
                 //m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.ResetNextPointsIDsIfEmpty();
-                m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData = dummy1;
+                m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData = dummy1;
             }
 
 
@@ -131,14 +131,14 @@ namespace LEM_Editor
             {
                 //Reassign Effects' nodeid to a new one cause we just created a new effect node
                 //but since it is a struct we need to reassign em
-                dummy1.m_NextPointsIDs = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NextPointsIDs;
-                dummy1.m_Position = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_Position;
+                dummy1.m_NextPointsIDs = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData.m_NextPointsIDs;
+                dummy1.m_Position = m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData.m_Position;
                 dummy1.m_NodeID = pastedNodes[i].NodeID;
 
                 dummyPasteCommandData = m_PastedEffectStructDictionary[allKeys[i]];
-                dummyPasteCommandData.baseEffect.m_NodeBaseData = dummy1;
+                dummyPasteCommandData.baseEffect.bm_NodeBaseData = dummy1;
 
-                m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData = dummy1;
+                m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData = dummy1;
             }
 
             #endregion
@@ -160,7 +160,7 @@ namespace LEM_Editor
                 pastedNodes[i].SelectNode();
 
                 //Readdd the dictionary
-                m_PastedEffectDictionary.Add(m_PastedEffectStructDictionary[allKeys[i]].baseEffect.m_NodeBaseData.m_NodeID, m_PastedEffectStructDictionary[allKeys[i]].baseEffect);
+                m_PastedEffectDictionary.Add(m_PastedEffectStructDictionary[allKeys[i]].baseEffect.bm_NodeBaseData.m_NodeID, m_PastedEffectStructDictionary[allKeys[i]].baseEffect);
             }
 
         }
@@ -172,10 +172,10 @@ namespace LEM_Editor
             //PasteCommandData dummyCommandData = new PasteCommandData();
             //Save before deleting the node
             for (int i = 0; i < allKeys.Length; i++)
-                m_PastedEffectDictionary[allKeys[i]] = NodeLEM_Editor.GetNodeEffectFromID(m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
+                m_PastedEffectDictionary[allKeys[i]] = NodeLEM_Editor.GetNodeEffectFromID(m_PastedEffectDictionary[allKeys[i]].bm_NodeBaseData.m_NodeID);
 
             //Delete the nodes
-            NodeLEM_Editor.DeleteConnectableNodes(m_PastedEffectDictionary.Select(x => x.Value.m_NodeBaseData).ToArray());
+            NodeLEM_Editor.DeleteConnectableNodes(m_PastedEffectDictionary.Select(x => x.Value.bm_NodeBaseData).ToArray());
         }
 
         public void Redo()
@@ -189,9 +189,9 @@ namespace LEM_Editor
             {
                 //Create a duplicate node with a new node id and load
                 effNode = NodeLEM_Editor.RecreateEffectNode
-                       (m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_Position + s_PasteOffsetValue,
-                       m_PastedEffectDictionary[allKeys[i]].m_NodeEffectType,
-                       m_PastedEffectDictionary[allKeys[i]].m_NodeBaseData.m_NodeID);
+                       (m_PastedEffectDictionary[allKeys[i]].bm_NodeBaseData.m_Position + s_PasteOffsetValue,
+                       m_PastedEffectDictionary[allKeys[i]].bm_NodeEffectType,
+                       m_PastedEffectDictionary[allKeys[i]].bm_NodeBaseData.m_NodeID);
 
                 effNode.LoadFromBaseEffect(m_PastedEffectDictionary[allKeys[i]]);
                 effNode.SelectNode();

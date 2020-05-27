@@ -51,15 +51,15 @@ namespace LEM_Editor
         {
             InstantiateGameObject effect = ScriptableObject.CreateInstance<InstantiateGameObject>();
             //effect.m_Description = m_LemEffectDescription;
-            effect.m_UpdateCycle = m_UpdateCycle;
+            effect.bm_UpdateCycle = m_UpdateCycle;
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
             //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
 
-            effect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
+            effect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
 
             //effect.m_NodeEffectType = this.GetType().ToString();
-            effect.m_NodeEffectType = EffectTypeName;
+            effect.bm_NodeEffectType = EffectTypeName;
 
 
             //Effect saving
@@ -81,7 +81,7 @@ namespace LEM_Editor
 
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;
-            m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+            m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
 
 
         }

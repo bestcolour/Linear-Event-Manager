@@ -12,7 +12,7 @@ namespace LEM_Effects
 
         public override string GetNextNodeID()
         {
-            if (!m_NodeBaseData.HasAtLeastOneNextPointNode)
+            if (!bm_NodeBaseData.HasAtLeastOneNextPointNode)
             {
 #if UNITY_EDITOR
                 Debug.LogWarning("Equal Random OutCome effect doesnt have any proceeding effects to randomise to!", this);
@@ -22,7 +22,7 @@ namespace LEM_Effects
             }
 
             //This means that null next pointids can also be triggered as long as there is at least one non-empty outcome
-            return m_NodeBaseData.m_NextPointsIDs[Random.Range(0, m_NumberOfOutComes)];
+            return bm_NodeBaseData.m_NextPointsIDs[Random.Range(0, m_NumberOfOutComes)];
 
         }
 

@@ -52,11 +52,11 @@ namespace LEM_Editor
             SetGameObjectsActive eff = ScriptableObject.CreateInstance<SetGameObjectsActive>();
 
           //  eff.m_Description = m_LemEffectDescription;
-            eff.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, TryToSaveNextPointNodeID());
+            eff.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, TryToSaveNextPointNodeID());
 
-            eff.m_NodeEffectType = EffectTypeName;
+            eff.bm_NodeEffectType = EffectTypeName;
 
-            eff.m_UpdateCycle = m_UpdateCycle;
+            eff.bm_UpdateCycle = m_UpdateCycle;
 
             eff.SetUp(m_GameObjectsToSet.GetObjectArray(), m_State);
 
@@ -73,7 +73,7 @@ namespace LEM_Editor
 
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;
-            m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+            m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
 
         }
     }

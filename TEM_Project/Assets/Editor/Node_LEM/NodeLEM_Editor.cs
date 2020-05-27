@@ -1582,19 +1582,19 @@ namespace LEM_Editor
 
         void TryToRestichConnections(LEM_BaseEffect currentEffect)
         {
-            if (!currentEffect.m_NodeBaseData.HasAtLeastOneNextPointNode)
+            if (!currentEffect.bm_NodeBaseData.HasAtLeastOneNextPointNode)
                 return;
 
             //And if there is one next point node
-            if (currentEffect.m_NodeBaseData.HasOnlyOneNextPointNode)
+            if (currentEffect.bm_NodeBaseData.HasOnlyOneNextPointNode)
             {
-                if (!String.IsNullOrEmpty(currentEffect.m_NodeBaseData.m_NextPointsIDs[0])
+                if (!String.IsNullOrEmpty(currentEffect.bm_NodeBaseData.m_NextPointsIDs[0])
                     &&
-                    !AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].outConnectionPoints[0].IsConnected)
+                    !AllEffectsNodeInEditor[currentEffect.bm_NodeBaseData.m_NodeID].outConnectionPoints[0].IsConnected)
                 {
                     CreateConnection(
-                              AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NextPointsIDs[0]].effectNode.m_InPoint,
-                              AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].effectNode.m_OutPoint
+                              AllEffectsNodeInEditor[currentEffect.bm_NodeBaseData.m_NextPointsIDs[0]].effectNode.m_InPoint,
+                              AllEffectsNodeInEditor[currentEffect.bm_NodeBaseData.m_NodeID].effectNode.m_OutPoint
                               );
                 }
 
@@ -1603,15 +1603,15 @@ namespace LEM_Editor
             {
                 //that means that this effect node is a special node which has multiple outputs
                 //Restich for those nodes
-                for (int n = 0; n < currentEffect.m_NodeBaseData.m_NextPointsIDs.Length; n++)
+                for (int n = 0; n < currentEffect.bm_NodeBaseData.m_NextPointsIDs.Length; n++)
                     //If the keys current next point id is not empty or null and the outpoint  isnt connected,
-                    if (!String.IsNullOrEmpty(currentEffect.m_NodeBaseData.m_NextPointsIDs[n])
+                    if (!String.IsNullOrEmpty(currentEffect.bm_NodeBaseData.m_NextPointsIDs[n])
                         &&
-                        !AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].outConnectionPoints[n].IsConnected)
+                        !AllEffectsNodeInEditor[currentEffect.bm_NodeBaseData.m_NodeID].outConnectionPoints[n].IsConnected)
                     {
                         CreateConnection(
-                        AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NextPointsIDs[n]].effectNode.m_InPoint,
-                        AllEffectsNodeInEditor[currentEffect.m_NodeBaseData.m_NodeID].outConnectionPoints[n]
+                        AllEffectsNodeInEditor[currentEffect.bm_NodeBaseData.m_NextPointsIDs[n]].effectNode.m_InPoint,
+                        AllEffectsNodeInEditor[currentEffect.bm_NodeBaseData.m_NodeID].outConnectionPoints[n]
                         );
                     }
 
@@ -1997,9 +1997,9 @@ namespace LEM_Editor
             for (int i = 0; i < allKeys.Length; i++)
             {
                 //Load the new node with saved node values values
-                RecreateEffectNode(allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_Position,
-                     allEffectsDictInLinearEvent[allKeys[i]].m_NodeEffectType,
-                     allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.m_NodeID).LoadFromBaseEffect(allEffectsDictInLinearEvent[allKeys[i]]);
+                RecreateEffectNode(allEffectsDictInLinearEvent[allKeys[i]].bm_NodeBaseData.m_Position,
+                     allEffectsDictInLinearEvent[allKeys[i]].bm_NodeEffectType,
+                     allEffectsDictInLinearEvent[allKeys[i]].bm_NodeBaseData.m_NodeID).LoadFromBaseEffect(allEffectsDictInLinearEvent[allKeys[i]]);
             }
 
             #endregion
@@ -2044,7 +2044,7 @@ namespace LEM_Editor
             for (int i = 0; i < allKeys.Length; i++)
             {
                 //If this nodebase data doesnt even have one nextpoint node id, skip this loop
-                if (!allEffectsDictInLinearEvent[allKeys[i]].m_NodeBaseData.HasAtLeastOneNextPointNode)
+                if (!allEffectsDictInLinearEvent[allKeys[i]].bm_NodeBaseData.HasAtLeastOneNextPointNode)
                     continue;
 
                 TryToRestichConnections(allEffectsDictInLinearEvent[allKeys[i]]);

@@ -53,15 +53,15 @@ namespace LEM_Editor
         public override LEM_BaseEffect CompileToBaseEffect()
         {
             RepeatMoveTowardsRectransformToRectransform myEffect = ScriptableObject.CreateInstance<RepeatMoveTowardsRectransformToRectransform>();
-            myEffect.m_NodeEffectType = EffectTypeName;
+            myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
-            myEffect.m_UpdateCycle = m_UpdateCycle;
+            myEffect.bm_UpdateCycle = m_UpdateCycle;
 
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
-            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
+            myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
             myEffect.SetUp(m_RectTransformFollower, m_RectTransformToFollow, m_Speed,m_SnapDistance);
             return myEffect;
 
@@ -71,7 +71,7 @@ namespace LEM_Editor
         {
             RepeatMoveTowardsRectransformToRectransform loadFrom = effectToLoadFrom as RepeatMoveTowardsRectransformToRectransform;
             loadFrom.UnPack(out m_RectTransformFollower, out m_RectTransformToFollow, out m_Speed,out m_SnapDistance);
-            m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+            m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
 
         }
     }

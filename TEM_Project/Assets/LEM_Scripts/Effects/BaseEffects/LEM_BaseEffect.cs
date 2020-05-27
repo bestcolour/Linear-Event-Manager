@@ -22,13 +22,13 @@ namespace LEM_Effects
         public abstract EffectFunctionType FunctionType { get; }
 
         //Records the node type this effect belongs to
-        [ReadOnly] public string m_NodeEffectType = default;
+        [ReadOnly] public string bm_NodeEffectType = default;
 
         [Tooltip("Which Update Cycle Effect is In")]
-        public UpdateCycle m_UpdateCycle = default;
+        public UpdateCycle bm_UpdateCycle = default;
 
         [Tooltip("Stores basic node data. This is applicable for effect nodes as well"), Header("Node Data")]
-        public NodeBaseData m_NodeBaseData = default;
+        public NodeBaseData bm_NodeBaseData = default;
 
         public virtual LEM_BaseEffect ShallowClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
 
@@ -45,7 +45,7 @@ namespace LEM_Effects
         /// To be called before loading the next effect
         /// </summary>
         /// <returns></returns>
-        public virtual string GetNextNodeID() { return m_NodeBaseData.m_NextPointsIDs[0]; }
+        public virtual string GetNextNodeID() { return bm_NodeBaseData.m_NextPointsIDs[0]; }
 
         /// <summary>
         /// To be called when to forcibly stop the effect if they are the UpdateEffect
@@ -61,6 +61,7 @@ namespace LEM_Effects
         /// To be called when the effect is removed
         /// </summary>
         public virtual void OnEndEffect() { }
+
     }
 
 }

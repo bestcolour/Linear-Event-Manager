@@ -49,15 +49,15 @@ namespace LEM_Editor
         public override LEM_BaseEffect CompileToBaseEffect()
         {
             FadeToAlphaSpriteRendererComponent myEffect = ScriptableObject.CreateInstance<FadeToAlphaSpriteRendererComponent>();
-            myEffect.m_NodeEffectType = EffectTypeName;
+            myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
-            myEffect.m_UpdateCycle = m_UpdateCycle;
+            myEffect.bm_UpdateCycle = m_UpdateCycle;
 
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
-            myEffect.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
+            myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
             myEffect.SetUp(m_TargetSpriteRenderer, m_TargetAlpha, m_Duration);
             return myEffect;
 
@@ -67,7 +67,7 @@ namespace LEM_Editor
         {
             FadeToAlphaSpriteRendererComponent loadFrom = effectToLoadFrom as FadeToAlphaSpriteRendererComponent;
             loadFrom.UnPack(out m_TargetSpriteRenderer, out m_TargetAlpha, out m_Duration);
-            m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+            m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
 
         }
     }

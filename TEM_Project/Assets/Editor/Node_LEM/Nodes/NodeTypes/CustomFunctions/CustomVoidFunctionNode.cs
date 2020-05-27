@@ -54,15 +54,15 @@ namespace LEM_Editor
         {
             CustomVoidFunction eff = ScriptableObject.CreateInstance<CustomVoidFunction>();
 
-            eff.m_NodeEffectType = EffectTypeName;
+            eff.bm_NodeEffectType = EffectTypeName;
 
           //  eff.m_Description = m_LemEffectDescription;
-            eff.m_UpdateCycle = m_UpdateCycle;
+            eff.bm_UpdateCycle = m_UpdateCycle;
 
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
-            eff.m_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
+            eff.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
 
             m_EventSerializedObject.ApplyModifiedPropertiesWithoutUndo();
             eff.SetUp(m_EventSerializedObject);
@@ -82,7 +82,7 @@ namespace LEM_Editor
 
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;
-            m_UpdateCycle = effectToLoadFrom.m_UpdateCycle;
+            m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
 
         }
 

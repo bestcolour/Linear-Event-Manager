@@ -10,7 +10,7 @@ namespace LEM_Effects
 
         public override string GetNextNodeID()
         {
-            if (!m_NodeBaseData.HasAtLeastOneNextPointNode)
+            if (!bm_NodeBaseData.HasAtLeastOneNextPointNode)
             {
 #if UNITY_EDITOR
                 Debug.LogWarning("Equal Random OutCome effect doesnt have any proceeding effects to randomise to!", this);
@@ -30,7 +30,7 @@ namespace LEM_Effects
                 //If randomfloat is more or equal to minrange, and lesser than maxrange,
                 if (randomFloat >= 0f && randomFloat < currentMaxRange)
                 {
-                    return m_NodeBaseData.m_NextPointsIDs[i];
+                    return bm_NodeBaseData.m_NextPointsIDs[i];
                 }
             }
 

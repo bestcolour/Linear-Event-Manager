@@ -34,11 +34,11 @@ namespace LEM_Editor
         public void Undo()
         {
             //Saving
-            m_NodeEffect = NodeLEM_Editor.GetNodeEffectFromID(m_NodeEffect.m_NodeBaseData.m_NodeID);
+            m_NodeEffect = NodeLEM_Editor.GetNodeEffectFromID(m_NodeEffect.bm_NodeBaseData.m_NodeID);
             //m_NodeEffect = NodeCommandInvoker.d_CompileNodeEffect(m_NodeEffect.m_NodeBaseData.m_NodeID);
 
             //Delete 
-            NodeBaseData[] nodesToBeDeleted = new NodeBaseData[1] { m_NodeEffect.m_NodeBaseData };
+            NodeBaseData[] nodesToBeDeleted = new NodeBaseData[1] { m_NodeEffect.bm_NodeBaseData };
             //NodeCommandInvoker.d_DeleteNodesWithNodeBase?.Invoke(nodesToBeDeleted);
             NodeLEM_Editor.DeleteConnectableNodes(nodesToBeDeleted);
         }
@@ -46,7 +46,7 @@ namespace LEM_Editor
         public void Redo()
         {
             //Recreate and load the effect data
-            NodeLEM_Editor.RecreateEffectNode(m_NodeEffect.m_NodeBaseData.m_Position, m_NodeEffect.m_NodeEffectType, m_NodeEffect.m_NodeBaseData.m_NodeID)
+            NodeLEM_Editor.RecreateEffectNode(m_NodeEffect.bm_NodeBaseData.m_Position, m_NodeEffect.bm_NodeEffectType, m_NodeEffect.bm_NodeBaseData.m_NodeID)
                 .LoadFromBaseEffect(m_NodeEffect);
             //NodeCommandInvoker.d_ReCreateEffectNode?.Invoke(m_NodeEffect.m_NodeBaseData.m_Position, m_NodeEffect.m_NodeEffectType, m_NodeEffect.m_NodeBaseData.m_NodeID)
             //.LoadFromBaseEffect(m_NodeEffect);
