@@ -24,7 +24,7 @@ namespace LEM_Editor
         {
             float newWidth = 0f;
 
-            if (m_IsSelected)
+            if (IsSelected)
             {
                 newWidth = m_TotalRect.width * NodeGUIConstants.k_SelectedNodeTextureScale;
                 float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale;

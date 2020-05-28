@@ -29,7 +29,7 @@ namespace LEM_Editor
 
         public override void Draw()
         {
-            if (m_IsSelected)
+            if (IsSelected)
             {
                 float newWidth = m_TotalRect.width * NodeGUIConstants.k_SelectedNodeTextureScale;
                 float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale;

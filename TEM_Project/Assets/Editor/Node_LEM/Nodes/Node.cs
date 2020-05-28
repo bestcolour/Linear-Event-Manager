@@ -33,13 +33,14 @@ namespace LEM_Editor
         public abstract string ID_Initial { get; }
         public bool IsGrouped => m_GroupedParent != null;
 
-        protected bool m_IsSelected = false;
+        //protected bool IsSelected = false;
+        public bool IsSelected { get; protected set; } = false;
+        //public bool IsSelected { get { return m_IsSelected; } }
 
         public bool IsWithinWindowScreen { get; private set; } = false;
         public bool IsWorthProcessingEventFor { get; private set; } = false;
 
         //public bool IsWorthProcessingEventFor => IsWithinWindowScreen || (!IsWithinWindowScreen && (IsSelected || (IsGrouped && GetRootParent.IsSelected)));
-        public bool IsSelected { get { return m_IsSelected; } }
 
         protected NodeSkinCollection m_NodeSkin = default;
         //Top skin will pull from a static cache
@@ -94,7 +95,7 @@ namespace LEM_Editor
         //only start & end node completely overrides the draw method
         public virtual void Draw()
         {
-            if (m_IsSelected)
+            if (IsSelected)
             {
                 float newWidth = m_TotalRect.width * NodeGUIConstants.k_SelectedNodeTextureScale;
                 float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale;
@@ -133,10 +134,10 @@ namespace LEM_Editor
                 if (currentClickedNode == this)
                 {
                     //Record the state of the current node last recorded
-                    NodeLEM_Editor.CurrentNodeLastRecordedSelectState = currentClickedNode.m_IsSelected;
+                    NodeLEM_Editor.CurrentNodeLastRecordedSelectState = currentClickedNode.IsSelected;
 
                     //if node has not been selected
-                    if (!m_IsSelected)
+                    if (!IsSelected)
                     {
                         DeselectAllParentGroupNodes();
                         SelectByClicking();
@@ -160,7 +161,7 @@ namespace LEM_Editor
 
                 //else if mouse doesnt overlapp this node
                 //If this node is selected
-                if (m_IsSelected)
+                if (IsSelected)
                 {
                     //If shift click is pressed , dont run the code below
                     if (e.shift)
@@ -172,7 +173,7 @@ namespace LEM_Editor
                     //Deselect if this node is selected but there isnt multiple selected nodes
                     // or if there is no node clicked
 
-                    if (currentClickedNode.m_IsSelected)
+                    if (currentClickedNode.IsSelected)
                     {
                         if (NodeLEM_Editor.CurrentNodeLastRecordedSelectState == false)
                         {
@@ -245,7 +246,7 @@ namespace LEM_Editor
             //Invoke onselect delegate
             d_OnSelectNode?.Invoke(this);
 
-            m_IsSelected = true;
+            IsSelected = true;
 
         }
 
@@ -256,14 +257,14 @@ namespace LEM_Editor
             //Invoke onselect delegate
             d_OnSelectNode?.Invoke(this);
 
-            m_IsSelected = true;
+            IsSelected = true;
 
         }
 
         public virtual void DeselectNode()
         {
             d_OnDeselectNode?.Invoke(NodeID);
-            m_IsSelected = false;
+            IsSelected = false;
             m_IsDragged = false;
         }
 
@@ -284,7 +285,7 @@ namespace LEM_Editor
             //Invoke onselect delegate
             d_OnSelectNode?.Invoke(this);
 
-            m_IsSelected = true;
+            IsSelected = true;
         }
 
         #endregion

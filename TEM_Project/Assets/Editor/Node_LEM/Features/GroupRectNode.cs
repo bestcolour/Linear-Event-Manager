@@ -118,7 +118,7 @@ namespace LEM_Editor
 
         public override void Draw()
         {
-            if (m_IsSelected)
+            if (IsSelected)
             {
                 float newWidth = m_TotalRect.width * NodeGUIConstants.k_SelectedNodeTextureScale;
                 float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale;
@@ -254,7 +254,7 @@ namespace LEM_Editor
                     NodeLEM_Editor.CurrentNodeLastRecordedSelectState = currentClickedNode.IsSelected;
 
                     //if node has not been selected
-                    if (!m_IsSelected)
+                    if (!IsSelected)
                     {
                         SelectByClicking();
                         //UpdateNestedNodes();
@@ -282,7 +282,7 @@ namespace LEM_Editor
 
                 //else if mouse doesnt overlapp this node
                 //If this node is selected
-                if (m_IsSelected)
+                if (IsSelected)
                 {
                     //If shift click is pressed , dont run the code below
                     if (e.shift)
