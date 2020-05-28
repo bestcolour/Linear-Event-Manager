@@ -41,6 +41,7 @@ namespace LEM_Effects
             m_NextColour = new Color(m_TargetTextMeshProUGUI.color.r, m_TargetTextMeshProUGUI.color.g, m_TargetTextMeshProUGUI.color.b, m_TargetTextMeshProUGUI.color.a);
         }
 
+#if UNITY_EDITOR
         public void SetUp(TextMeshProUGUI t1, float t2, float t3)
         {
             m_TargetTextMeshProUGUI = t1;
@@ -53,7 +54,8 @@ namespace LEM_Effects
             t1 = m_TargetTextMeshProUGUI;
             t2 = m_TargetAlpha;
             t3 = m_Duration;
-        }
+        } 
+#endif
 
         public override bool OnUpdateEffect(float delta)
         {

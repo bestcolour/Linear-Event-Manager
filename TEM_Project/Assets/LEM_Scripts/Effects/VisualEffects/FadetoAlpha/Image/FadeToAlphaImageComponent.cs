@@ -59,14 +59,15 @@ namespace LEM_Effects
 
             return m_IsFinished;
         }
-        
-        
+
+
+#if UNITY_EDITOR
         public void SetUp(Image t1, float t2, float t3)
         {
             m_TargetImage = t1;
             m_TargetAlpha = t2;
             m_Duration = t3;
-         
+
         }
 
         public void UnPack(out Image t1, out float t2, out float t3)
@@ -74,9 +75,10 @@ namespace LEM_Effects
             t1 = m_TargetImage;
             t2 = m_TargetAlpha;
             t3 = m_Duration;
-           
+
         }
 
 
+#endif
     }
 }

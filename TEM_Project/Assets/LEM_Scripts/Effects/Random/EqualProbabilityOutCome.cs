@@ -28,6 +28,7 @@ namespace LEM_Effects
             return bm_NodeBaseData.m_NextPointsIDs[Random.Range(0, m_NumberOfOutComes)];
 
         }
+#if UNITY_EDITOR
 
         public void SetUp(int t1)
         {
@@ -37,7 +38,8 @@ namespace LEM_Effects
         public void UnPack(out int t1)
         {
             t1 = m_NumberOfOutComes;
-        }
+        } 
+#endif
     }
 
 }

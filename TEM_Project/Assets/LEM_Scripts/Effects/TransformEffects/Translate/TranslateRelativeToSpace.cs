@@ -24,6 +24,7 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, Space t3)
         {
             m_TargetedTransform = t1;
@@ -37,7 +38,8 @@ namespace LEM_Effects
             t1 = m_TargetedTransform;
             t2 = m_DirectionalSpeed;
             t3 = m_RelativeSpace;
-        }
+        } 
+#endif
     }
 
 }

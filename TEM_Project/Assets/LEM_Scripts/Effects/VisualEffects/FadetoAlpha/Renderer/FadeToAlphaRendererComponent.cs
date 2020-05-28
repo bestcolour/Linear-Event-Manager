@@ -83,6 +83,7 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
+#if UNITY_EDITOR
         public void SetUp(Renderer t1, float t2, float t3)
         {
             m_TargetRenderer = t1;
@@ -95,7 +96,8 @@ namespace LEM_Effects
             t1 = m_TargetRenderer;
             t2 = m_TargetAlpha;
             t3 = m_Duration;
-        }
+        } 
+#endif
 
 
     }

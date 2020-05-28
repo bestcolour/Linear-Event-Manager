@@ -45,6 +45,7 @@ namespace LEM_Effects
 
         }
 
+#if UNITY_EDITOR
         public void SetUp(float[] t1)
         {
             m_Probabilities = t1;
@@ -53,7 +54,8 @@ namespace LEM_Effects
         public void UnPack(out float[] t1)
         {
             t1 = m_Probabilities;
-        }
+        } 
+#endif
     }
 
 }

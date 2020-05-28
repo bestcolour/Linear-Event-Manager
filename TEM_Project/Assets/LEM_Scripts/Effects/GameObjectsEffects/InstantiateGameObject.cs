@@ -23,6 +23,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+#if UNITY_EDITOR
         public void SetUp(GameObject targetObject, int numberOfTimes, Vector3 targetPosition, Vector3 targetRotation, Vector3 targetScale)
         {
             m_TargetObject = targetObject;
@@ -39,7 +40,8 @@ namespace LEM_Effects
             targetPosition = m_TargetPosition;
             targetRotation = m_TargetRotation;
             targetScale = m_TargetScale;
-        }
+        } 
+#endif
 
         public override void OnInitialiseEffect()
         {

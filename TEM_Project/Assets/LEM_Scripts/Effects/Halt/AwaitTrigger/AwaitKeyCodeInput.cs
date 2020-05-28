@@ -18,28 +18,6 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateHaltEffect;
 
-        public override LEM_BaseEffect ShallowClone()
-        {
-            AwaitKeyCodeInput newClone = (AwaitKeyCodeInput)MemberwiseClone();
-
-            AwaitKeyCodeInputData newDataInstance = ScriptableObject.CreateInstance<AwaitKeyCodeInputData>();
-
-            int length = m_InputData.m_GetkeyDownKeyCodes != null ? m_InputData.m_GetkeyDownKeyCodes.Length : 0;
-            newDataInstance.m_GetkeyDownKeyCodes = new KeyCode[length];
-
-            length = m_InputData.m_GetkeyKeyCodes != null ? m_InputData.m_GetkeyKeyCodes.Length : 0;
-            newDataInstance.m_GetkeyKeyCodes = new KeyCode[length];
-
-            for (int i = 0; i < newDataInstance.m_GetkeyDownKeyCodes.Length; i++)
-                newDataInstance.m_GetkeyDownKeyCodes[i] = m_InputData.m_GetkeyDownKeyCodes[i];
-
-            for (int i = 0; i < newDataInstance.m_GetkeyKeyCodes.Length; i++)
-                newDataInstance.m_GetkeyKeyCodes[i] = m_InputData.m_GetkeyKeyCodes[i];
-
-            newClone.m_InputData = newDataInstance;
-
-            return newClone;
-        }
 
         public override void OnInitialiseEffect()
         {
@@ -83,6 +61,29 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
+
+        public override LEM_BaseEffect ShallowClone()
+        {
+            AwaitKeyCodeInput newClone = (AwaitKeyCodeInput)MemberwiseClone();
+
+            AwaitKeyCodeInputData newDataInstance = ScriptableObject.CreateInstance<AwaitKeyCodeInputData>();
+
+            int length = m_InputData.m_GetkeyDownKeyCodes != null ? m_InputData.m_GetkeyDownKeyCodes.Length : 0;
+            newDataInstance.m_GetkeyDownKeyCodes = new KeyCode[length];
+
+            length = m_InputData.m_GetkeyKeyCodes != null ? m_InputData.m_GetkeyKeyCodes.Length : 0;
+            newDataInstance.m_GetkeyKeyCodes = new KeyCode[length];
+
+            for (int i = 0; i < newDataInstance.m_GetkeyDownKeyCodes.Length; i++)
+                newDataInstance.m_GetkeyDownKeyCodes[i] = m_InputData.m_GetkeyDownKeyCodes[i];
+
+            for (int i = 0; i < newDataInstance.m_GetkeyKeyCodes.Length; i++)
+                newDataInstance.m_GetkeyKeyCodes[i] = m_InputData.m_GetkeyKeyCodes[i];
+
+            newClone.m_InputData = newDataInstance;
+
+            return newClone;
+        }
         public void SetUp(LinearEvent t1, SerializedObject t2)
         {
             m_TargetLinearEvent = t1;

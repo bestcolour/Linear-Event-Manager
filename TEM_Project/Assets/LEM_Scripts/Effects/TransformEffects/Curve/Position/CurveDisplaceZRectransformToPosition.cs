@@ -19,6 +19,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+#if UNITY_EDITOR
         public override LEM_BaseEffect ShallowClone()
         {
             CurveDisplaceZRectransformToPosition copy = ScriptableObject.CreateInstance<CurveDisplaceZRectransformToPosition>();
@@ -36,6 +37,20 @@ namespace LEM_Effects
 
             return copy;
         }
+
+        public void SetUp(RectTransform t1, AnimationCurve t2)
+        {
+            m_TargetRectransform = t1;
+            m_Graph = t2;
+
+        }
+
+        public void UnPack(out RectTransform t1, out AnimationCurve t2)
+        {
+            t1 = m_TargetRectransform;
+            t2 = m_Graph;
+        } 
+#endif
 
         public override void OnInitialiseEffect()
         {
@@ -57,18 +72,6 @@ namespace LEM_Effects
             }
 
             return m_IsFinished;
-        }
-        public void SetUp(RectTransform t1, AnimationCurve t2)
-        {
-            m_TargetRectransform = t1;
-            m_Graph = t2;
-
-        }
-
-        public void UnPack(out RectTransform t1, out AnimationCurve t2)
-        {
-            t1 = m_TargetRectransform;
-            t2 = m_Graph;
         }
     }
 

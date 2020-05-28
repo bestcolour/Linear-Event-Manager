@@ -58,6 +58,7 @@ namespace LEM_Effects
 
             return m_IsFinished;
         }
+#if UNITY_EDITOR
 
         public void SetUp(SpriteRenderer t1, float t2, float t3)
         {
@@ -73,7 +74,8 @@ namespace LEM_Effects
 
             t2 = m_TargetAlpha;
             t3 = m_Duration;
-        }
+        } 
+#endif
 
 
     }

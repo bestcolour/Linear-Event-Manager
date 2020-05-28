@@ -36,6 +36,7 @@ namespace LEM_Effects
 #endif
         }
 
+#if UNITY_EDITOR
         public void SetUp(LinearEvent[] t1, float[] t2)
         {
             m_TargetLinearEvent = t1;
@@ -48,7 +49,8 @@ namespace LEM_Effects
             t1 = m_TargetLinearEvent;
             t2 = m_Probabilities;
 
-        }
+        } 
+#endif
     }
 
 }

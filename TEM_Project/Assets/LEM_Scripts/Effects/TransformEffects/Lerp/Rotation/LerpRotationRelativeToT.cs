@@ -79,6 +79,7 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, Transform t3, bool t4, float t5, float t6)
         {
             m_TargetTransform = t1;
@@ -99,6 +100,7 @@ namespace LEM_Effects
             t5 = m_Smoothing;
             t6 = m_SnapRange;
 
-        }
+        } 
+#endif
     }
 }

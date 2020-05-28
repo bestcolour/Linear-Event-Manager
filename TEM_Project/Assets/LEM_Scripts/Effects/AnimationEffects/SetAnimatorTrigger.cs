@@ -19,6 +19,7 @@ namespace LEM_Effects
         //Set trigger name
         public override void OnInitialiseEffect() { m_TargetAnimator.SetTrigger(m_ParameterName); }
 
+#if UNITY_EDITOR
         public void SetUp(Animator t1, string t2)
         {
             m_TargetAnimator = t1;
@@ -29,6 +30,7 @@ namespace LEM_Effects
         {
             t1 = m_TargetAnimator;
             t2 = m_ParameterName;
-        }
+        } 
+#endif
     } 
 }

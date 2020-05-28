@@ -47,8 +47,9 @@ namespace LEM_Effects
 
             return m_IsFinished;
         }
-        
-        
+
+
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, float t3, float t4)
         {
             m_TargetTransform = t1;
@@ -65,6 +66,7 @@ namespace LEM_Effects
             t4 = m_SnapDistance;
         }
 
+#endif
 
     } 
 }

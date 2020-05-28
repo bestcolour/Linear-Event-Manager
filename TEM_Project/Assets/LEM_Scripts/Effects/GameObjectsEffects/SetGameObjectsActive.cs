@@ -24,16 +24,18 @@ namespace LEM_Effects
             }
         }
 
+#if UNITY_EDITOR
         public void SetUp(GameObject[] t1, bool t2)
         {
             m_TargetObjects = t1;
-            m_State= t2;
+            m_State = t2;
         }
 
         public void UnPack(out GameObject[] t1, out bool t2)
         {
             t1 = m_TargetObjects;
             t2 = m_State;
-        }
+        } 
+#endif
     }
 }

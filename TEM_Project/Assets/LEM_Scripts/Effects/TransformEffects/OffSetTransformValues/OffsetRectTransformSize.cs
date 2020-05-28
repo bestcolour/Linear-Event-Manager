@@ -20,6 +20,7 @@ namespace LEM_Effects
             m_TargetRectTransform.sizeDelta += m_OffSetDimensions;
         }
 
+#if UNITY_EDITOR
         public void SetUp(RectTransform t1, Vector2 t2)
         {
             m_TargetRectTransform = t1;
@@ -30,6 +31,7 @@ namespace LEM_Effects
         {
             t1 = m_TargetRectTransform;
             t2 = m_OffSetDimensions;
-        }
+        } 
+#endif
     }
 }

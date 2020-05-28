@@ -33,6 +33,7 @@ namespace LEM_Effects
                 m_TargetTransform.rotation = Quaternion.Euler(m_OffsetRotation) * m_TargetTransform.rotation;
             }
         }
+#if UNITY_EDITOR
 
         public void SetUp(Transform t1, Vector3 t2, bool t3)
         {
@@ -46,6 +47,7 @@ namespace LEM_Effects
             t1 = m_TargetTransform;
             t2 = m_OffsetRotation;
             t3 = m_RelativeToLocal;
-        }
+        } 
+#endif
     } 
 }

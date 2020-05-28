@@ -24,6 +24,7 @@ namespace LEM_Effects
             m_TargetAnimator.SetInteger(m_ParameterName, m_IntValue);
         }
 
+#if UNITY_EDITOR
         public void SetUp(Animator t1, string t2, int t3)
         {
             m_TargetAnimator = t1;
@@ -36,6 +37,7 @@ namespace LEM_Effects
             t1 = m_TargetAnimator;
             t2 = m_ParameterName;
             t3 = m_IntValue;
-        }
+        } 
+#endif
     } 
 }

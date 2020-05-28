@@ -1,4 +1,5 @@
-﻿namespace LEM_Effects
+﻿#if UNITY_EDITOR
+namespace LEM_Effects
 {
 
     public interface IEffectSavable<T1>
@@ -65,4 +66,5 @@
 
     }
 
-}
+} 
+#endif

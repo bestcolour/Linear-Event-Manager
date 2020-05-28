@@ -16,6 +16,7 @@ namespace LEM_Effects
             LinearEventsManager.LoadLinearEvent(m_TargetLinearEvent[Random.Range(0, m_TargetLinearEvent.Length)]);
         }
 
+#if UNITY_EDITOR
         public void SetUp(LinearEvent[] t1)
         {
             m_TargetLinearEvent = t1;
@@ -26,6 +27,7 @@ namespace LEM_Effects
             t1 = m_TargetLinearEvent;
         }
 
+#endif
     }
 
 }

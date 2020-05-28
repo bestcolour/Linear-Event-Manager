@@ -27,6 +27,7 @@ namespace LEM_Effects
             m_TargetButton.interactable = m_State;
         }
 
+#if UNITY_EDITOR
         public void SetUp(Button t1, bool t2)
         {
             m_TargetButton = t1;
@@ -37,7 +38,8 @@ namespace LEM_Effects
         {
             t1 = m_TargetButton;
             t2 = m_State;
-        }
+        } 
+#endif
     }
 
 }

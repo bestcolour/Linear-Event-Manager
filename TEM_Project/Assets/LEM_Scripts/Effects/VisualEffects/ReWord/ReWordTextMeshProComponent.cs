@@ -24,6 +24,7 @@ namespace LEM_Effects
             m_TargetText.text = m_NewText;
         }
 
+#if UNITY_EDITOR
         public void SetUp(TextMeshPro t1, string t2)
         {
             m_TargetText = t1;
@@ -34,6 +35,7 @@ namespace LEM_Effects
         {
             t1 = m_TargetText;
             t2 = m_NewText;
-        }
+        } 
+#endif
     }
 }

@@ -76,8 +76,7 @@ namespace LEM_Editor
              { "OffsetTransScale", new NodeDictionaryDefinition(new OffsetTransformScaleNode()          ,new Color(0.12f ,0.52f,0.29f)) },
              { "OffsetRectTransSize", new NodeDictionaryDefinition(new OffsetRectTransformSizeNode()    ,new Color(0.12f ,0.52f,0.29f)) },
 
-	    #endregion
-
+        #endregion
 
         #region Halt
              //{ "AddGlobalDelay",  new NodeDictionaryDefinition(    new AddGlobalDelayNode()             ,new Color(0.85f,0.64f,0.13f))},

@@ -20,6 +20,7 @@ namespace LEM_Effects
             m_TargetRectransform.anchoredPosition3D = m_TargetPosition;
         }
 
+#if UNITY_EDITOR
         public void SetUp(RectTransform t1, Vector3 t2)
         {
             m_TargetRectransform = t1;
@@ -30,6 +31,7 @@ namespace LEM_Effects
         {
             t1 = m_TargetRectransform;
             t2 = m_TargetPosition;
-        }
+        } 
+#endif
     } 
 }

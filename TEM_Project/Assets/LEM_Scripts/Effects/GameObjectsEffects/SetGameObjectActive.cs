@@ -21,6 +21,7 @@ namespace LEM_Effects
             m_TargetObject.SetActive(m_State);
         }
 
+#if UNITY_EDITOR
         public void SetUp(GameObject t1, bool t2)
         {
             m_TargetObject = t1;
@@ -31,6 +32,7 @@ namespace LEM_Effects
         {
             t1 = m_TargetObject;
             t2 = m_State;
-        }
+        } 
+#endif
     } 
 }

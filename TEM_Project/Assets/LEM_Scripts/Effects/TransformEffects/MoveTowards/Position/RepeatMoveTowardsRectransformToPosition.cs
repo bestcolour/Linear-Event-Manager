@@ -56,6 +56,7 @@ namespace LEM_Effects
 
             return m_IsFinished;
         }
+#if UNITY_EDITOR
 
         public void SetUp(RectTransform t1, Vector3 t2, float t3)
         {
@@ -70,7 +71,8 @@ namespace LEM_Effects
             t1 = m_TargetRectransform;
             t2 = m_TargetPosition;
             t3 = m_Duration;
-        }
+        } 
+#endif
 
 
     }

@@ -63,6 +63,7 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, Transform t3, float t4, float t5)
         {
             m_TargetTransform = t1;
@@ -80,7 +81,8 @@ namespace LEM_Effects
             t4 = m_Smoothing;
             t5 = m_SnapRange;
 
-        }
+        } 
+#endif
 
         ////m_TargetTransform.localPosition = GetRelativePosition(m_InitialPosition, m_LocalPivotPosition, m_NewScale.Divide(m_InitialScale));
         ////Relative scale = how much is the new scale compared to the previous scale?

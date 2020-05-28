@@ -20,6 +20,7 @@ namespace LEM_Effects
             m_TargetLinearEvent.SetDelayBeforeNextEffect = m_DelayTime;
         }
 
+#if UNITY_EDITOR
 
         public void SetUp(LinearEvent t1, float t2)
         {
@@ -31,7 +32,8 @@ namespace LEM_Effects
         {
             t1 = m_TargetLinearEvent;
             t2 = m_DelayTime;
-        }
+        } 
+#endif
     }
 
 }

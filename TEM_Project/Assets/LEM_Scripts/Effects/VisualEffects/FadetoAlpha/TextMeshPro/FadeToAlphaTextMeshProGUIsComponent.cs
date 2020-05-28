@@ -43,6 +43,7 @@ namespace LEM_Effects
             m_TargetAlpha /= 255f;
         }
 
+#if UNITY_EDITOR
         public void SetUp(TextMeshProUGUI[] t1, float t2, float t3)
         {
             m_TargetTexts = t1;
@@ -55,7 +56,8 @@ namespace LEM_Effects
             t1 = m_TargetTexts;
             t2 = m_TargetAlpha;
             t3 = m_Duration;
-        }
+        } 
+#endif
 
         public override bool OnUpdateEffect(float delta)
         {

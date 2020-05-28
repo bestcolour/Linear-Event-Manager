@@ -21,6 +21,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+#if UNITY_EDITOR
         public void SetUp(RectTransform t1, RectTransform t2, float t3, float t4)
         {
             m_TargetRectransform = t1;
@@ -37,6 +38,7 @@ namespace LEM_Effects
             t4 = m_SnapDistance;
         }
 
+#endif
         public override bool OnUpdateEffect(float delta)
         {
             //meanwhile, lerp the transform to the target

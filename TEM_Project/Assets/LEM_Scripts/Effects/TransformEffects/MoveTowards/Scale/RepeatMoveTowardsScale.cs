@@ -42,6 +42,7 @@ namespace LEM_Effects
 
         }
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, float t3)
         {
             m_TargetTransform = t1;
@@ -54,7 +55,8 @@ namespace LEM_Effects
             t1 = m_TargetTransform;
             t2 = m_TargetScale;
             t3 = m_Duration;
-        }
+        } 
+#endif
     }
 
 }

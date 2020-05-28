@@ -71,6 +71,7 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
+#if UNITY_EDITOR
         public void SetUp(Image[] t1, float t2, float t3)
         {
             m_TargetImages = t1;
@@ -87,6 +88,7 @@ namespace LEM_Effects
             t3 = m_Duration;
         }
 
+#endif
 
     }
 }

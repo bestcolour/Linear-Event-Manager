@@ -19,6 +19,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType =>EffectFunctionType.InstantEffect;
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, bool t3)
         {
             m_TargetTransform = t1;
@@ -31,7 +32,8 @@ namespace LEM_Effects
             t1 = m_TargetTransform;
             t2 = m_TargetRotation;
             t3 = m_RelativeToLocal;
-        }
+        } 
+#endif
 
         public override void OnInitialiseEffect()
         {

@@ -71,6 +71,7 @@ namespace LEM_Effects
         }
 
 
+#if UNITY_EDITOR
 
         public void SetUp(TextMeshPro[] t1, float t2, float t3)
         {
@@ -86,7 +87,8 @@ namespace LEM_Effects
             t2 = m_TargetAlpha;
             t3 = m_Duration;
 
-        }
+        } 
+#endif
 
     }
 }

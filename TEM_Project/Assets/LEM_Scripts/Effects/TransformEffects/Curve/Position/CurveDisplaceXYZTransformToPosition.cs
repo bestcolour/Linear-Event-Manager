@@ -23,6 +23,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+#if UNITY_EDITOR
         public override LEM_BaseEffect ShallowClone()
         {
             CurveDisplaceXYZTransformToPosition copy = ScriptableObject.CreateInstance<CurveDisplaceXYZTransformToPosition>();
@@ -34,14 +35,14 @@ namespace LEM_Effects
             copy.m_Graphx.postWrapMode = m_Graphx.postWrapMode;
 
             copy.m_Graphy = new AnimationCurve();
-            copy.m_Graphy.keys =        m_Graphy.keys;
+            copy.m_Graphy.keys = m_Graphy.keys;
             copy.m_Graphy.preWrapMode = m_Graphy.preWrapMode;
-            copy.m_Graphy.postWrapMode =m_Graphy.postWrapMode;
+            copy.m_Graphy.postWrapMode = m_Graphy.postWrapMode;
 
             copy.m_Graphz = new AnimationCurve();
-            copy.m_Graphz.keys =        m_Graphz.keys;
+            copy.m_Graphz.keys = m_Graphz.keys;
             copy.m_Graphz.preWrapMode = m_Graphz.preWrapMode;
-            copy.m_Graphz.postWrapMode =m_Graphz.postWrapMode;
+            copy.m_Graphz.postWrapMode = m_Graphz.postWrapMode;
 
             copy.m_RelativeToWorld = m_RelativeToWorld;
 
@@ -51,6 +52,26 @@ namespace LEM_Effects
 
 
             return copy;
+        }
+
+        public void SetUp(Transform t1, AnimationCurve t2, AnimationCurve t3, AnimationCurve t4, bool t5)
+        {
+            m_TargetTransform = t1;
+            m_Graphx = t2;
+            m_Graphy = t3;
+            m_Graphz = t4;
+            m_RelativeToWorld = t5;
+
+        } 
+#endif
+
+        public void UnPack(out Transform t1, out AnimationCurve t2, out AnimationCurve t3, out AnimationCurve t4, out bool t5)
+        {
+            t1 = m_TargetTransform;
+            t2 = m_Graphx;
+            t3 = m_Graphy;
+            t4 = m_Graphz;
+            t5 = m_RelativeToWorld;
         }
 
         public override void OnInitialiseEffect()
@@ -92,25 +113,6 @@ namespace LEM_Effects
             }
 
             return m_IsFinished;
-        }
-
-        public void SetUp(Transform t1, AnimationCurve t2, AnimationCurve t3, AnimationCurve t4, bool t5)
-        {
-            m_TargetTransform = t1;
-            m_Graphx = t2;
-            m_Graphy = t3;
-            m_Graphz = t4;
-            m_RelativeToWorld = t5;
-
-        }
-
-        public void UnPack(out Transform t1, out AnimationCurve t2, out AnimationCurve t3, out AnimationCurve t4, out bool t5)
-        {
-            t1 = m_TargetTransform;
-            t2 = m_Graphx;
-            t3 = m_Graphy;
-            t4 = m_Graphz;
-            t5 = m_RelativeToWorld;
         }
     }
 

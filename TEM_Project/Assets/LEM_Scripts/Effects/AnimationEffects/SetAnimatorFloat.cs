@@ -21,6 +21,7 @@ namespace LEM_Effects
 
         public override void OnInitialiseEffect() { m_TargetAnimator.SetFloat(m_ParameterName, m_FloatValue); }
 
+#if UNITY_EDITOR
         public void SetUp(Animator t1, string t2, float t3)
         {
             m_TargetAnimator = t1;
@@ -33,6 +34,7 @@ namespace LEM_Effects
             t1 = m_TargetAnimator;
             t2 = m_ParameterName;
             t3 = m_FloatValue;
-        }
+        } 
+#endif
     } 
 }

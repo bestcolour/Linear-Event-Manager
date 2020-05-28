@@ -25,6 +25,7 @@ namespace LEM_Effects
             }
         }
 
+#if UNITY_EDITOR
         public void SetUp(GameObject[] t1)
         {
             m_TargetObjects = t1;
@@ -33,7 +34,8 @@ namespace LEM_Effects
         public void UnPack(out GameObject[] t1)
         {
             t1 = m_TargetObjects;
-        }
+        } 
+#endif
     }
 
    

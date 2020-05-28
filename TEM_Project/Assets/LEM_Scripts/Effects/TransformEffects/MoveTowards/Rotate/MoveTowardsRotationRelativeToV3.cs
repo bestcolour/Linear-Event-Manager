@@ -72,6 +72,7 @@ namespace LEM_Effects
 
         }
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, Vector3 t3, bool t4, float t5)
         {
             m_TargetTransform = t1;
@@ -88,6 +89,7 @@ namespace LEM_Effects
             t3 = m_LocalPivotPosition;
             t4 = m_WorldRotation;
             t5 = m_Duration;
-        }
+        } 
+#endif
     }
 }

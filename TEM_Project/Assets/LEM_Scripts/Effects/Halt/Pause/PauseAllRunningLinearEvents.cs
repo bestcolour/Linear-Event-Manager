@@ -18,6 +18,7 @@ namespace LEM_Effects
             LinearEventsManager.Instance.PauseAllRunningLinearEvents = m_State;
         }
 
+#if UNITY_EDITOR
         public void SetUp(bool t1)
         {
             m_State = t1;
@@ -26,7 +27,8 @@ namespace LEM_Effects
         public void UnPack(out bool t1)
         {
             t1 = m_State;
-        }
+        } 
+#endif
     }
 
 }

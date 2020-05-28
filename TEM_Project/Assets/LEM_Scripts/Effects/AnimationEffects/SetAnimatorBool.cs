@@ -23,6 +23,7 @@ namespace LEM_Effects
             m_TargetAnimator.SetBool(m_ParameterName, m_BooleanValue);
         }
 
+#if UNITY_EDITOR
         public void SetUp(Animator t1, string t2, bool t3)
         {
             m_TargetAnimator = t1;
@@ -35,7 +36,8 @@ namespace LEM_Effects
             t1 = m_TargetAnimator;
             t2 = m_ParameterName;
             t3 = m_BooleanValue;
-        }
+        } 
+#endif
     }
 
 }

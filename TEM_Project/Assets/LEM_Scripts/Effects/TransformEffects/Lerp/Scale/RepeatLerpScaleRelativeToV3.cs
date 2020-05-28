@@ -56,6 +56,7 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, Vector3 t3, float t4, float t5)
         {
             m_TargetTransform = t1;
@@ -75,6 +76,7 @@ namespace LEM_Effects
 
         }
 
+#endif
     }
 
 }

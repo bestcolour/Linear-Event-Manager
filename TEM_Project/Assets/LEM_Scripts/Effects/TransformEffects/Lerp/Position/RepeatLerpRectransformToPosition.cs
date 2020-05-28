@@ -48,6 +48,7 @@ namespace LEM_Effects
         }
 
 
+#if UNITY_EDITOR
         public void SetUp(RectTransform t1, Vector3 t2, float t3, float t4)
         {
             m_TargetRectransform = t1;
@@ -62,6 +63,7 @@ namespace LEM_Effects
             t2 = m_TargetPosition;
             t3 = m_Smoothing;
             t4 = m_SnapDistance;
-        }
+        } 
+#endif
     }
 }

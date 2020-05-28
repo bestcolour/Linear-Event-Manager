@@ -20,6 +20,7 @@ namespace LEM_Effects
             m_TargetTransform.localScale += m_OffsetScale;
         }
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2)
         {
             m_TargetTransform = t1;
@@ -30,6 +31,7 @@ namespace LEM_Effects
         {
             t1 = m_TargetTransform;
             t2 = m_OffsetScale;
-        }
+        } 
+#endif
     } 
 }

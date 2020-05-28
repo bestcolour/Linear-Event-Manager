@@ -25,6 +25,7 @@ namespace LEM_Effects
             m_ChildTransform.SetSiblingIndex(m_SiblingIndex);
         }
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Transform t2, int t3)
         {
             m_ChildTransform = t1;
@@ -37,6 +38,7 @@ namespace LEM_Effects
             t1 = m_ChildTransform;
             t2 = m_ParentTransform;
             t3 = m_SiblingIndex;
-        }
+        } 
+#endif
     } 
 }

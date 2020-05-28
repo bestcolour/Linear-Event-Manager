@@ -20,7 +20,8 @@ namespace LEM_Effects
             GameObject.Destroy(m_TargetObject);
         }
 
-        #region Important
+
+#if UNITY_EDITOR
         public void SetUp(GameObject targetObject)
         {
             m_TargetObject = targetObject;
@@ -32,7 +33,8 @@ namespace LEM_Effects
             targetObject = m_TargetObject;
         }
 
-        #endregion
+#endif
+
 
 
     }

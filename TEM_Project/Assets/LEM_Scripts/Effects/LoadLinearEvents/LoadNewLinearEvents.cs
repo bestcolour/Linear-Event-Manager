@@ -19,6 +19,7 @@ namespace LEM_Effects
                 LinearEventsManager.LoadLinearEvent(m_TargetLinearEvent[i]);
             }
         }
+#if UNITY_EDITOR
 
         public void SetUp(LinearEvent[] t1)
         {
@@ -28,7 +29,8 @@ namespace LEM_Effects
         public void UnPack(out LinearEvent[] t1)
         {
             t1 = m_TargetLinearEvent;
-        }
+        } 
+#endif
     }
 
 }

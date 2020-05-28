@@ -20,6 +20,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+#if UNITY_EDITOR
         public override LEM_BaseEffect ShallowClone()
         {
             CurveDisplaceYTransformToPosition copy = ScriptableObject.CreateInstance<CurveDisplaceYTransformToPosition>();
@@ -39,6 +40,22 @@ namespace LEM_Effects
             return copy;
         }
 
+        public void SetUp(Transform t1, AnimationCurve t2, bool t3)
+        {
+            m_TargetTransform = t1;
+            m_Graph = t2;
+            m_RelativeToWorld = t3;
+
+
+        }
+
+        public void UnPack(out Transform t1, out AnimationCurve t2, out bool t3)
+        {
+            t1 = m_TargetTransform;
+            t2 = m_Graph;
+            t3 = m_RelativeToWorld;
+        } 
+#endif
         public override void OnInitialiseEffect()
         {
             if (m_RelativeToWorld)
@@ -72,21 +89,7 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-        public void SetUp(Transform t1, AnimationCurve t2, bool t3)
-        {
-            m_TargetTransform = t1;
-            m_Graph = t2;
-            m_RelativeToWorld = t3;
-
-
-        }
-
-        public void UnPack(out Transform t1, out AnimationCurve t2, out bool t3)
-        {
-            t1 = m_TargetTransform;
-            t2 = m_Graph;
-            t3 = m_RelativeToWorld;
-        }
+     
 
     }
 
