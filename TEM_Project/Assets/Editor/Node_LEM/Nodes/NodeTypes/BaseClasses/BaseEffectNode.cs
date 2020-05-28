@@ -19,7 +19,7 @@ namespace LEM_Editor
         public override string ID_Initial => LEMDictionary.NodeIDs_Initials.k_BaseEffectInital;
 
         //For updating effect node dictionary
-        protected Action<NodeDictionaryStruct> d_UpdateNodeDictionaryStatus = null;
+        protected Action<BaseEffectNodePair> d_UpdateNodeDictionaryStatus = null;
 
 
         public virtual OutConnectionPoint[] GetOutConnectionPoints
@@ -34,7 +34,7 @@ namespace LEM_Editor
 
         public UpdateCycle m_UpdateCycle = default;
 
-        public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode,Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
+        public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode,Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, topSkinColour);
 

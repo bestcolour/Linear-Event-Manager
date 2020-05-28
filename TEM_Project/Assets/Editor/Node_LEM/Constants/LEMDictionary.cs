@@ -7,7 +7,7 @@ namespace LEM_Editor
 {
     public class LEMDictionary
     {
-        public struct NodeDictionaryDefinition
+        public class NodeDictionaryDefinition
         {
             public object m_Type;
             public Color m_Colour;

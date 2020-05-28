@@ -9,12 +9,12 @@ using System.Linq;
 
 namespace LEM_Editor
 {
-    public struct NodeDictionaryStruct
+    public class BaseEffectNodePair
     {
         public BaseEffectNode effectNode;
         public OutConnectionPoint[] outConnectionPoints;
 
-        public NodeDictionaryStruct(BaseEffectNode effectNode, OutConnectionPoint[] outConnectionPoints)
+        public BaseEffectNodePair(BaseEffectNode effectNode, OutConnectionPoint[] outConnectionPoints)
         {
             this.effectNode = effectNode;
             this.outConnectionPoints = outConnectionPoints;
@@ -56,10 +56,10 @@ namespace LEM_Editor
         public static Dictionary<string, GroupRectNode> AllGroupRectsInEditorDictionary => instance.m_AllGroupRectsInEditorDictionary;
         public static string[] AllGroupRectsInEditorNodeIDs => AllGroupRectsInEditorDictionary.Keys.ToArray();
 
-        Dictionary<string, NodeDictionaryStruct> m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
-        public static Dictionary<string, NodeDictionaryStruct> AllEffectsNodeInEditor => instance.m_AllEffectsNodeInEditor;
+        Dictionary<string, BaseEffectNodePair> m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNodePair>();
+        public static Dictionary<string, BaseEffectNodePair> AllEffectsNodeInEditor => instance.m_AllEffectsNodeInEditor;
 
-        void EditEffectNodeStruct(NodeDictionaryStruct nodeStruct)
+        void EditEffectNodeStruct(BaseEffectNodePair nodeStruct)
         {
             //Do the service of removing connection when edit occurs
             //Only when new node struct has lesser outpoints than current nodestruct
@@ -216,7 +216,7 @@ namespace LEM_Editor
         NodeCommandInvoker m_CommandInvoker = default;
         static NodeCommandInvoker CommandInvoker => instance.m_CommandInvoker;
         bool m_IsDragging = default;
-        public static int s_MaxActions = 100;
+        //public static int s_MaxActions = 100;
 
         void DoCutCommand()
         {
@@ -425,7 +425,7 @@ namespace LEM_Editor
 
             if (instance.m_CommandInvoker == null)
             {
-                instance.m_CommandInvoker = new NodeCommandInvoker(s_MaxActions,/* CreateEffectNode,*/ /*RecreateEffectNode,*//* CreateGroupNode,*/ TryToRestichConnections,/* CompileNodeToEffect, *//*MoveNodes,*/ /*CreateConnection, TryToRemoveConnection,*/ /*DeselectAllNodes, */() => m_EditorState = EDITORSTATE.LOADED);
+                instance.m_CommandInvoker = new NodeCommandInvoker(s_Settings.m_HistoryLength,/* CreateEffectNode,*/ /*RecreateEffectNode,*//* CreateGroupNode,*/ TryToRestichConnections,/* CompileNodeToEffect, *//*MoveNodes,*/ /*CreateConnection, TryToRemoveConnection,*/ /*DeselectAllNodes, */() => m_EditorState = EDITORSTATE.LOADED);
             }
 
             if (instance.m_AllConnectableNodesInEditor == null)
@@ -440,7 +440,7 @@ namespace LEM_Editor
 
             if (instance.m_AllEffectsNodeInEditor == null)
             {
-                instance.m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
+                instance.m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNodePair>();
             }
 
             if (instance.m_AllGroupRectsInEditorDictionary == null)
@@ -540,7 +540,7 @@ namespace LEM_Editor
             m_AllGroupRectsInEditorDictionary = new Dictionary<string, GroupRectNode>();
             //m_AllNodesInEditor = new Dictionary<int, Node>();
 
-            m_AllEffectsNodeInEditor = new Dictionary<string, NodeDictionaryStruct>();
+            m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNodePair>();
             m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
             m_CommandInvoker.ResetHistory();
 
@@ -1331,7 +1331,7 @@ namespace LEM_Editor
         //This is used for when you wanna create a new node
         public static BaseEffectNode CreateEffectNode(Vector2 mousePosition, string nameOfNodeType)
         {
-            NodeDictionaryStruct nodeStruct = new NodeDictionaryStruct();
+            //NodeDictionaryStruct nodeStruct = new NodeDictionaryStruct();
             BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
             //Get the respective skin from the collection of nodeskin
@@ -1352,19 +1352,19 @@ namespace LEM_Editor
                 LEMDictionary.GetNodeColour(nameOfNodeType)
                 );
 
-            nodeStruct.effectNode = newEffectNode;
-            nodeStruct.outConnectionPoints = newEffectNode.GetOutConnectionPoints;
+            //nodeStruct.effectNode = newEffectNode;
+            //nodeStruct.outConnectionPoints = newEffectNode.GetOutConnectionPoints;
 
             //Add the node into collection in editor
             AllConnectableNodesInEditor.Add(newEffectNode);
-            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, nodeStruct);
+            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, new BaseEffectNodePair(newEffectNode,newEffectNode.GetOutConnectionPoints));
             return newEffectNode;
         }
 
         //This is used for loading and probably undoing/redoing from a linear event
         public static BaseEffectNode RecreateEffectNode(Vector2 positionToSet, string nameOfNodeType, string idToSet)
         {
-            NodeDictionaryStruct nodeStruct = new NodeDictionaryStruct();
+            //NodeDictionaryStruct nodeStruct = new NodeDictionaryStruct();
             BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
             //Get the respective skin from the collection of nodeskin
@@ -1384,12 +1384,12 @@ namespace LEM_Editor
                 );
 
             newEffectNode.SetNodeID(idToSet);
-            nodeStruct.effectNode = newEffectNode;
-            nodeStruct.outConnectionPoints = newEffectNode.GetOutConnectionPoints;
+            //nodeStruct.effectNode = newEffectNode;
+            //nodeStruct.outConnectionPoints = newEffectNode.GetOutConnectionPoints;
 
             //Add the node into collection in editor
             AllConnectableNodesInEditor.Add(newEffectNode);
-            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, nodeStruct);
+            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, new BaseEffectNodePair(newEffectNode, newEffectNode.GetOutConnectionPoints));
             return newEffectNode;
         }
 
@@ -2181,7 +2181,7 @@ namespace LEM_Editor
         {
             Node[] nestedNodes = new Node[groupRectNodes.m_NestedNodeIDs.Length];
 
-            NodeDictionaryStruct dummy1;
+            BaseEffectNodePair dummy1;
             GroupRectNode dummy2;
 
             for (int i = 0; i < nestedNodes.Length; i++)

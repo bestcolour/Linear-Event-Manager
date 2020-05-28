@@ -14,6 +14,9 @@ namespace LEM_Editor
         public bool m_AutoSave = true;
         public bool m_SaveSceneWhenSavingLinearEvent = true;
 
+        [Header("History")]
+        public int m_HistoryLength = 100;
+
         [Header("ToolBar")]
         public bool m_ShowToolBar = true;
         [Range(50f,150f)]

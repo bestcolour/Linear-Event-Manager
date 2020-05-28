@@ -15,7 +15,7 @@ namespace LEM_Editor
         protected override string EffectTypeName => "BiasedRandomOutcome";
 
 
-        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<NodeDictionaryStruct> updateEffectNodeInDictionary, Color topSkinColour)
+        public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
         }
@@ -104,7 +104,7 @@ namespace LEM_Editor
                     m_ListOfExtraOutPoints.RemoveAt(m_ListOfExtraOutPoints.Count - 1);
                     m_ExtraProbabilities.RemoveAt(m_ExtraProbabilities.Count - 1);
                     AddMidRectSize(-NodeGUIConstants.k_MultiOutComesNodeIncrements);
-                    d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
+                    d_UpdateNodeDictionaryStatus(new BaseEffectNodePair(this, GetOutConnectionPoints));
                 }
             }
             else if (m_ListOfExtraOutPoints.Count < numberOfExtraOutComes)
@@ -117,7 +117,7 @@ namespace LEM_Editor
                     //Update the rect height
                     AddMidRectSize(NodeGUIConstants.k_MultiOutComesNodeIncrements);
                     //Update dictionary
-                    d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
+                    d_UpdateNodeDictionaryStatus(new BaseEffectNodePair(this, GetOutConnectionPoints));
                     m_ExtraProbabilities.Add(0f);
                 }
             }
@@ -162,7 +162,7 @@ namespace LEM_Editor
                     m_ListOfExtraOutPoints.RemoveAt(m_ListOfExtraOutPoints.Count - 1);
                     m_ExtraProbabilities.RemoveAt(m_ExtraProbabilities.Count - 1);
                     AddMidRectSize(-NodeGUIConstants.k_MultiOutComesNodeIncrements);
-                    d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
+                    d_UpdateNodeDictionaryStatus(new BaseEffectNodePair(this, GetOutConnectionPoints));
                 }
             }
             else if (m_ListOfExtraOutPoints.Count < numberOfExtraOutComes)
@@ -175,7 +175,7 @@ namespace LEM_Editor
                     //Update the rect height
                     AddMidRectSize(NodeGUIConstants.k_MultiOutComesNodeIncrements);
                     //Update dictionary
-                    d_UpdateNodeDictionaryStatus(new NodeDictionaryStruct(this, GetOutConnectionPoints));
+                    d_UpdateNodeDictionaryStatus(new BaseEffectNodePair(this, GetOutConnectionPoints));
                     m_ExtraProbabilities.Add(0f);
                 }
             }
