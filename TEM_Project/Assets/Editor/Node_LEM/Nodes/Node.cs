@@ -35,7 +35,10 @@ namespace LEM_Editor
 
         protected bool m_IsSelected = false;
 
-        public bool IsWorthProcessingEventFor => IsWithinWindowScreen || (!IsWithinWindowScreen && (IsSelected || (IsGrouped && GetRootParent.IsSelected)));
+        public bool IsWithinWindowScreen { get; private set; } = false;
+        public bool IsWorthProcessingEventFor { get; private set; } = false;
+
+        //public bool IsWorthProcessingEventFor => IsWithinWindowScreen || (!IsWithinWindowScreen && (IsSelected || (IsGrouped && GetRootParent.IsSelected)));
         public bool IsSelected { get { return m_IsSelected; } }
 
         protected NodeSkinCollection m_NodeSkin = default;
@@ -47,9 +50,9 @@ namespace LEM_Editor
         protected Action<Node> d_OnSelectNode = null;
         protected Action<string> d_OnDeselectNode = null;
 
-        public bool IsWithinWindowScreen => m_TotalRect.position.x + m_TotalRect.width > 0 && m_TotalRect.position.x < NodeLEM_Editor.instance.position.width * NodeLEM_Editor.InverseScaleFactor
-             &&
-             m_TotalRect.position.y + m_TotalRect.height > 0 && m_TotalRect.position.y < NodeLEM_Editor.instance.position.height * NodeLEM_Editor.InverseScaleFactor;
+        //public bool IsWithinWindowScreen => m_TotalRect.position.x + m_TotalRect.width > 0 && m_TotalRect.position.x < NodeLEM_Editor.instance.position.width * NodeLEM_Editor.InverseScaleFactor
+        //     &&
+        //     m_TotalRect.position.y + m_TotalRect.height > 0 && m_TotalRect.position.y < NodeLEM_Editor.instance.position.height * NodeLEM_Editor.InverseScaleFactor;
 
 
         public virtual void Initialise(Vector2 position, NodeSkinCollection nodeSkin /*, GUIStyle connectionPointStyle,
@@ -77,6 +80,16 @@ namespace LEM_Editor
             m_TotalRect.position += delta;
         }
 
+        public void DetermineStatus()
+        {
+            IsWithinWindowScreen = m_TotalRect.position.x + m_TotalRect.width > 0 && m_TotalRect.position.x < NodeLEM_Editor.instance.position.width * NodeLEM_Editor.InverseScaleFactor
+             &&
+             m_TotalRect.position.y + m_TotalRect.height > 0 && m_TotalRect.position.y < NodeLEM_Editor.instance.position.height * NodeLEM_Editor.InverseScaleFactor;
+
+            IsWorthProcessingEventFor = IsWithinWindowScreen || (!IsWithinWindowScreen && (IsSelected || (IsGrouped && GetRootParent.IsSelected))); 
+        }
+
+
         //Draws the node using its position, dimensions and style
         //only start & end node completely overrides the draw method
         public virtual void Draw()
@@ -87,7 +100,7 @@ namespace LEM_Editor
                 float newHeight = m_TotalRect.height * NodeGUIConstants.k_SelectedNodeTextureScale;
                 GUI.DrawTexture(new Rect(
                     m_TotalRect.x - (newWidth - m_TotalRect.width) * 0.5f,
-                    m_TotalRect.y -(newHeight - m_TotalRect.height) * 0.5f,
+                    m_TotalRect.y - (newHeight - m_TotalRect.height) * 0.5f,
                     newWidth, newHeight),
                     m_NodeSkin.m_SelectedMidOutline);
             }
@@ -103,7 +116,7 @@ namespace LEM_Editor
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
             GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
 
-          
+
 
         }
 

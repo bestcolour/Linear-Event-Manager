@@ -620,6 +620,8 @@ namespace LEM_Editor
             EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
             Vector2 currMousePos = currentEvent.mousePosition;
 
+            DetermineAllNodes();
+
             //Draw the rect grpsfirst
             //DrawRectGroups();
             DrawNodes();
@@ -666,6 +668,22 @@ namespace LEM_Editor
         #endregion
 
         #region Draw Functions
+
+        void DetermineAllNodes()
+        {
+            for (int i = 0; i < AllConnectableNodesInEditor.Count; i++)
+            {
+                AllConnectableNodesInEditor[i].DetermineStatus();
+            }
+
+            for (int i = 0; i < AllGroupRectNodesInEditor.Count; i++)
+            {
+                AllGroupRectNodesInEditor[i].DetermineStatus();
+            }
+
+            if (s_CurrentClickedNode != null)
+                s_CurrentClickedNode.DetermineStatus();
+        }
 
         void DrawNodes()
         {
@@ -1145,6 +1163,8 @@ namespace LEM_Editor
                             //Since selected nodes will clear itself of the rect node before moving the nodes,
                             CommandInvoker.InvokeCommand(new MoveNodeCommand(m_AllSelectedNodes.ToArray()));
                         }
+
+
                     }
 
                     break;
