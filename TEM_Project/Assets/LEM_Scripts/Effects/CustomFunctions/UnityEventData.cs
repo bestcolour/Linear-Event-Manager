@@ -1,5 +1,9 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEngine.Events;
+
+
+
 namespace LEM_Effects
 {
 	[System.Serializable]
@@ -11,6 +15,13 @@ namespace LEM_Effects
 		{
 			m_UnityEvent = unityEvent;
 		}
-	}
+
+       
+
+    }
+
+    
+
 
 }
+#endif

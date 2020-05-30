@@ -10,11 +10,11 @@ namespace LEM_Effects
         [SerializeField, Header("GetKeyDown down")]
         public KeyCode[] m_GetkeyDownKeyCodes = default;
 
-        public AwaitKeyCodeInputData(KeyCode[] getkeyKeyCodes, KeyCode[] getKeyDownKeyCodes)
-        {
-            m_GetkeyKeyCodes = getkeyKeyCodes;
-            m_GetkeyDownKeyCodes = getKeyDownKeyCodes;
-        }
+        //public AwaitKeyCodeInputData(KeyCode[] getkeyKeyCodes, KeyCode[] getKeyDownKeyCodes)
+        //{
+        //    m_GetkeyKeyCodes = getkeyKeyCodes;
+        //    m_GetkeyDownKeyCodes = getKeyDownKeyCodes;
+        //}
 
     }
 

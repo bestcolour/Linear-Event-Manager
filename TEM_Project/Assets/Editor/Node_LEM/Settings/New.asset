@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: New
   m_EditorClassIdentifier: 
   m_EditorTheme: 1
-  m_AutoSave: 0
-  m_SaveSceneWhenSavingLinearEvent: 1
-  m_ShowToolBar: 0
+  m_SaveSettings: 2
+  m_SaveSceneTogether: 1
+  m_HistoryLength: 100
+  m_ShowToolBar: 1
   m_ButtonSize: 50

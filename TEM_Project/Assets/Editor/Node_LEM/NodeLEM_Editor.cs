@@ -29,7 +29,7 @@ namespace LEM_Editor
             //UNLOADED = there is no linear event loaded yet, LOADED = there is linear event loaded but there is also changes made
             //SAVED = linear event was just saved, SAVING = linear event is current in the midsts of saving
             public const int UNLOADED = -1, LOADED = 0, LOADING = 1, SAVED = 2, SAVING = 3;
-            public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save"/* Effects \n (Crlt + S)"*/, AUTOSAVE_STRING = "Auto Save On";
+            public const string SAVED_STRING = "Saved!", LOADED_STRING = "Save"/* Effects \n (Crlt + S)"*/, AUTOSAVE_STRING = "Auto\nSave\nOn";
         }
 
         int m_EditorState = EDITORSTATE.UNLOADED;
@@ -855,7 +855,7 @@ namespace LEM_Editor
 
             #region Drawing Save Button
 
-            if (!s_Settings.m_AutoSave)
+            if (s_Settings.m_SaveSettings != NodeLEM_Settings.SaveSettings.AlwaysSave)
             {
                 if (GUI.Button(propertyRect, EDITORSTATE.LOADED_STRING))
                 {
@@ -1241,7 +1241,7 @@ namespace LEM_Editor
 
                         }
                         //Save
-                        else if (!s_Settings.m_AutoSave && e.keyCode == KeyCode.S)
+                        else if (s_Settings.m_SaveSettings != NodeLEM_Settings.SaveSettings.AlwaysSave && e.keyCode == KeyCode.S)
                         {
                             SaveToLinearEvent();
                             e.Use();
@@ -1357,7 +1357,7 @@ namespace LEM_Editor
 
             //Add the node into collection in editor
             AllConnectableNodesInEditor.Add(newEffectNode);
-            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, new BaseEffectNodePair(newEffectNode,newEffectNode.GetOutConnectionPoints));
+            AllEffectsNodeInEditor.Add(newEffectNode.NodeID, new BaseEffectNodePair(newEffectNode, newEffectNode.GetOutConnectionPoints));
             return newEffectNode;
         }
 
@@ -1930,11 +1930,23 @@ namespace LEM_Editor
 
         void TryToSaveLinearEvent()
         {
-            if (!s_Settings.m_AutoSave)
-                return;
 
-            if (m_EditorState == EDITORSTATE.LOADED)
-                SaveToLinearEvent();
+            switch (s_Settings.m_SaveSettings)
+            {
+                case NodeLEM_Settings.SaveSettings.DontSave:
+                    return;
+
+                case NodeLEM_Settings.SaveSettings.AlwaysSave:
+                    SaveToLinearEvent();
+                    break;
+
+                case NodeLEM_Settings.SaveSettings.SaveWhenCommandChange:
+                    if (m_EditorState == EDITORSTATE.LOADED)
+                        SaveToLinearEvent();
+                    break;
+
+            }
+
         }
 
         //To be called when player presses "Save button" or when assembly reloads every time a script changes (when play mode is entered this will get called also but it doesnt save the values to the LE)
@@ -1970,7 +1982,7 @@ namespace LEM_Editor
             //Finished loading
             Repaint();
 
-            if (s_Settings.m_SaveSceneWhenSavingLinearEvent)
+            if (s_Settings.m_SaveSceneTogether)
                 EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
 
             Debug.Log("Saved Linear Event File " + s_CurrentLE.name, s_CurrentLE);
@@ -2000,8 +2012,8 @@ namespace LEM_Editor
                 return;
 
             m_EditorState = EDITORSTATE.LOADING;
-            #region Loading Events from Dictionary
 
+            #region Loading Events from Dictionary
             //Dont do any thing if there is no effects in the dicitionary
             Dictionary<string, LEM_BaseEffect> allEffectsDictInLinearEvent = s_CurrentLE.GetAllEffectsDictionary;
 

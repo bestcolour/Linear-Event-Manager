@@ -1,13 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using LEM_Effects.Extensions;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace LEM_Effects
 {
 
     [
 #if UNITY_EDITOR
-        CanEditMultipleObjects, 
+        CanEditMultipleObjects,
+        //ExecuteInEditMode,
 #endif
         System.Serializable]
     public class LinearEvent : MonoBehaviour
@@ -20,6 +25,8 @@ namespace LEM_Effects
 #if UNITY_EDITOR
         [HideInInspector]
         public GroupRectNodeBase[] m_AllGroupRectNodes = default;
+
+
 #endif
 
         [HideInInspector]
@@ -42,7 +49,7 @@ namespace LEM_Effects
             }
         }
 
-     
+
         #endregion
 
         #region RunTime Values
@@ -192,7 +199,7 @@ namespace LEM_Effects
             else if (!TryLoadNextEffect(LinearEventsManager.InstantEffectCapacity))
             {
                 return false;
-            }   
+            }
             else
                 return true;
         }
@@ -307,6 +314,48 @@ namespace LEM_Effects
 
 
         #endregion
+
+
+
+
+//        #region Editor Code
+//#if UNITY_EDITOR
+
+//        public int m_DuplicateIDChecker = 0;
+
+
+//        private void Awake()
+//        {
+//            //If initialiser is not ran
+//            if(m_DuplicateIDChecker != 0)
+//            {
+//                Debug.Log("Duplication Detected of " + gameObject.name + " oldID:" + m_DuplicateIDChecker + " newID: " + gameObject.GetInstanceID());
+
+//                //Run thru the entire lienar events and createnewinstances of scriptable object n copy their values?
+
+//            }
+
+//            m_DuplicateIDChecker = gameObject.GetInstanceID();
+
+//        }
+
+
+//#endif
+//        #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 

@@ -1,17 +1,83 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System;
+using UnityEngine.Events;
 
 namespace LEM_Effects
 {
     public class CustomVoidFunction : LEM_BaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<SerializedObject> 
+        , IEffectSavable<SerializedObject>
 #endif
     {
-        public UnityEventData m_EventObject = default;
+        //public UnityEventData m_EventObject = default;
+
+        [SerializeField]
+        UnityEvent m_UnityEvent = default;
+
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
+
+
+
+        public override void OnInitialiseEffect()
+        {
+            /*m_EventObject.*/m_UnityEvent.Invoke();
+        }
+
+#if UNITY_EDITOR
+
+        public void SetUp(SerializedObject t1)
+        {
+            UnityEventData eventObject = (UnityEventData)t1.targetObject;
+            m_UnityEvent = eventObject.m_UnityEvent.Clone();
+
+        }
+
+        public void UnPack(out SerializedObject t1)
+        {
+            UnityEventData data = ScriptableObject.CreateInstance<UnityEventData>();
+            //Do copy here
+            data.m_UnityEvent = m_UnityEvent.Clone();
+
+            t1 = new SerializedObject(data);
+        }
+
+
+        public override LEM_BaseEffect ShallowClone()
+        {
+            CustomVoidFunction dummy = (CustomVoidFunction)MemberwiseClone();
+
+            //Do copy here
+
+            //dummy.m_EventObject = ScriptableObject.CreateInstance<UnityEventData>();
+
+            //int delegateCount = m_EventObject.m_UnityEvent.GetPersistentEventCount();
+            //ParameterInfo[] paraInfo;
+
+
+            //for (int i = 0; i < delegateCount; i++)
+            //{
+            //    string methodName = m_EventObject.m_UnityEvent.GetPersistentMethodName(i);
+            //    if (string.IsNullOrEmpty(methodName))
+            //        continue;
+
+            //    UnityEngine.Object targetReference = m_EventObject.m_UnityEvent.GetPersistentTarget(i);
+
+            //    //Get method info of targetReference
+            //    MethodInfo methodInfo = targetReference.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+
+
+
+            //    //methodInfo.GetParameters()
+            //    //dummy.m_EventObject.m_UnityEvent.AddListener(CreateSpecificParametersDelegateType(methodInfo) as UnityAction);
+            //    dummy.m_EventObject.m_UnityEvent.AddListener(() => Delegate.CreateDelegate(typeof(UnityAction<int>), methodInfo));
+            //    //dummy.m_EventObject.m_UnityEvent.AddListener(Delegate.CreateDelegate(typeof(UnityAction<>), targetReference, methodName, false) as UnityAction);
+            //}
+            dummy.m_UnityEvent = m_UnityEvent.Clone();
+
+            return dummy;
+        }
 
 
         //UnityAction CreateSpecificParametersDelegateType(MethodInfo methodInfo)
@@ -48,54 +114,10 @@ namespace LEM_Effects
 
         //}
 
-        public override void OnInitialiseEffect()
-        {
-            m_EventObject.m_UnityEvent.Invoke();
-        }
 
-#if UNITY_EDITOR
-        public void SetUp(SerializedObject t1)
-        {
-            m_EventObject = (UnityEventData)t1.targetObject;
-        }
-
-        public void UnPack(out SerializedObject t1)
-        {
-            t1 = new SerializedObject(m_EventObject);
-        }
 
 #endif
-        public override LEM_BaseEffect ShallowClone()
-        {
-            CustomVoidFunction dummy = (CustomVoidFunction)MemberwiseClone();
-            dummy.m_EventObject = ScriptableObject.CreateInstance<UnityEventData>();
 
-            //int delegateCount = m_EventObject.m_UnityEvent.GetPersistentEventCount();
-            //ParameterInfo[] paraInfo;
-
-
-            //for (int i = 0; i < delegateCount; i++)
-            //{
-            //    string methodName = m_EventObject.m_UnityEvent.GetPersistentMethodName(i);
-            //    if (string.IsNullOrEmpty(methodName))
-            //        continue;
-
-            //    UnityEngine.Object targetReference = m_EventObject.m_UnityEvent.GetPersistentTarget(i);
-
-            //    //Get method info of targetReference
-            //    MethodInfo methodInfo = targetReference.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-
-
-
-            //    //methodInfo.GetParameters()
-            //    //dummy.m_EventObject.m_UnityEvent.AddListener(CreateSpecificParametersDelegateType(methodInfo) as UnityAction);
-            //    dummy.m_EventObject.m_UnityEvent.AddListener(() => Delegate.CreateDelegate(typeof(UnityAction<int>), methodInfo));
-            //    //dummy.m_EventObject.m_UnityEvent.AddListener(Delegate.CreateDelegate(typeof(UnityAction<>), targetReference, methodName, false) as UnityAction);
-            //}
-
-
-            return dummy;
-        }
 
     }
 
