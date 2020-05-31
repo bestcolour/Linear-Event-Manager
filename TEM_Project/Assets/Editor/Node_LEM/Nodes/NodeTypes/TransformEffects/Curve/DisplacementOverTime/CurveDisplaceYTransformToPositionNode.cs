@@ -33,7 +33,7 @@ namespace LEM_Editor
             //propertyRect.height = 25f;
             m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Target Transform", m_TargetTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_Graph = EditorGUI.CurveField(propertyRect, "Y Velocity", m_Graph);
+            m_Graph = EditorGUI.CurveField(propertyRect, "Y Displacement", m_Graph);
             propertyRect.y += 20f;
             m_RelativeToWorld = EditorGUI.Toggle(propertyRect, "Relative To World", m_RelativeToWorld);
 

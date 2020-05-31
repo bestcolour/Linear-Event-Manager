@@ -2,22 +2,22 @@
 using UnityEngine;
 using UnityEditor;
 using LEM_Effects;
-
 namespace LEM_Editor
 {
 
-    public class CurveDisplaceYRectransformToPositionNode : UpdateEffectNode
+    public class CurveDisplaceZTransformToPositionNode : UpdateEffectNode
     {
-        protected override string EffectTypeName => "CurveDisplaceYRectransformToPosition";
-        RectTransform m_TargetRectransform = default;
+        Transform m_TargetTransform = default;
         AnimationCurve m_Graph = new AnimationCurve();
+        bool m_RelativeToWorld = false;
+        protected override string EffectTypeName => "CurveDisplaceZTransformToPosition";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             //Override the rect size n pos
-            SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
+            SetNodeRects(position, NodeTextureDimensions.BIG_MID_SIZE, NodeTextureDimensions.BIG_TOP_SIZE);
 
         }
 
@@ -30,19 +30,20 @@ namespace LEM_Editor
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
             //EditorGUI.LabelField(propertyRect, "RectTransform To Lerp");
             //propertyRect.y += 20f;
-            m_TargetRectransform = (RectTransform)EditorGUI.ObjectField(propertyRect, "Target RectTransform", m_TargetRectransform, typeof(RectTransform), true);
+            //propertyRect.height = 25f;
+            m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Target Transform", m_TargetTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-
-            m_Graph = EditorGUI.CurveField(propertyRect, "Y Velocity", m_Graph);
+            m_Graph = EditorGUI.CurveField(propertyRect, "Z Displacement", m_Graph);
+            propertyRect.y += 20f;
+            m_RelativeToWorld = EditorGUI.Toggle(propertyRect, "Relative To World", m_RelativeToWorld);
 
             LEMStyleLibrary.EndEditorLabelColourChange();
-
 
         }
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            CurveDisplaceYRectransformToPosition myEffect = ScriptableObject.CreateInstance<CurveDisplaceYRectransformToPosition>();
+            CurveDisplaceZTransformToPosition myEffect = ScriptableObject.CreateInstance<CurveDisplaceZTransformToPosition>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -52,15 +53,15 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetRectransform, m_Graph);
+            myEffect.SetUp(m_TargetTransform, m_Graph, m_RelativeToWorld);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            CurveDisplaceYRectransformToPosition loadFrom = effectToLoadFrom as CurveDisplaceYRectransformToPosition;
-            loadFrom.UnPack(out m_TargetRectransform, out m_Graph);
+            CurveDisplaceZTransformToPosition loadFrom = effectToLoadFrom as CurveDisplaceZTransformToPosition;
+            loadFrom.UnPack(out m_TargetTransform, out m_Graph, out m_RelativeToWorld);
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;

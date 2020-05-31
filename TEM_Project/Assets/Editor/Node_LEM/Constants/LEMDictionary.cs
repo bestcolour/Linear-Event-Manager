@@ -59,24 +59,7 @@ namespace LEM_Editor
 
 	#endregion
 
-        #region SetTransform
-             { "ReposTrans", new NodeDictionaryDefinition(new RepositionTransformNode()         ,new Color(0.15f ,0.68f,0.38f)) },
-             { "ReposRectTrans", new NodeDictionaryDefinition(new RepositionRectTransformNode() ,new Color(0.15f ,0.68f,0.38f)) },
-             { "ReScaleTrans", new NodeDictionaryDefinition(new RescaleTransformNode()          ,new Color(0.15f ,0.68f,0.38f)) },
-             { "ReRotTrans", new NodeDictionaryDefinition(new ReRotateTransformNode()           ,new Color(0.15f ,0.68f,0.38f)) },
-             { "ReSizeRectTrans", new NodeDictionaryDefinition(new ReSizeRectTransformNode()    ,new Color(0.15f ,0.68f,0.38f)) },
-             { "SetTransParent", new NodeDictionaryDefinition(new SetTransformParentNode()      ,new Color(0.15f ,0.68f,0.38f)) },
-
-	    #endregion
-
-             
-        #region OffSet Transform
-             { "OffsetTransPos", new NodeDictionaryDefinition(new OffsetTransformPositionNode()         ,new Color(0.12f ,0.52f,0.29f)) },
-             { "OffsetTransRot", new NodeDictionaryDefinition(new OffsetTransformRotationNode()         ,new Color(0.12f ,0.52f,0.29f)) },
-             { "OffsetTransScale", new NodeDictionaryDefinition(new OffsetTransformScaleNode()          ,new Color(0.12f ,0.52f,0.29f)) },
-             { "OffsetRectTransSize", new NodeDictionaryDefinition(new OffsetRectTransformSizeNode()    ,new Color(0.12f ,0.52f,0.29f)) },
-
-        #endregion
+      
 
         #region Halt
              { "AddDelay",  new NodeDictionaryDefinition(    new AddDelayNode()                                         ,new Color(0.85f,0.64f,0.13f))},
@@ -143,6 +126,25 @@ namespace LEM_Editor
 
 	    #endregion
 
+        #region SetTransform
+             { "ReposTrans", new NodeDictionaryDefinition(new RepositionTransformNode()         ,new Color(0.15f ,0.68f,0.38f)) },
+             { "ReposRectTrans", new NodeDictionaryDefinition(new RepositionRectTransformNode() ,new Color(0.15f ,0.68f,0.38f)) },
+             { "ReScaleTrans", new NodeDictionaryDefinition(new RescaleTransformNode()          ,new Color(0.15f ,0.68f,0.38f)) },
+             { "ReRotTrans", new NodeDictionaryDefinition(new ReRotateTransformNode()           ,new Color(0.15f ,0.68f,0.38f)) },
+             { "ReSizeRectTrans", new NodeDictionaryDefinition(new ReSizeRectTransformNode()    ,new Color(0.15f ,0.68f,0.38f)) },
+             { "SetTransParent", new NodeDictionaryDefinition(new SetTransformParentNode()      ,new Color(0.15f ,0.68f,0.38f)) },
+
+	    #endregion
+
+             
+        #region OffSet Transform
+             { "OffsetTransPos", new NodeDictionaryDefinition(new OffsetTransformPositionNode()         ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetTransRot", new NodeDictionaryDefinition(new OffsetTransformRotationNode()         ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetTransScale", new NodeDictionaryDefinition(new OffsetTransformScaleNode()          ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetRectTransSize", new NodeDictionaryDefinition(new OffsetRectTransformSizeNode()    ,new Color(0.12f ,0.52f,0.29f)) },
+
+        #endregion
+
         #region MoveTowards
 		
              //Position
@@ -182,8 +184,11 @@ namespace LEM_Editor
              { "TranslateRelativeToTransform", new NodeDictionaryDefinition(new TranslateRelativeToTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
              { "TranslateRelativeToSpace", new NodeDictionaryDefinition(new TranslateRelativeToSpaceNode()                          ,new Color(0.302f,0.216f,0.851f)) },
         #endregion
-        #region Curve
-             //Position
+
+        #region Curve Transform Values
+
+             //Position related
+             //Displacement
              { "CurveDisplaceXTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
              { "CurveDisplaceXRectransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
              { "CurveDisplaceYTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceYTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
@@ -191,6 +196,22 @@ namespace LEM_Editor
              { "CurveDisplaceZTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceZTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
              { "CurveDisplaceZRectransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceZRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
              { "CurveDisplaceXYZTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXYZTransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Velocity
+             { "CurveVelocityXRectransform", new NodeDictionaryDefinition(new CurveVelocityXRectransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveVelocityYRectransform", new NodeDictionaryDefinition(new CurveVelocityYRectransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveVelocityZRectransform", new NodeDictionaryDefinition(new CurveVelocityZRectransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveVelocityXTransform", new NodeDictionaryDefinition(new CurveVelocityXTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveVelocityYTransform", new NodeDictionaryDefinition(new CurveVelocityYTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveVelocityZTransform", new NodeDictionaryDefinition(new CurveVelocityZTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+
+             //Rotation Related
+
+
+
+
+
 	    #endregion
 
 	    #endregion
@@ -213,8 +234,7 @@ namespace LEM_Editor
              { "FadeToAlphaTextMeshPros", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProsComponentNode()                       ,new Color(0.13f ,0.38f,0.55f)) },
 
              { "FadeToAlphaTextMeshProGUI", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIComponentNode()                   ,new Color(0.11f ,0.31f,0.45f)) },
-             { "FadeToAlphaTextMeshProGUIs", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIsComponentNode()                 ,new Color(0.11f ,0.31f,0.45f)) }, 
-       
+             { "FadeToAlphaTextMeshProGUIs", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIsComponentNode()                 ,new Color(0.11f ,0.31f,0.45f)) },
 
 	    #endregion
 

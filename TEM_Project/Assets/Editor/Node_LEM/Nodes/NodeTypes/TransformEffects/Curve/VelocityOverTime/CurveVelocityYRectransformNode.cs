@@ -6,9 +6,9 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class CurveDisplaceZRectransformToPositionNode : UpdateEffectNode
+    public class CurveVelocityYRectransformNode : UpdateEffectNode
     {
-        protected override string EffectTypeName => "CurveDisplaceZRectransformToPosition";
+        protected override string EffectTypeName => "CurveVelocityYRectransform";
         RectTransform m_TargetRectransform = default;
         AnimationCurve m_Graph = new AnimationCurve();
 
@@ -33,16 +33,19 @@ namespace LEM_Editor
             m_TargetRectransform = (RectTransform)EditorGUI.ObjectField(propertyRect, "Target RectTransform", m_TargetRectransform, typeof(RectTransform), true);
             propertyRect.y += 20f;
 
-            m_Graph = EditorGUI.CurveField(propertyRect, "Z Velocity", m_Graph);
+            m_Graph = EditorGUI.CurveField(propertyRect, "Y Velocity", m_Graph);
 
             LEMStyleLibrary.EndEditorLabelColourChange();
 
 
         }
 
+
+
+
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            CurveDisplaceZRectransformToPosition myEffect = ScriptableObject.CreateInstance<CurveDisplaceZRectransformToPosition>();
+            CurveVelocityYRectransform myEffect = ScriptableObject.CreateInstance<CurveVelocityYRectransform>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -59,7 +62,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            CurveDisplaceZRectransformToPosition loadFrom = effectToLoadFrom as CurveDisplaceZRectransformToPosition;
+            CurveVelocityYRectransform loadFrom = effectToLoadFrom as CurveVelocityYRectransform;
             loadFrom.UnPack(out m_TargetRectransform, out m_Graph);
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System;
 using UnityEngine;
 
 /// <summary>
@@ -30,7 +28,6 @@ namespace LEM_Effects
         [Tooltip("Stores basic node data. This is applicable for effect nodes as well"), Header("Node Data")]
         public NodeBaseData bm_NodeBaseData = default;
 
-        public virtual LEM_BaseEffect ShallowClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
 
         public virtual void OnInitialiseEffect() { }
 
@@ -62,6 +59,25 @@ namespace LEM_Effects
         /// </summary>
         public virtual void OnEndEffect() { }
 
+
+#if UNITY_EDITOR
+        public virtual LEM_BaseEffect ShallowClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
+#endif
+
     }
+
+#if UNITY_EDITOR
+    public static class LEM_BaseEffect_Extensions
+    {
+        public static void CloneBaseValuesFrom(this LEM_BaseEffect copy, LEM_BaseEffect original)
+        {
+            copy.bm_NodeBaseData = original.bm_NodeBaseData;
+            copy.bm_NodeEffectType = original.bm_NodeEffectType;
+            copy.bm_UpdateCycle = original.bm_UpdateCycle;
+        }
+    } 
+#endif
+
+
 
 }
