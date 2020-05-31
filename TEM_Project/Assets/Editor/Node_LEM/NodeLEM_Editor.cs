@@ -164,6 +164,8 @@ namespace LEM_Editor
 
         public static float InverseScaleFactor => instance.m_InverseScaleFactorOnEveryGUIFrame;
         float m_InverseScaleFactorOnEveryGUIFrame = default;
+
+        Vector2 m_PreviousZoomMousePosition = Vector2.zero;
         #endregion
 
         #region SearchBox
@@ -618,8 +620,8 @@ namespace LEM_Editor
             DrawGrid(100 * ScaleFactor, 0.4f, Color.gray);
             //Draw graphics that are zoomable
             EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height));
+            //EditorZoomFeature.BeginZoom(ScaleFactor, new Rect(0f, 0f, Screen.width, Screen.height), m_PreviousZoomMousePosition);
             Vector2 currMousePos = currentEvent.mousePosition;
-
             DetermineAllNodes();
 
             //Draw the rect grpsfirst
@@ -1074,6 +1076,8 @@ namespace LEM_Editor
 
                     if (!isMouseInSearchBox)
                     {
+                        m_PreviousZoomMousePosition = currMousePosition;
+
                         int signOfChange;
                         float changeRate;
 

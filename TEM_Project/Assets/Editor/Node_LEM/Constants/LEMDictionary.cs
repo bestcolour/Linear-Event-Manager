@@ -79,7 +79,6 @@ namespace LEM_Editor
         #endregion
 
         #region Halt
-             //{ "AddGlobalDelay",  new NodeDictionaryDefinition(    new AddGlobalDelayNode()             ,new Color(0.85f,0.64f,0.13f))},
              { "AddDelay",  new NodeDictionaryDefinition(    new AddDelayNode()                                         ,new Color(0.85f,0.64f,0.13f))},
              { "AddDelayAt",  new NodeDictionaryDefinition(    new AddDelayAtNode()                                     ,new Color(0.85f,0.64f,0.13f))},
 

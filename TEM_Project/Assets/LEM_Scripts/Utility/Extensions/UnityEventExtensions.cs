@@ -1,18 +1,22 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine.Events;
 
-public static class UnityEventExtensions
+//You can remove this namespace if you wish to use this as well!s
+namespace LEM_Effects.Extensions
 {
-    /// <summary>
-    /// Clones the specified unity event list.
-    /// </summary>
-    /// <param name="ev">The unity event.</param>
-    /// <returns>Cloned UnityEvent</returns>
-    public static T Clone<T>(this T ev) where T : UnityEventBase
+    public static class UnityEventExtensions
     {
-        return ReflectionExtensions.DeepCopy(ev);
+        /// <summary>
+        /// Clones the specified unity event list.
+        /// </summary>
+        /// <param name="ev">The unity event.</param>
+        /// <returns>Cloned UnityEvent</returns>
+        public static T Clone<T>(this T ev) where T : UnityEventBase
+        {
+            return ReflectionExtensions.DeepCopy(ev);
+        }
+
     }
 
 }
-
 #endif
