@@ -9,7 +9,7 @@ namespace LEM_Editor
     {
         Transform m_TargetTransform = default;
         Transform m_ReferenceTransform = default;
-        Vector3 m_LocalPivotPosition = default;
+        Vector3 m_PivotWorldPosition = default;
         bool m_WorldRotation = false;
         float m_Smoothing = 0.1f;
         float m_SnapRange = 0.025f;
@@ -41,7 +41,7 @@ namespace LEM_Editor
             m_ReferenceTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Reference Transform", m_ReferenceTransform, typeof(Transform), true);
             propertyRect.y += 20f;
 
-            m_LocalPivotPosition = EditorGUI.Vector3Field(propertyRect, "Pivot LocalPosition", m_LocalPivotPosition);
+            m_PivotWorldPosition = EditorGUI.Vector3Field(propertyRect, "Pivot WorldPosition", m_PivotWorldPosition);
             propertyRect.y += 40f;
             m_WorldRotation = EditorGUI.Toggle(propertyRect, "Use World Rotation", m_WorldRotation);
             propertyRect.y += 20f;
@@ -67,7 +67,7 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_ReferenceTransform, m_LocalPivotPosition, m_WorldRotation, m_Smoothing, m_SnapRange);
+            myEffect.SetUp(m_TargetTransform, m_ReferenceTransform, m_PivotWorldPosition, m_WorldRotation, m_Smoothing, m_SnapRange);
             return myEffect;
 
         }
@@ -75,7 +75,7 @@ namespace LEM_Editor
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
             RepeatLerpRotationToTAboutV3Pivot loadFrom = effectToLoadFrom as RepeatLerpRotationToTAboutV3Pivot;
-            loadFrom.UnPack(out m_TargetTransform, out m_ReferenceTransform, out m_LocalPivotPosition, out m_WorldRotation, out m_Smoothing, out m_SnapRange);
+            loadFrom.UnPack(out m_TargetTransform, out m_ReferenceTransform, out m_PivotWorldPosition, out m_WorldRotation, out m_Smoothing, out m_SnapRange);
 
             //Important
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;

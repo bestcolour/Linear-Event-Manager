@@ -188,21 +188,51 @@ namespace LEM_Editor
              //Lerps a Transform's rotation/local Rotation to match another Transform's Rotational value about a Vector3 Pivot
               //and will reset the Transform's rotation/local to its original value upon completion before Lerping again
              { "RepeatLerpRotationToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpRotationToTAboutV3PivotNode()                                  ,new Color(0.12f ,0.38f,0.55f)) },
+    #endregion
+
+           #region Scale
+		  //Lerp a Transform's scale to a vector3 value
+             { "LerpScaleToV3", new NodeDictionaryDefinition(new LerpScaleToV3Node()                            ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a vector3 value about a Transform pivot
+             { "LerpScaleToV3AboutTPivot", new NodeDictionaryDefinition(new LerpScaleToV3AboutTPivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a vector3 value about a vector3 pivot
+             { "LerpScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new LerpScaleToV3AboutV3PivotNode()    ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a reference Transform's scale value 
+             { "LerpScaleToT", new NodeDictionaryDefinition(new LerpScaleToTNode()    ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a refernce Transform's scale value about a Transform Pivot
+             { "LerpScaleToTAboutTPivot", new NodeDictionaryDefinition(new LerpScaleToTAboutTPivotNode()    ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a refernce Transform's scale value about a Vector3 Pivot
+             { "LerpScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new LerpScaleToTAboutV3PivotNode()    ,new Color(0.14f,0.44f,0.64f)) },
+
+
+             //RepeatScale
+             //Lerp a Transform's scale to a vector3 value and reset the Transform's scale to its original value upon completion before Lerping again
+             { "RepeatLerpScaleToV3", new NodeDictionaryDefinition(new RepeatLerpScaleToV3Node()                            ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a vector3 value about a Vector3 pivot and reset the Transform's scale to its original value upon completion before Lerping again
+             { "RepeatLerpScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpScaleToV3AboutV3PivotNode()    ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a vector3 value about a Transform pivot and reset the Transform's scale to its original value upon completion before Lerping again
+             { "RepeatLerpScaleToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatLerpScaleToV3AboutTPivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a Reference Transform's value and reset the Transform's scale to its original value upon completion before Lerping again
+             { "RepeatLerpScaleToT", new NodeDictionaryDefinition(new RepeatLerpScaleToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a Reference Transform's value about a Transform pivot and reset the Transform's scale to its original value upon completion before Lerping again
+             { "RepeatLerpScaleToTAboutTPivot", new NodeDictionaryDefinition(new RepeatLerpScaleToTAboutTPivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerp a Transform's scale to a Reference Transform's value about a Vector3 pivot and reset the Transform's scale to its original value upon completion before Lerping again
+             { "RepeatLerpScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpScaleToTAboutV3PivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
 
 	#endregion
 
 
-             //Scale
-             { "LerpScale", new NodeDictionaryDefinition(new LerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpScaleRelativeToV3", new NodeDictionaryDefinition(new LerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpScaleRelativeToT", new NodeDictionaryDefinition(new LerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
-             //RepeatScale
-             { "RepeatLerpScale", new NodeDictionaryDefinition(new RepeatLerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
-             { "RepeatLerpScaleRelativeToV3", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
-             { "RepeatLerpScaleRelativeToT", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
-
-	    #endregion
-
+        #endregion
 
 
         #region MoveTowards

@@ -3,7 +3,7 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class RepeatLerpScaleRelativeToT : UpdateBaseEffect
+    public class RepeatLerpScaleToV3AboutTPivot : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, Transform, float, float> 
 #endif
@@ -81,22 +81,6 @@ namespace LEM_Effects
         }
 
 #endif
-        ////m_TargetTransform.localPosition = GetRelativePosition(m_InitialPosition, m_LocalPivotPosition, m_NewScale.Divide(m_InitialScale));
-        ////Relative scale = how much is the new scale compared to the previous scale?
-        //Vector3 GetRelativePosition(Vector3 point, Vector3 pivot, Vector3 relativeScale)
-        //{
-        //    //Translate pivot point to the origin
-        //    Vector3 dir = point - pivot;
-
-        //    //Scale the point
-        //    dir = Vector3.Scale(relativeScale, dir);
-
-        //    //Translate the dir point back to pivot
-        //    dir += pivot;
-
-        //    return dir;
-        //}
-
 
     }
 

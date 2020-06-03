@@ -3,9 +3,9 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class LerpScaleRelativeToT : UpdateBaseEffect
+    public class LerpScaleToTAboutTPivot : UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3, Transform, float, float> 
+        , IEffectSavable<Transform, Transform, Transform, float, float>
 #endif
     {
 
@@ -13,7 +13,7 @@ namespace LEM_Effects
         Transform m_TargetTransform = default;
 
         [SerializeField]
-        Vector3 m_TargetScale = default;
+        Transform m_ReferenceTransform = default;
 
         [SerializeField]
         Transform m_Pivot = default;
@@ -37,7 +37,7 @@ namespace LEM_Effects
 
         public override bool OnUpdateEffect(float delta)
         {
-            m_TargetTransform.localScale = Vector3.Lerp(m_TargetTransform.localScale, m_TargetScale, delta * m_Smoothing);
+            m_TargetTransform.localScale = Vector3.Lerp(m_TargetTransform.localScale, m_ReferenceTransform.localScale, delta * m_Smoothing);
 
             //Translate pivot point to the origin
             Vector3 dir = m_InitialPosition - m_Pivot.localPosition;
@@ -54,9 +54,9 @@ namespace LEM_Effects
 
 
             //Stop updating after target has been reached
-            if (Vector3.SqrMagnitude(m_TargetTransform.localScale - m_TargetScale) < m_SnapRange * m_SnapRange)
+            if (Vector3.SqrMagnitude(m_TargetTransform.localScale - m_ReferenceTransform.localScale) < m_SnapRange * m_SnapRange)
             {
-                m_TargetTransform.localScale = m_TargetScale;
+                m_TargetTransform.localScale = m_ReferenceTransform.localScale;
                 return true;
             }
 
@@ -64,41 +64,26 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
-        public void SetUp(Transform t1, Vector3 t2, Transform t3, float t4, float t5)
+        public void SetUp(Transform t1, Transform t2, Transform t3, float t4, float t5)
         {
             m_TargetTransform = t1;
-            m_TargetScale = t2;
+            m_ReferenceTransform = t2;
             m_Pivot = t3;
             m_Smoothing = t4;
             m_SnapRange = t5;
         }
 
-        public void UnPack(out Transform t1, out Vector3 t2, out Transform t3, out float t4, out float t5)
+        public void UnPack(out Transform t1, out Transform t2, out Transform t3, out float t4, out float t5)
         {
             t1 = m_TargetTransform;
-            t2 = m_TargetScale;
+            t2 = m_ReferenceTransform;
             t3 = m_Pivot;
             t4 = m_Smoothing;
             t5 = m_SnapRange;
 
-        } 
+        }
 #endif
 
-        ////m_TargetTransform.localPosition = GetRelativePosition(m_InitialPosition, m_LocalPivotPosition, m_NewScale.Divide(m_InitialScale));
-        ////Relative scale = how much is the new scale compared to the previous scale?
-        //Vector3 GetRelativePosition(Vector3 point, Vector3 pivot, Vector3 relativeScale)
-        //{
-        //    //Translate pivot point to the origin
-        //    Vector3 dir = point - pivot;
-
-        //    //Scale the point
-        //    dir = Vector3.Scale(relativeScale, dir);
-
-        //    //Translate the dir point back to pivot
-        //    dir += pivot;
-
-        //    return dir;
-        //}
 
 
     }

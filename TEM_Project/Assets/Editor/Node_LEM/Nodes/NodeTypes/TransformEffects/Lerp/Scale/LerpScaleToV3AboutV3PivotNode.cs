@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class LerpScaleRelativeToV3Node : UpdateEffectNode
+    public class LerpScaleToV3AboutV3PivotNode : UpdateEffectNode
     {
         [SerializeField]
         Transform m_TargetedTransform = default;
@@ -16,7 +16,7 @@ namespace LEM_Editor
         [SerializeField]
         float m_Smoothing = 0.1f, m_SnapRange = 0.025f;
 
-        protected override string EffectTypeName => "LerpScaleRelativeToV3";
+        protected override string EffectTypeName => "LerpScaleToV3AboutV3Pivot";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -55,7 +55,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            LerpScaleRelativeToV3 myEffect = ScriptableObject.CreateInstance<LerpScaleRelativeToV3>();
+            LerpScaleToV3AboutV3Pivot myEffect = ScriptableObject.CreateInstance<LerpScaleToV3AboutV3Pivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -72,7 +72,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            LerpScaleRelativeToV3 loadFrom = effectToLoadFrom as LerpScaleRelativeToV3;
+            LerpScaleToV3AboutV3Pivot loadFrom = effectToLoadFrom as LerpScaleToV3AboutV3Pivot;
             loadFrom.UnPack(out m_TargetedTransform, out m_TargetScale,out m_LocalPivot, out m_Smoothing, out m_SnapRange);
 
             //Important
