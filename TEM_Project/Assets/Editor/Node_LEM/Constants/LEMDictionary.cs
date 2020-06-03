@@ -3,6 +3,8 @@ using UnityEngine;
 using System;
 using System.Linq;
 using LEM_Effects.Extensions;
+using LEM_Effects;
+
 namespace LEM_Editor
 {
     public class LEMDictionary
@@ -140,10 +142,10 @@ namespace LEM_Editor
              //Lerps a rectTransform to another rectTransform's anchored3DPosition and will reset the rectTransform's anchored3DPosition to its original value upon completion before Lerping again
              { "RepeatLerpRectTransToRectTrans", new NodeDictionaryDefinition(new RepeatLerpRectTransformToRectTransformNode()          ,new Color(0.12f ,0.38f,0.55f)) },
 
-	    #endregion
+        #endregion
 
-
-             //Rotation
+          #region Rotation
+		   //Rotation
              //In world rotation means applying the rotation to the transform's rotation property instead of localRotation
              //Note: Lerp Rotation takes in a targeted rotation and hence the TargetTransform will always take the shortest rotational path to achieve that Targeted Rotation
 
@@ -156,6 +158,17 @@ namespace LEM_Editor
              //Lerps a Transform's rotation/localRotation to a V3 eulerAngle about a V3 Pivot
              { "LerpRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new LerpRotationToV3AboutV3PivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
 
+             //Lerps a Transform's rotation/local Rotation to match another Transform's Rotational value
+             { "LerpRotationToT", new NodeDictionaryDefinition(new LerpRotationToTNode()                                ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerps a Transform's rotation/localRotation to match another Transform's Rotational value about a Transform Pivot
+             { "LerpRotationToTAboutTPivot", new NodeDictionaryDefinition(new LerpRotationToTAboutTPivotNode()          ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerps a Transform's rotation/localRotation to match another Transform's Rotational value about a Vector3 Pivot
+             { "LerpRotationToTAboutV3Pivot", new NodeDictionaryDefinition(new LerpRotationToTAboutV3PivotNode()        ,new Color(0.14f,0.44f,0.64f)) },
+
+
+
               //Lerps a Transform's rotation/localRotation to a V3 eulerAngle and will reset the Transform's rotation/local to its original value upon completion before Lerping again
              { "RepeatLerpRotationToV3", new NodeDictionaryDefinition(new RepeatLerpRotationToV3Node()                                  ,new Color(0.12f ,0.38f,0.55f)) },
 
@@ -165,7 +178,18 @@ namespace LEM_Editor
               //Lerps a Transform's rotation/localRotation to a V3 eulerAngle about a V3 Pivot Pivot and will reset the Transform's rotation/local to its original value upon completion before Lerping again
              { "RepeatLerpRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpRotationToV3AboutV3PivotNode()          ,new Color(0.12f ,0.38f,0.55f)) },
 
+              //Lerps a Transform's rotation/local Rotation to match another Transform's Rotational value and will reset the Transform's rotation/local to its original value upon completion before Lerping again
+             { "RepeatLerpRotationToT", new NodeDictionaryDefinition(new RepeatLerpRotationToTNode()                                  ,new Color(0.12f ,0.38f,0.55f)) },
 
+              //Lerps a Transform's rotation/local Rotation to match another Transform's Rotational value about a Transform Pivot
+              //and will reset the Transform's rotation/local to its original value upon completion before Lerping again
+             { "RepeatLerpRotationToTAboutTPivot", new NodeDictionaryDefinition(new RepeatLerpRotationToTAboutTPivotNode()                                  ,new Color(0.12f ,0.38f,0.55f)) },
+
+             //Lerps a Transform's rotation/local Rotation to match another Transform's Rotational value about a Vector3 Pivot
+              //and will reset the Transform's rotation/local to its original value upon completion before Lerping again
+             { "RepeatLerpRotationToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpRotationToTAboutV3PivotNode()                                  ,new Color(0.12f ,0.38f,0.55f)) },
+
+	#endregion
 
 
              //Scale

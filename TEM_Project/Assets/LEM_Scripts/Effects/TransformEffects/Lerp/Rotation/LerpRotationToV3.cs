@@ -12,7 +12,7 @@ namespace LEM_Effects
         [SerializeField]
         Transform m_TransformToBeRotated = default;
 
-        [SerializeField, Tooltip("The amount of rotation you wish the Transform to have rotated by the end of the Lerp")]
+        [SerializeField]
         Vector3 m_TargetRotation = default;
 
         [SerializeField, Tooltip("Rotates the transform by the values locally if false")]
