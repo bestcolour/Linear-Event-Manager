@@ -37,7 +37,7 @@ namespace LEM_Editor
 
             m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Targeted Transform", m_TargetTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Amount To Rotate", m_AmountToRotate);
+            m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Target Rotation", m_AmountToRotate);
             propertyRect.y += 40f;
             m_PivotTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Pivot Transform", m_PivotTransform, typeof(Transform), true);
             propertyRect.y += 20f;
@@ -55,6 +55,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
+            
             LEM_Effects.LerpRotationRelativeToT myEffect = ScriptableObject.CreateInstance<LEM_Effects.LerpRotationRelativeToT>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 

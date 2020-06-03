@@ -51,7 +51,7 @@ namespace LEM_Editor
 
 
         #region GameObject
-		    { "InstantiateGameObject", new NodeDictionaryDefinition(   new InstantiateGameObjectNode(),new Color(0.04f,0.65f,0.2f)) },
+		     { "InstantiateGameObject", new NodeDictionaryDefinition(   new InstantiateGameObjectNode(),new Color(0.04f,0.65f,0.2f)) },
              { "DestroyGameObject", new NodeDictionaryDefinition(  new DestroyGameObjectNode(),  new Color(0.796f,0.098f,0.098f)) },
              { "DestroyGameObjects", new NodeDictionaryDefinition(  new DestroyGameObjectsNode(),  new Color(0.796f,0.098f,0.098f)) },
              { "SetGameObjectsActive", new NodeDictionaryDefinition(new SetGameObjectsActiveNode(),new Color(0.64f,0.09f,0.39f)) },
@@ -89,42 +89,7 @@ namespace LEM_Editor
 
         #region TransformRelated Effects
 
-             //Note: Effects under lerp, movetowards and Curve are all non-additive effects which means that any other effects which intends to add on to the 
-             //lerp/movetowards effects will result in conflicts in which one effect will dominate over the other and apply its transform value changes over the other's
-
-        #region LERP
-		
-             //Position
-             { "LerpRectransToPos", new NodeDictionaryDefinition(new LerpRectransToPosNode()            ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpRectransToRectrans", new NodeDictionaryDefinition(new LerpRectransToRectransNode()  ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpTransToPos", new NodeDictionaryDefinition(new LerpTransformToPositionNode()         ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpTransToTrans", new NodeDictionaryDefinition(new LerpTransformToTransformNode()      ,new Color(0.14f,0.44f,0.64f)) },
-              //Repeat Position
-             { "RepeatLerpRectransToPosNode", new NodeDictionaryDefinition(new RepeatLerpRectransformToPositionNode()                   ,new Color(0.12f ,0.38f,0.55f)) },
-             { "RepeatLerpTransToTrans", new NodeDictionaryDefinition(new RepeatLerpTransformToTransformNode()                          ,new Color(0.12f ,0.38f,0.55f)) },
-             { "RepeatLerpTransToPos", new NodeDictionaryDefinition(new RepeatLerpTransformToPositionNode()                             ,new Color(0.12f ,0.38f,0.55f)) },
-             { "RepeatLerpRectTransToRectTrans", new NodeDictionaryDefinition(new RepeatLerpRectTransformToRectTransformNode()          ,new Color(0.12f ,0.38f,0.55f)) },
-
-             //Scale
-             { "LerpScale", new NodeDictionaryDefinition(new LerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpScaleRelativeToV3", new NodeDictionaryDefinition(new LerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpScaleRelativeToT", new NodeDictionaryDefinition(new LerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
-             //RepeatRotation
-             { "RepeatLerpScale", new NodeDictionaryDefinition(new RepeatLerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
-             { "RepeatLerpScaleRelativeToV3", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
-             { "RepeatLerpScaleRelativeToT", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
-
-           
-             //Rotation
-             { "LerpRotation", new NodeDictionaryDefinition(new LerpRotationNode()                              ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpRotationRelativeToT", new NodeDictionaryDefinition(new LerpRotationRelativeToTNode()        ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpRotationRelativeToV3", new NodeDictionaryDefinition(new LerpRotationRelativeToV3Node()      ,new Color(0.14f,0.44f,0.64f)) },
-              //RepeatRotation
-             { "RepeatLerpRotation", new NodeDictionaryDefinition(new RepeatLerpRotationNode()                                  ,new Color(0.12f ,0.38f,0.55f)) },
-             { "RepeatLerpRotationRelativeToT", new NodeDictionaryDefinition(new RepeatLerpRotationRelativeToTNode()            ,new Color(0.12f ,0.38f,0.55f)) },
-             { "RepeatLerpRotationRelativeToV3", new NodeDictionaryDefinition(new RepeatLerpRotationRelativeToV3Node()          ,new Color(0.12f ,0.38f,0.55f)) },
-
-	    #endregion
+            
 
         #region SetTransform
              { "ReposTrans", new NodeDictionaryDefinition(new RepositionTransformNode()         ,new Color(0.15f ,0.68f,0.38f)) },
@@ -144,6 +109,62 @@ namespace LEM_Editor
              { "OffsetRectTransSize", new NodeDictionaryDefinition(new OffsetRectTransformSizeNode()    ,new Color(0.12f ,0.52f,0.29f)) },
 
         #endregion
+
+              //Note: Effects under lerp, movetowards and Curve are all non-additive effects which means that any other effects which intends to add on to the 
+             //lerp/movetowards effects will result in conflicts in which one effect will dominate over the other and apply its transform value changes over the other's
+        #region LERP
+		
+          #region Position
+             //Lerps a rectTransform to a vector3 position
+             { "LerpRectransToPos", new NodeDictionaryDefinition(new LerpRectransToPosNode()            ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerps a rectTransform to another rectTransform's anchored3DPosition
+             { "LerpRectransToRectrans", new NodeDictionaryDefinition(new LerpRectransToRectransNode()  ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerps a transform to a vector3 position
+             { "LerpTransToPos", new NodeDictionaryDefinition(new LerpTransformToPositionNode()         ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerps a transform to a transform's world position
+             { "LerpTransToTrans", new NodeDictionaryDefinition(new LerpTransformToTransformNode()      ,new Color(0.14f,0.44f,0.64f)) },
+
+
+             //Repeatedly Lerps a rectTransform to a vector3 position
+             { "RepeatLerpRectransToPosNode", new NodeDictionaryDefinition(new RepeatLerpRectransformToPositionNode()                   ,new Color(0.12f ,0.38f,0.55f)) },
+
+             //Repeat Lerps a rectTransform to another rectTransform's anchored3DPosition
+             { "RepeatLerpTransToTrans", new NodeDictionaryDefinition(new RepeatLerpTransformToTransformNode()                          ,new Color(0.12f ,0.38f,0.55f)) },
+
+             //Repeat /Lerps a transform to a vector3 position
+             { "RepeatLerpTransToPos", new NodeDictionaryDefinition(new RepeatLerpTransformToPositionNode()                             ,new Color(0.12f ,0.38f,0.55f)) },
+
+             //Repeat Lerps a transform to a transform's world position
+             { "RepeatLerpRectTransToRectTrans", new NodeDictionaryDefinition(new RepeatLerpRectTransformToRectTransformNode()          ,new Color(0.12f ,0.38f,0.55f)) },
+
+	    #endregion
+
+
+             //Scale
+             { "LerpScale", new NodeDictionaryDefinition(new LerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpScaleRelativeToV3", new NodeDictionaryDefinition(new LerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpScaleRelativeToT", new NodeDictionaryDefinition(new LerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
+             //RepeatScale
+             { "RepeatLerpScale", new NodeDictionaryDefinition(new RepeatLerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleRelativeToV3", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleRelativeToT", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
+
+           
+             //Rotation
+             { "LerpRotation", new NodeDictionaryDefinition(new LerpRotationNode()                              ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpRotationRelativeToT", new NodeDictionaryDefinition(new LerpRotationRelativeToTNode()        ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpRotationRelativeToV3", new NodeDictionaryDefinition(new LerpRotationRelativeToV3Node()      ,new Color(0.14f,0.44f,0.64f)) },
+              //RepeatRotation
+             { "RepeatLerpRotation", new NodeDictionaryDefinition(new RepeatLerpRotationNode()                                  ,new Color(0.12f ,0.38f,0.55f)) },
+             { "RepeatLerpRotationRelativeToT", new NodeDictionaryDefinition(new RepeatLerpRotationRelativeToTNode()            ,new Color(0.12f ,0.38f,0.55f)) },
+             { "RepeatLerpRotationRelativeToV3", new NodeDictionaryDefinition(new RepeatLerpRotationRelativeToV3Node()          ,new Color(0.12f ,0.38f,0.55f)) },
+
+	    #endregion
+
+
 
         #region MoveTowards
 		
@@ -197,6 +218,10 @@ namespace LEM_Editor
              { "CurveDisplaceZRectransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceZRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
              { "CurveDisplaceXYZTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXYZTransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
 
+
+             //Additive Effects (you can add effects one on top of the other for these few effects
+             //The area under the curve/lines = Total amount of Displacement the transform has moved
+             //Absolute Value of areas under the curve lines = Total amount of Distance travelled by the transform
              //Velocity
              { "CurveVelocityXRectransform", new NodeDictionaryDefinition(new CurveVelocityXRectransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
              { "CurveVelocityYRectransform", new NodeDictionaryDefinition(new CurveVelocityYRectransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
@@ -205,8 +230,10 @@ namespace LEM_Editor
              { "CurveVelocityYTransform", new NodeDictionaryDefinition(new CurveVelocityYTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
              { "CurveVelocityZTransform", new NodeDictionaryDefinition(new CurveVelocityZTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
 
-
-             //Rotation Related
+             //The area under the curve/lines  (+ve Area + -ve Area) = Net Gain Rotation the transform has rotated
+             //Absolute Value of areas under the curve lines (|+ve Area| + |-ve Area|) =Total amount of rotation rotated by transform
+             //Rate of Change in Rotation 
+             { "CurveRotationXTransform", new NodeDictionaryDefinition(new CurveRotationXTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
 
 
 
