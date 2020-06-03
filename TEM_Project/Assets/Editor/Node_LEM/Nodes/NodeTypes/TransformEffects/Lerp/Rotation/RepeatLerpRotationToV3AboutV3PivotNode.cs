@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class LerpRotationRelativeToV3Node : UpdateEffectNode
+    public class RepeatLerpRotationToV3AboutV3PivotNode : UpdateEffectNode
     {
         Transform m_TargetTransform = default;
         Vector3 m_AmountToRotate = default;
@@ -15,7 +15,7 @@ namespace LEM_Editor
         float m_SnapRange = 0.025f;
 
 
-        protected override string EffectTypeName => "LerpRotationRelativeToV3";
+        protected override string EffectTypeName => "RepeatLerpRotationToV3AboutV3Pivot";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -37,7 +37,7 @@ namespace LEM_Editor
 
             m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Targeted Transform", m_TargetTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Amount To Rotate", m_AmountToRotate);
+            m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Target Rotation", m_AmountToRotate);
             propertyRect.y += 40f;
             m_LocalPivotPosition = EditorGUI.Vector3Field(propertyRect, "Pivot LocalPosition", m_LocalPivotPosition);
             propertyRect.y += 40f;
@@ -55,7 +55,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            LerpRotationRelativeToV3 myEffect = ScriptableObject.CreateInstance<LerpRotationRelativeToV3>();
+            RepeatLerpRotationToV3AboutV3Pivot myEffect = ScriptableObject.CreateInstance<RepeatLerpRotationToV3AboutV3Pivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -72,7 +72,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            LerpRotationRelativeToV3 loadFrom = effectToLoadFrom as LerpRotationRelativeToV3;
+            RepeatLerpRotationToV3AboutV3Pivot loadFrom = effectToLoadFrom as RepeatLerpRotationToV3AboutV3Pivot;
             loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate, out m_LocalPivotPosition, out m_WorldRotation, out m_Smoothing, out m_SnapRange);
 
             //Important

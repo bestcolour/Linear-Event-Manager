@@ -128,19 +128,44 @@ namespace LEM_Editor
              { "LerpTransToTrans", new NodeDictionaryDefinition(new LerpTransformToTransformNode()      ,new Color(0.14f,0.44f,0.64f)) },
 
 
-             //Repeatedly Lerps a rectTransform to a vector3 position
+             //Lerps a transform to another vector3 position and will reset the transform's position to its original value upon completion before Lerping again
              { "RepeatLerpRectransToPosNode", new NodeDictionaryDefinition(new RepeatLerpRectransformToPositionNode()                   ,new Color(0.12f ,0.38f,0.55f)) },
 
-             //Repeat Lerps a rectTransform to another rectTransform's anchored3DPosition
+             //Lerps a transform to a transform's world position and will reset the transform's position to its original value upon completion before Lerping again
              { "RepeatLerpTransToTrans", new NodeDictionaryDefinition(new RepeatLerpTransformToTransformNode()                          ,new Color(0.12f ,0.38f,0.55f)) },
 
-             //Repeat /Lerps a transform to a vector3 position
+             //Lerps a rectTransform to a vector3 position and will reset the rectTransform's anchored3DPosition to its original value upon completion before Lerping again
              { "RepeatLerpTransToPos", new NodeDictionaryDefinition(new RepeatLerpTransformToPositionNode()                             ,new Color(0.12f ,0.38f,0.55f)) },
 
-             //Repeat Lerps a transform to a transform's world position
+             //Lerps a rectTransform to another rectTransform's anchored3DPosition and will reset the rectTransform's anchored3DPosition to its original value upon completion before Lerping again
              { "RepeatLerpRectTransToRectTrans", new NodeDictionaryDefinition(new RepeatLerpRectTransformToRectTransformNode()          ,new Color(0.12f ,0.38f,0.55f)) },
 
 	    #endregion
+
+
+             //Rotation
+             //In world rotation means applying the rotation to the transform's rotation property instead of localRotation
+             //Note: Lerp Rotation takes in a targeted rotation and hence the TargetTransform will always take the shortest rotational path to achieve that Targeted Rotation
+
+             //Lerps a Transform's rotation/localRotation to a V3 eulerAngle
+             { "LerpRotationToV3", new NodeDictionaryDefinition(new LerpRotationToV3Node()                              ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerps a Transform's rotation/localRotation to a V3 eulerAngle about a Transform Pivot
+             { "LerpRotationToV3AboutTPivot", new NodeDictionaryDefinition(new LerpRotationToV3AboutTPivotNode()        ,new Color(0.14f,0.44f,0.64f)) },
+
+             //Lerps a Transform's rotation/localRotation to a V3 eulerAngle about a V3 Pivot
+             { "LerpRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new LerpRotationToV3AboutV3PivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
+
+              //Lerps a Transform's rotation/localRotation to a V3 eulerAngle and will reset the Transform's rotation/local to its original value upon completion before Lerping again
+             { "RepeatLerpRotationToV3", new NodeDictionaryDefinition(new RepeatLerpRotationToV3Node()                                  ,new Color(0.12f ,0.38f,0.55f)) },
+
+              //Lerps a Transform's rotation/localRotation to a V3 eulerAngle about a Transform Pivot and will reset the Transform's rotation/local to its original value upon completion before Lerping again
+             { "RepeatLerpRotationToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatLerpRotationToV3AboutTPivotNode()            ,new Color(0.12f ,0.38f,0.55f)) },
+
+              //Lerps a Transform's rotation/localRotation to a V3 eulerAngle about a V3 Pivot Pivot and will reset the Transform's rotation/local to its original value upon completion before Lerping again
+             { "RepeatLerpRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpRotationToV3AboutV3PivotNode()          ,new Color(0.12f ,0.38f,0.55f)) },
+
+
 
 
              //Scale
@@ -151,16 +176,6 @@ namespace LEM_Editor
              { "RepeatLerpScale", new NodeDictionaryDefinition(new RepeatLerpScaleNode()                            ,new Color(0.14f,0.44f,0.64f)) },
              { "RepeatLerpScaleRelativeToV3", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToV3Node()    ,new Color(0.14f,0.44f,0.64f)) },
              { "RepeatLerpScaleRelativeToT", new NodeDictionaryDefinition(new RepeatLerpScaleRelativeToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
-
-           
-             //Rotation
-             { "LerpRotation", new NodeDictionaryDefinition(new LerpRotationNode()                              ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpRotationRelativeToT", new NodeDictionaryDefinition(new LerpRotationRelativeToTNode()        ,new Color(0.14f,0.44f,0.64f)) },
-             { "LerpRotationRelativeToV3", new NodeDictionaryDefinition(new LerpRotationRelativeToV3Node()      ,new Color(0.14f,0.44f,0.64f)) },
-              //RepeatRotation
-             { "RepeatLerpRotation", new NodeDictionaryDefinition(new RepeatLerpRotationNode()                                  ,new Color(0.12f ,0.38f,0.55f)) },
-             { "RepeatLerpRotationRelativeToT", new NodeDictionaryDefinition(new RepeatLerpRotationRelativeToTNode()            ,new Color(0.12f ,0.38f,0.55f)) },
-             { "RepeatLerpRotationRelativeToV3", new NodeDictionaryDefinition(new RepeatLerpRotationRelativeToV3Node()          ,new Color(0.12f ,0.38f,0.55f)) },
 
 	    #endregion
 

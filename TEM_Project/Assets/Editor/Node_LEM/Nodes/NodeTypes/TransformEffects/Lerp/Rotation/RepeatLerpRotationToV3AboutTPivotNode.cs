@@ -5,17 +5,17 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class RepeatLerpRotationRelativeToV3Node : UpdateEffectNode
+    public class RepeatLerpRotationToV3AboutTPivotNode : UpdateEffectNode
     {
         Transform m_TargetTransform = default;
-        Vector3 m_AmountToRotate = default;
-        Vector3 m_LocalPivotPosition = default;
+        Vector3 m_TargetRotation = default;
+        Transform m_PivotTransform = default;
         bool m_WorldRotation = false;
         float m_Smoothing = 0.1f;
         float m_SnapRange = 0.025f;
 
 
-        protected override string EffectTypeName => "RepeatLerpRotationRelativeToV3";
+        protected override string EffectTypeName => "RepeatLerpRotationToV3AboutTPivot";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -37,11 +37,11 @@ namespace LEM_Editor
 
             m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Targeted Transform", m_TargetTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Amount To Rotate", m_AmountToRotate);
+            m_TargetRotation = EditorGUI.Vector3Field(propertyRect, "Target Rotation", m_TargetRotation);
             propertyRect.y += 40f;
-            m_LocalPivotPosition = EditorGUI.Vector3Field(propertyRect, "Pivot LocalPosition", m_LocalPivotPosition);
-            propertyRect.y += 40f;
-            m_WorldRotation = EditorGUI.Toggle(propertyRect, "Use World Rotation", m_WorldRotation);
+            m_PivotTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Pivot Transform", m_PivotTransform, typeof(Transform), true);
+            propertyRect.y += 20f;
+            m_WorldRotation = EditorGUI.Toggle(propertyRect, "In World Rotation", m_WorldRotation);
             propertyRect.y += 20f;
             m_Smoothing = EditorGUI.Slider(propertyRect, "Smoothing", m_Smoothing, 0f, 1f);
             propertyRect.y += 20f;
@@ -55,7 +55,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            RepeatLerpRotationRelativeToV3 myEffect = ScriptableObject.CreateInstance<RepeatLerpRotationRelativeToV3>();
+            LEM_Effects.RepeatLerpRotationToV3AboutTPivot myEffect = ScriptableObject.CreateInstance<LEM_Effects.RepeatLerpRotationToV3AboutTPivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -65,15 +65,15 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_AmountToRotate, m_LocalPivotPosition, m_WorldRotation, m_Smoothing, m_SnapRange);
+            myEffect.SetUp(m_TargetTransform, m_TargetRotation, m_PivotTransform, m_WorldRotation, m_Smoothing, m_SnapRange);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            RepeatLerpRotationRelativeToV3 loadFrom = effectToLoadFrom as RepeatLerpRotationRelativeToV3;
-            loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate, out m_LocalPivotPosition, out m_WorldRotation, out m_Smoothing, out m_SnapRange);
+            LEM_Effects.RepeatLerpRotationToV3AboutTPivot loadFrom = effectToLoadFrom as LEM_Effects.RepeatLerpRotationToV3AboutTPivot;
+            loadFrom.UnPack(out m_TargetTransform, out m_TargetRotation, out m_PivotTransform, out m_WorldRotation, out m_Smoothing, out m_SnapRange);
 
             //Important
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;

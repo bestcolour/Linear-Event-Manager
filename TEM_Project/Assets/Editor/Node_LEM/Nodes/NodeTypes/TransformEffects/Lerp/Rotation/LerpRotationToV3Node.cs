@@ -5,7 +5,7 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class LerpRotationNode : UpdateEffectNode
+    public class LerpRotationToV3Node : UpdateEffectNode
     {
         Transform m_TargetTransform = default;
         Vector3 m_AmountToRotate = default;
@@ -14,7 +14,7 @@ namespace LEM_Editor
         float m_SnapRange = 0.025f;
 
 
-        protected override string EffectTypeName => "LerpRotation";
+        protected override string EffectTypeName => "LerpRotationToV3";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -38,7 +38,7 @@ namespace LEM_Editor
             propertyRect.y += 20f;
             m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Target Rotation", m_AmountToRotate);
             propertyRect.y += 40f;
-            m_WorldRotation = EditorGUI.Toggle(propertyRect, "Use World Rotation", m_WorldRotation);
+            m_WorldRotation = EditorGUI.Toggle(propertyRect, "In World Rotation", m_WorldRotation);
             propertyRect.y += 20f;
             m_Smoothing = EditorGUI.Slider(propertyRect, "Smoothing", m_Smoothing, 0f, 1f);
             propertyRect.y += 20f;
@@ -52,7 +52,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            LerpRotation myEffect = ScriptableObject.CreateInstance<LerpRotation>();
+            LerpRotationToV3 myEffect = ScriptableObject.CreateInstance<LerpRotationToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -69,7 +69,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            LerpRotation loadFrom = effectToLoadFrom as LerpRotation;
+            LerpRotationToV3 loadFrom = effectToLoadFrom as LerpRotationToV3;
             loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate, out m_WorldRotation,out m_Smoothing, out m_SnapRange);
 
             //Important
