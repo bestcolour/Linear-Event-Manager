@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepeatLerpRotationToV3 : UpdateBaseEffect
+    public class RepeatMoveRotationToV3 : TimerBasedUpdateEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3, bool, float, float>
+        , IEffectSavable<Transform, Vector3, bool, float>
 #endif
     {
         [SerializeField]
@@ -15,17 +15,14 @@ namespace LEM_Effects
         [SerializeField, Tooltip("Rotates the transform by the values locally if false")]
         bool m_WorldRotation = false;
 
-        [SerializeField, Range(0f, 1f)]
-        float m_Smoothing = 0.1f;
-
         [SerializeField]
-        float m_SnapRange = 0.025f;
+        float m_Duration = 0f;
 
         #region Cached var
+
         Quaternion m_OriginalRotation = default;
         Quaternion m_TargetQRotation = default;
-        FloatLerpQuaternionDelegate d_RotateFunction = null;
-
+        VoidLerpQuaternionDelegate d_RotateFunction = null;
         #endregion
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
@@ -34,7 +31,6 @@ namespace LEM_Effects
         {
             m_TargetQRotation = Quaternion.Euler(m_TargetRotation);
 
-            //Soz im just sick of checking if statements every frame
             if (m_WorldRotation)
             {
                 m_OriginalRotation = m_TransformToBeRotated.rotation;
@@ -48,66 +44,58 @@ namespace LEM_Effects
 
         }
 
-        public override void OnReset()
-        {
-            base.OnReset();
-        }
-
         public override bool OnUpdateEffect(float delta)
         {
-            float angle = d_RotateFunction.Invoke(delta);
+            d_RotateFunction.Invoke(delta);
 
-            //If angle between the two quaternions r within the range
-            if (angle < m_SnapRange)
+            if (m_Timer >= m_Duration)
             {
-                //Soz im just sick of checking if statements every frame
                 if (m_WorldRotation)
                     m_TransformToBeRotated.rotation = m_OriginalRotation;
                 else
                     m_TransformToBeRotated.localRotation = m_OriginalRotation;
+
+                OnReset();
             }
 
             return m_IsFinished;
         }
 
-
-        float RotateLocally(float delta)
+        void RotateLocally(float delta)
         {
-            Quaternion q = Quaternion.Lerp(m_TransformToBeRotated.localRotation, m_TargetQRotation, m_Smoothing * delta);
-            m_TransformToBeRotated.localRotation = q;
+            m_Timer += delta;
+            delta = m_Timer / m_Duration;
 
-            return Quaternion.Angle(q, m_TargetQRotation);
+            m_TransformToBeRotated.localRotation = Quaternion.Lerp(m_OriginalRotation, m_TargetQRotation, delta);
+
         }
 
-        float RotateInWorld(float delta)
+        void RotateInWorld(float delta)
         {
-            Quaternion q = Quaternion.Lerp(m_TransformToBeRotated.rotation, m_TargetQRotation, m_Smoothing * delta);
-            m_TransformToBeRotated.rotation = q;
+            m_Timer += delta;
+            delta = m_Timer / m_Duration;
 
-            return Quaternion.Angle(q, m_TargetQRotation);
+            m_TransformToBeRotated.rotation = Quaternion.Lerp(m_OriginalRotation, m_TargetQRotation, delta);
+
         }
 
 #if UNITY_EDITOR
-        public void SetUp(Transform t1, Vector3 t2, bool t3, float t4, float t5)
+        public void SetUp(Transform t1, Vector3 t2, bool t3, float t4)
         {
             m_TransformToBeRotated = t1;
             m_TargetRotation = t2;
             m_WorldRotation = t3;
-            m_Smoothing = t4;
-            m_SnapRange = t5;
+            m_Duration = t4;
 
         }
 
-        public void UnPack(out Transform t1, out Vector3 t2, out bool t3, out float t4, out float t5)
+        public void UnPack(out Transform t1, out Vector3 t2, out bool t3, out float t4)
         {
             t1 = m_TransformToBeRotated;
             t2 = m_TargetRotation;
             t3 = m_WorldRotation;
-            t4 = m_Smoothing;
-            t5 = m_SnapRange;
+            t4 = m_Duration;
         }
 #endif
     }
-
-
 }

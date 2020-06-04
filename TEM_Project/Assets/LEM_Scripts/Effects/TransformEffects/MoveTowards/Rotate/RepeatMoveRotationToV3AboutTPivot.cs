@@ -1,35 +1,34 @@
-﻿using UnityEngine;
+﻿
+using System;
+using UnityEngine;
 namespace LEM_Effects
 {
-    public class LerpRotationToTAboutTPivot : UpdateBaseEffect
+    public class RepeatMoveRotationToV3AboutTPivot : TimerBasedUpdateEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Transform, Transform, bool, float, float>
+        , IEffectSavable<Transform, Vector3, Transform, bool, float>
 #endif
     {
-
         [SerializeField]
         Transform m_TransformToBeRotated = default;
 
         [SerializeField]
-        Transform m_TargetTransformRotation = default;
+        Vector3 m_TargetRotation = default;
 
         [SerializeField]
         Transform m_PivotTransform = default;
 
-        [SerializeField, Tooltip("Applies values to the transform's localRotation if false")]
+        [SerializeField, Tooltip("Rotates the transform by the values locally if false")]
         bool m_WorldRotation = false;
 
-        [SerializeField, Range(0f, 1f)]
-        float m_Smoothing = 0.1f;
-
         [SerializeField]
-        float m_SnapRange = 0.025f;
+        float m_Duration = 0f;
 
+        #region Cached Var
 
-
-        #region Cached var
+        Quaternion m_OriginalRotation = default;
         Vector3 m_OriginalPosition = default;
-        FloatLerpQuaternionDelegate d_RotateFunction = null;
+        Quaternion m_TargetQRotation = default;
+        VoidLerpQuaternionDelegate d_RotateFunction = null;
 
         #endregion
 
@@ -37,40 +36,54 @@ namespace LEM_Effects
 
         public override void OnInitialiseEffect()
         {
-
             m_OriginalPosition = m_TransformToBeRotated.position;
 
+            m_TargetQRotation = Quaternion.Euler(m_TargetRotation);
+
             if (m_WorldRotation)
+            {
+                m_OriginalRotation = m_TransformToBeRotated.rotation;
                 d_RotateFunction = RotateInWorld;
+            }
             else
+            {
+                m_OriginalRotation = m_TransformToBeRotated.localRotation;
                 d_RotateFunction = RotateLocal;
-        }
 
-        public override void OnReset()
-        {
-            base.OnReset();
-        }
+            }
 
+
+        }
         public override bool OnUpdateEffect(float delta)
         {
-            float angle = d_RotateFunction.Invoke(delta);
+            d_RotateFunction.Invoke(delta);
 
-            if (angle < m_SnapRange)
+            //Stop if amount is to rotate is reached
+            if (m_Timer >= m_Duration)
             {
                 if (m_WorldRotation)
-                    m_TransformToBeRotated.rotation = m_TargetTransformRotation.rotation;
+                {
+                    m_TransformToBeRotated.rotation = m_OriginalRotation;
+                }
                 else
-                    m_TransformToBeRotated.localRotation = m_TargetTransformRotation.localRotation;
+                {
+                    m_TransformToBeRotated.localRotation = m_OriginalRotation;
+                }
 
-                return true;
+                OnReset();
             }
 
             return m_IsFinished;
+
         }
 
-        float RotateLocal(float delta)
+
+        private void RotateLocal(float delta)
         {
-            Quaternion q = Quaternion.Lerp(m_TransformToBeRotated.localRotation, m_TargetTransformRotation.localRotation, m_Smoothing * delta);
+            m_Timer += delta;
+            delta = m_Timer / m_Duration;
+
+            Quaternion q = Quaternion.Lerp(m_OriginalRotation, m_TargetQRotation, delta);
 
             m_TransformToBeRotated.localRotation = q;
 
@@ -81,14 +94,14 @@ namespace LEM_Effects
             dir += m_PivotTransform.position;
 
             m_TransformToBeRotated.position = dir;
-
-            return Quaternion.Angle(q, m_TargetTransformRotation.localRotation);
         }
 
-        float RotateInWorld(float delta)
+        void RotateInWorld(float delta)
         {
-            Quaternion q = Quaternion.Lerp(m_TransformToBeRotated.rotation, m_TargetTransformRotation.rotation, m_Smoothing * delta);
+            m_Timer += delta;
+            delta = m_Timer / m_Duration;
 
+            Quaternion q = Quaternion.Lerp(m_OriginalRotation, m_TargetQRotation, delta);
             m_TransformToBeRotated.rotation = q;
 
             //Apply translation to accomodate rotation about a pivot
@@ -99,31 +112,28 @@ namespace LEM_Effects
 
             m_TransformToBeRotated.position = dir;
 
-            return Quaternion.Angle(q, m_TargetTransformRotation.rotation);
         }
+
+
 
 
 #if UNITY_EDITOR
-        public void SetUp(Transform t1, Transform t2, Transform t3, bool t4, float t5, float t6)
+        public void SetUp(Transform t1, Vector3 t2, Transform t3, bool t4, float t5)
         {
             m_TransformToBeRotated = t1;
-            m_TargetTransformRotation = t2;
+            m_TargetRotation = t2;
             m_PivotTransform = t3;
             m_WorldRotation = t4;
-            m_Smoothing = t5;
-            m_SnapRange = t6;
-
+            m_Duration = t5;
         }
 
-        public void UnPack(out Transform t1, out Transform t2, out Transform t3, out bool t4, out float t5, out float t6)
+        public void UnPack(out Transform t1, out Vector3 t2, out Transform t3, out bool t4, out float t5)
         {
             t1 = m_TransformToBeRotated;
-            t2 = m_TargetTransformRotation;
+            t2 = m_TargetRotation;
             t3 = m_PivotTransform;
             t4 = m_WorldRotation;
-            t5 = m_Smoothing;
-            t6 = m_SnapRange;
-
+            t5 = m_Duration;
         }
 #endif
     }

@@ -3,7 +3,7 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class RepeatMoveTowardsScaleRelativeToT : TimerBasedUpdateEffect
+    public class RepeatMoveScaleToV3AboutTPivot : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, Transform, float> 
 #endif
@@ -30,7 +30,7 @@ namespace LEM_Effects
         public override void OnInitialiseEffect()
         {
             m_Timer = 0f;
-            m_InitialPosition = m_TargetTransform.localPosition;
+            m_InitialPosition = m_TargetTransform.position;
             m_InitialScale = m_TargetTransform.localScale;
         }
 
@@ -41,14 +41,14 @@ namespace LEM_Effects
             m_NewScale = Vector3.Lerp(m_InitialScale, m_TargetScale, m_Timer / m_Duration);
 
             //Translate pivot point to the origin
-            Vector3 dir = m_InitialPosition - m_Pivot.localPosition;
+            Vector3 dir = m_InitialPosition - m_Pivot.position;
 
             //Scale the point
             dir = Vector3.Scale(m_NewScale.Divide(m_InitialScale), dir);
 
             //Translate the dir point back to pivot
-            dir += m_Pivot.localPosition;
-            m_TargetTransform.localPosition = dir;
+            dir += m_Pivot.position;
+            m_TargetTransform.position = dir;
 
 
             m_TargetTransform.localScale = m_NewScale;
@@ -58,7 +58,7 @@ namespace LEM_Effects
             if (m_Timer >= m_Duration)
             {
                 m_TargetTransform.localScale = m_InitialScale;
-                m_TargetTransform.localPosition= m_InitialPosition;
+                m_TargetTransform.position= m_InitialPosition;
                 OnReset();
             }
 

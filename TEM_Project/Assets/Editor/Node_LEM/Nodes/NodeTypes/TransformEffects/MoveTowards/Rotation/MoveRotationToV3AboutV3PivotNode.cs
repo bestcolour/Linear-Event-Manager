@@ -5,15 +5,16 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class RepeatMoveTowardsRotationNode : UpdateEffectNode
+    public class MoveRotationToV3AboutV3PivotNode : UpdateEffectNode
     {
         Transform m_TargetTransform = default;
-        Vector3 m_AmountToRotate = default;
+        Vector3 m_TargetRotation = default;
+        Vector3 m_PivotWorldPosition = default;
         bool m_WorldRotation = false;
         float m_Duration = 0f;
 
 
-        protected override string EffectTypeName => "RepeatMoveTowardsRotation";
+        protected override string EffectTypeName => "MoveRotationToV3AboutV3Pivot";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -35,7 +36,9 @@ namespace LEM_Editor
 
             m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Targeted Transform", m_TargetTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Amount To Rotate", m_AmountToRotate);
+            m_TargetRotation = EditorGUI.Vector3Field(propertyRect, "Target Rotation", m_TargetRotation);
+            propertyRect.y += 40f;
+            m_PivotWorldPosition = EditorGUI.Vector3Field(propertyRect, "Pivot World Position", m_PivotWorldPosition);
             propertyRect.y += 40f;
             m_WorldRotation = EditorGUI.Toggle(propertyRect, "Use World Rotation", m_WorldRotation);
             propertyRect.y += 20f;
@@ -49,7 +52,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            RepeatMoveTowardsRotation myEffect = ScriptableObject.CreateInstance<RepeatMoveTowardsRotation>();
+            MoveRotationToV3AboutV3Pivot myEffect = ScriptableObject.CreateInstance<MoveRotationToV3AboutV3Pivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -59,15 +62,15 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_AmountToRotate, m_WorldRotation, m_Duration);
+            myEffect.SetUp(m_TargetTransform, m_TargetRotation, m_PivotWorldPosition, m_WorldRotation, m_Duration);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            RepeatMoveTowardsRotation loadFrom = effectToLoadFrom as RepeatMoveTowardsRotation;
-            loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate, out m_WorldRotation, out m_Duration);
+            MoveRotationToV3AboutV3Pivot loadFrom = effectToLoadFrom as MoveRotationToV3AboutV3Pivot;
+            loadFrom.UnPack(out m_TargetTransform, out m_TargetRotation, out m_PivotWorldPosition, out m_WorldRotation, out m_Duration);
 
             //Important
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;

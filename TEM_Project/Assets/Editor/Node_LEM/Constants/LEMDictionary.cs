@@ -112,11 +112,11 @@ namespace LEM_Editor
 
         #endregion
 
-              //Note: Effects under lerp, movetowards and Curve are all non-additive effects which means that any other effects which intends to add on to the 
+             //Note: Effects under lerp, movetowards and Curve are all non-additive effects which means that any other effects which intends to add on to the 
              //lerp/movetowards effects will result in conflicts in which one effect will dominate over the other and apply its transform value changes over the other's
         #region LERP
 		
-          #region Position
+        #region Position
              //Lerps a rectTransform to a vector3 position
              { "LerpRectransToPos", new NodeDictionaryDefinition(new LerpRectransToPosNode()            ,new Color(0.14f,0.44f,0.64f)) },
 
@@ -144,8 +144,8 @@ namespace LEM_Editor
 
         #endregion
 
-          #region Rotation
-		   //Rotation
+        #region Rotation
+		     //Rotation
              //In world rotation means applying the rotation to the transform's rotation property instead of localRotation
              //Note: Lerp Rotation takes in a targeted rotation and hence the TargetTransform will always take the shortest rotational path to achieve that Targeted Rotation
 
@@ -188,9 +188,9 @@ namespace LEM_Editor
              //Lerps a Transform's rotation/local Rotation to match another Transform's Rotational value about a Vector3 Pivot
               //and will reset the Transform's rotation/local to its original value upon completion before Lerping again
              { "RepeatLerpRotationToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpRotationToTAboutV3PivotNode()                                  ,new Color(0.12f ,0.38f,0.55f)) },
-    #endregion
+        #endregion
 
-           #region Scale
+        #region Scale
 		  //Lerp a Transform's scale to a vector3 value
              { "LerpScaleToV3", new NodeDictionaryDefinition(new LerpScaleToV3Node()                            ,new Color(0.14f,0.44f,0.64f)) },
 
@@ -229,15 +229,17 @@ namespace LEM_Editor
              //Lerp a Transform's scale to a Reference Transform's value about a Vector3 pivot and reset the Transform's scale to its original value upon completion before Lerping again
              { "RepeatLerpScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpScaleToTAboutV3PivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
 
-	#endregion
+	    #endregion
 
 
         #endregion
 
 
+        //Movetowards effects all uses Lerping but at a constant rate therefore on every update, the amount Lerped will be the same
         #region MoveTowards
 		
-             //Position
+        #region Position
+		  //Position
              { "MoveTowRectransToPos", new NodeDictionaryDefinition(new MoveTowRectransToPosNode()              ,new Color(0.49f,0.24f,0.60f)) },
              { "MoveTowRectransToRectrans", new NodeDictionaryDefinition(new MoveTowRectransToRectransNode()    ,new Color(0.49f,0.24f,0.60f)) },
              { "MoveTowTransToPos", new NodeDictionaryDefinition(new MoveTowardsTransformToPositionNode()       ,new Color(0.49f,0.24f,0.60f)) },
@@ -248,25 +250,53 @@ namespace LEM_Editor
              { "RepeatMoveTowRectransToRectrans", new NodeDictionaryDefinition(new RepeatMoveTowardsRectransformToRectransformNode()    ,new Color(0.36f ,0.17f,0.44f)) },
              { "RepeatMoveTowRectTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsRectTransformToPositionNode()           ,new Color(0.36f ,0.17f,0.44f)) },
 
-          
-             //Scale
-             { "MoveTowardsScale", new NodeDictionaryDefinition(new MoveTowardsScaleNode()                          ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowardsScaleRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowardsScaleRelativeToT", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToTNode()    ,new Color(0.49f,0.24f,0.60f)) },
-             //Repeat Scale
-             { "RepeatMoveTowardsScale", new NodeDictionaryDefinition(new RepeatMoveTowardsScaleNode()    ,new Color(0.49f,0.24f,0.60f)) },
-             { "RepeatMoveTowardsScaleRelativeToV3", new NodeDictionaryDefinition(new RepeatMoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
-             { "RepeatMoveTowardsScaleRelativeToT", new NodeDictionaryDefinition(new RepeatMoveTowardsScaleRelativeToTNode()    ,new Color(0.49f,0.24f,0.60f)) },
+	    #endregion
 
+        #region Rotation
+		     //Rotation
+             //Move a Transform's rotation/localRotation towards a V3 eulerAngle
+             { "MoveRotationToV3", new NodeDictionaryDefinition(new MoveRotationToV3Node()                            ,new Color(0.49f,0.24f,0.60f)) },
 
-             //Rotation
-             { "MoveTowardsRotation", new NodeDictionaryDefinition(new MoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new MoveTowardsRotationRelativeToTNode()      ,new Color(0.49f,0.24f,0.60f)) },
+             //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a Transform pivot
+             { "MoveRotationToV3AboutTPivot", new NodeDictionaryDefinition(new MoveRotationToV3AboutTPivotNode()      ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a vector3 pivot
+             { "MoveRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new MoveRotationToV3AboutV3PivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
              //Repeat Rotation
-             { "RepeatMoveTowardsRotation", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationNode()                            ,new Color(0.49f,0.24f,0.60f)) },
-             { "RepeatMoveTowardsRotationRelativeToV3", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationRelativeToV3Node()                            ,new Color(0.49f,0.24f,0.60f)) },
-             { "RepeatMoveTowardsRotationRelativeToT", new NodeDictionaryDefinition(new RepeatMoveTowardsRotationRelativeToTNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+             //Move a Transform's rotation/localRotation towards a V3 eulerAngle and reset to its original value upon completion before repeating movetowards again
+             { "RepeatMoveRotationToV3", new NodeDictionaryDefinition(new RepeatMoveRotationToV3Node()                            ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a Vector3 pivot and reset to its original value upon completion before repeating movetowards again
+             { "RepeatMoveRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutV3PivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a Transform pivot and reset to its original value upon completion before repeating movetowards again
+             { "RepeatMoveRotationToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutTPivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+
+	    #endregion
+
+
+             //Scale
+             //Move a Transform's scale towards a Vector3 value
+             { "MoveScaleToV3Node", new NodeDictionaryDefinition(new MoveScaleToV3Node()                          ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's scale towards a Vector3 value about a Transform Pivot
+             { "MoveScaleToV3AboutTPivot", new NodeDictionaryDefinition(new MoveScaleToV3AboutTPivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's scale towards a Vector3 value about a Vector3 Pivot
+             { "MoveScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
+
+
+             //Repeat Scale
+             //Move a Transform's scale towards a Vector3 value and reset the Transform's value upon completion before repeating the move to
+             {"RepeatMoveScaleToV3", new NodeDictionaryDefinition(new RepeatMoveScaleToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's scale towards a Vector3 value about a Transform pivot and reset the Transform's value upon completion before repeating the move to
+             { "RepeatMoveScaleToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatMoveScaleToV3AboutTPivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's scale towards a Vector3 value about a Vector3 pivot and reset the Transform's value upon completion before repeating the move to
+             { "RepeatMoveScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveScaleToV3AboutV3PivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
 
 	    #endregion
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepeatMoveTowardsScale : TimerBasedUpdateEffect
+    public class MoveScaleToV3 : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, float> 
 #endif
@@ -29,13 +29,13 @@ namespace LEM_Effects
         {
             m_Timer += delta;
 
-            m_TargetTransform.localScale = Vector3.Lerp(m_OriginalScale, m_TargetScale, m_Timer / m_Duration);
+            m_TargetTransform.localScale = Vector3.Lerp(m_OriginalScale, m_TargetScale,m_Timer/m_Duration);
 
             //Stop updating after target has been reached
             if (m_Timer >= m_Duration)
             {
-                m_TargetTransform.localScale = m_OriginalScale;
-                OnReset();
+                m_TargetTransform.localScale = m_TargetScale;
+                return true;
             }
 
             return m_IsFinished;

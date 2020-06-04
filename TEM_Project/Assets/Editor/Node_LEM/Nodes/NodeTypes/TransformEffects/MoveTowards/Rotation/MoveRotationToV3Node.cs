@@ -5,15 +5,15 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class MoveTowardsRotationNode : UpdateEffectNode
+    public class MoveRotationToV3Node : UpdateEffectNode
     {
         Transform m_TargetTransform = default;
-        Vector3 m_AmountToRotate = default;
+        Vector3 m_TargetRotation = default;
         bool m_WorldRotation = false;
         float m_Duration = 0f;
 
 
-        protected override string EffectTypeName => "MoveTowardsRotation";
+        protected override string EffectTypeName => "MoveRotationToV3";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -35,7 +35,7 @@ namespace LEM_Editor
 
             m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Targeted Transform", m_TargetTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Amount To Rotate", m_AmountToRotate);
+            m_TargetRotation = EditorGUI.Vector3Field(propertyRect, "Target Rotation", m_TargetRotation);
             propertyRect.y += 40f;
             m_WorldRotation = EditorGUI.Toggle(propertyRect, "Use World Rotation", m_WorldRotation);
             propertyRect.y += 20f;
@@ -49,7 +49,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            LEM_Effects.MoveTowardsRotation myEffect = ScriptableObject.CreateInstance<LEM_Effects.MoveTowardsRotation>();
+            MoveRotationToV3 myEffect = ScriptableObject.CreateInstance<MoveRotationToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -59,15 +59,15 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_AmountToRotate, m_WorldRotation, m_Duration);
+            myEffect.SetUp(m_TargetTransform, m_TargetRotation, m_WorldRotation, m_Duration);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            LEM_Effects.MoveTowardsRotation loadFrom = effectToLoadFrom as LEM_Effects.MoveTowardsRotation;
-            loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate, out m_WorldRotation, out m_Duration);
+            MoveRotationToV3 loadFrom = effectToLoadFrom as MoveRotationToV3;
+            loadFrom.UnPack(out m_TargetTransform, out m_TargetRotation, out m_WorldRotation, out m_Duration);
 
             //Important
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;

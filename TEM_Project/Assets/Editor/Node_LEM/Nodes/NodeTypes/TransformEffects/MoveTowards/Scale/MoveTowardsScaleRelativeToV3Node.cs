@@ -16,7 +16,7 @@ namespace LEM_Editor
         [SerializeField]
         float m_Duration = 0f;
 
-        protected override string EffectTypeName => "MoveTowardsScaleRelativeToV3";
+        protected override string EffectTypeName => "MoveScaleToV3AboutV3Pivot";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -40,7 +40,7 @@ namespace LEM_Editor
             propertyRect.y += 20f;
             m_TargetScale = EditorGUI.Vector3Field(propertyRect, "Target Scale", m_TargetScale);
             propertyRect.y += 40f;
-            m_LocalPivot = EditorGUI.Vector3Field(propertyRect, "LocalPivot Position", m_LocalPivot);
+            m_LocalPivot = EditorGUI.Vector3Field(propertyRect, "Pivot World Position", m_LocalPivot);
             propertyRect.y += 40f;
             m_Duration = EditorGUI.FloatField(propertyRect, "Duration", m_Duration);
 

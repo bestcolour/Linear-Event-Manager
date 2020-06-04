@@ -5,16 +5,18 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class MoveTowardsRotationRelativeToTNode : UpdateEffectNode
+    public class MoveScaleToV3Node : UpdateEffectNode
     {
-        Transform m_TargetTransform = default;
-        Vector3 m_AmountToRotate = default;
-        Transform m_PivotTransform = default;
-        bool m_WorldRotation = false;
-        float m_Duration =0f;
+        [SerializeField]
+        Transform m_TargetedTransform = default;
 
+        [SerializeField]
+        Vector3 m_TargetScale = default;
 
-        protected override string EffectTypeName => "MoveTowardsRotationRelativeToT";
+        [SerializeField]
+        float m_Duration = 0f;
+
+        protected override string EffectTypeName => "MoveScaleToV3Node";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -34,14 +36,10 @@ namespace LEM_Editor
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
 
-            m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Targeted Transform", m_TargetTransform, typeof(Transform), true);
+            m_TargetedTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Targeted Transform", m_TargetedTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_AmountToRotate = EditorGUI.Vector3Field(propertyRect, "Amount To Rotate", m_AmountToRotate);
+            m_TargetScale = EditorGUI.Vector3Field(propertyRect, "Target Scale", m_TargetScale);
             propertyRect.y += 40f;
-            m_PivotTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Pivot Transform", m_PivotTransform, typeof(Transform), true);
-            propertyRect.y += 20f;
-            m_WorldRotation = EditorGUI.Toggle(propertyRect, "Use World Rotation", m_WorldRotation);
-            propertyRect.y += 20f;
             m_Duration = EditorGUI.FloatField(propertyRect, "Duration", m_Duration);
 
 
@@ -52,7 +50,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-           MoveTowardsRotationRelativeToT myEffect = ScriptableObject.CreateInstance<MoveTowardsRotationRelativeToT>();
+            MoveScaleToV3 myEffect = ScriptableObject.CreateInstance<MoveScaleToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -62,15 +60,15 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_AmountToRotate, m_PivotTransform, m_WorldRotation, m_Duration);
+            myEffect.SetUp(m_TargetedTransform, m_TargetScale, m_Duration);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            MoveTowardsRotationRelativeToT loadFrom = effectToLoadFrom as MoveTowardsRotationRelativeToT;
-            loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate, out m_PivotTransform, out m_WorldRotation, out m_Duration);
+            MoveScaleToV3 loadFrom = effectToLoadFrom as MoveScaleToV3;
+            loadFrom.UnPack(out m_TargetedTransform, out m_TargetScale, out m_Duration);
 
             //Important
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;

@@ -28,7 +28,7 @@ namespace LEM_Effects
         Vector3 m_OriginalPosition = default;
         Quaternion m_TargetQRotation = default;
         Quaternion m_OriginalQRotation = default;
-        LerpQuaternionDelegate d_RotateFunction = null;
+        FloatLerpQuaternionDelegate d_RotateFunction = null;
 
         #endregion
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;

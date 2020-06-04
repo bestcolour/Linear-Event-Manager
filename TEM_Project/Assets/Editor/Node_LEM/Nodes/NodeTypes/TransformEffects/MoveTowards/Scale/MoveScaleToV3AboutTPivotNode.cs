@@ -5,18 +5,21 @@ using LEM_Effects;
 namespace LEM_Editor
 {
 
-    public class RepeatMoveTowardsScaleRelativeToV3Node : UpdateEffectNode
+    public class MoveScaleToV3AboutTPivotNode : UpdateEffectNode
     {
         [SerializeField]
         Transform m_TargetedTransform = default;
 
         [SerializeField]
-        Vector3 m_TargetScale = default, m_LocalPivot = default;
+        Vector3 m_TargetScale = default;
+
+        [SerializeField]
+        Transform m_Pivot = default;
 
         [SerializeField]
         float m_Duration = 0f;
 
-        protected override string EffectTypeName => "RepeatMoveTowardsScaleRelativeToV3";
+        protected override string EffectTypeName => "MoveScaleToV3AboutTPivot";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -40,8 +43,8 @@ namespace LEM_Editor
             propertyRect.y += 20f;
             m_TargetScale = EditorGUI.Vector3Field(propertyRect, "Target Scale", m_TargetScale);
             propertyRect.y += 40f;
-            m_LocalPivot = EditorGUI.Vector3Field(propertyRect, "LocalPivot Position", m_LocalPivot);
-            propertyRect.y += 40f;
+            m_Pivot = (Transform)EditorGUI.ObjectField(propertyRect, "Pivot Transform", m_Pivot, typeof(Transform), true);
+            propertyRect.y += 20f;
             m_Duration = EditorGUI.FloatField(propertyRect, "Duration", m_Duration);
 
 
@@ -52,7 +55,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            RepeatMoveTowardsScaleRelativeToV3 myEffect = ScriptableObject.CreateInstance<RepeatMoveTowardsScaleRelativeToV3>();
+            MoveScaleToV3AboutTPivot myEffect = ScriptableObject.CreateInstance<MoveScaleToV3AboutTPivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -62,15 +65,15 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs);
-            myEffect.SetUp(m_TargetedTransform, m_TargetScale, m_LocalPivot, m_Duration);
+            myEffect.SetUp(m_TargetedTransform, m_TargetScale, m_Pivot, m_Duration);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            RepeatMoveTowardsScaleRelativeToV3 loadFrom = effectToLoadFrom as RepeatMoveTowardsScaleRelativeToV3;
-            loadFrom.UnPack(out m_TargetedTransform, out m_TargetScale, out m_LocalPivot, out m_Duration);
+            MoveScaleToV3AboutTPivot loadFrom = effectToLoadFrom as MoveScaleToV3AboutTPivot;
+            loadFrom.UnPack(out m_TargetedTransform, out m_TargetScale, out m_Pivot, out m_Duration);
 
             //Important
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;

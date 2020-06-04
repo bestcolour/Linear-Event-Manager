@@ -23,7 +23,7 @@ namespace LEM_Effects
 
         #region Cached var
         Quaternion m_OriginalRotation = default;
-        LerpQuaternionDelegate d_RotateFunction = null;
+        FloatLerpQuaternionDelegate d_RotateFunction = null;
 
         #endregion
 

@@ -56,7 +56,7 @@ namespace LEM_Editor
         public override LEM_BaseEffect CompileToBaseEffect()
         {
             
-            LEM_Effects.LerpRotationToV3AboutTPivot myEffect = ScriptableObject.CreateInstance<LEM_Effects.LerpRotationToV3AboutTPivot>();
+            LerpRotationToV3AboutTPivot myEffect = ScriptableObject.CreateInstance<LerpRotationToV3AboutTPivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;
@@ -73,7 +73,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            LEM_Effects.LerpRotationToV3AboutTPivot loadFrom = effectToLoadFrom as LEM_Effects.LerpRotationToV3AboutTPivot;
+            LerpRotationToV3AboutTPivot loadFrom = effectToLoadFrom as LerpRotationToV3AboutTPivot;
             loadFrom.UnPack(out m_TargetTransform, out m_AmountToRotate,out m_PivotTransform, out m_WorldRotation, out m_Smoothing, out m_SnapRange);
 
             //Important

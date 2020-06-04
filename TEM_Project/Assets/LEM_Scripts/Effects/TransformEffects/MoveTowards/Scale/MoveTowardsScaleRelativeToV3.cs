@@ -13,7 +13,7 @@ namespace LEM_Effects
         Transform m_TargetTransform = default;
 
         [SerializeField]
-        Vector3 m_TargetScale = default, m_LocalPivotPosition = default;
+        Vector3 m_TargetScale = default, m_PivotWorldPosition = default;
 
         [SerializeField]
         float m_Duration = 0f;
@@ -26,7 +26,7 @@ namespace LEM_Effects
         public override void OnInitialiseEffect()
         {
             m_Timer = 0f;
-            m_InitialPosition = m_TargetTransform.localPosition;
+            m_InitialPosition = m_TargetTransform.position;
             m_InitialScale = m_TargetTransform.localScale;
         }
 
@@ -37,14 +37,14 @@ namespace LEM_Effects
             m_NewScale = Vector3.Lerp(m_InitialScale, m_TargetScale, m_Timer/m_Duration);
 
             //Translate pivot point to the origin
-            Vector3 dir = m_InitialPosition - m_LocalPivotPosition;
+            Vector3 dir = m_InitialPosition - m_PivotWorldPosition;
 
             //Scale the point
             dir = Vector3.Scale(m_NewScale.Divide(m_InitialScale), dir);
 
             //Translate the dir point back to pivot
-            dir += m_LocalPivotPosition;
-            m_TargetTransform.localPosition = dir;
+            dir += m_PivotWorldPosition;
+            m_TargetTransform.position = dir;
 
 
             m_TargetTransform.localScale = m_NewScale;
@@ -65,7 +65,7 @@ namespace LEM_Effects
         {
             m_TargetTransform = t1;
             m_TargetScale = t2;
-            m_LocalPivotPosition = t3;
+            m_PivotWorldPosition = t3;
             m_Duration = t4;
         }
 
@@ -73,7 +73,7 @@ namespace LEM_Effects
         {
             t1 = m_TargetTransform;
             t2 = m_TargetScale;
-            t3 = m_LocalPivotPosition;
+            t3 = m_PivotWorldPosition;
             t4 = m_Duration;
 
         }
