@@ -267,24 +267,47 @@ namespace LEM_Editor
              //Move a Transform's rotation/localRotation towards a V3 eulerAngle and reset to its original value upon completion before repeating movetowards again
              { "RepeatMoveRotationToV3", new NodeDictionaryDefinition(new RepeatMoveRotationToV3Node()                            ,new Color(0.49f,0.24f,0.60f)) },
 
-             //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a Vector3 pivot and reset to its original value upon completion before repeating movetowards again
-             { "RepeatMoveRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutV3PivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
-
              //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a Transform pivot and reset to its original value upon completion before repeating movetowards again
              { "RepeatMoveRotationToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutTPivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
 
+             //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a Vector3 pivot and reset to its original value upon completion before repeating movetowards again
+             { "RepeatMoveRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutV3PivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+
+
+             
+             //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle
+             { "MoveRotationToTNode", new NodeDictionaryDefinition(new MoveRotationToTNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle about a Transform pivot
+             { "MoveRotationToTAboutTPivot", new NodeDictionaryDefinition(new MoveRotationToTAboutTPivotNode()      ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle about a vector3 pivot
+             { "MoveRotationToTAboutV3Pivot", new NodeDictionaryDefinition(new MoveRotationToTAboutV3PivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Repeat Rotation
+             //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle and reset to its original value upon completion before repeating movetowards again
+             { "RepeatMoveRotationToT", new NodeDictionaryDefinition(new RepeatMoveRotationToTNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle about a Transform pivot and reset to its original value upon completion before repeating movetowards again
+             { "RepeatMoveRotationToTAboutTPivot", new NodeDictionaryDefinition(new RepeatMoveRotationToTAboutTPivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle about a Vector3 pivot and reset to its original value upon completion before repeating movetowards again
+             { "RepeatMoveRotationToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveRotationToTAboutV3PivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+
+
 	    #endregion
 
-
+        #region Scale
+		
              //Scale
              //Move a Transform's scale towards a Vector3 value
-             { "MoveScaleToV3Node", new NodeDictionaryDefinition(new MoveScaleToV3Node()                          ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveScaleToV3", new NodeDictionaryDefinition(new MoveScaleToV3Node()                          ,new Color(0.49f,0.24f,0.60f)) },
 
              //Move a Transform's scale towards a Vector3 value about a Transform Pivot
              { "MoveScaleToV3AboutTPivot", new NodeDictionaryDefinition(new MoveScaleToV3AboutTPivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
 
              //Move a Transform's scale towards a Vector3 value about a Vector3 Pivot
-             { "MoveScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new MoveTowardsScaleRelativeToV3Node()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new MoveScaleToV3AboutV3PivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
 
 
              //Repeat Scale
@@ -298,6 +321,28 @@ namespace LEM_Editor
              { "RepeatMoveScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveScaleToV3AboutV3PivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
 
 
+             //Move a Transform's scale towards a Transform's Scale value
+             { "MoveScaleToT", new NodeDictionaryDefinition(new MoveScaleToTNode()                          ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's scale towards a Transform's Scale value about a Transform Pivot
+             { "MoveScaleToTAboutTPivot", new NodeDictionaryDefinition(new MoveScaleToTAboutTPivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's scale towards a Transform's Scale value about a Vector3 Pivot
+             { "MoveScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new MoveScaleToTAboutV3PivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
+
+             //Repeat Scale
+             //Move a Transform's scale towards a Transform's Scale value and reset the Transform's value upon completion before repeating the move to
+             {"RepeatMoveScaleToT", new NodeDictionaryDefinition(new RepeatMoveScaleToTNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's scale towards a Transform's Scale value about a Transform pivot and reset the Transform's value upon completion before repeating the move to
+             { "RepeatMoveScaleToTAboutTPivot", new NodeDictionaryDefinition(new RepeatMoveScaleToTAboutTPivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's scale towards a Transform's Scale value about a Vector3 pivot and reset the Transform's value upon completion before repeating the move to
+             { "RepeatMoveScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveScaleToTAboutV3PivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
+
+	    #endregion
 	    #endregion
 
         #region Translate 

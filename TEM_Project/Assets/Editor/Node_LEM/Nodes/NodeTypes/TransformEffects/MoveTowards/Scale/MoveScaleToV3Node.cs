@@ -16,7 +16,7 @@ namespace LEM_Editor
         [SerializeField]
         float m_Duration = 0f;
 
-        protected override string EffectTypeName => "MoveScaleToV3Node";
+        protected override string EffectTypeName => "MoveScaleToV3";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
