@@ -118,29 +118,31 @@ namespace LEM_Editor
 		
         #region Position
              //Lerps a rectTransform to a vector3 position
-             { "LerpRectransToPos", new NodeDictionaryDefinition(new LerpRectransToPosNode()            ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpAnchPosToV3Node", new NodeDictionaryDefinition(new LerpAnchPosToV3Node()            ,new Color(0.14f,0.44f,0.64f)) },
 
              //Lerps a rectTransform to another rectTransform's anchored3DPosition
-             { "LerpRectransToRectrans", new NodeDictionaryDefinition(new LerpRectransToRectransNode()  ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpAnchPosToRtT", new NodeDictionaryDefinition(new LerpAnchPosToRtTNode()  ,new Color(0.14f,0.44f,0.64f)) },
 
              //Lerps a transform to a vector3 position
-             { "LerpTransToPos", new NodeDictionaryDefinition(new LerpTransformToPositionNode()         ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpPosToV3", new NodeDictionaryDefinition(new LerpPosToV3Node()         ,new Color(0.14f,0.44f,0.64f)) },
 
              //Lerps a transform to a transform's world position
-             { "LerpTransToTrans", new NodeDictionaryDefinition(new LerpTransformToTransformNode()      ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpPosToT", new NodeDictionaryDefinition(new LerpPosToTNode()      ,new Color(0.14f,0.44f,0.64f)) },
 
 
-             //Lerps a transform to another vector3 position and will reset the transform's position to its original value upon completion before Lerping again
-             { "RepeatLerpRectransToPosNode", new NodeDictionaryDefinition(new RepeatLerpRectransformToPositionNode()                   ,new Color(0.12f ,0.38f,0.55f)) },
 
              //Lerps a transform to a transform's world position and will reset the transform's position to its original value upon completion before Lerping again
-             { "RepeatLerpTransToTrans", new NodeDictionaryDefinition(new RepeatLerpTransformToTransformNode()                          ,new Color(0.12f ,0.38f,0.55f)) },
+             { "RepeatLerpPosToT", new NodeDictionaryDefinition(new RepeatLerpPosToTNode()                          ,new Color(0.12f ,0.38f,0.55f)) },
 
-             //Lerps a rectTransform to a vector3 position and will reset the rectTransform's anchored3DPosition to its original value upon completion before Lerping again
-             { "RepeatLerpTransToPos", new NodeDictionaryDefinition(new RepeatLerpTransformToPositionNode()                             ,new Color(0.12f ,0.38f,0.55f)) },
+             //Lerps a transform to a vector3 position and will reset the rectTransform's anchored3DPosition to its original value upon completion before Lerping again
+             { "RepeatLerpPosToV3", new NodeDictionaryDefinition(new RepeatLerpPosToV3Node()                             ,new Color(0.12f ,0.38f,0.55f)) },
 
              //Lerps a rectTransform to another rectTransform's anchored3DPosition and will reset the rectTransform's anchored3DPosition to its original value upon completion before Lerping again
-             { "RepeatLerpRectTransToRectTrans", new NodeDictionaryDefinition(new RepeatLerpRectTransformToRectTransformNode()          ,new Color(0.12f ,0.38f,0.55f)) },
+             { "RepeatLerpAnchPosToRtT", new NodeDictionaryDefinition(new RepeatLerpAnchPosToRtTNode()          ,new Color(0.12f ,0.38f,0.55f)) },
+
+             //Lerps a rectTransform to another vector3 position and will reset the rectTransform's position to its original value upon completion before Lerping again
+             { "RepeatLerpAnchPosToV3", new NodeDictionaryDefinition(new RepeatLerpAnchPosToV3Node()                   ,new Color(0.12f ,0.38f,0.55f)) },
+
 
         #endregion
 
@@ -229,28 +231,46 @@ namespace LEM_Editor
              //Lerp a Transform's scale to a Reference Transform's value about a Vector3 pivot and reset the Transform's scale to its original value upon completion before Lerping again
              { "RepeatLerpScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpScaleToTAboutV3PivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
 
-	    #endregion
-
-
         #endregion
 
+
+            #endregion
 
         //Movetowards effects all uses Lerping but at a constant rate therefore on every update, the amount Lerped will be the same
         #region MoveTowards
 		
         #region Position
-		  //Position
-             { "MoveTowRectransToPos", new NodeDictionaryDefinition(new MoveTowRectransToPosNode()              ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowRectransToRectrans", new NodeDictionaryDefinition(new MoveTowRectransToRectransNode()    ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowTransToPos", new NodeDictionaryDefinition(new MoveTowardsTransformToPositionNode()       ,new Color(0.49f,0.24f,0.60f)) },
-             { "MoveTowTransToTrans", new NodeDictionaryDefinition(new MoveTowardsTransformToTransformNode()    ,new Color(0.49f,0.24f,0.60f)) }, 
-             //RepeatPosition
-             { "RepeatMoveTowTransToTrans", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToTransformNode()                ,new Color(0.36f ,0.17f,0.44f)) },
-             { "RepeatMoveTowTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsTransformToPositionNode()                   ,new Color(0.36f ,0.17f,0.44f)) },
-             { "RepeatMoveTowRectransToRectrans", new NodeDictionaryDefinition(new RepeatMoveTowardsRectransformToRectransformNode()    ,new Color(0.36f ,0.17f,0.44f)) },
-             { "RepeatMoveTowRectTransToPos", new NodeDictionaryDefinition(new RepeatMoveTowardsRectTransformToPositionNode()           ,new Color(0.36f ,0.17f,0.44f)) },
 
-	    #endregion
+		     //Position
+             //Move a RectTransform's anchoredPosition towards a Vector3 value
+             { "MoveAnchPosToV3", new NodeDictionaryDefinition(new MoveAnchPosToV3Node()              ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a RectTransform's anchoredPosition towards another RectTransform's anchoredPosition value
+             { "MoveAnchPosToRtT", new NodeDictionaryDefinition(new MoveAnchPosToRtTNode()    ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's position to a vector3
+             { "MovePosToV3", new NodeDictionaryDefinition(new MovePosToV3Node()       ,new Color(0.49f,0.24f,0.60f)) },
+
+             //Move a Transform's position to a vector3
+             { "MovePosToT", new NodeDictionaryDefinition(new MovePosToTNode()    ,new Color(0.49f,0.24f,0.60f)) }, 
+
+
+             //RepeatPosition
+
+             //Move a Transform's position to another Transform's position value and reset the Transform's position to its original value upon completion before Moving again
+             { "RepeatMovePosToT", new NodeDictionaryDefinition(new RepeatMovePosToTNode()                ,new Color(0.36f ,0.17f,0.44f)) },
+
+             //Move a Transform's position to a vector3 value and reset the Transform's position to its original value upon completion before Moving again
+             { "RepeatMovePosToV3", new NodeDictionaryDefinition(new RepeatMovePosToV3Node()                   ,new Color(0.36f ,0.17f,0.44f)) },
+
+             //Move a RectTransform's anchoredPosition towards another RectTransform anchoredPosition value and reset the rectTransform's anchoredPosition to its original value upon completion before Moving again
+             { "RepeatMoveAnchPosToRtT", new NodeDictionaryDefinition(new RepeatMoveAnchPosToRtTNode()    ,new Color(0.36f ,0.17f,0.44f)) },
+
+               //Move a RectTransform's anchoredPosition towards a Vector3 value and reset the rectTransform's anchoredPosition to its original value upon completion before Moving again
+             { "RepeatMoveAnchPosToV3Node", new NodeDictionaryDefinition(new RepeatMoveAnchPosToV3Node()           ,new Color(0.36f ,0.17f,0.44f)) },
+
+        #endregion
+
 
         #region Rotation
 		     //Rotation
@@ -272,7 +292,6 @@ namespace LEM_Editor
 
              //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a Vector3 pivot and reset to its original value upon completion before repeating movetowards again
              { "RepeatMoveRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutV3PivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
-
 
              
              //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle
