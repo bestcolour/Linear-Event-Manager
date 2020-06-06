@@ -29,12 +29,12 @@ namespace LEM_Effects
         public AxisData[] m_ApproxEqualToAxises = default;
 
 
-        public AwaitAxisInputData(AxisData[] moreThanAxises, AxisData[] lessThanAxises, AxisData[] approxEqualToAxises)
-        {
-            m_MoreThanAxises = moreThanAxises;
-            m_LessThanAxises = lessThanAxises;
-            m_ApproxEqualToAxises = approxEqualToAxises;
-        }
+        //public AwaitAxisInputData(AxisData[] moreThanAxises, AxisData[] lessThanAxises, AxisData[] approxEqualToAxises)
+        //{
+        //    m_MoreThanAxises = moreThanAxises;
+        //    m_LessThanAxises = lessThanAxises;
+        //    m_ApproxEqualToAxises = approxEqualToAxises;
+        //}
 
 
 

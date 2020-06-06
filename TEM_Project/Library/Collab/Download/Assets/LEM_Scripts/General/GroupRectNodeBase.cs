@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 #if UNITY_EDITOR
 namespace LEM_Effects
 {
     [System.Serializable]
-    public struct GroupRectNodeBase
+    public class GroupRectNodeBase
     {
         //For when group rect doesnt have a nested node to recreate on
         [ReadOnly]
@@ -44,6 +46,8 @@ namespace LEM_Effects
             }
 
         }
+
+     
     }
 
 } 

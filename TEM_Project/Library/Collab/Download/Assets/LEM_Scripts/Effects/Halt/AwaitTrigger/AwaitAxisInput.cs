@@ -10,44 +10,124 @@ namespace LEM_Effects
     {
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateHaltEffect;
 
-        [SerializeField]
-        AwaitAxisInputData m_AxisInputData = default;
+        //[SerializeField]
+        //AwaitAxisInputData m_AxisInputData = default;
+
+        [SerializeField, Header("Check More Than")]
+        public AwaitAxisInputData.AxisData[] m_MoreThanAxises = default;
+
+        [SerializeField, Header("Check Less Than")]
+        public AwaitAxisInputData.AxisData[] m_LessThanAxises = default;
+
+        [SerializeField, Header("Check ApproximatelyEqual To")]
+        public AwaitAxisInputData.AxisData[] m_ApproxEqualToAxises = default;
 
         [SerializeField]
         LinearEvent m_TargetLinearEvent = default;
 
+        //Runtime values
+        [ReadOnly,SerializeField,Header("Runtime")]
         bool m_AllInputConditionsMet = false;
 
 
-        public override LEM_BaseEffect ShallowClone()
+#if UNITY_EDITOR
+        public override LEM_BaseEffect CreateClone()
         {
-            AwaitAxisInput newClone = (AwaitAxisInput)MemberwiseClone();
+            AwaitAxisInput newClone = ScriptableObject.CreateInstance<AwaitAxisInput>();
+            //AwaitAxisInput newClone = (AwaitAxisInput)MemberwiseClone();
 
-            AwaitAxisInputData newDataInstance = ScriptableObject.CreateInstance<AwaitAxisInputData>();
+            //AwaitAxisInputData newDataInstance = ScriptableObject.CreateInstance<AwaitAxisInputData>();
 
-            int length = m_AxisInputData.m_MoreThanAxises != null ? m_AxisInputData.m_MoreThanAxises.Length : 0;
-            newDataInstance.m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
+            //int length = m_MoreThanAxises != null ? m_MoreThanAxises.Length : 0;
+            //m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
 
-            length = m_AxisInputData.m_LessThanAxises != null ? m_AxisInputData.m_LessThanAxises.Length : 0;
-            newDataInstance.m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
+            //length = m_LessThanAxises != null ? m_LessThanAxises.Length : 0;
+            //m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
 
-            length = m_AxisInputData.m_ApproxEqualToAxises != null ? m_AxisInputData.m_ApproxEqualToAxises.Length : 0;
-            newDataInstance.m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
+            //length = m_ApproxEqualToAxises != null ? m_ApproxEqualToAxises.Length : 0;
+            //m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
 
-            for (int i = 0; i < newDataInstance.m_MoreThanAxises.Length; i++)
-                newDataInstance.m_MoreThanAxises[i] = m_AxisInputData.m_MoreThanAxises[i];
+            //for (int i = 0; i < m_MoreThanAxises.Length; i++)
+            //m_MoreThanAxises[i] = m_MoreThanAxises[i];
 
-            for (int i = 0; i < newDataInstance.m_LessThanAxises.Length; i++)
-                newDataInstance.m_LessThanAxises[i] = m_AxisInputData.m_LessThanAxises[i]; 
-            
-            for (int i = 0; i < newDataInstance.m_ApproxEqualToAxises.Length; i++)
-                newDataInstance.m_ApproxEqualToAxises[i] = m_AxisInputData.m_ApproxEqualToAxises[i];
+            //for (int i = 0; i < m_LessThanAxises.Length; i++)
+            //m_LessThanAxises[i] = m_LessThanAxises[i];
+
+            //for (int i = 0; i < m_ApproxEqualToAxises.Length; i++)
+            //m_ApproxEqualToAxises[i] = m_ApproxEqualToAxises[i];
+
+            //newClone.m_AxisInputData = newDataInstance;
+
+            int length = m_MoreThanAxises != null ? m_MoreThanAxises.Length : 0;
+            newClone.m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
+
+            length = m_LessThanAxises != null ? m_LessThanAxises.Length : 0;
+            newClone.m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
+
+            length = m_ApproxEqualToAxises != null ? m_ApproxEqualToAxises.Length : 0;
+            newClone.m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
 
 
-            newClone.m_AxisInputData = newDataInstance;
+            m_MoreThanAxises?.CopyTo(newClone.m_MoreThanAxises,0);
+            m_LessThanAxises?.CopyTo(newClone.m_LessThanAxises,0);
+            m_ApproxEqualToAxises?.CopyTo(newClone.m_ApproxEqualToAxises,0);
+
+            newClone.bm_NodeBaseData = bm_NodeBaseData;
+            newClone.bm_NodeEffectType = bm_NodeEffectType;
+            newClone.bm_UpdateCycle = bm_UpdateCycle;
 
             return newClone;
         }
+
+        public void SetUp(LinearEvent t1, SerializedObject t2)
+        {
+            m_TargetLinearEvent = t1;
+            AwaitAxisInputData temp  = (AwaitAxisInputData)t2.targetObject;
+
+            //m_MoreThanAxises = temp.m_MoreThanAxises;
+            //m_LessThanAxises = temp.m_LessThanAxises;
+            //m_ApproxEqualToAxises = temp.m_ApproxEqualToAxises;
+
+            int length = temp.m_MoreThanAxises != null ? temp.m_MoreThanAxises.Length : 0;
+            m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
+
+            length = temp.m_LessThanAxises != null ? temp.m_LessThanAxises.Length : 0;
+            m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
+
+            length = temp.m_ApproxEqualToAxises != null ? temp.m_ApproxEqualToAxises.Length : 0;
+            m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
+
+            temp.m_MoreThanAxises?.CopyTo(m_MoreThanAxises, 0);
+            temp.m_LessThanAxises?.CopyTo(m_LessThanAxises, 0);
+            temp.m_ApproxEqualToAxises?.CopyTo(m_ApproxEqualToAxises, 0);
+
+        }
+
+        public void UnPack(out LinearEvent t1, out SerializedObject t2)
+        {
+            t1 = m_TargetLinearEvent;
+
+            AwaitAxisInputData temp = ScriptableObject.CreateInstance<AwaitAxisInputData>();
+            //temp.m_MoreThanAxises = m_MoreThanAxises;
+            //temp.m_LessThanAxises = m_LessThanAxises;
+            //temp.m_ApproxEqualToAxises = m_ApproxEqualToAxises;
+
+            int length = m_MoreThanAxises != null ? m_MoreThanAxises.Length : 0;
+            temp.m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
+
+            length = m_LessThanAxises != null ? m_LessThanAxises.Length : 0;
+            temp.m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
+
+            length = m_ApproxEqualToAxises != null ? m_ApproxEqualToAxises.Length : 0;
+            temp.m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
+
+            m_MoreThanAxises?.CopyTo(temp.m_MoreThanAxises, 0);
+            m_LessThanAxises?.CopyTo(temp.m_LessThanAxises, 0);
+            m_ApproxEqualToAxises?.CopyTo(temp.m_ApproxEqualToAxises, 0);
+
+            t2 = new SerializedObject(temp);
+        }
+#endif
 
         public override void OnInitialiseEffect()
         {
@@ -61,16 +141,16 @@ namespace LEM_Effects
 
             m_AllInputConditionsMet = true;
 
-            for (int i = 0; i < m_AxisInputData.m_MoreThanAxises.Length; i++)
-                if (!(Input.GetAxisRaw(m_AxisInputData.m_MoreThanAxises[i].axisName) > m_AxisInputData.m_MoreThanAxises[i].value))
+            for (int i = 0; i < m_MoreThanAxises.Length; i++)
+                if (!(Input.GetAxisRaw(m_MoreThanAxises[i].axisName) > m_MoreThanAxises[i].value))
                     m_AllInputConditionsMet = false;
 
-            for (int i = 0; i < m_AxisInputData.m_LessThanAxises.Length; i++)
-                if (!(Input.GetAxisRaw(m_AxisInputData.m_LessThanAxises[i].axisName) < m_AxisInputData.m_LessThanAxises[i].value))
+            for (int i = 0; i < m_LessThanAxises.Length; i++)
+                if (!(Input.GetAxisRaw(m_LessThanAxises[i].axisName) < m_LessThanAxises[i].value))
                     m_AllInputConditionsMet = false;
 
-            for (int i = 0; i < m_AxisInputData.m_ApproxEqualToAxises.Length; i++)
-                if (!(Mathf.Approximately(Input.GetAxisRaw(m_AxisInputData.m_ApproxEqualToAxises[i].axisName), m_AxisInputData.m_ApproxEqualToAxises[i].value)))
+            for (int i = 0; i < m_ApproxEqualToAxises.Length; i++)
+                if (!(Mathf.Approximately(Input.GetAxisRaw(m_ApproxEqualToAxises[i].axisName), m_ApproxEqualToAxises[i].value)))
                     m_AllInputConditionsMet = false;
 
             //Return when
@@ -85,19 +165,6 @@ namespace LEM_Effects
             m_TargetLinearEvent.AddNumberOfAwaitingInput = -1;
         }
 
-#if UNITY_EDITOR
-        public void SetUp(LinearEvent t1, SerializedObject t2)
-        {
-            m_TargetLinearEvent = t1;
-            m_AxisInputData = (AwaitAxisInputData)t2.targetObject;
-        }
-
-        public void UnPack(out LinearEvent t1, out SerializedObject t2)
-        {
-            t1 = m_TargetLinearEvent;
-            t2 = new SerializedObject(m_AxisInputData);
-        } 
-#endif
     }
 
 }

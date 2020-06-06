@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEditor;
 using LEM_Effects;
-using LEM_Effects.AbstractClasses;
 namespace LEM_Editor
 {
 

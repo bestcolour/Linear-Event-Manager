@@ -399,7 +399,8 @@ namespace LEM_Editor
 
         #region Velocity
 
-             //Additive Effects (you can add effects one on top of the other for these few effects
+             //Additive Effects (you can add effects one on top of the other for a combination) 
+             //Eg. Applying CurveRateOfChangeAnchPosX + CurveRateOfChangeAnchPosY will result in Applying rate of change of a RectTransform's x and y values of AnchoredPosition3D
              //The area under the curve/lines = Total amount of Displacement the transform has moved
              //Absolute Value of areas under the curve lines = Total amount of Distance travelled by the transform
 
@@ -425,15 +426,30 @@ namespace LEM_Editor
 
         #endregion
 
-             //The area under the curve/lines  (+ve Area + -ve Area) = Net Gain Rotation the transform has rotated
+        #region Rate of Change Rotation
+
+             //Additive Effects (you can add effects one on top of the other for a combination) 
+             //Eg. Applying CurveRateOfRotationX + CurveRateOfRotationY will result in Applying rate of change of a Trasform's x and y values of Rotation
+		     //The area under the curve/lines  (+ve Area + -ve Area) = Net Gain Rotation the transform has rotated
              //Absolute Value of areas under the curve lines (|+ve Area| + |-ve Area|) =Total amount of rotation rotated by transform
-             //Rate of Change in Rotation 
-             { "CurveRateOfRotationX", new NodeDictionaryDefinition(new CurveRateOfRotationXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveRateOfRotationY", new NodeDictionaryDefinition(new CurveRateOfRotationYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveRateOfRotationZ", new NodeDictionaryDefinition(new CurveRateOfRotationZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a Transform's Rotation X value over time with an AnimationCurve
+             { "CurveRateOfChangeRotationX", new NodeDictionaryDefinition(new CurveRateOfChangeRotationXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a Transform's Rotation Y value over time with an AnimationCurve
+             { "CurveRateOfChangeRotationY", new NodeDictionaryDefinition(new CurveRateOfChangeRotationYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a Transform's Rotation Z value over time with an AnimationCurve
+             { "CurveRateOfChangeRotationZ", new NodeDictionaryDefinition(new CurveRateOfChangeRotationZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+
+	    #endregion
+
 
         #endregion
-            #endregion
+
+
+        #endregion
 
 
         #region Fade Alpha

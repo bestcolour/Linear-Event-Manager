@@ -1,11 +1,19 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using LEM_Effects.Extensions;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace LEM_Effects
 {
 
-    [CanEditMultipleObjects, System.Serializable]
+    [
+#if UNITY_EDITOR
+        CanEditMultipleObjects,
+#endif
+        System.Serializable]
     public class LinearEvent : MonoBehaviour
     {
 
@@ -16,6 +24,8 @@ namespace LEM_Effects
 #if UNITY_EDITOR
         [HideInInspector]
         public GroupRectNodeBase[] m_AllGroupRectNodes = default;
+
+
 #endif
 
         [HideInInspector]
@@ -38,7 +48,7 @@ namespace LEM_Effects
             }
         }
 
-     
+
         #endregion
 
         #region RunTime Values
@@ -188,7 +198,7 @@ namespace LEM_Effects
             else if (!TryLoadNextEffect(LinearEventsManager.InstantEffectCapacity))
             {
                 return false;
-            }   
+            }
             else
                 return true;
         }

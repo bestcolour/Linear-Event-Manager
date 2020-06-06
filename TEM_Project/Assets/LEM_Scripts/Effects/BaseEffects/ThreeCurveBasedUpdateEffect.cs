@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using UnityEngine;
-namespace LEM_Effects.AbstractClasses
+﻿using UnityEngine;
+namespace LEM_Effects
 {
     public enum MainGraph { X, Y, Z }
 

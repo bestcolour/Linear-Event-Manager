@@ -2,7 +2,10 @@
 namespace LEM_Effects
 {
 
-    public class OffsetTransformPosition : LEM_BaseEffect,IEffectSavable<Transform,Vector3,bool>
+    public class OffsetTransformPosition : LEM_BaseEffect
+#if UNITY_EDITOR
+        , IEffectSavable<Transform, Vector3, bool> 
+#endif
     {
         [Tooltip("The transform you want to offset")]
         [SerializeField] Transform m_TargetTransform = default;
@@ -16,7 +19,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
-        public override void Initialise()
+        public override void OnInitialiseEffect()
         {
             //If set to local is true, set transform scale as local scale
             if (m_RelativeToLocal)
@@ -30,6 +33,7 @@ namespace LEM_Effects
 
         }
 
+#if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, bool t3)
         {
             m_TargetTransform = t1;
@@ -42,6 +46,7 @@ namespace LEM_Effects
             t1 = m_TargetTransform;
             t2 = m_OffsetPosition;
             t3 = m_RelativeToLocal;
-        }
+        } 
+#endif
     } 
 }

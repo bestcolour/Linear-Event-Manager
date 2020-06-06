@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-namespace LEM_Effects.AbstractClasses
+namespace LEM_Effects
 {
     public delegate bool RBoolIVoidDelegate();
 

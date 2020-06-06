@@ -445,6 +445,52 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 0
     m_RotationOrder: 4
+--- !u!114 &536884618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8169d897c16c5a48b2ca58bc2c6c509, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: CurveRateOfChangeRotationX
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: -2.5440826, y: 166.92651}
+    m_NodeID: BEN_50f5496b-00e7-4dda-853f-ec72bd368180
+    m_NextPointsIDs: []
+  m_Timer: 0
+  m_Graph:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_Duration: 0
+  m_TargetTransform: {fileID: 1407778484}
+  m_RelativeSpace: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,11 +625,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e497938d38cb74492560adb572c903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllEffects: []
+  m_AllEffects:
+  - {fileID: 536884618}
+  - {fileID: 1511752197}
   m_AllGroupRectNodes: []
   m_StartNodeData:
-    m_Position: {x: 150, y: 96}
-    m_NodeID: SN_478e3529-e616-4265-af7e-7267836d839e
+    m_Position: {x: -185.80205, y: 152.93443}
+    m_NodeID: SN_c82607c6-0a67-4cc6-a5e8-4c824163e089
     m_NextPointsIDs: []
   m_LinearEventIndex: -1
   m_PreviousEffectPlayed: {fileID: 0}
@@ -833,6 +881,115 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1511752197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8169d897c16c5a48b2ca58bc2c6c509, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: CurveRateOfChangeRotationX
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 290.6912, y: 191.92654}
+    m_NodeID: BEN_c351dcfe-dd7a-4e79-a9e9-03d14725bc80
+    m_NextPointsIDs: []
+  m_Timer: 0
+  m_Graph:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 8
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 8.166667
+      value: 0.05
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 8.333333
+      value: -0.051708985
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 8.5
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 9.4
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 9.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 9.95
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 10
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_Duration: 0
+  m_TargetTransform: {fileID: 1407778484}
+  m_RelativeSpace: 0
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0

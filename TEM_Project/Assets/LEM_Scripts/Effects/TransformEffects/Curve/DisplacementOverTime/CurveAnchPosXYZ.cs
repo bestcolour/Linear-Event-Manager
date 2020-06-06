@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using LEM_Effects.AbstractClasses;
 namespace LEM_Effects
 {
 
@@ -16,17 +15,17 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
 #if UNITY_EDITOR
-        public override LEM_BaseEffect CreateClone()
-        {
-            CurveAnchPosXYZ copy = (CurveAnchPosXYZ)MemberwiseClone();
+        //public override LEM_BaseEffect CreateClone()
+        //{
+        //    CurveAnchPosXYZ copy = (CurveAnchPosXYZ)MemberwiseClone();
 
-            //copy.m_TargetTransform = m_TargetTransform;
-            copy.m_GraphX = m_GraphX.Clone();
-            copy.m_GraphY = m_GraphY.Clone();
-            copy.m_GraphZ = m_GraphZ.Clone();
+        //    //copy.m_TargetTransform = m_TargetTransform;
+        //    copy.m_GraphX = m_GraphX.Clone();
+        //    copy.m_GraphY = m_GraphY.Clone();
+        //    copy.m_GraphZ = m_GraphZ.Clone();
 
-            return copy;
-        }
+        //    return copy;
+        //}
 
         public void SetUp(RectTransform t1, MainGraph t2, AnimationCurve t3, AnimationCurve t4, AnimationCurve t5)
         {
