@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public delegate void VoidLerpQuaternionDelegate(float delta);
+    public delegate void RVoidIFloatDelegate(float delta);
 
     public class MoveRotationToV3 : TimerBasedUpdateEffect
 #if UNITY_EDITOR
@@ -24,7 +24,7 @@ namespace LEM_Effects
 
         Quaternion m_OriginalRotation = default;
         Quaternion m_TargetQRotation = default;
-        VoidLerpQuaternionDelegate d_RotateFunction = null;
+        RVoidIFloatDelegate d_RotateFunction = null;
         #endregion
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;

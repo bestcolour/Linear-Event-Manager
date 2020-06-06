@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// © 2020 Lee Kee Shen All Rights Reserved
 /// </summary>
-namespace LEM_Effects
+namespace LEM_Effects.AbstractClasses
 {
 
     public enum UpdateCycle
@@ -61,7 +61,7 @@ namespace LEM_Effects
 
 
 #if UNITY_EDITOR
-        public virtual LEM_BaseEffect ShallowClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
+        public virtual LEM_BaseEffect CreateClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
 #endif
 
     }

@@ -289,29 +289,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 349933723}
   m_CullTransparentMesh: 0
---- !u!114 &370614541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2bb36a180565974ebb5d2b1455d7fb8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bm_NodeEffectType: LerpPosToV3
-  bm_UpdateCycle: 0
-  bm_NodeBaseData:
-    m_Position: {x: 160.3135, y: 113.51092}
-    m_NodeID: BEN_ff3c2b90-f334-4c31-966f-717c4e8ab6cd
-    m_NextPointsIDs: []
-  m_TargetTransform: {fileID: 374613757}
-  m_TargetPosition: {x: 5, y: 0, z: 0}
-  m_UseWorldSpace: 0
-  m_Smoothing: 0.43
-  m_SnapDistance: 0.25
 --- !u!1 &374613753
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,6 +298,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 374613757}
+  - component: {fileID: 374613758}
   - component: {fileID: 374613756}
   - component: {fileID: 374613755}
   - component: {fileID: 374613754}
@@ -404,6 +382,69 @@ Transform:
   m_Father: {fileID: 1618572937}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &374613758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374613753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cef9fa98728d70840820cdf71cf657e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 180
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2
+      value: -180
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 3
+      value: 180
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4
+      value: -180
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 0
+    m_RotationOrder: 4
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,17 +579,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e497938d38cb74492560adb572c903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllEffects:
-  - {fileID: 370614541}
-  - {fileID: 1540063574}
-  - {fileID: 1099875219}
-  - {fileID: 1597921604}
+  m_AllEffects: []
   m_AllGroupRectNodes: []
   m_StartNodeData:
-    m_Position: {x: 17.757912, y: 147.01094}
-    m_NodeID: SN_a1bef48a-51b9-4864-bc68-50b05de83f69
-    m_NextPointsIDs:
-    - BEN_ff3c2b90-f334-4c31-966f-717c4e8ab6cd
+    m_Position: {x: 150, y: 96}
+    m_NodeID: SN_478e3529-e616-4265-af7e-7267836d839e
+    m_NextPointsIDs: []
   m_LinearEventIndex: -1
   m_PreviousEffectPlayed: {fileID: 0}
   m_UpdateCycle: []
@@ -667,28 +703,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1099875219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 858f082f074dc764f8e8f77e036a5288, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bm_NodeEffectType: LerpPosToT
-  bm_UpdateCycle: 0
-  bm_NodeBaseData:
-    m_Position: {x: 386.50818, y: 455.85715}
-    m_NodeID: BEN_7bbfc22a-9828-45e4-bdda-94f124d59064
-    m_NextPointsIDs: []
-  m_TargetTransform: {fileID: 0}
-  m_TargetDestination: {fileID: 0}
-  m_Smoothing: 0
-  m_SnapDistance: 0
 --- !u!1 &1358906466
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,51 +833,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1540063574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5619959ab1eb5846bd24188ba356fdd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bm_NodeEffectType: LerpAnchPosToRtT
-  bm_UpdateCycle: 0
-  bm_NodeBaseData:
-    m_Position: {x: 511.27725, y: 113.16474}
-    m_NodeID: BEN_8cc0c604-6201-4985-bf65-4c6d3038fbfc
-    m_NextPointsIDs: []
-  m_TargetRectransform: {fileID: 0}
-  m_TargetDestination: {fileID: 0}
-  m_Smoothing: 0
-  m_SnapDistance: 0
---- !u!114 &1597921604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bb50f07d077ed741bfb9b5689a4ffec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bm_NodeEffectType: LerpRotationToT
-  bm_UpdateCycle: 0
-  bm_NodeBaseData:
-    m_Position: {x: 786.508, y: 459.85712}
-    m_NodeID: BEN_9baeb42a-8dff-4ba2-8d14-6c7b26aaf768
-    m_NextPointsIDs: []
-  m_TransformToBeRotated: {fileID: 0}
-  m_TargetTransformRotation: {fileID: 0}
-  m_WorldRotation: 0
-  m_Smoothing: 0.1
-  m_SnapRange: 0.025
 --- !u!1 &1614687448
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,7 +849,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1614687449
 MonoBehaviour:
   m_ObjectHideFlags: 0

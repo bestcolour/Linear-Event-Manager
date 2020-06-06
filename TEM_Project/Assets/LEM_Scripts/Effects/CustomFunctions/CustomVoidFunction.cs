@@ -44,7 +44,7 @@ namespace LEM_Effects
         }
 
 
-        public override LEM_BaseEffect ShallowClone()
+        public override LEM_BaseEffect CreateClone()
         {
             CustomVoidFunction dummy = (CustomVoidFunction)MemberwiseClone();
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public delegate float FloatLerpQuaternionDelegate(float delta);
+    public delegate float RFloatIFloatDelegate(float delta);
 
 
     public class LerpRotationToV3 : UpdateBaseEffect
@@ -27,7 +27,7 @@ namespace LEM_Effects
         #region Cached var
 
         Quaternion m_TargetQRotation = default;
-        FloatLerpQuaternionDelegate d_RotateFunction = null;
+        RFloatIFloatDelegate d_RotateFunction = null;
 
         #endregion
 

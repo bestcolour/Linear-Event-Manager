@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-namespace LEM_Effects
+namespace LEM_Effects.AbstractClasses
 {
 
     public abstract class TimerBasedUpdateEffect :UpdateBaseEffect

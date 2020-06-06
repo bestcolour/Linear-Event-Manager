@@ -31,7 +31,7 @@ namespace LEM_Effects
         Vector3 m_OriginalPosition = default;
         Quaternion m_TargetQRotation = default;
         Quaternion m_OriginalQRotation = default;
-        FloatLerpQuaternionDelegate d_RotateFunction = null;
+        RFloatIFloatDelegate d_RotateFunction = null;
 
         #endregion
 

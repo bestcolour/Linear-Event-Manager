@@ -31,7 +31,7 @@ namespace LEM_Effects
 
 
 #if UNITY_EDITOR
-        public override LEM_BaseEffect ShallowClone()
+        public override LEM_BaseEffect CreateClone()
         {
             AwaitAxisInput newClone = ScriptableObject.CreateInstance<AwaitAxisInput>();
             //AwaitAxisInput newClone = (AwaitAxisInput)MemberwiseClone();

@@ -22,7 +22,7 @@ namespace LEM_Effects
         #region Cached var
 
         Quaternion m_OriginalRotation = default;
-        VoidLerpQuaternionDelegate d_RotateFunction = null;
+        RVoidIFloatDelegate d_RotateFunction = null;
         #endregion
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;

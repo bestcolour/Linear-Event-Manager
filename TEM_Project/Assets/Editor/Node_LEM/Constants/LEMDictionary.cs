@@ -91,8 +91,6 @@ namespace LEM_Editor
 
         #region TransformRelated Effects
 
-            
-
         #region SetTransform
              { "ReposTrans", new NodeDictionaryDefinition(new RepositionTransformNode()         ,new Color(0.15f ,0.68f,0.38f)) },
              { "ReposRectTrans", new NodeDictionaryDefinition(new RepositionRectTransformNode() ,new Color(0.15f ,0.68f,0.38f)) },
@@ -369,42 +367,74 @@ namespace LEM_Editor
 
         #region Curve Transform Values
 
-             //Position related
-             //Displacement
-             { "CurveDisplaceXTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveDisplaceXRectransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveDisplaceYTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceYTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveDisplaceYRectransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceYRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveDisplaceZTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceZTransformToPositionNode()                        ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveDisplaceZRectransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceZRectransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveDisplaceXYZTransformToPosition", new NodeDictionaryDefinition(new CurveDisplaceXYZTransformToPositionNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             
+        #region Displacement
+		     //CurvePos and CurveAnchPos effects are not additive. In other words, you can't add CurvePosX and CurvePosY together to expect them to move the transform in both the X and Y direction.
 
+             //Control the value of a transform's X position with an AnimationCurve
+             { "CurvePosX", new NodeDictionaryDefinition(new CurvePosXNode()                        ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a RectTransform's X anchoredPosition3D with an AnimationCurve
+             { "CurveAnchPosX", new NodeDictionaryDefinition(new CurveAnchPosXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a transform's Y position with an AnimationCurve
+             { "CurvePosY", new NodeDictionaryDefinition(new CurvePosYNode()                        ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a RectTransform's Y anchoredPosition3D with an AnimationCurve
+             { "CurveAnchPosY", new NodeDictionaryDefinition(new CurveAnchPosYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a transform's Z position with an AnimationCurve
+             { "CurvePosZ", new NodeDictionaryDefinition(new CurvePosZNode()                        ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a RectTransform's Z anchoredPosition3D with an AnimationCurve
+             { "CurveAnchPosZ", new NodeDictionaryDefinition(new CurveAnchPosZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a transform's XYZ position with an AnimationCurve
+             { "CurvePosXYZ", new NodeDictionaryDefinition(new CurvePosXYZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a RectTransform's XYZ anchoredPosition3D with an AnimationCurve
+             { "CurveAnchPosXYZ", new NodeDictionaryDefinition(new CurveAnchPosXYZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+        #endregion
+
+        #region Velocity
 
              //Additive Effects (you can add effects one on top of the other for these few effects
              //The area under the curve/lines = Total amount of Displacement the transform has moved
              //Absolute Value of areas under the curve lines = Total amount of Distance travelled by the transform
-             //Velocity
-             { "CurveVelocityXRectransform", new NodeDictionaryDefinition(new CurveVelocityXRectransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveVelocityYRectransform", new NodeDictionaryDefinition(new CurveVelocityYRectransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveVelocityZRectransform", new NodeDictionaryDefinition(new CurveVelocityZRectransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveVelocityXTransform", new NodeDictionaryDefinition(new CurveVelocityXTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveVelocityYTransform", new NodeDictionaryDefinition(new CurveVelocityYTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
-             { "CurveVelocityZTransform", new NodeDictionaryDefinition(new CurveVelocityZTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a RectTransform's AnchoredPosition X value over time with an AnimationCurve
+             { "CurveRateOfChangeAnchPosX", new NodeDictionaryDefinition(new CurveRateOfChangeAnchPosXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a RectTransform's AnchoredPosition Y value over time with an AnimationCurve
+             { "CurveRateOfChangeAnchPosY", new NodeDictionaryDefinition(new CurveRateOfChangeAnchPosYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a RectTransform's AnchoredPosition Z value over time with an AnimationCurve
+             { "CurveRateOfChangeAnchPosZ", new NodeDictionaryDefinition(new CurveRateOfChangeAnchPosZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a Transform's Position X value over time with an AnimationCurve
+             { "CurveRateOfChangePosX", new NodeDictionaryDefinition(new CurveRateOfChangePosXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a Transform's Position Y value over time with an AnimationCurve
+             { "CurveRateOfChangePosY", new NodeDictionaryDefinition(new CurveRateOfChangePosYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a Transform's Position Z value over time with an AnimationCurve
+             { "CurveRateOfChangePosZ", new NodeDictionaryDefinition(new CurveRateOfChangePosZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+
+
+        #endregion
 
              //The area under the curve/lines  (+ve Area + -ve Area) = Net Gain Rotation the transform has rotated
              //Absolute Value of areas under the curve lines (|+ve Area| + |-ve Area|) =Total amount of rotation rotated by transform
              //Rate of Change in Rotation 
-             { "CurveRotationXTransform", new NodeDictionaryDefinition(new CurveRotationXTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfRotationX", new NodeDictionaryDefinition(new CurveRateOfRotationXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfRotationY", new NodeDictionaryDefinition(new CurveRateOfRotationYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfRotationZ", new NodeDictionaryDefinition(new CurveRateOfRotationZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
 
+        #endregion
+            #endregion
 
-
-
-
-	    #endregion
-
-	    #endregion
-
-     
 
         #region Fade Alpha
 		     { "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageComponentNode()                                     ,new Color(0.19f ,0.74f,0.67f)) },

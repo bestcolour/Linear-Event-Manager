@@ -1,4 +1,4 @@
-﻿namespace LEM_Effects
+﻿namespace LEM_Effects.AbstractClasses
 {
 
 	public abstract class UpdateBaseEffect : LEM_BaseEffect

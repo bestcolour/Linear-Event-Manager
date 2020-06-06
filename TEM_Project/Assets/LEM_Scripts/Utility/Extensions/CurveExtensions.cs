@@ -8,7 +8,11 @@ public static class CurveExtensions
 {
     public static AnimationCurve Clone(this AnimationCurve curve)
     {
-        return ReflectionExtensions.DeepCopy<AnimationCurve>(curve);
+        AnimationCurve c = new AnimationCurve();
+        c.keys = curve.keys;
+        c.preWrapMode = curve.preWrapMode;
+        c.postWrapMode = curve.postWrapMode;
+        return c;
     }
 
 

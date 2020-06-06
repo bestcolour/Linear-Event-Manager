@@ -26,7 +26,7 @@ namespace LEM_Effects
         #region Cached var
         Vector3 m_OriginalPosition = default;
         Quaternion m_TargetQRotation = default;
-        FloatLerpQuaternionDelegate d_RotateFunction = null;
+        RFloatIFloatDelegate d_RotateFunction = null;
 
         #endregion
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
