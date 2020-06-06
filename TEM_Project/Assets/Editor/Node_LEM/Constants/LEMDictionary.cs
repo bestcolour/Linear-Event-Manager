@@ -426,6 +426,25 @@ namespace LEM_Editor
 
         #endregion
 
+
+        #region Rotation Over Time
+             //CurveRotation effects are not additive. In other words, you can't add CurveRotationX and CurveRotationY together to expect them to rotate in both X and Y axis
+
+             //Control the value of a transform's X rotation/localRotation with an AnimationCurve
+             { "CurveRotationX", new NodeDictionaryDefinition(new CurveRotationXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a transform's Y rotation/localRotation with an AnimationCurve
+             { "CurveRotationY", new NodeDictionaryDefinition(new CurveRotationYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a transform's Z rotation/localRotation with an AnimationCurve
+             { "CurveRotationZ", new NodeDictionaryDefinition(new CurveRotationZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the value of a transform's XYZ rotation/localRotation with an AnimationCurve
+             { "CurveRotationXYZ", new NodeDictionaryDefinition(new CurveRotationXYZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+
+        #endregion
+             
         #region Rate of Change Rotation
 
              //Additive Effects (you can add effects one on top of the other for a combination) 
