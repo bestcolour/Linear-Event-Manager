@@ -9,6 +9,7 @@ namespace LEM_Editor
     {
         Transform m_TargetTransform = default;
         Vector3 m_TargetPosition = default;
+        bool m_UseWorldSpace = default;
         float m_Smoothing = 0f,m_SnapDistance =0f;
 
         protected override string EffectTypeName => "RepeatLerpPosToV3";
@@ -35,6 +36,8 @@ namespace LEM_Editor
             propertyRect.y += 20f;
             m_TargetPosition = EditorGUI.Vector3Field(propertyRect, "Target Position", m_TargetPosition);
             propertyRect.y += 40f;
+            m_UseWorldSpace = EditorGUI.Toggle(propertyRect, "Use WorldSpace", m_UseWorldSpace);
+            propertyRect.y += 20f;
             m_Smoothing = EditorGUI.Slider(propertyRect, "Smoothing", m_Smoothing, 0f, 1f);
             propertyRect.y += 20f;
             m_SnapDistance = EditorGUI.FloatField(propertyRect, "SnapDistance", m_SnapDistance);
@@ -56,7 +59,7 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_TargetPosition, m_Smoothing,m_SnapDistance);
+            myEffect.SetUp(m_TargetTransform, m_TargetPosition, m_UseWorldSpace, m_Smoothing,m_SnapDistance);
             return myEffect;
 
         }
@@ -64,7 +67,7 @@ namespace LEM_Editor
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
             RepeatLerpPosToV3 loadFrom = effectToLoadFrom as RepeatLerpPosToV3;
-            loadFrom.UnPack(out m_TargetTransform, out m_TargetPosition, out m_Smoothing,out m_SnapDistance);
+            loadFrom.UnPack(out m_TargetTransform, out m_TargetPosition,out m_UseWorldSpace, out m_Smoothing,out m_SnapDistance);
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
 
         }

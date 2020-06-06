@@ -10,6 +10,7 @@ namespace LEM_Editor
         Transform m_TargetTransform = default;
         Vector3 m_TargetPosition = default;
         float m_Duration = 0f;
+        bool m_UseWorldSpace = default;
         protected override string EffectTypeName => "MovePosToV3";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
@@ -35,6 +36,9 @@ namespace LEM_Editor
             propertyRect.y += 20f;
             m_TargetPosition = EditorGUI.Vector3Field(propertyRect, "Target Position", m_TargetPosition);
             propertyRect.y += 40f;
+            m_UseWorldSpace = EditorGUI.Toggle(propertyRect, "Use WorldSpace", m_UseWorldSpace);
+            propertyRect.y += 20f;
+
             m_Duration = EditorGUI.FloatField(propertyRect, "Duration", m_Duration);
 
             if (m_Duration < 0)
@@ -57,7 +61,7 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_TargetPosition, m_Duration);
+            myEffect.SetUp(m_TargetTransform, m_TargetPosition,m_UseWorldSpace, m_Duration);
             return myEffect;
 
         }
@@ -65,7 +69,7 @@ namespace LEM_Editor
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
             MovePosToV3 loadFrom = effectToLoadFrom as MovePosToV3;
-            loadFrom.UnPack(out m_TargetTransform, out m_TargetPosition, out m_Duration);
+            loadFrom.UnPack(out m_TargetTransform, out m_TargetPosition,out m_UseWorldSpace, out m_Duration);
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;

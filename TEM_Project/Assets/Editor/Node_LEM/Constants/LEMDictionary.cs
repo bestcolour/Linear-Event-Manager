@@ -143,7 +143,6 @@ namespace LEM_Editor
              //Lerps a rectTransform to another vector3 position and will reset the rectTransform's position to its original value upon completion before Lerping again
              { "RepeatLerpAnchPosToV3", new NodeDictionaryDefinition(new RepeatLerpAnchPosToV3Node()                   ,new Color(0.12f ,0.38f,0.55f)) },
 
-
         #endregion
 
         #region Rotation
@@ -270,7 +269,6 @@ namespace LEM_Editor
              { "RepeatMoveAnchPosToV3Node", new NodeDictionaryDefinition(new RepeatMoveAnchPosToV3Node()           ,new Color(0.36f ,0.17f,0.44f)) },
 
         #endregion
-
 
         #region Rotation
 		     //Rotation

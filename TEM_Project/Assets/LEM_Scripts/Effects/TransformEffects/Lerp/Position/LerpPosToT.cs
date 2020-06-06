@@ -37,7 +37,7 @@ namespace LEM_Effects
             t2 = m_TargetDestination;
             t3 = m_Smoothing;
             t4 = m_SnapDistance;
-        } 
+        }
 #endif
 
         public override bool OnUpdateEffect(float delta)

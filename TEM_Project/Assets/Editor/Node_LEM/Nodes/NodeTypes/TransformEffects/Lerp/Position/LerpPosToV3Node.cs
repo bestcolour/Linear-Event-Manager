@@ -11,7 +11,8 @@ namespace LEM_Editor
         protected override string EffectTypeName => "LerpPosToV3";
         Transform m_TargetTransform = default;
         Vector3 m_TargetPosition = default;
-        float m_Smoothing = 0f, m_SnapDistance = 0f;
+        bool m_UseWorldSpace = default;
+        float m_Smoothing = 0.1f, m_SnapDistance = 0.025f;
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -36,6 +37,8 @@ namespace LEM_Editor
             propertyRect.y += 20f;
             m_TargetPosition = EditorGUI.Vector3Field(propertyRect, "Target Position", m_TargetPosition);
             propertyRect.y += 40f;
+            m_UseWorldSpace = EditorGUI.Toggle(propertyRect, "Use WorldSpace", m_UseWorldSpace);
+            propertyRect.y += 20f;
             m_Smoothing = EditorGUI.Slider(propertyRect, "Smoothing", m_Smoothing, 0f, 1f);
             propertyRect.y += 20f;
             m_SnapDistance = EditorGUI.FloatField(propertyRect, "SnapDistance", m_SnapDistance);
@@ -47,7 +50,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            LEM_Effects.LerpPosToV3 myEffect = ScriptableObject.CreateInstance<LEM_Effects.LerpPosToV3>();
+            LerpPosToV3 myEffect = ScriptableObject.CreateInstance<LerpPosToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;
@@ -57,15 +60,15 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_TargetPosition, m_Smoothing, m_SnapDistance);
+            myEffect.SetUp(m_TargetTransform, m_TargetPosition,m_UseWorldSpace, m_Smoothing, m_SnapDistance);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            LEM_Effects.LerpPosToV3 loadFrom = effectToLoadFrom as LEM_Effects.LerpPosToV3;
-            loadFrom.UnPack(out m_TargetTransform, out m_TargetPosition, out m_Smoothing, out m_SnapDistance);
+            LerpPosToV3 loadFrom = effectToLoadFrom as LerpPosToV3;
+            loadFrom.UnPack(out m_TargetTransform, out m_TargetPosition,out m_UseWorldSpace, out m_Smoothing, out m_SnapDistance);
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;

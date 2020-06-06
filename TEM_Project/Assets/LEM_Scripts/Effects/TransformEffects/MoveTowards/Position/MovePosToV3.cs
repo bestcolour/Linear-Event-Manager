@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
     public class MovePosToV3 : TimerBasedUpdateEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3, float> 
+        , IEffectSavable<Transform, Vector3, bool,float> 
 #endif
     {
         [Tooltip("The transform you want to move")]
@@ -11,6 +11,8 @@ namespace LEM_Effects
 
         [Tooltip("The position you want to move to")]
         [SerializeField] Vector3 m_TargetPosition = default;
+
+        [SerializeField] bool m_UseWorldSpace = default;
 
         [Tooltip("The time needed for target to reach target position with MoveTowards")]
         [SerializeField, Range(0.0001f, 1000f)] float m_Duration = 1f;
@@ -26,25 +28,25 @@ namespace LEM_Effects
 
         public override void OnInitialiseEffect()
         {
-            //Calculate speed in initialise
-            //m_Speed = Vector3.Distance(m_TargetTransform.position, m_TargetPosition) / m_Duration;
             m_OriginalPosition = m_TargetTransform.position;
-
+            m_TargetPosition = m_UseWorldSpace ? m_TargetPosition : m_TargetTransform.TransformPoint(m_TargetPosition);
         }
 
 #if UNITY_EDITOR
-        public void SetUp(Transform t1, Vector3 t2, float t3)
+        public void SetUp(Transform t1, Vector3 t2, bool t3,float t4)
         {
             m_TargetTransform = t1;
             m_TargetPosition = t2;
-            m_Duration = t3;
+            m_UseWorldSpace = t3;
+            m_Duration = t4;
         }
 
-        public void UnPack(out Transform t1, out Vector3 t2, out float t3)
+        public void UnPack(out Transform t1, out Vector3 t2,out bool t3, out float t4)
         {
             t1 = m_TargetTransform;
             t2 = m_TargetPosition;
-            t3 = m_Duration;
+            t3 = m_UseWorldSpace;
+            t4 = m_Duration;
         }
 
 #endif

@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
     public class LerpPosToV3 : UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3, float, float> 
+        , IEffectSavable<Transform, Vector3,bool, float, float> 
 #endif
     {
         [Tooltip("The transform you want to lerp")]
@@ -11,6 +11,9 @@ namespace LEM_Effects
 
         [Tooltip("The position you want to lerp to")]
         [SerializeField] Vector3 m_TargetPosition = default;
+
+        //If false, the transform's localposition will be lerped instead
+        [SerializeField] bool m_UseWorldSpace = false;
 
         [Tooltip("This is how much does the Lerp interpolate between targetTransform and targetPosition.")]
         [SerializeField, Range(0.0001f, 1000f)] float m_Smoothing = 1f;
@@ -22,22 +25,30 @@ namespace LEM_Effects
 
 
 #if UNITY_EDITOR
-        public void SetUp(Transform t1, Vector3 t2, float t3, float t4)
+        public void SetUp(Transform t1, Vector3 t2, bool t3 ,float t4, float t5)
         {
             m_TargetTransform = t1;
             m_TargetPosition = t2;
-            m_Smoothing = t3;
-            m_SnapDistance = t4;
+            m_UseWorldSpace = t3;
+            m_Smoothing = t4;
+            m_SnapDistance = t5;
         }
 
-        public void UnPack(out Transform t1, out Vector3 t2, out float t3, out float t4)
+        public void UnPack(out Transform t1, out Vector3 t2,out bool t3, out float t4, out float t5)
         {
             t1 = m_TargetTransform;
             t2 = m_TargetPosition;
-            t3 = m_Smoothing;
-            t4 = m_SnapDistance;
-        } 
+            t3 = m_UseWorldSpace;
+            t4= m_Smoothing;
+            t5= m_SnapDistance;
+        }
 #endif
+
+        public override void OnInitialiseEffect()
+        {
+            m_TargetPosition = m_UseWorldSpace ? m_TargetPosition : m_TargetTransform.TransformPoint(m_TargetPosition);
+        }
+
 
         public override bool OnUpdateEffect(float delta)
         {
