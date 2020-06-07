@@ -4,13 +4,12 @@ using UnityEditor;
 using LEM_Effects;
 namespace LEM_Editor
 {
-
-    public class OffsetTransformPositionNode : InstantEffectNode
+    public class OffsetRotationNode : InstantEffectNode
     {
-        protected override string EffectTypeName => "OffsetTransPos";
+        protected override string EffectTypeName => "OffsetRotation";
 
         Transform m_TargetTransform = default;
-        Vector3 m_OffSetPositionValue = default;
+        Vector3 m_OffSetRotationValue = default;
         bool m_IsRelativeToLocalPosition = default;
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
@@ -31,9 +30,9 @@ namespace LEM_Editor
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
-            m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect,"Target Transform", m_TargetTransform, typeof(Transform), true);
+            m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Target Transform", m_TargetTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_OffSetPositionValue = EditorGUI.Vector3Field(propertyRect, "Offset Position by", m_OffSetPositionValue);
+            m_OffSetRotationValue = EditorGUI.Vector3Field(propertyRect, "Offset Rotation by", m_OffSetRotationValue);
             propertyRect.y += 40f;
             m_IsRelativeToLocalPosition = EditorGUI.Toggle(propertyRect, "Relative To Local", m_IsRelativeToLocalPosition);
 
@@ -45,7 +44,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            OffsetTransformPosition myEffect = ScriptableObject.CreateInstance<OffsetTransformPosition>();
+            OffsetRotation myEffect = ScriptableObject.CreateInstance<OffsetRotation>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;
@@ -55,15 +54,15 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform,m_OffSetPositionValue,m_IsRelativeToLocalPosition);
+            myEffect.SetUp(m_TargetTransform, m_OffSetRotationValue, m_IsRelativeToLocalPosition);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            OffsetTransformPosition loadFrom = effectToLoadFrom as OffsetTransformPosition;
-            loadFrom.UnPack(out m_TargetTransform,out m_OffSetPositionValue, out m_IsRelativeToLocalPosition);
+            OffsetRotation loadFrom = effectToLoadFrom as OffsetRotation;
+            loadFrom.UnPack(out m_TargetTransform, out m_OffSetRotationValue, out m_IsRelativeToLocalPosition);
 
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;

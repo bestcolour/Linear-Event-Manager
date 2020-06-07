@@ -2,22 +2,21 @@
 using UnityEngine;
 using UnityEditor;
 using LEM_Effects;
-
 namespace LEM_Editor
 {
-    public class RepositionRectTransformNode : InstantEffectNode
+
+    public class SetSiblingIndexNode : InstantEffectNode
     {
-        protected override string EffectTypeName => "ReposRectTrans";
+        protected override string EffectTypeName => "SetSiblingIndex";
 
-        RectTransform m_TargetRectTransform = default;
-        Vector3 m_SetPositionValue = default;
-
+        Transform m_TargetTransform = default;
+        int m_SiblingIndex = default;
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             //Override the rect size n pos
-            SetNodeRects(position, NodeTextureDimensions.NORMAL_MID_SIZE, NodeTextureDimensions.NORMAL_TOP_SIZE);
+            SetNodeRects(position, NodeTextureDimensions.SMALL_MID_SIZE, NodeTextureDimensions.SMALL_TOP_SIZE);
 
         }
 
@@ -30,9 +29,10 @@ namespace LEM_Editor
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
-            m_TargetRectTransform = (RectTransform)EditorGUI.ObjectField(propertyRect, "Target RectTransform", m_TargetRectTransform, typeof(RectTransform), true);
+
+            m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Target Transform", m_TargetTransform, typeof(Transform), true);
             propertyRect.y += 20f;
-            m_SetPositionValue = EditorGUI.Vector3Field(propertyRect, "Set To Position", m_SetPositionValue);
+            m_SiblingIndex = EditorGUI.IntField(propertyRect, "SiblingIndex", m_SiblingIndex);
 
             LEMStyleLibrary.EndEditorLabelColourChange();
 
@@ -41,28 +41,27 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            RepositionRectTransform myEffect = ScriptableObject.CreateInstance<RepositionRectTransform>();
+            SetSiblingIndex myEffect = ScriptableObject.CreateInstance<SetSiblingIndex>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
-           //myEffect.m_Description = m_LemEffectDescription;
+            //myEffect.m_Description = m_LemEffectDescription;
             myEffect.bm_UpdateCycle = m_UpdateCycle;
 
 
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetRectTransform, m_SetPositionValue);
+            myEffect.SetUp(m_TargetTransform, m_SiblingIndex);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            RepositionRectTransform loadFrom = effectToLoadFrom as RepositionRectTransform;
-            loadFrom.UnPack(out m_TargetRectTransform, out m_SetPositionValue);
-
+            SetSiblingIndex loadFrom = effectToLoadFrom as SetSiblingIndex;
+            loadFrom.UnPack(out m_TargetTransform, out m_SiblingIndex);
             //Important
-            //m_LemEffectDescription = effectToLoadFrom.m_Description;
+            ////m_LemEffectDescription = effectToLoadFrom.m_Description;
             m_UpdateCycle = effectToLoadFrom.bm_UpdateCycle;
 
         }

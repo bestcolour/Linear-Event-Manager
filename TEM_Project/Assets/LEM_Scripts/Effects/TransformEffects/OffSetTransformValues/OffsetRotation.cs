@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class OffsetTransformRotation : LEM_BaseEffect
+    public class OffsetRotation : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, bool> 
 #endif

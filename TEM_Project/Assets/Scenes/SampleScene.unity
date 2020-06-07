@@ -381,30 +381,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &431841921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 918bedc8f260c7640a0a3a019976a50c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bm_NodeEffectType: FadeToAlphaTextMeshComponent
-  bm_UpdateCycle: 0
-  bm_NodeBaseData:
-    m_Position: {x: 448.75, y: -39.000004}
-    m_NodeID: BEN_8dacadaa-2ff8-4d2f-86c3-35e2c4503f52
-    m_NextPointsIDs: []
-  m_Timer: 0
-  m_TargetTextMesh: {fileID: 0}
-  m_InitialAlpha: 0
-  m_TargetAlpha: 0
-  m_Duration: 0
-  m_NextColour: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,30 +472,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &721623222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed5cafcb1c34d274a956a001984fe43c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bm_NodeEffectType: FadeToAlphaTextMeshesComponent
-  bm_UpdateCycle: 0
-  bm_NodeBaseData:
-    m_Position: {x: 147.5, y: 127.5}
-    m_NodeID: BEN_7e9bce39-f6cd-47fe-b5a1-7be6b8e2274e
-    m_NextPointsIDs: []
-  m_Timer: 0
-  m_TargetTextMeshes:
-  - {fileID: 0}
-  - {fileID: 0}
-  m_TargetAlpha: 0
-  m_Duration: 0
 --- !u!1 &893081940
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,13 +516,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllEffects:
-  - {fileID: 1518828816}
-  - {fileID: 431841921}
-  - {fileID: 721623222}
+  - {fileID: 1505904070}
+  - {fileID: 924146208}
+  - {fileID: 1169294523}
   m_AllGroupRectNodes: []
   m_StartNodeData:
-    m_Position: {x: 184.27493, y: -13.077897}
-    m_NodeID: SN_5aec4b56-1926-4ab6-957d-10215629afa6
+    m_Position: {x: 322.73538, y: 62.941174}
+    m_NodeID: SN_ddad43a7-a2dd-4b03-a0ff-1455013f1336
     m_NextPointsIDs: []
   m_LinearEventIndex: -1
   m_PreviousEffectPlayed: {fileID: 0}
@@ -607,6 +559,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
+--- !u!114 &924146208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7381a0a1e25824c499fb3c84a5d45e0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: SetParent
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 419.23535, y: 247.41168}
+    m_NodeID: BEN_0b09b38d-c1ec-481c-9315-a9ad4e5425c4
+    m_NextPointsIDs: []
+  m_ChildTransform: {fileID: 0}
+  m_ParentTransform: {fileID: 0}
+  m_SiblingIndex: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -690,6 +663,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1169294523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd0e21565f0460e45b67887b2678e2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: SetSiblingIndex
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 379.85284, y: 114.14707}
+    m_NodeID: BEN_9f0e9c1c-67cd-41e8-9006-6425149f9025
+    m_NextPointsIDs: []
+  m_ChildTransform: {fileID: 0}
+  m_SiblingIndex: 0
 --- !u!1 &1358906466
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,7 +813,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1518828816
+--- !u!114 &1505904070
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -835,7 +828,7 @@ MonoBehaviour:
   bm_NodeEffectType: CurveRotationXYZ
   bm_UpdateCycle: 0
   bm_NodeBaseData:
-    m_Position: {x: 801.41754, y: 46.493546}
+    m_Position: {x: 829.6528, y: 59.43472}
     m_NodeID: BEN_45197b97-535e-401d-ba1b-c4c037f2cd0f
     m_NextPointsIDs: []
   m_Timer: 0

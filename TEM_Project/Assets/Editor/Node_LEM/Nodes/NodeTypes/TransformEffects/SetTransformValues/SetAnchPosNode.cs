@@ -5,14 +5,12 @@ using LEM_Effects;
 
 namespace LEM_Editor
 {
-    public class SetRotationNode : InstantEffectNode
+    public class SetAnchPosNode : InstantEffectNode
     {
-        protected override string EffectTypeName => "SetRotation";
+        protected override string EffectTypeName => "SetAnchPos";
 
-        Transform m_TargetTransform = default;
-        Vector3 m_SetRotationValue = default;
-        bool m_IsRelativeToLocalPosition = default;
-
+        RectTransform m_TargetRectTransform = default;
+        Vector3 m_SetPositionValue = default;
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {
@@ -32,11 +30,9 @@ namespace LEM_Editor
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
-            m_TargetTransform = (Transform)EditorGUI.ObjectField(propertyRect, "Target Transform", m_TargetTransform, typeof(Transform), true);
+            m_TargetRectTransform = (RectTransform)EditorGUI.ObjectField(propertyRect, "Target RectTransform", m_TargetRectTransform, typeof(RectTransform), true);
             propertyRect.y += 20f;
-            m_SetRotationValue = EditorGUI.Vector3Field(propertyRect, "Set To Rotation", m_SetRotationValue);
-            propertyRect.y += 40f;
-            m_IsRelativeToLocalPosition = EditorGUI.Toggle(propertyRect, "Relative To Local", m_IsRelativeToLocalPosition);
+            m_SetPositionValue = EditorGUI.Vector3Field(propertyRect, "Set To Position", m_SetPositionValue);
 
             LEMStyleLibrary.EndEditorLabelColourChange();
 
@@ -45,7 +41,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            SetRotation myEffect = ScriptableObject.CreateInstance<SetRotation>();
+            SetAnchPos myEffect = ScriptableObject.CreateInstance<SetAnchPos>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;
@@ -55,15 +51,15 @@ namespace LEM_Editor
             string[] connectedNextPointNodeIDs = TryToSaveNextPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(m_TargetTransform, m_SetRotationValue,m_IsRelativeToLocalPosition);
+            myEffect.SetUp(m_TargetRectTransform, m_SetPositionValue);
             return myEffect;
 
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            SetRotation loadFrom = effectToLoadFrom as SetRotation;
-            loadFrom.UnPack(out m_TargetTransform, out m_SetRotationValue,out m_IsRelativeToLocalPosition);
+            SetAnchPos loadFrom = effectToLoadFrom as SetAnchPos;
+            loadFrom.UnPack(out m_TargetRectTransform, out m_SetPositionValue);
 
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;

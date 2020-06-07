@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class SetTransformParent : LEM_BaseEffect
+    public class SetParent : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, int> 
 #endif
@@ -22,7 +22,24 @@ namespace LEM_Effects
             //Set the parent of the child as the parent transform
             m_ChildTransform.SetParent(m_ParentTransform);
 
-            m_ChildTransform.SetSiblingIndex(m_SiblingIndex);
+            if (m_SiblingIndex == -1)
+            {
+                m_ChildTransform.SetAsFirstSibling();
+
+            }
+            else if (m_SiblingIndex == -2)
+            {
+                m_ChildTransform.SetAsLastSibling();
+            }
+            else
+            {
+#if UNITY_EDITOR
+                if (m_SiblingIndex < -2)
+                    Debug.LogError("The sibling index is not recognised at a value of " + m_SiblingIndex, this);
+#endif
+                m_ChildTransform.SetSiblingIndex(m_SiblingIndex);
+            }
+
         }
 
 #if UNITY_EDITOR

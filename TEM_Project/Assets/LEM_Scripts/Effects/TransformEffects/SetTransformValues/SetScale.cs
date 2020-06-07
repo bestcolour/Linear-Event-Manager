@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class RescaleTransform : LEM_BaseEffect
+    public class SetScale : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3> 
 #endif

@@ -5,9 +5,9 @@ using LEM_Effects;
 
 namespace LEM_Editor
 {
-    public class RepositionTransformNode : InstantEffectNode
+    public class SetPositionNode : InstantEffectNode
     {
-        protected override string EffectTypeName => "ReposTrans";
+        protected override string EffectTypeName => "SetPosition";
 
         Transform m_TargetTransform = default;
         Vector3 m_SetPositionValue = default;
@@ -45,7 +45,7 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect()
         {
-            RepositionTransform myEffect = ScriptableObject.CreateInstance<RepositionTransform>();
+            SetPosition myEffect = ScriptableObject.CreateInstance<SetPosition>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;
@@ -62,7 +62,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            RepositionTransform loadFrom = effectToLoadFrom as RepositionTransform;
+            SetPosition loadFrom = effectToLoadFrom as SetPosition;
             loadFrom.UnPack(out m_TargetTransform, out m_SetPositionValue, out m_IsRelativeToLocalPosition);
 
             //Important
