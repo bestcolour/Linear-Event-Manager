@@ -448,7 +448,7 @@ namespace LEM_Editor
         #region Rate of Change Rotation
 
              //Additive Effects (you can add effects one on top of the other for a combination) 
-             //Eg. Applying CurveRateOfRotationX + CurveRateOfRotationY will result in Applying rate of change of a Trasform's x and y values of Rotation
+             //Eg. Applying CurveRateOfChangeRotationX + CurveRateOfChangeRotationY will result in Applying rate of change of a Trasform's x and y values of Rotation
 		     //The area under the curve/lines  (+ve Area + -ve Area) = Net Gain Rotation the transform has rotated
              //Absolute Value of areas under the curve lines (|+ve Area| + |-ve Area|) =Total amount of rotation rotated by transform
 
@@ -465,6 +465,44 @@ namespace LEM_Editor
 	    #endregion
 
 
+        #region Scale Over Time
+             //CurveScale effects are not additive. In other words, you can't add CurveScaleX and CurveScaleY together to expect them to scale in respect to both X and Y axis
+
+             //Control the x value of a Transform's scale using an AnimationCurve
+             { "CurveScaleX", new NodeDictionaryDefinition(new CurveScaleXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the y value of a Transform's scale using an AnimationCurve
+             { "CurveScaleY", new NodeDictionaryDefinition(new CurveScaleYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the z value of a Transform's scale using an AnimationCurve
+             { "CurveScaleZ", new NodeDictionaryDefinition(new CurveScaleZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+              //Control the xyz value of a Transform's scale using an AnimationCurve
+             { "CurveScaleXYZ", new NodeDictionaryDefinition(new CurveScaleXYZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+        #endregion
+
+
+        #region Rate of Change Scale
+
+             //Additive Effects (you can add effects one on top of the other for a combination) 
+             //Eg. Applying CurveRateOfChangeScaleX + CurveRateOfChangeScaleY will result in Applying rate of change of a Trasform's x and y values of Scale
+		     //The area under the curve/lines  (+ve Area + -ve Area) = Net Gain of Scale the transform has been received
+             //Absolute Value of areas under the curve lines (|+ve Area| + |-ve Area|) =Total amount of change in scale by transform
+
+             //Control the rate of change of a Transform's Scale X value over time with an AnimationCurve
+             { "CurveRateOfChangeScaleX", new NodeDictionaryDefinition(new CurveRateOfChangeScaleXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a Transform's Scale Y value over time with an AnimationCurve
+             { "CurveRateOfChangeScaleY", new NodeDictionaryDefinition(new CurveRateOfChangeScaleYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Control the rate of change of a Transform's Scale Z value over time with an AnimationCurve
+             { "CurveRateOfChangeScaleZ", new NodeDictionaryDefinition(new CurveRateOfChangeScaleZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+	    #endregion
+
+
+
         #endregion
 
 
@@ -472,31 +510,68 @@ namespace LEM_Editor
 
 
         #region Fade Alpha
-		     { "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageComponentNode()                                     ,new Color(0.19f ,0.74f,0.67f)) },
-             { "FadeToAlphaImages", new NodeDictionaryDefinition(new FadeToAlphaImagesComponentNode()                                   ,new Color(0.19f ,0.74f,0.67f)) },
+             //Fade Alpha effects fade various classes with the color property
 
-             { "FadeToAlphaRenderer", new NodeDictionaryDefinition(new FadeToAlphaRendererComponentNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
-             { "FadeToAlphaRenderers", new NodeDictionaryDefinition(new FadeToAlphaRenderersComponentNode()                             ,new Color(0.07f ,0.55f,0.46f)) },
-             { "FadeToAlphaSpriteRenderer", new NodeDictionaryDefinition(new FadeToAlphaSpriteRendererComponentNode()                   ,new Color(0.067f ,0.48f,0.4f)) },
-             { "FadeToAlphaSpriteRenderers", new NodeDictionaryDefinition(new FadeToAlphaSpriteRenderersComponentNode()                 ,new Color(0.067f ,0.48f,0.4f)) },
+             //Fades the Alpha of image to a target alpha within a given duration
+		     { "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageNode()                                     ,new Color(0.19f ,0.74f,0.67f)) },
 
-             { "FadeToAlphaText", new NodeDictionaryDefinition(new  FadeToAlphaTextComponentNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
-             { "FadeToAlphaTexts", new NodeDictionaryDefinition(new FadeToAlphaTextsComponentNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+             //Fades the Alpha of images to a target alpha within a given duration
+             { "FadeToAlphaImages", new NodeDictionaryDefinition(new FadeToAlphaImagesNode()                                   ,new Color(0.19f ,0.74f,0.67f)) },
 
-             { "FadeToAlphaTextMeshPro", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProComponentNode()                         ,new Color(0.13f ,0.38f,0.55f)) },
-             { "FadeToAlphaTextMeshPros", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProsComponentNode()                       ,new Color(0.13f ,0.38f,0.55f)) },
+             //Fades the Alpha of Renderer to a target alpha within a given duration
+             { "FadeToAlphaRenderer", new NodeDictionaryDefinition(new FadeToAlphaRendererNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
 
-             { "FadeToAlphaTextMeshProGUI", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIComponentNode()                   ,new Color(0.11f ,0.31f,0.45f)) },
-             { "FadeToAlphaTextMeshProGUIs", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIsComponentNode()                 ,new Color(0.11f ,0.31f,0.45f)) },
+             //Fades the Alpha of Renderers to a target alpha within a given duration
+             { "FadeToAlphaRenderers", new NodeDictionaryDefinition(new FadeToAlphaRenderersNode()                             ,new Color(0.07f ,0.55f,0.46f)) },
+
+             //Fades the Alpha of SpriteRenderer to a target alpha within a given duration
+             { "FadeToAlphaSpriteRenderer", new NodeDictionaryDefinition(new FadeToAlphaSpriteRendererNode()                   ,new Color(0.067f ,0.48f,0.4f)) },
+
+             //Fades the Alpha of SpriteRenderers to a target alpha within a given duration
+             { "FadeToAlphaSpriteRenderers", new NodeDictionaryDefinition(new FadeToAlphaSpriteRenderersNode()                 ,new Color(0.067f ,0.48f,0.4f)) },
+
+             //Fades the Alpha of Text to a target alpha within a given duration
+             { "FadeToAlphaText", new NodeDictionaryDefinition(new  FadeToAlphaTextNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Fades the Alpha of Texts to a target alpha within a given duration
+             { "FadeToAlphaTexts", new NodeDictionaryDefinition(new FadeToAlphaTextsNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Fades the Alpha of TextMesh to a target alpha within a given duration
+             { "FadeToAlphaTextMesh", new NodeDictionaryDefinition(new  FadeToAlphaTextMeshNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Fades the Alpha of TextMeshes to a target alpha within a given duration
+             { "FadeToAlphaTextMeshes", new NodeDictionaryDefinition(new FadeToAlphaTextMeshesNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Fades the Alpha of TextMeshPro to a target alpha within a given duration
+             { "FadeToAlphaTextMeshPro", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProNode()                         ,new Color(0.13f ,0.38f,0.55f)) },
+
+             //Fades the Alpha of TextMeshPros to a target alpha within a given duration
+             { "FadeToAlphaTextMeshPros", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProsNode()                       ,new Color(0.13f ,0.38f,0.55f)) },
+
+             //Fades the Alpha of TextMeshProGUI to a target alpha within a given duration
+             { "FadeToAlphaTextMeshProGUI", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUINode()                   ,new Color(0.11f ,0.31f,0.45f)) },
+
+             //Fades the Alpha of TextMeshProGUIs to a target alpha within a given duration
+             { "FadeToAlphaTextMeshProGUIs", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIsNode()                 ,new Color(0.11f ,0.31f,0.45f)) },
+
+
 
 	    #endregion
 
         #region Reword
-             { "ReWordText", new NodeDictionaryDefinition(new ReWordTextComponentNode()                             ,new Color(0.16f ,0.45f,0.65f)) },
+             //Sets the text of the different Text Classes to a new text
 
-             { "ReWordTextMeshPro", new NodeDictionaryDefinition(new ReWordTextMeshProComponentNode()               ,new Color(0.13f ,0.38f,0.55f)) },
+             //Sets the text of a Text class to a new text
+             { "ReWordText", new NodeDictionaryDefinition(new ReWordTextNode()                             ,new Color(0.16f ,0.45f,0.65f)) },
 
-             { "ReWordTextMeshProGUI", new NodeDictionaryDefinition(new ReWordTextMeshProGUIComponentNode()         ,new Color(0.11f ,0.31f,0.45f)) }, 
+              //Sets the text of a Text class to a new text
+             { "ReWordTextMesh", new NodeDictionaryDefinition(new ReWordTextMeshNode()                             ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Sets the text of a TextMeshPro class to a new text
+             { "ReWordTextMeshPro", new NodeDictionaryDefinition(new ReWordTextMeshProNode()               ,new Color(0.13f ,0.38f,0.55f)) },
+
+             //Sets the text of a TextMeshProGUI class to a new text
+             { "ReWordTextMeshProGUI", new NodeDictionaryDefinition(new ReWordTextMeshProGUINode()         ,new Color(0.11f ,0.31f,0.45f)) }, 
 	#endregion
 
 
