@@ -165,19 +165,19 @@ namespace LEM_Editor
         #region OffSet Transform
 
              //Adds values to the Transform's position
-             { "OffsetPos", new NodeDictionaryDefinition(new OffsetPosNode()                                                ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetPos"          , new NodeDictionaryDefinition(new OffsetPosNode()                                                ,new Color(0.12f ,0.52f,0.29f)) },
 
              //Adds values to the RectTransform's dimensions
-             { "OffsetAnchPos", new NodeDictionaryDefinition(new OffsetAnchPosNode()                                        ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetAnchPos"      , new NodeDictionaryDefinition(new OffsetAnchPosNode()                                        ,new Color(0.12f ,0.52f,0.29f)) },
 
              //Adds values to the Transform's rotation
-             { "OffsetRotation", new NodeDictionaryDefinition(new OffsetRotationNode()                                      ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetRotation"     , new NodeDictionaryDefinition(new OffsetRotationNode()                                      ,new Color(0.12f ,0.52f,0.29f)) },
 
              //Adds values to the Transform's scale
-             { "OffsetScale", new NodeDictionaryDefinition(new OffsetScaleNode()                                            ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetScale"        , new NodeDictionaryDefinition(new OffsetScaleNode()                                            ,new Color(0.12f ,0.52f,0.29f)) },
 
              //Adds values to the RectTransform's width and height
-             { "OffsetWidthHeight", new NodeDictionaryDefinition(new OffsetWidthHeightNode()                                ,new Color(0.12f ,0.52f,0.29f)) },
+             { "OffsetWidthHeight"  , new NodeDictionaryDefinition(new OffsetWidthHeightNode()                                ,new Color(0.12f ,0.52f,0.29f)) },
 
 
         #endregion
