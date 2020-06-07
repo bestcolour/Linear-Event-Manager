@@ -38,9 +38,9 @@ namespace LEM_Editor
             base.Draw();
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUI.GetPropertyHeight(m_GetkeyKeyCodesArray));
 
-            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
-            LEMStyleLibrary.BeginEditorBoldLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
-            LEMStyleLibrary.BeginEditorFoldOutLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
+            LEMStyleLibrary.BeginEditorBoldLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
+            LEMStyleLibrary.BeginEditorFoldOutLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
             ////m_State = EditorGUI.Toggle(propertyRect, "Listen To Click", m_State);
 
             //Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);

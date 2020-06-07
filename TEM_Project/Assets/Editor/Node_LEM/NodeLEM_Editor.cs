@@ -137,7 +137,7 @@ namespace LEM_Editor
             if (connectionPoint == null)
                 return;
 
-            connectionPoint.m_Style = isSelected == 1 ? LEMStyleLibrary.s_ConnectionPointStyleSelected : LEMStyleLibrary.s_ConnectionPointStyleNormal;
+            connectionPoint.m_Style = isSelected == 1 ? LEMStyleLibrary.ConnectionPointStyleSelected : LEMStyleLibrary.ConnectionPointStyleNormal;
         }
 
         void TrySetConnectionPoint(ConnectionPoint connectionPoint)
@@ -145,7 +145,7 @@ namespace LEM_Editor
             if (connectionPoint == null)
                 return;
 
-            connectionPoint.m_Style = connectionPoint.IsConnected ? LEMStyleLibrary.s_ConnectionPointStyleSelected : LEMStyleLibrary.s_ConnectionPointStyleNormal;
+            connectionPoint.m_Style = connectionPoint.IsConnected ? LEMStyleLibrary.ConnectionPointStyleSelected : LEMStyleLibrary.ConnectionPointStyleNormal;
         }
 
         struct ConnectionPointState
@@ -624,8 +624,6 @@ namespace LEM_Editor
             Vector2 currMousePos = currentEvent.mousePosition;
             DetermineAllNodes();
 
-            //Draw the rect grpsfirst
-            //DrawRectGroups();
             DrawNodes();
 
             DrawConnections();
@@ -647,7 +645,8 @@ namespace LEM_Editor
             //Then process the events that occured from unity's events (events are like clicks,drag etc)
             ProcessEvents(currentEvent, currMousePos, isMouseInSearchBox);
             ProcessNodeEvents(currentEvent);
-            //ProcessGroupRectEvents(currentEvent);
+
+            LEMStyleLibrary.AssertEditorLabelColour();
 
             //If there is any value change in the gui,repaint it
             if (GUI.changed)
@@ -763,7 +762,7 @@ namespace LEM_Editor
                     e.mousePosition,
                     m_SelectedInPoint.m_Rect.center + Vector2.left * 50f,
                     e.mousePosition - Vector2.left * 50f,
-                   LEMStyleLibrary.s_CurrentBezierColour,
+                   LEMStyleLibrary.CurrentBezierColour,
                     null,
                     2f
                 );
@@ -781,7 +780,7 @@ namespace LEM_Editor
                     m_SelectedOutPoint.m_Rect.center,
                     e.mousePosition + Vector2.left * 50f,
                     m_SelectedOutPoint.m_Rect.center - Vector2.left * 50f,
-                    LEMStyleLibrary.s_CurrentBezierColour,
+                    LEMStyleLibrary.CurrentBezierColour,
                     null,
                     2f
                 );
@@ -960,7 +959,7 @@ namespace LEM_Editor
         private void DrawDebugLists()
         {
             //Copy previous colour and set the color red
-            LEMStyleLibrary.s_GUIPreviousColour = GUI.skin.label.normal.textColor;
+            LEMStyleLibrary.GUIPreviousColour = GUI.skin.label.normal.textColor;
             GUI.skin.label.normal.textColor = Color.red;
 
             Rect propertyRect = Rect.zero;
@@ -1050,7 +1049,7 @@ namespace LEM_Editor
 
             #endregion
 
-            GUI.skin.label.normal.textColor = LEMStyleLibrary.s_GUIPreviousColour;
+            GUI.skin.label.normal.textColor = LEMStyleLibrary.GUIPreviousColour;
 
 
         }
@@ -1339,7 +1338,7 @@ namespace LEM_Editor
             BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
             //Get the respective skin from the collection of nodeskin
-            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.WhiteBackgroundSkin;
 
             newEffectNode.GenerateNodeID();
 
@@ -1347,7 +1346,7 @@ namespace LEM_Editor
             newEffectNode.Initialise
                 (mousePosition,
                 nodeSkin,
-                LEMStyleLibrary.s_ConnectionPointStyleNormal,
+                LEMStyleLibrary.ConnectionPointStyleNormal,
                 instance.OnClickInPoint,
                 instance.OnClickOutPoint,
                 instance.TryToAddNodeToSelectedCollection,
@@ -1372,13 +1371,13 @@ namespace LEM_Editor
             BaseEffectNode newEffectNode = LEMDictionary.GetNodeObject(nameOfNodeType) as BaseEffectNode;
 
             //Get the respective skin from the collection of nodeskin
-            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.WhiteBackgroundSkin;
 
             //Initialise the new node 
             newEffectNode.Initialise
                 (positionToSet,
                 nodeSkin,
-                LEMStyleLibrary.s_ConnectionPointStyleNormal,
+                LEMStyleLibrary.ConnectionPointStyleNormal,
                 instance.OnClickInPoint,
                 instance.OnClickOutPoint,
                 instance.TryToAddNodeToSelectedCollection,
@@ -1403,13 +1402,13 @@ namespace LEM_Editor
             ConnectableNode basicNode = LEMDictionary.GetNodeObject(nameOfNodeType) as ConnectableNode;
 
             //Get the respective skin from the collection of nodeskin
-            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.WhiteBackgroundSkin;
 
             //Initialise the new node 
             basicNode.Initialise
                 (mousePosition,
                 nodeSkin,
-                LEMStyleLibrary.s_ConnectionPointStyleNormal,
+                LEMStyleLibrary.ConnectionPointStyleNormal,
                 OnClickInPoint,
                 OnClickOutPoint,
                 TryToAddNodeToSelectedCollection,
@@ -1430,13 +1429,13 @@ namespace LEM_Editor
             ConnectableNode newNode = LEMDictionary.GetNodeObject(nameOfNodeType) as ConnectableNode;
 
             //Get the respective skin from the collection of nodeskin
-            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.WhiteBackgroundSkin;
 
             //Initialise the new node 
             newNode.Initialise
                 (positionToSet,
                 nodeSkin,
-                LEMStyleLibrary.s_ConnectionPointStyleNormal,
+                LEMStyleLibrary.ConnectionPointStyleNormal,
                 OnClickInPoint,
                 OnClickOutPoint,
                 TryToAddNodeToSelectedCollection,
@@ -1463,7 +1462,7 @@ namespace LEM_Editor
             endVector2Pos.y = Mathf.Abs(endVector2Pos.y - startVector2Pos.y);
 
             //Get the respective skin from the collection of nodeskin
-            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.WhiteBackgroundSkin;
 
             groupRect = new GroupRectNode();
 
@@ -1475,7 +1474,7 @@ namespace LEM_Editor
                 nodeSkin,
                 instance.TryToAddNodeToSelectedCollection,
                 instance.TryToRemoveNodeFromSelectedCollection,
-                LEMStyleLibrary.s_CurrentGroupRectTopSkinColour
+                LEMStyleLibrary.CurrentGroupRectTopSkinColour
                 );
 
             groupRect.GenerateNodeID();
@@ -1490,7 +1489,7 @@ namespace LEM_Editor
         public static GroupRectNode ReCreateGroupNode(string[] allNestedNodesIDs, string idToSet, string labelText)
         {
             //Get the respective skin from the collection of nodeskin
-            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.WhiteBackgroundSkin;
 
             Node[] allSelectedNodesWithNoGroups = new Node[allNestedNodesIDs.Length];
             Rect[] allNestedNodesRects = new Rect[allNestedNodesIDs.Length];
@@ -1527,7 +1526,7 @@ namespace LEM_Editor
                 nodeSkin,
                 instance.TryToAddNodeToSelectedCollection,
                 instance.TryToRemoveNodeFromSelectedCollection,
-                LEMStyleLibrary.s_CurrentGroupRectTopSkinColour
+                LEMStyleLibrary.CurrentGroupRectTopSkinColour
                 );
 
             groupRect.CommentLabel = labelText;
@@ -1543,7 +1542,7 @@ namespace LEM_Editor
         public static GroupRectNode ReCreateGroupNode(Vector2 rectGroupPos, Vector2 rectGroupSize, string idToSet, string labelText)
         {
             //Get the respective skin from the collection of nodeskin
-            NodeSkinCollection nodeSkin = LEMStyleLibrary.s_WhiteBackGroundSkin;
+            NodeSkinCollection nodeSkin = LEMStyleLibrary.WhiteBackgroundSkin;
             GroupRectNode groupRect = new GroupRectNode();
 
             Node[] noNested = new Node[0];
@@ -1556,7 +1555,7 @@ namespace LEM_Editor
                 nodeSkin,
                 instance.TryToAddNodeToSelectedCollection,
                 instance.TryToRemoveNodeFromSelectedCollection,
-                LEMStyleLibrary.s_CurrentGroupRectTopSkinColour
+                LEMStyleLibrary.CurrentGroupRectTopSkinColour
                 );
 
             groupRect.CommentLabel = labelText;

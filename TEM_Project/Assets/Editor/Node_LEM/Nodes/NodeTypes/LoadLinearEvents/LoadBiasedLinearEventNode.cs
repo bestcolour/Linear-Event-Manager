@@ -37,7 +37,7 @@ namespace LEM_Editor
                 ,
                 EditorGUIUtility.singleLineHeight);
 
-            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
             EditorGUI.LabelField(propertyRect, "Linear Events To Load");
 
             propertyRect.y += 20f;

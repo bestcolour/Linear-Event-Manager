@@ -46,7 +46,7 @@ namespace LEM_Editor
             propertyRect.x = m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT;
             propertyRect.y += 30f;
 
-            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
             EditorGUI.TextField(propertyRect, "Node ID : ", NodeID);
             LEMStyleLibrary.EndEditorLabelColourChange();
         }

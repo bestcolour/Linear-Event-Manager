@@ -5,106 +5,82 @@ namespace LEM_Editor
 
     public class LEMStyleLibrary
     {
-        public static bool m_SkinsLoaded = false;
+        static bool SkinsLoaded { get; set; } = false;
+
+        //Orginal Colour used by EditorGUI
+        public static Color GUIOriginalColour_Label { get; private set; } = default;
 
         //PreviousColour is used by EditorGUI.LabelField and GUI.color (to draw different coloured node skins)
-        public static Color s_GUIPreviousColour = default;
-        public static Color s_GUIPreviousColour_BoldLabel = default;
-        public static Color s_GUIPreviousColour_MiniLabel = default;
+        public static Color GUIPreviousColour { get; set; } = default;
+        static Color GUIPreviousColour_BoldLabel { get; set; } = default;
+        static Color GUIPreviousColour_FoldOut { get; set; } = default;
         //To be pulled by all nodes with top textures 
-        public static Color s_CurrentMidSkinColour = default;
-        public static Color s_CurrentBezierColour = default;
-        public static Color s_CurrentLabelColour = default;
-        public static Color s_CurrentGroupRectMidSkinColour = default;
-        public static Color s_CurrentGroupRectTopSkinColour = default;
+        public static Color CurrentMidSkinColour { get; private set; } = default;
+        public static Color CurrentBezierColour { get; private set; } = default;
+        public static Color CurrentLabelColour { get; private set; } = default;
+        public static Color CurrentGroupRectMidSkinColour { get; private set; } = default;
+        public static Color CurrentGroupRectTopSkinColour { get; private set; } = default;
 
-        //public static GUIStyle s_InPointStyle = default;
-        //public static GUIStyle s_OutPointStyle = default;
-        public static GUIStyle s_ConnectionPointStyleNormal = default;
-        public static GUIStyle s_ConnectionPointStyleSelected = default;
+        public static GUIStyle ConnectionPointStyleNormal { get; private set; } = null;
+        public static GUIStyle ConnectionPointStyleSelected { get; private set; } = null;
 
         //Node fontstyles
         public static readonly GUIStyle s_NodeHeaderStyle = new GUIStyle();
         public static readonly GUIStyle s_GroupLabelStyle = new GUIStyle();
         public static readonly GUIStyle s_StartEndStyle = new GUIStyle();
-        //public static GUIStyle s_NodeTextInputStyle = null;
         public static readonly GUIStyle s_NodeParagraphStyle = new GUIStyle();
 
         //Just a default skin
-        public static NodeSkinCollection s_WhiteBackGroundSkin = default;
+        public static NodeSkinCollection WhiteBackgroundSkin { get; private set; } = null;
         const string k_NodeTextureAssetPath = "Assets/Editor/Node_LEM/NodeTextures";
+
+
+        #region Loading
 
         public static void LoadLibrary()
         {
             //If gui style has not been loaded
-            if (!m_SkinsLoaded)
+            if (!SkinsLoaded)
             {
                 LoadingNodeSkins(NodeLEM_Editor.s_Settings);
-                m_SkinsLoaded = true;
+                SkinsLoaded = true;
             }
         }
 
-        public static void BeginEditorLabelColourChange(Color colourToChangeTo)
+        public static void ReLoadLibrary()
         {
-            s_GUIPreviousColour = EditorStyles.label.normal.textColor;
-            EditorStyles.label.normal.textColor = colourToChangeTo;
+            LoadingNodeSkins(NodeLEM_Editor.s_Settings);
+            SkinsLoaded = true;
         }
-        public static void EndEditorLabelColourChange()
-        {
-            EditorStyles.label.normal.textColor = s_GUIPreviousColour;
-        }
-
-        public static void BeginEditorBoldLabelColourChange(Color colourToChangeTo)
-        {
-            s_GUIPreviousColour_BoldLabel = EditorStyles.boldLabel.normal.textColor;
-            EditorStyles.boldLabel.normal.textColor = colourToChangeTo;
-        }
-
-        public static void EndEditorBoldLabelColourChange()
-        {
-            EditorStyles.boldLabel.normal.textColor = s_GUIPreviousColour_BoldLabel;
-        }
-
-        public static void BeginEditorFoldOutLabelColourChange(Color colourToChangeTo)
-        {
-            s_GUIPreviousColour_MiniLabel = EditorStyles.foldout.normal.textColor;
-            EditorStyles.foldout.normal.textColor = colourToChangeTo;
-            EditorStyles.foldout.onNormal.textColor = colourToChangeTo;
-        }
-
-        public static void EndEditorFoldOutLabelColourChange()
-        {
-            EditorStyles.foldout.normal.textColor = s_GUIPreviousColour_MiniLabel;
-            EditorStyles.foldout.onNormal.textColor = s_GUIPreviousColour_MiniLabel;
-        }
-
 
 
         static void LoadingNodeSkins(NodeLEM_Settings settings)
         {
             NodeLEM_Editor.LoadSettings();
+
+            //Record original style colours so i dont mess them up
+            GUIOriginalColour_Label = EditorStyles.label.normal.textColor;
+
             //Initialise the execution pin style for normal and selected pins
-            s_ConnectionPointStyleNormal = new GUIStyle();
-            s_ConnectionPointStyleNormal.normal.background = settings.m_EditorTheme == EditorTheme.Light ?
+            ConnectionPointStyleNormal = new GUIStyle();
+            ConnectionPointStyleNormal.normal.background = settings.m_EditorTheme == EditorTheme.Light ?
                 AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin.png", typeof(Texture2D)) as Texture2D :
-                 AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/dark_ExecutionPin.png", typeof(Texture2D)) as Texture2D
-                ;
-            s_ConnectionPointStyleNormal.active.background = settings.m_EditorTheme == EditorTheme.Light ?
+                AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/dark_ExecutionPin.png", typeof(Texture2D)) as Texture2D;
+
+            ConnectionPointStyleNormal.active.background = settings.m_EditorTheme == EditorTheme.Light ?
                 AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/light_ExecutionPin_Selected.png", typeof(Texture2D)) as Texture2D :
                 AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeIcons/dark_ExecutionPin_Selected.png", typeof(Texture2D)) as Texture2D;
 
             //Invert the two pins' backgrounds so that the user will be able to know what will happen if they press it
-            s_ConnectionPointStyleSelected = new GUIStyle();
-            s_ConnectionPointStyleSelected.normal.background = s_ConnectionPointStyleNormal.active.background;
-            s_ConnectionPointStyleSelected.active.background = s_ConnectionPointStyleNormal.normal.background;
+            ConnectionPointStyleSelected = new GUIStyle();
+            ConnectionPointStyleSelected.normal.background = ConnectionPointStyleNormal.active.background;
+            ConnectionPointStyleSelected.active.background = ConnectionPointStyleNormal.normal.background;
 
-            s_WhiteBackGroundSkin = new NodeSkinCollection();
-            s_WhiteBackGroundSkin.m_MidBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround.png", typeof(Texture2D)) as Texture2D;
-            s_WhiteBackGroundSkin.m_SelectedMidOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround_Selected.png", typeof(Texture2D)) as Texture2D;
-            s_WhiteBackGroundSkin.m_TopBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top.png", typeof(Texture2D)) as Texture2D;
-            s_WhiteBackGroundSkin.m_SelectedTopOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top_Selected.png", typeof(Texture2D)) as Texture2D;
-
-
+            WhiteBackgroundSkin = new NodeSkinCollection();
+            WhiteBackgroundSkin.m_MidBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround.png", typeof(Texture2D)) as Texture2D;
+            WhiteBackgroundSkin.m_SelectedMidOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_BackGround_Selected.png", typeof(Texture2D)) as Texture2D;
+            WhiteBackgroundSkin.m_TopBackground = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top.png", typeof(Texture2D)) as Texture2D;
+            WhiteBackgroundSkin.m_SelectedTopOutline = AssetDatabase.LoadAssetAtPath(k_NodeTextureAssetPath + "/NodeBg/White_Top_Selected.png", typeof(Texture2D)) as Texture2D;
 
             //s_NodeHeaderStyle.normal.textColor = settings.m_EditorTheme == EditorTheme.Dark ? Color.white : Color.black;
 
@@ -136,11 +112,11 @@ namespace LEM_Editor
                 s_NodeHeaderStyle.normal.textColor = Color.white;
                 s_NodeParagraphStyle.normal.textColor = Color.white;
                 s_GroupLabelStyle.normal.textColor = Color.white;
-                s_CurrentLabelColour = Color.white;
-                s_CurrentMidSkinColour = new Color(0.164f, 0.164f, 0.164f);
-                s_CurrentBezierColour = Color.white;
-                s_CurrentGroupRectMidSkinColour = new Color(0, 0, 0, 0.1f);
-                s_CurrentGroupRectTopSkinColour = new Color(0, 0, 0, 0.5f);
+                CurrentLabelColour = Color.white;
+                CurrentMidSkinColour = new Color(0.164f, 0.164f, 0.164f);
+                CurrentBezierColour = Color.white;
+                CurrentGroupRectMidSkinColour = new Color(0, 0, 0, 0.1f);
+                CurrentGroupRectTopSkinColour = new Color(0, 0, 0, 0.5f);
 
             }
             else
@@ -148,22 +124,62 @@ namespace LEM_Editor
                 s_NodeHeaderStyle.normal.textColor = Color.white;
                 s_GroupLabelStyle.normal.textColor = new Color(0.152f, 0.152f, 0.152f);
                 s_NodeParagraphStyle.normal.textColor = Color.black;
-                s_CurrentLabelColour = Color.black;
-                s_CurrentMidSkinColour = Color.white;
-                s_CurrentBezierColour = new Color(0.152f, 0.152f, 0.152f);
-                s_CurrentGroupRectMidSkinColour = new Color(1, 1, 1, 0.5f);
-                s_CurrentGroupRectTopSkinColour = new Color(1, 1, 1, 0.5f);
+                CurrentLabelColour = Color.black;
+                CurrentMidSkinColour = Color.white;
+                CurrentBezierColour = new Color(0.152f, 0.152f, 0.152f);
+                CurrentGroupRectMidSkinColour = new Color(1, 1, 1, 0.5f);
+                CurrentGroupRectTopSkinColour = new Color(1, 1, 1, 0.5f);
             }
 
-            //s_CurrentMidSkinColour = settings.m_EditorTheme == EditorTheme.Dark ? new Color(0.164f, 0.164f, 0.164f) : Color.white;
-            //s_CurrentBezierColour = settings.m_EditorTheme == EditorTheme.Light ? new Color(0.152f, 0.152f, 0.152f) : Color.white;
         }
 
-        public static void RefreshLibrary()
+
+
+
+
+        #endregion
+
+        public static void BeginEditorLabelColourChange(Color colourToChangeTo)
         {
-            LoadingNodeSkins(NodeLEM_Editor.s_Settings);
-            m_SkinsLoaded = true;
+            GUIPreviousColour = EditorStyles.label.normal.textColor;
+            EditorStyles.label.normal.textColor = colourToChangeTo;
         }
+        public static void EndEditorLabelColourChange()
+        {
+            EditorStyles.label.normal.textColor = GUIPreviousColour;
+        }
+
+        public static void AssertEditorLabelColour()
+        {
+            if (EditorStyles.label.normal.textColor != GUIOriginalColour_Label)
+                EditorStyles.label.normal.textColor = GUIOriginalColour_Label;
+        }
+
+
+        public static void BeginEditorBoldLabelColourChange(Color colourToChangeTo)
+        {
+            GUIPreviousColour_BoldLabel = EditorStyles.boldLabel.normal.textColor;
+            EditorStyles.boldLabel.normal.textColor = colourToChangeTo;
+        }
+
+        public static void EndEditorBoldLabelColourChange()
+        {
+            EditorStyles.boldLabel.normal.textColor = GUIPreviousColour_BoldLabel;
+        }
+
+        public static void BeginEditorFoldOutLabelColourChange(Color colourToChangeTo)
+        {
+            GUIPreviousColour_FoldOut = EditorStyles.foldout.normal.textColor;
+            EditorStyles.foldout.normal.textColor = colourToChangeTo;
+            EditorStyles.foldout.onNormal.textColor = colourToChangeTo;
+        }
+
+        public static void EndEditorFoldOutLabelColourChange()
+        {
+            EditorStyles.foldout.normal.textColor = GUIPreviousColour_FoldOut;
+            EditorStyles.foldout.onNormal.textColor = GUIPreviousColour_FoldOut;
+        }
+
 
 
     }

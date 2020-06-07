@@ -15,8 +15,7 @@ namespace LEM_Editor
 
             if (GUILayout.Button("Update Editor Skins"))
             {
-                LEMStyleLibrary.m_SkinsLoaded = false;
-                LEMStyleLibrary.LoadLibrary();
+                LEMStyleLibrary.ReLoadLibrary();
             }
 
             GUILayout.EndHorizontal();

@@ -106,16 +106,16 @@ namespace LEM_Editor
                     m_NodeSkin.m_SelectedMidOutline);
             }
 
-            LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
+            LEMStyleLibrary.GUIPreviousColour = GUI.color;
 
             //Draw the top of the node
             GUI.color = m_TopSkinColour;
             GUI.DrawTexture(m_TopRect, m_NodeSkin.m_TopBackground, ScaleMode.StretchToFill);
 
             //Draw the node midskin with its colour
-            GUI.color = LEMStyleLibrary.s_CurrentMidSkinColour;
+            GUI.color = LEMStyleLibrary.CurrentMidSkinColour;
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground, ScaleMode.StretchToFill);
-            GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
+            GUI.color = LEMStyleLibrary.GUIPreviousColour;
 
 
 

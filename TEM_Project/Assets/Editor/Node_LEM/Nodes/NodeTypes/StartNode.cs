@@ -33,10 +33,10 @@ namespace LEM_Editor
             }
 
             //Draw the node box,description and title
-            LEMStyleLibrary.s_GUIPreviousColour = GUI.color;
+            LEMStyleLibrary.GUIPreviousColour = GUI.color;
             GUI.color = m_TopSkinColour;
             GUI.DrawTexture(m_MidRect, m_NodeSkin.m_MidBackground);
-            GUI.color = LEMStyleLibrary.s_GUIPreviousColour;
+            GUI.color = LEMStyleLibrary.GUIPreviousColour;
 
             //GUI.Label(new Rect(m_TotalRect.center,m_TotalRect.size), "Start", LEMStyleLibrary.s_StartEndStyle);
             GUI.Label(m_TotalRect, "Start", LEMStyleLibrary.s_StartEndStyle);

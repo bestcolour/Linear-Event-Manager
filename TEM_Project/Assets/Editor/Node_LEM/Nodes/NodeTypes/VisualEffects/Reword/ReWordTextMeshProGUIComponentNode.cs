@@ -29,7 +29,7 @@ namespace LEM_Editor
 
             //Draw a object field for inputting  the gameobject to destroy
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
-            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
             m_TargetText = (TextMeshProUGUI)EditorGUI.ObjectField(propertyRect, "Target Text", m_TargetText, typeof(TextMeshProUGUI), true);
             propertyRect.y += 20f;
             m_NewString = EditorGUI.TextField(propertyRect, "New Text", m_NewString);
