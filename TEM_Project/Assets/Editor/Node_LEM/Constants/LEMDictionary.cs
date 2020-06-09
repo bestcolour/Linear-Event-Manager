@@ -433,7 +433,10 @@ namespace LEM_Editor
 	    #endregion
 
         #region Translate 
+             //Translate a Transform in a direction and distance relative to another Transform
              { "TranslateRelativeToTransform", new NodeDictionaryDefinition(new TranslateRelativeToTransformNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+
+             //Translate a Transform in a direction and distance relative to itself or the world coordinates
              { "TranslateRelativeToSpace", new NodeDictionaryDefinition(new TranslateRelativeToSpaceNode()                          ,new Color(0.302f,0.216f,0.851f)) },
         #endregion
 

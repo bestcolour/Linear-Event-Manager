@@ -403,7 +403,7 @@ namespace LEM_Editor
 
                 //Load the new one
                 s_CurrentLE = linearEvent;
-                instance.ResetandLoadEditor();
+                instance.ResetandLoadNewEvent();
             }
 
         }
@@ -465,11 +465,6 @@ namespace LEM_Editor
                 instance.m_SearchBox = new LEM_SearchBox(instance.OnInputChange, instance.OnConfirm, 250, 325);
             }
 
-            //if (instance.m_NodeContextMenu == null)
-            //{
-            //    SetupProcessNodeContextMenu();
-            //}
-
             //Regardless, just initialise strt end nodes
             instance.InitialiseStartEndNodes();
             instance.LoadFromLinearEvent();
@@ -489,24 +484,6 @@ namespace LEM_Editor
                 StartNode = startTempNode;
             }
         }
-
-        //void SetupProcessNodeContextMenu()
-        //{
-        //    //and then add an button option with the name "Remove node"
-        //    GenericMenu genericMenu = new GenericMenu();
-
-        //    genericMenu.AddItem(new GUIContent("Undo   (Crlt + Q)"), false, delegate { CommandInvoker.UndoCommand(); Repaint(); });
-        //    genericMenu.AddItem(new GUIContent("Redo   (Crlt + W)"), false, delegate { CommandInvoker.RedoCommand(); Repaint(); });
-        //    genericMenu.AddItem(new GUIContent("Group   (Crlt + G)"), false, delegate { DoGroup(); Repaint(); });
-        //    genericMenu.AddItem(new GUIContent("Copy   (Crlt + C)"), false, delegate { DoCopy(); Repaint(); });
-        //    genericMenu.AddItem(new GUIContent("Cut   (Crlt + X)"), false, delegate { DoCutCommand(); Repaint(); });
-        //    genericMenu.AddItem(new GUIContent("Paste   (Crlt + V)"), false, delegate { DoPasteCommand(); Repaint(); });
-        //    genericMenu.AddItem(new GUIContent("Select All   (Crlt + A)"), false, delegate { SelectAllNodes(); Repaint(); });
-        //    genericMenu.AddItem(new GUIContent("Delete   (Del)"), false, delegate { DoDeleteCommand(); Repaint(); });
-
-        //    //Display the editted made menu
-        //    instance.m_NodeContextMenu = genericMenu;
-        //}
 
         #endregion
 
@@ -528,24 +505,9 @@ namespace LEM_Editor
             instance.m_SelectedInPoint = null;
         }
 
-        //Time taken: Instant
-        void ResetandLoadEditor()
+        void ResetandLoadNewEvent()
         {
-            StartNode = null;
-            ResetDrawingBezierCurve();
-            ResetEventVariables();
-            CurrentNodeLastRecordedSelectState = null;
-            m_IsSearchBoxActive = false;
-
-            m_AllConnectableNodesInEditor = new List<Node>();
-            m_AllGroupRectNodesInEditor = new List<Node>();
-            m_AllGroupRectsInEditorDictionary = new Dictionary<string, GroupRectNode>();
-            //m_AllNodesInEditor = new Dictionary<int, Node>();
-
-            m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNodePair>();
-            m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
-            m_CommandInvoker.ResetHistory();
-
+            ResetAll();
 
             //Regardless, just initialise strt end nodes
             instance.InitialiseStartEndNodes();
@@ -555,6 +517,36 @@ namespace LEM_Editor
             d_OnGUI = UpdateGUI;
 
             m_EditorState = EDITORSTATE.SAVED;
+        }
+
+        void ResetandLoadEmptyEvent()
+        {
+            ResetAll();
+
+            d_OnGUI = EmptyEditorUpdate;
+
+            m_EditorState = EDITORSTATE.UNLOADED;
+        }
+
+
+
+
+        void ResetAll()
+        {
+            //All the resets
+            StartNode = null;
+            ResetDrawingBezierCurve();
+            ResetEventVariables();
+            CurrentNodeLastRecordedSelectState = null;
+            m_IsSearchBoxActive = false;
+
+            m_AllConnectableNodesInEditor = new List<Node>();
+            m_AllGroupRectNodesInEditor = new List<Node>();
+            m_AllGroupRectsInEditorDictionary = new Dictionary<string, GroupRectNode>();
+
+            m_AllEffectsNodeInEditor = new Dictionary<string, BaseEffectNodePair>();
+            m_AllConnectionsDictionary = new Dictionary<Tuple<string, string>, Connection>();
+            m_CommandInvoker.ResetHistory();
         }
 
         //Called when window is closed
@@ -606,6 +598,13 @@ namespace LEM_Editor
 
         void UpdateGUI()
         {
+            //To check if reference is destroyed or smth
+            if (s_CurrentLE == null)
+            {
+                ResetandLoadEmptyEvent();
+                return;
+            }
+
             m_InverseScaleFactorOnEveryGUIFrame = 1 / ScaleFactor;
             Rect dummyRect = Rect.zero;
             Event currentEvent = Event.current;
@@ -1988,9 +1987,13 @@ namespace LEM_Editor
             if (s_Settings.m_SaveSceneTogether)
                 EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
 
+            EditorUtility.SetDirty(s_CurrentLE);
+            EditorSceneManager.MarkSceneDirty(s_CurrentLE.gameObject.scene);
+
             Debug.Log("Saved Linear Event File " + s_CurrentLE.name, s_CurrentLE);
             m_EditorState = EDITORSTATE.SAVED;
         }
+
 
         void LoadAfterExitingPlayMode(PlayModeStateChange state)
         {

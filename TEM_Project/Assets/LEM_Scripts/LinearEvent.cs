@@ -18,14 +18,12 @@ namespace LEM_Effects
     {
 
         #region Cached Values
-        [Header("DONT TOUCH! Cached Values!"), ReadOnly]
+        [Header("DONT TOUCH! Cached Values!"), ReadOnly,SerializeField]
         public LEM_BaseEffect[] m_AllEffects = default;
 
 #if UNITY_EDITOR
         [HideInInspector]
         public GroupRectNodeBase[] m_AllGroupRectNodes = default;
-
-
 #endif
 
         [HideInInspector]
@@ -55,6 +53,8 @@ namespace LEM_Effects
 
         public int m_LinearEventIndex = -1;
 
+        #region Halt Variables
+
         float m_DelayBeforeNextEffect = 0f;
         public float AddDelayBeforeNextEffect { set { m_DelayBeforeNextEffect += value; } }
         public float SetDelayBeforeNextEffect { set { m_DelayBeforeNextEffect = value; } }
@@ -62,18 +62,16 @@ namespace LEM_Effects
         bool m_PauseLinearEvent = true;
         public bool PauseLinearEvent { set { m_PauseLinearEvent = value; } }
 
-        #region Bool Conditions
         int m_NumOfAwaitingInput = default;
         public int AddNumberOfAwaitingInput { set { m_NumOfAwaitingInput += value; } }
-        //public bool m_ListeningForClick = false;
-        //public bool m_ListeningForTrigger = false;
-
 
         #endregion
+
         [SerializeField, ReadOnly]
         LEM_BaseEffect m_PreviousEffectPlayed = default;
-        //public bool HasAnymoreEffectsToLoad => m_PreviousEffectPlayed.m_NodeBaseData.HasAtLeastOneNextPointNode;
+
         public bool HasNoEffectsPlaying => m_UpdateCycle.Count == 0 && m_FixedUpdateCycle.Count == 0 && m_LateUpdateCycle.Count == 0;
+        bool IsStartNodeConnected => m_StartNodeData.HasAtLeastOneNextPointNode;
 
         //Update cycles
         [SerializeField, ReadOnly, Header("RunTime Cycles (Do not touch)"), Space(15)]
@@ -82,42 +80,67 @@ namespace LEM_Effects
         [SerializeField, ReadOnly]
         List<LEM_BaseEffect> m_FixedUpdateCycle = default, m_LateUpdateCycle = default;
 
-        public Dictionary<string, LEM_BaseEffect> m_EffectsDictionary = default;
-
+        public Dictionary<string, LEM_BaseEffect> EffectsDictionary { get; private set; } = null;
+        bool IsInitialised => EffectsDictionary == null;
         #endregion
 
         #region Initialisation Methods
 
+        /// <summary>
+        /// Initialses the Linear Event to get its Effects ready
+        /// </summary>
         public void InitialiseLinearEvent()
         {
             m_UpdateCycle = new List<LEM_BaseEffect>(LinearEventsManager.StartingUpdateEffectCapacity);
             m_FixedUpdateCycle = new List<LEM_BaseEffect>(LinearEventsManager.StartingUpdateEffectCapacity);
             m_LateUpdateCycle = new List<LEM_BaseEffect>(LinearEventsManager.StartingUpdateEffectCapacity);
 
-            m_EffectsDictionary = GetAllEffectsDictionary;
+            EffectsDictionary = GetAllEffectsDictionary;
             m_PauseLinearEvent = false;
         }
 
-        //Returns true if there is a starting next point node
-        public void RunTimeStartLinearEvent()
-        {
-            if (m_StartNodeData.HasAtLeastOneNextPointNode)
-            {
-                LoadStartingEffect(LinearEventsManager.InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
-                LinearEventsManager.Instance.RunningLinearEvents.Add(this);
-            }
-#if UNITY_EDITOR
-            else
-            {
-                Debug.LogWarning("LinearEvent " + name + " does not have any effect connected to its start ndoe!", this);
-            }
-#endif
-        }
+        //        //LEManager -> Initialised this LE -> Chooses to run this Linear Event not on LEManager's awake
+        //        //Returns true if there is a starting next point node
+        //        public void RunTimeStartLinearEvent()
+        //        {
+        //            if (m_StartNodeData.HasAtLeastOneNextPointNode)
+        //            {
+        //                LoadStartingEffect(LinearEventsManager.InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
+        //                LinearEventsManager.Instance.RunningLinearEvents.Add(this);
+        //            }
+        //#if UNITY_EDITOR
+        //            else
+        //            {
+        //                Debug.LogWarning("LinearEvent " + name + " does not have any effect connected to its start ndoe!", this);
+        //            }
+        //#endif
+        //        }
 
-        public void OnStartPlayingLinearEvent()
+        //LEManager -> Initialised this LE -> Chooses to run this Linear Event LEManager's awake from LEManager's List of Running LinearEvents
+        public void OnLEM_Awake_PlayLinearEvent()
         {
+#if UNITY_EDITOR
+            Debug.Assert(IsStartNodeConnected, "Linear Event " + name + " does not have its Start Node connected to any effects!", this);
+#endif
+
             LoadStartingEffect(LinearEventsManager.InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
         }
+
+        //LEManager -> Initialised this LE -> Chooses to run this Linear Event LEManager's awake from LEManager's List of Running LinearEvents
+        public void OnLEM_Runtime_PlayLinearEvent()
+        {
+#if UNITY_EDITOR
+            Debug.Assert(IsStartNodeConnected, "Linear Event " + name + " does not have its Start Node connected to any effects!", this);
+#endif
+
+            //if (m_StartNodeData.HasAtLeastOneNextPointNode)
+            //{
+
+            LoadStartingEffect(LinearEventsManager.InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
+            LinearEventsManager.Instance.RunningLinearEvents.Add(this);
+            //}
+        }
+
 
         #endregion
 
@@ -210,7 +233,7 @@ namespace LEM_Effects
         {
             //if the next nodeid or the previous effect played is null, that means thats the end of the linear event. No more events to load.
             //we need to check if prev node atleast hv one nextpoint node due to nodes that can give multiple outcomes
-            if (m_PreviousEffectPlayed == null || !m_PreviousEffectPlayed.bm_NodeBaseData.HasAtLeastOneNextPointNode || !m_EffectsDictionary.TryGetValue(m_PreviousEffectPlayed.GetNextNodeID(), out m_PreviousEffectPlayed))
+            if (m_PreviousEffectPlayed == null || !m_PreviousEffectPlayed.bm_NodeBaseData.HasAtLeastOneNextPointNode || !EffectsDictionary.TryGetValue(m_PreviousEffectPlayed.GetNextNodeID(), out m_PreviousEffectPlayed))
                 return true;
 
 
@@ -251,7 +274,7 @@ namespace LEM_Effects
         void LoadStartingEffect(int maxEffectsPerFrame, string nextEffect)
         {
             //Load next effect
-            if (!m_EffectsDictionary.TryGetValue(nextEffect, out m_PreviousEffectPlayed))
+            if (!EffectsDictionary.TryGetValue(nextEffect, out m_PreviousEffectPlayed))
             {
 #if UNITY_EDITOR
                 Debug.LogWarning("Linear Event " + name + " does not contain the ID " + nextEffect, this);

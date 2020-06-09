@@ -17,13 +17,10 @@ public class LinearEventsManager : MonoBehaviour
     bool m_AutoFindLinearEvents = false;
 
     [SerializeField, Tooltip("The Container GameObject that stores all the LinearEvents in the scene"), ConditionalReadOnly("m_AutoFindLinearEvents", m_ConditionToMeet = true)]
-    GameObject m_LinearEventHolder = default;
+    GameObject m_LinearEventsHolder = default;
 
     [SerializeField, Tooltip("This array is supposed to represent all the Linear Events in the scene. If you enable AutoFindLinearEvents, make sure that the only LinearEvents dragged and dropped in this array are NOT inisde the Container ")/*, ConditionalReadOnly("m_AutoFindLinearEvents", m_ConditionToMeet = false)*/]
-    //LinearEvent[] m_AllLinearEventsInScene = default;
     List<LinearEvent> m_AllLinearEventsInScene = default;
-
-    //public static LinearEvent[] AllLinearEventsInScene => Instance.m_AllLinearEventsInScene;
     public static List<LinearEvent> AllLinearEventsInScene => Instance.m_AllLinearEventsInScene;
 
     //The linear events currently running
@@ -67,9 +64,8 @@ public class LinearEventsManager : MonoBehaviour
         //Change this to getcomponentsfromchildren later
         if (m_AutoFindLinearEvents)
         {
-            m_AllLinearEventsInScene.AddRange(m_LinearEventHolder.GetComponentsInChildren<LinearEvent>());
+            m_AllLinearEventsInScene.AddRange(m_LinearEventsHolder.GetComponentsInChildren<LinearEvent>());
         }
-            //m_AllLinearEventsInScene = FindObjectsOfType<LinearEvent>();
 
         //Check if there is any linear event in the scene
 #if UNITY_EDITOR
@@ -88,8 +84,7 @@ public class LinearEventsManager : MonoBehaviour
 
             if (m_AllLinearEventsInScene[i].m_AllEffects == null && m_AllLinearEventsInScene[i].m_AllEffects.Length <= 0)
             {
-                Debug.LogWarning("Linear Event " + m_AllLinearEventsInScene[i].name + " does not have any effects on it. AllLinearEventsInScene element: " + i,
-                    m_AllLinearEventsInScene[i]);
+                Debug.LogWarning("Linear Event " + m_AllLinearEventsInScene[i].name + " does not have any effects on it. AllLinearEventsInScene element: " + i, m_AllLinearEventsInScene[i]);
             }
 #endif
             m_AllLinearEventsInScene[i].m_LinearEventIndex = i;
@@ -115,14 +110,13 @@ public class LinearEventsManager : MonoBehaviour
 
             if (m_PlayOnAwake)
             {
-
+                //Precached events will be ran here on awake if Play on Awake is true
                 for (int i = 0; i < m_RunningLinearEvents.Count; i++)
                 {
 #if UNITY_EDITOR
-                    Debug.Assert(m_RunningLinearEvents[i] != null, "There is no Playing Event to play OnAwake!", this);
-                    Debug.Assert(m_RunningLinearEvents[i].m_StartNodeData.HasAtLeastOneNextPointNode, "The Start Node of " + m_RunningLinearEvents[i].name + " has not been connected to any effects", m_RunningLinearEvents[i]);
+                    Debug.Assert(m_RunningLinearEvents[i] != null, "Element of Index " + i + " is null!", this);
 #endif
-                    m_RunningLinearEvents[i].OnStartPlayingLinearEvent();
+                    m_RunningLinearEvents[i].OnLEM_Awake_PlayLinearEvent();
                 }
             }
 
@@ -134,9 +128,11 @@ public class LinearEventsManager : MonoBehaviour
     public static void LoadLinearEvent(LinearEvent linearEventToLoad)
     {
         Instance.m_RunningLinearEvents.Add(linearEventToLoad);
-        linearEventToLoad.RunTimeStartLinearEvent();
+        linearEventToLoad.OnLEM_Runtime_PlayLinearEvent();
     }
 
+
+    #region Update Loop
     //Update loop will be where all the effects will be called and then removed if 
     //their effects are done
     void Update()
@@ -182,6 +178,7 @@ public class LinearEventsManager : MonoBehaviour
 
     }
 
-   
+
+    #endregion
 
 }

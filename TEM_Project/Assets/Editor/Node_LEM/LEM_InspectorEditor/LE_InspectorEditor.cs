@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using LEM_Effects;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 namespace LEM_Editor
 {
@@ -23,6 +25,7 @@ namespace LEM_Editor
             //GUILayout.BeginHorizontal();
 
             DrawLoadButton(linearEvent);
+            DrawCreatePrefabButton(linearEvent);
             //DrawRemoveUnusedEventsButton(linearEvent);
 
             //GUILayout.EndHorizontal();
@@ -42,6 +45,15 @@ namespace LEM_Editor
             }
         }
 
+        void DrawCreatePrefabButton(LinearEvent linearEvent)
+        {
+            //Creates a button to load the node editor
+            if (GUILayout.Button("Save To Assets as Scene", GUILayout.Height(m_LineHeightSpace * 2)))
+            {
+                SaveEventAsScene(linearEvent);
+            }
+        }
+
         //void DrawRemoveUnusedEventsButton(LinearEvent linearEvent)
         //{
         //    //Creates a button to load the node editor
@@ -50,6 +62,24 @@ namespace LEM_Editor
         //        linearEvent.RemoveUnusedEvents();
         //    }
         //}
+
+        void SaveEventAsScene( LinearEvent le)
+        {
+            Scene s = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+
+            if(le.transform.root != le.transform)
+            {
+                le.transform.SetParent(null);
+            }
+
+            EditorSceneManager.MoveGameObjectToScene(le.gameObject, s);
+
+            EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+
+            bool saveok = EditorSceneManager.SaveScene(s);
+            //bool saveok= EditorSceneManager.SaveScene(s, "Assets/" + s.name+".unity" ,true);
+            Debug.Log("Save Success : " + saveok);
+        }
 
         void DrawInspector()
         {
