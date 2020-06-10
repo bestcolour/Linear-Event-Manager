@@ -43,7 +43,7 @@ namespace LEM_Editor
             //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(NodeLEM_Editor.s_CurrentLE, m_State);
+            myEffect.SetUp(NodeLEM_Editor.CurrentLE, m_State);
             return myEffect;
         }
 

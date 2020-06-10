@@ -82,7 +82,7 @@ namespace LEM_Editor
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
 
             m_InputDataSerializedObject.ApplyModifiedProperties();
-            myEffect.SetUp(NodeLEM_Editor.s_CurrentLE, m_InputDataSerializedObject);
+            myEffect.SetUp(NodeLEM_Editor.CurrentLE, m_InputDataSerializedObject);
             return myEffect;
         }
 

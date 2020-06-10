@@ -8,6 +8,7 @@ namespace LEM_Editor
         //LEM_BaseEffect[] m_DeletedNodesEffects = default;
         //GroupRectNodeBase[] m_DeletedGroupRectNodeBases = default;
 
+        //To future me or anybody else, connectable nodes was just another way for me to call nodes which are not group nodes 
         BaseDeletionCommandData[] m_ConnectableNodesData = default;
 
         public int CommandType => NodeCommandType.DELETE;
@@ -215,6 +216,15 @@ namespace LEM_Editor
             //NodeLEM_Editor.DeleteConnectableNodes(m_DeletedNodesEffects.Select(x => x.m_NodeBaseData).ToArray());
             //NodeLEM_Editor.DeleteGroupRects(m_DeletedGroupRectNodeBases);
             NodeLEM_Editor.DeselectAllNodes();
+        }
+
+        public void OnClear()
+        {
+            for (int i = 0; i < m_ConnectableNodesData.Length; i++)
+            {
+                m_ConnectableNodesData[i].OnClear();
+            }
+
         }
     }
 }

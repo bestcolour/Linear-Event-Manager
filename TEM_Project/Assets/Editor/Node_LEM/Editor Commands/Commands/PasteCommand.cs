@@ -206,7 +206,14 @@ namespace LEM_Editor
 
         }
 
-
+        public void OnClear()
+        {
+            string[] keys = m_PastedEffectDictionary.Keys.ToArray();
+            for (int i = 0; i < keys.Length; i++)
+            {
+                UnityEngine.Object.DestroyImmediate(m_PastedEffectDictionary[keys[i]]);
+            }
+        }
     }
 
 }

@@ -182,7 +182,10 @@ namespace LEM_Editor
             Undo();
         }
 
-
+        public void OnClear()
+        {
+            //Nth to do
+        }
     }
 
 }

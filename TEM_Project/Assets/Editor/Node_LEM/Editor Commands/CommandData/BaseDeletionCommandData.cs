@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using LEM_Effects;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace LEM_Editor
 {
@@ -9,6 +10,9 @@ namespace LEM_Editor
         public abstract void Delete();
         public abstract void Recreate();
         public abstract void SaveAndDelete();
+
+        //Called to remove unnecssary references to the monobehaviour effects which was stored 
+        public abstract void OnClear();
     }
 
 
@@ -63,6 +67,13 @@ namespace LEM_Editor
 
         }
 
+        public override void OnClear()
+        {
+            for (int i = 0; i < m_BaseEffectsData.Length; i++)
+            {
+                Object.DestroyImmediate(m_BaseEffectsData[i]);
+            }
+        }
     }
 
     public class DeleteGroupRectNodeData : BaseDeletionCommandData
@@ -293,7 +304,10 @@ namespace LEM_Editor
             return groupRectNodeBases.ToArray();
         }
 
-
+        public override void OnClear()
+        {
+            //Nth to do here
+        }
     }
 
 }

@@ -33,6 +33,11 @@ namespace LEM_Editor
         {
             NodeLEM_Editor.CreateConnection(m_InPointNodeID, m_OutPointNodeID, m_OutPointIndex);
         }
+
+        public void OnClear()
+        {
+            //nth to do
+        }
     }
 
 }

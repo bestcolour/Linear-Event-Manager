@@ -65,7 +65,10 @@ namespace LEM_Editor
             //m_GroupRectNode.m_GroupedParent = string.IsNullOrEmpty(m_DeletedNodeData.m_ParentNodeID) ? null : NodeLEM_Editor.AllGroupRectsInEditorDictionary[m_DeletedNodeData.m_ParentNodeID];
         }
 
-
+        public void OnClear()
+        {
+            //nth to do here
+        }
     }
 
 

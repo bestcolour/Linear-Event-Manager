@@ -70,7 +70,9 @@ namespace LEM_Effects
         public override LEM_BaseEffect CreateClone()
         {
             AwaitKeyCodeInput newClone = ScriptableObject.CreateInstance<AwaitKeyCodeInput>();
-            //AwaitKeyCodeInput newClone = (AwaitKeyCodeInput)MemberwiseClone();
+            //AwaitKeyCodeInput newClone = new AwaitKeyCodeInput();
+
+            ////AwaitKeyCodeInput newClone = (AwaitKeyCodeInput)MemberwiseClone();
 
             //AwaitKeyCodeInputData newDataInstance = ScriptableObject.CreateInstance<AwaitKeyCodeInputData>();
 

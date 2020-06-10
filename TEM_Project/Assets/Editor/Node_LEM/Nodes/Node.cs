@@ -83,9 +83,9 @@ namespace LEM_Editor
 
         public void DetermineStatus()
         {
-            IsWithinWindowScreen = m_TotalRect.position.x + m_TotalRect.width > 0 && m_TotalRect.position.x < NodeLEM_Editor.instance.position.width * NodeLEM_Editor.InverseScaleFactor
+            IsWithinWindowScreen = m_TotalRect.position.x + m_TotalRect.width > 0 && m_TotalRect.position.x < NodeLEM_Editor.Instance.position.width * NodeLEM_Editor.InverseScaleFactor
              &&
-             m_TotalRect.position.y + m_TotalRect.height > 0 && m_TotalRect.position.y < NodeLEM_Editor.instance.position.height * NodeLEM_Editor.InverseScaleFactor;
+             m_TotalRect.position.y + m_TotalRect.height > 0 && m_TotalRect.position.y < NodeLEM_Editor.Instance.position.height * NodeLEM_Editor.InverseScaleFactor;
 
             IsWorthProcessingEventFor = IsWithinWindowScreen || (!IsWithinWindowScreen && (IsSelected || (IsGrouped && GetRootParent.IsSelected))); 
         }

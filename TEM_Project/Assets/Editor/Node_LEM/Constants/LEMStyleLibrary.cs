@@ -42,14 +42,14 @@ namespace LEM_Editor
             //If gui style has not been loaded
             if (!SkinsLoaded)
             {
-                LoadingNodeSkins(NodeLEM_Editor.s_Settings);
+                LoadingNodeSkins(NodeLEM_Editor.Settings);
                 SkinsLoaded = true;
             }
         }
 
         public static void ReLoadLibrary()
         {
-            LoadingNodeSkins(NodeLEM_Editor.s_Settings);
+            LoadingNodeSkins(NodeLEM_Editor.Settings);
             SkinsLoaded = true;
         }
 

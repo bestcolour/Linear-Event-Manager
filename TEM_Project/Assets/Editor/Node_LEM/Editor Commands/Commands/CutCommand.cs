@@ -143,7 +143,13 @@ namespace LEM_Editor
 
         }
 
-
+        public void OnClear()
+        {
+            for (int i = 0; i < m_DeletionData.Length; i++)
+            {
+                m_DeletionData[i].OnClear();
+            }
+        }
     }
 
 }

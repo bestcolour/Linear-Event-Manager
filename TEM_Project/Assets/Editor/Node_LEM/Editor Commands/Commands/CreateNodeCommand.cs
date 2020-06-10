@@ -55,6 +55,10 @@ namespace LEM_Editor
             NodeCommandInvoker.d_RestitchConnections(m_NodeEffect);
         }
 
+        public void OnClear()
+        {
+            Object.DestroyImmediate(m_NodeEffect);
+        }
     }
 
  

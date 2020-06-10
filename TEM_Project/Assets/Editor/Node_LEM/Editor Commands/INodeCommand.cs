@@ -19,6 +19,8 @@ namespace LEM_Editor
         void Undo();
         void Redo();
 
+        //To be called when history exceeds its memory n begin overwriting old commands or when you undo a command and then dont press redo, instead you act out a new command
+        void OnClear();
         int CommandType { get; }
 
     }
