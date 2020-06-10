@@ -18,7 +18,7 @@ namespace LEM_Effects
     {
 
         #region Cached Values
-        [Header("DONT TOUCH! Cached Values!"), ReadOnly,SerializeField]
+        [/*Header("DONT TOUCH! Cached Values!"), ReadOnly,*/SerializeField]
         public LEM_BaseEffect[] m_AllEffects = default;
 
 #if UNITY_EDITOR
@@ -81,7 +81,7 @@ namespace LEM_Effects
         List<LEM_BaseEffect> m_FixedUpdateCycle = default, m_LateUpdateCycle = default;
 
         public Dictionary<string, LEM_BaseEffect> EffectsDictionary { get; private set; } = null;
-        bool IsInitialised => EffectsDictionary == null;
+        //bool IsInitialised => EffectsDictionary == null;
         #endregion
 
         #region Initialisation Methods

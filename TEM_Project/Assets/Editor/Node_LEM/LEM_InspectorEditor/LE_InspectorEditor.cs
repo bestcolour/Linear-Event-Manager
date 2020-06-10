@@ -51,6 +51,7 @@ namespace LEM_Editor
             if (GUILayout.Button("Save To Assets as Scene", GUILayout.Height(m_LineHeightSpace * 2)))
             {
                 SaveEventAsScene(linearEvent);
+                //SaveEventAsAsset(linearEvent);
             }
         }
 
@@ -80,6 +81,18 @@ namespace LEM_Editor
             //bool saveok= EditorSceneManager.SaveScene(s, "Assets/" + s.name+".unity" ,true);
             Debug.Log("Save Success : " + saveok);
         }
+
+
+        //void SaveEventAsAsset(LinearEvent le)
+        //{
+        //    //PrefabUtility.SaveAsPrefabAsset(le.gameObject,"Assets/" + le.name + ".prefab");
+        //    ////AssetDatabase.CreateAsset(le.gameObject, "Assets/" + le.name + ".asset");
+        //    //EditorUtility.SetDirty(le);
+        //    //AssetDatabase.SaveAssets();
+        //    string s = JsonUtility.ToJson(le);
+
+        //    Debug.Log(s);
+        //}
 
         void DrawInspector()
         {
