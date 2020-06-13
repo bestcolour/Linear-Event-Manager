@@ -6,7 +6,7 @@ namespace LEM_Effects
 
     public class CurvePosZ : SingleCurveBasedUpdateEffect<CurvePosZ>
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, AnimationCurve, bool> 
+        , IEffectSavable<Transform, AnimationCurve, bool>
 #endif
     {
         [SerializeField] Transform m_TargetTransform = default;
@@ -19,6 +19,15 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
 #if UNITY_EDITOR
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurvePosZ g = go.AddComponent<CurvePosZ>();
+
+            g.CloneBaseValuesFrom(this);
+            g.SetUp(m_TargetTransform, m_Graph.Clone(), m_RelativeToWorld);
+            return g;
+        }
+
         //public override LEM_BaseEffect CreateClone()
         //{
         //    CurveDisplaceZTransformToPosition copy = ScriptableObject.CreateInstance<CurveDisplaceZTransformToPosition>();

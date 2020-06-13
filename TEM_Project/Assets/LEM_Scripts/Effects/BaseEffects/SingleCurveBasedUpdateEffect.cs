@@ -13,7 +13,7 @@ namespace LEM_Effects
         protected RBoolIVoidDelegate d_UpdateCheck = null;
 
 #if UNITY_EDITOR
-        public override LEM_BaseEffect CreateClone()
+        public override LEM_BaseEffect ScriptableClone()
         {
             T c = (T)MemberwiseClone();
             c.m_Graph = m_Graph.Clone();

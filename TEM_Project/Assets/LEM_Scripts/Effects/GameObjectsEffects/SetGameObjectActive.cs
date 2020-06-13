@@ -15,6 +15,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+     
         public override void OnInitialiseEffect()
         {
             //Set the target object to true or false
@@ -32,7 +33,15 @@ namespace LEM_Effects
         {
             t1 = m_TargetObject;
             t2 = m_State;
-        } 
+        }   
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            SetGameObjectActive t = go.AddComponent<SetGameObjectActive>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetObject, out t.m_State);
+            return t;
+        }
+
 #endif
     } 
 }

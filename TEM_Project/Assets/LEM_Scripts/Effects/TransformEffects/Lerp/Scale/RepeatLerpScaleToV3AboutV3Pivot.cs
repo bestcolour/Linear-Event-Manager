@@ -5,7 +5,7 @@ namespace LEM_Effects
 
     public class RepeatLerpScaleToV3AboutV3Pivot : UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3, Vector3, float, float> 
+        , IEffectSavable<Transform, Vector3, Vector3, float, float>
 #endif
     {
 
@@ -24,6 +24,7 @@ namespace LEM_Effects
         Vector3 m_InitialPosition = default, m_InitialScale = default;/*, m_NewScale = default;*/
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
+
 
 
         public override void OnInitialiseEffect()
@@ -65,7 +66,13 @@ namespace LEM_Effects
             m_Smoothing = t4;
             m_SnapRange = t5;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatLerpScaleToV3AboutV3Pivot t = go.AddComponent<RepeatLerpScaleToV3AboutV3Pivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetScale, out t.m_LocalPivotPosition, out t.m_Smoothing, out t.m_SnapRange);
+            return t;
+        }
         public void UnPack(out Transform t1, out Vector3 t2, out Vector3 t3, out float t4, out float t5)
         {
             t1 = m_TargetTransform;

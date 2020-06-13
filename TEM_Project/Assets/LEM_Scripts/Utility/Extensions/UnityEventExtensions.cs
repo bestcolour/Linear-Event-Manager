@@ -9,11 +9,11 @@ namespace LEM_Effects.Extensions
         /// <summary>
         /// Clones the specified unity event list.
         /// </summary>
-        /// <param name="ev">The unity event.</param>
+        /// <param name="unityEventBase">The unity event.</param>
         /// <returns>Cloned UnityEvent</returns>
-        public static T Clone<T>(this T ev) where T : UnityEventBase
+        public static T Clone<T>(this T unityEventBase) where T : UnityEventBase
         {
-            return ReflectionExtensions.DeepCopy(ev);
+            return ReflectionExtensions.DeepCopy(unityEventBase);
         }
 
     }

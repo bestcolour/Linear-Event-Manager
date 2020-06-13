@@ -43,7 +43,15 @@ namespace LEM_Effects
         //    copy.CloneBaseValuesFrom(this);
 
         //    return copy;
-        //}
+        //}   
+        
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveRateOfChangePosZ t = go.AddComponent<CurveRateOfChangePosZ>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetTransform, m_Graph.Clone(), m_IsWorldSpace);
+            return t;
+        }
 #endif
 
 
@@ -86,7 +94,7 @@ namespace LEM_Effects
             return d_UpdateCheck.Invoke();
         }
 
-
+     
     }
 
 }

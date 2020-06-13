@@ -38,7 +38,16 @@ namespace LEM_Effects
             t3 = m_Smoothing;
             t4 = m_SnapDistance;
 
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LerpAnchPosToV3 t = go.AddComponent<LerpAnchPosToV3>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRectransform, out t.m_TargetPosition, out t.m_Smoothing, out t.m_SnapDistance);
+            return t;
+        }
+
 #endif
 
         public override bool OnUpdateEffect(float delta)
@@ -57,6 +66,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-
+      
     } 
 }

@@ -46,7 +46,14 @@ namespace LEM_Effects
             t4 = m_GraphY;
             t5 = m_GraphZ;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveAnchPosXYZ t = go.AddComponent<CurveAnchPosXYZ>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetRectTransform, m_MainGraph, m_GraphX.Clone(), m_GraphY.Clone(), m_GraphZ.Clone());
+            //UnPack(out t.m_TargetRectTransform, out t.m_MainGraph, out t.m_GraphX, out t.m_GraphY, out t.m_GraphZ);
+            return t;
+        }
 #endif
 
 
@@ -72,6 +79,8 @@ namespace LEM_Effects
 
             return d_UpdateCheck.Invoke();
         }
+
+
     }
 
 }

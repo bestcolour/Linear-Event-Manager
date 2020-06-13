@@ -42,9 +42,10 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            ReWordText myEffect = ScriptableObject.CreateInstance<ReWordText>();
+            ReWordText myEffect = go.AddComponent<ReWordText>();
+            //ReWordText myEffect = ScriptableObject.CreateInstance<ReWordText>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

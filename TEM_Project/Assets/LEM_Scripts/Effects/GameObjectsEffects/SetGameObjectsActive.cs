@@ -15,6 +15,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+    
+
         public override void OnInitialiseEffect()
         {
             //Set all objects to the same state
@@ -25,6 +27,14 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            SetGameObjectsActive t = go.AddComponent<SetGameObjectsActive>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetObjects, out t.m_State);
+            return t;
+        }
+
         public void SetUp(GameObject[] t1, bool t2)
         {
             m_TargetObjects = t1;

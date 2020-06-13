@@ -26,6 +26,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+       
 
         public override void OnInitialiseEffect()
         {
@@ -66,6 +67,14 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatMoveScaleToV3AboutTPivot t =  go.AddComponent<RepeatMoveScaleToV3AboutTPivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetScale, out t.m_Pivot,out t.m_Duration);
+            return t;
+        }
+
         public void SetUp(Transform t1, Vector3 t2, Transform t3, float t4)
         {
             m_TargetTransform = t1;

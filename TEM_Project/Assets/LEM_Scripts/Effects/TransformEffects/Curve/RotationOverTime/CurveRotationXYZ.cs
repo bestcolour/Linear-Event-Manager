@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEngine;
 namespace LEM_Effects
 {
 
     public class CurveRotationXYZ : ThreeCurveBasedUpdateEffect<CurveRotationXYZ>
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, MainGraph,AnimationCurve, AnimationCurve, AnimationCurve, bool>
+        , IEffectSavable<Transform, MainGraph, AnimationCurve, AnimationCurve, AnimationCurve, bool>
 #endif
     {
         [SerializeField] Transform m_TargetTransform = default;
@@ -17,7 +18,7 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
 #if UNITY_EDITOR
-        public void SetUp(Transform t1,MainGraph t2 , AnimationCurve t3, AnimationCurve t4, AnimationCurve t5, bool t6)
+        public void SetUp(Transform t1, MainGraph t2, AnimationCurve t3, AnimationCurve t4, AnimationCurve t5, bool t6)
         {
             m_TargetTransform = t1;
             m_MainGraph = t2;
@@ -27,7 +28,7 @@ namespace LEM_Effects
             m_RelativeToWorld = t6;
         }
 
-        public void UnPack(out Transform t1,out MainGraph t2 , out AnimationCurve t3, out AnimationCurve t4, out AnimationCurve t5, out bool t6)
+        public void UnPack(out Transform t1, out MainGraph t2, out AnimationCurve t3, out AnimationCurve t4, out AnimationCurve t5, out bool t6)
         {
             t1 = m_TargetTransform;
             t2 = m_MainGraph;
@@ -37,6 +38,15 @@ namespace LEM_Effects
             t6 = m_RelativeToWorld;
         }
 
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveRotationXYZ t = go.AddComponent<CurveRotationXYZ>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetTransform, m_MainGraph, m_GraphX.Clone(), m_GraphY.Clone(), m_GraphZ.Clone(), m_RelativeToWorld);
+            //UnPack(out t.m_TargetTransform, out t.m_MainGraph, out t.m_GraphX, out t.m_GraphY, out t.m_GraphZ, out t.m_RelativeToWorld);
+            return t;
+        }
 #endif
         public override void OnInitialiseEffect()
         {
@@ -71,7 +81,7 @@ namespace LEM_Effects
             return d_UpdateCheck.Invoke();
         }
 
-    
+
     }
 
 }

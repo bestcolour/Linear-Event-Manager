@@ -12,8 +12,15 @@ namespace LEM_Effects
         Update, FixedUpdate, LateUpdate
     }
 
+    //Major Affected classes by the change from SO to mono
+    //Search with : MAJOR MONOCHANGE
+    //AwaitKeyCodeInput
+    //AwaitAxisInput
+    //CustomVoidFunction
+
+
     [Serializable]
-    public abstract class LEM_BaseEffect : ScriptableObject
+    public abstract class LEM_BaseEffect : MonoBehaviour
     {
         public enum EffectFunctionType { InstantEffect, UpdateEffect, InstantHaltEffect,UpdateHaltEffect}
 
@@ -61,7 +68,9 @@ namespace LEM_Effects
 
 
 #if UNITY_EDITOR
-        public virtual LEM_BaseEffect CreateClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
+        public abstract LEM_BaseEffect CloneMonoBehaviour(GameObject go);
+
+        public virtual LEM_BaseEffect ScriptableClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
 #endif
 
     }

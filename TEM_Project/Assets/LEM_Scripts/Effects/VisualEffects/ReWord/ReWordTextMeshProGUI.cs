@@ -17,6 +17,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+     
+
         public override void OnInitialiseEffect()
         {
             //Retext 
@@ -34,7 +36,15 @@ namespace LEM_Effects
         {
             t1 = m_TargetText;
             t2 = m_NewText;
-        } 
+        }    
+        
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            ReWordTextMeshProGUI t = go.AddComponent<ReWordTextMeshProGUI>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetText, out t.m_NewText);
+            return t;
+        }
 #endif
     }
 }

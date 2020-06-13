@@ -4,7 +4,7 @@ namespace LEM_Effects
 
     public class OffsetRotation : LEM_BaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3, bool> 
+        , IEffectSavable<Transform, Vector3, bool>
 #endif
     {
         [Tooltip("The transform you want to offset")]
@@ -18,6 +18,7 @@ namespace LEM_Effects
         [SerializeField] bool m_RelativeToLocal = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
+
 
         public override void OnInitialiseEffect()
         {
@@ -42,12 +43,20 @@ namespace LEM_Effects
             m_RelativeToLocal = t3;
         }
 
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            OffsetRotation t = go.AddComponent<OffsetRotation>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_OffsetRotation, out t.m_RelativeToLocal);
+            return t;
+        }
+
         public void UnPack(out Transform t1, out Vector3 t2, out bool t3)
         {
             t1 = m_TargetTransform;
             t2 = m_OffsetRotation;
             t3 = m_RelativeToLocal;
-        } 
+        }
 #endif
-    } 
+    }
 }

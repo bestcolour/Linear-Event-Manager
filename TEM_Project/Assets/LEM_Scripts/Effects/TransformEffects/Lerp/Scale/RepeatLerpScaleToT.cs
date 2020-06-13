@@ -22,6 +22,8 @@ namespace LEM_Effects
         Vector3 m_InitialScale = default;
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+    
+
         public override void OnInitialiseEffect()
         {
             m_SnapRange *= m_SnapRange;
@@ -57,6 +59,15 @@ namespace LEM_Effects
             t2 = m_ReferenceTransform;
             t3 = m_Smoothing;
             t4 = m_SnapRange;
+
+        }  
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatLerpScaleToT t = go.AddComponent<RepeatLerpScaleToT>();
+
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_ReferenceTransform, out t.m_Smoothing, out t.m_SnapRange);
+            return t;
 
         }
 #endif

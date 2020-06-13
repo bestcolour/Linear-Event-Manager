@@ -14,6 +14,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType =>EffectFunctionType.InstantEffect;
 
+     
         public override void OnInitialiseEffect()
         {
             //If set to local is true, set transform scale as local scale
@@ -31,7 +32,15 @@ namespace LEM_Effects
         {
             t1 = m_TargetTransform;
             t2 = m_TargetScale;
-        } 
+        }   
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            SetScale t = go.AddComponent<SetScale>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetScale);
+            return t;
+        }
+
 #endif
     } 
 }

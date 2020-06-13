@@ -13,6 +13,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+     
+
         public override string GetNextNodeID()
         {
             if (!bm_NodeBaseData.HasAtLeastOneNextPointNode)
@@ -38,7 +40,15 @@ namespace LEM_Effects
         public void UnPack(out int t1)
         {
             t1 = m_NumberOfOutComes;
-        } 
+        }   
+        
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            EqualProbabilityOutCome t = go.AddComponent<EqualProbabilityOutCome>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_NumberOfOutComes);
+            return t;
+        }
 #endif
     }
 

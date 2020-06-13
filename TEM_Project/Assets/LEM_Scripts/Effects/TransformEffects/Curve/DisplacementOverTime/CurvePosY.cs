@@ -52,6 +52,14 @@ namespace LEM_Effects
             t1 = m_TargetTransform;
             t2 = m_Graph;
             t3 = m_RelativeToWorld;
+        } 
+        
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurvePosY t = go.AddComponent<CurvePosY>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetTransform, m_Graph.Clone(), m_RelativeToWorld);
+            return t;
         }
 #endif
         public override void OnInitialiseEffect()
@@ -88,8 +96,7 @@ namespace LEM_Effects
             //return m_IsFinished;
         }
 
-
-
+      
     }
 
 }

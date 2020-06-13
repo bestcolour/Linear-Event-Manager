@@ -29,6 +29,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+     
+
         public override void OnInitialiseEffect()
         {
             //Record initial alpha first
@@ -69,7 +71,13 @@ namespace LEM_Effects
             m_Duration = t3;
 
         }
-
+   public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaImage t = go.AddComponent<FadeToAlphaImage>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetImage, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
         public void UnPack(out Image t1, out float t2, out float t3)
         {
             t1 = m_TargetImage;

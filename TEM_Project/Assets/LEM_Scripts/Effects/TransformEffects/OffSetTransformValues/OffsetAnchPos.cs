@@ -15,6 +15,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+     
+
         public override void OnInitialiseEffect()
         {
             //If set to local is true, set transform scale as local scale
@@ -22,6 +24,14 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            OffsetAnchPos t = go.AddComponent<OffsetAnchPos>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRectTransform, out t.m_OffsetPosition);
+            return t;
+        }
+
         public void SetUp(RectTransform t1, Vector3 t2)
         {
             m_TargetRectTransform = t1;

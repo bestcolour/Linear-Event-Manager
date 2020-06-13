@@ -4,7 +4,7 @@ namespace LEM_Effects
 {
     public class PauseLinearEvent : LEM_BaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<LinearEvent, bool> 
+        , IEffectSavable<LinearEvent, bool>
 #endif
     {
         [SerializeField]
@@ -14,6 +14,8 @@ namespace LEM_Effects
         LinearEvent m_TargetLinearEvent = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantHaltEffect;
+
+
 
         public override void OnInitialiseEffect()
         {
@@ -28,13 +30,19 @@ namespace LEM_Effects
             m_TargetLinearEvent = t1;
             m_State = t2;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            PauseLinearEvent t = go.AddComponent<PauseLinearEvent>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetLinearEvent, out t.m_State);
+            return t;
+        }
 
         public void UnPack(out LinearEvent t1, out bool t2)
         {
             t1 = m_TargetLinearEvent;
             t2 = m_State;
-        } 
+        }
 #endif
     }
 

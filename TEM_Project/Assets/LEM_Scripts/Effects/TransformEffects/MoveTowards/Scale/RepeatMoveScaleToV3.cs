@@ -43,6 +43,15 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatMoveScaleToV3 t = go.AddComponent<RepeatMoveScaleToV3>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetScale, out t.m_Duration);
+            return t;
+        }
+
         public void SetUp(Transform t1, Vector3 t2, float t3)
         {
             m_TargetTransform = t1;

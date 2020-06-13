@@ -25,6 +25,15 @@ namespace LEM_Effects
             t2 = m_Graph;
         }
 
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveRateOfChangeAnchPosY t = go.AddComponent<CurveRateOfChangeAnchPosY>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetRectransform, m_Graph.Clone());
+
+            //UnPack(out t.m_TargetRectransform, out t.m_Graph);
+            return t;
+        }
         //public override LEM_BaseEffect CreateClone()
         //{
         //    CurveRateOfAnchPosY copy = ScriptableObject.CreateInstance<CurveRateOfAnchPosY>();
@@ -59,7 +68,6 @@ namespace LEM_Effects
 
             return d_UpdateCheck.Invoke();
         }
-
 
     }
 

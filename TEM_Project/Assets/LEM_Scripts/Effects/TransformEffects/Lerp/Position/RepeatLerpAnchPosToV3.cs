@@ -25,7 +25,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
-
+    
         public override void OnInitialiseEffect()
         {
             //Record the intiial position for repeated process
@@ -63,7 +63,15 @@ namespace LEM_Effects
             t2 = m_TargetPosition;
             t3 = m_Smoothing;
             t4 = m_SnapDistance;
-        } 
+        }   
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatLerpAnchPosToV3 t = go.AddComponent<RepeatLerpAnchPosToV3>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRectransform, out t.m_TargetPosition, out t.m_Smoothing, out t.m_SnapDistance);
+            return t;
+        }
+
 #endif
     }
 }

@@ -23,7 +23,14 @@ namespace LEM_Effects
             t1 = m_TargetTransform;
             t2 = m_Graph;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveScaleZ t = go.AddComponent<CurveScaleZ>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetTransform, m_Graph.Clone());
+            //UnPack(out t.m_TargetTransform, out t.m_Graph);
+            return t;
+        }
 #endif
 
         public override bool OnUpdateEffect(float delta)
@@ -34,6 +41,7 @@ namespace LEM_Effects
             m_TargetTransform.localScale = newScale;
             return d_UpdateCheck.Invoke();
         }
+
 
     }
 

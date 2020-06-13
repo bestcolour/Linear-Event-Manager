@@ -64,6 +64,15 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
+
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LerpScaleToTAboutTPivot t = go.AddComponent<LerpScaleToTAboutTPivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_ReferenceTransform, out t.m_Pivot, out t.m_Smoothing, out t.m_SnapRange);
+            return t;
+        }
         public void SetUp(Transform t1, Transform t2, Transform t3, float t4, float t5)
         {
             m_TargetTransform = t1;

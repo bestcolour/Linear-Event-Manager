@@ -28,6 +28,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+      
 
         public override void OnInitialiseEffect()
         {
@@ -80,6 +81,13 @@ namespace LEM_Effects
 
         }
 
+  public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatLerpScaleToV3AboutTPivot t= go.AddComponent<RepeatLerpScaleToV3AboutTPivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetScale, out t.m_Pivot, out t.m_Smoothing, out t.m_SnapRange);
+            return t;
+        }
 #endif
 
     }

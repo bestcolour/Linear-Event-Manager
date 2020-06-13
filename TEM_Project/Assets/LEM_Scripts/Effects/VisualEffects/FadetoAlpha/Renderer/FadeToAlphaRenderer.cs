@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
     public class FadeToAlphaRenderer : TimerBasedUpdateEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Renderer, float, float> 
+        , IEffectSavable<Renderer, float, float>
 #endif
     {
         //target
@@ -24,6 +24,7 @@ namespace LEM_Effects
 
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
+
 
         public override void OnInitialiseEffect()
         {
@@ -55,7 +56,7 @@ namespace LEM_Effects
 
         public override bool OnUpdateEffect(float delta)
         {
-            m_Timer +=delta;
+            m_Timer += delta;
             delta = m_Timer / m_Duration;
 
             //Lerp all the alphas of the images 
@@ -96,7 +97,16 @@ namespace LEM_Effects
             t1 = m_TargetRenderer;
             t2 = m_TargetAlpha;
             t3 = m_Duration;
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaRenderer t = go.AddComponent<FadeToAlphaRenderer>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRenderer, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
+
 #endif
 
 

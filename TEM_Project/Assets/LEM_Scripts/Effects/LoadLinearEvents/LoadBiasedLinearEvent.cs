@@ -49,7 +49,15 @@ namespace LEM_Effects
             t1 = m_TargetLinearEvent;
             t2 = m_Probabilities;
 
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LoadBiasedLinearEvent t = go.AddComponent<LoadBiasedLinearEvent>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetLinearEvent, out t.m_Probabilities);
+            return t;
+        }
 #endif
     }
 

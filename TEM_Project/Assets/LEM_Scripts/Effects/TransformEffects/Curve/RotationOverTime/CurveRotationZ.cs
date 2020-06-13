@@ -33,7 +33,14 @@ namespace LEM_Effects
             t2 = m_Graph;
             t3 = m_RelativeToWorld;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveRotationZ t = go.AddComponent<CurveRotationZ>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetTransform, m_Graph.Clone(), m_RelativeToWorld);
+            //UnPack(out t.m_TargetTransform, out t.m_Graph, out t.m_RelativeToWorld);
+            return t;
+        }
 #endif
         public override void OnInitialiseEffect()
         {
@@ -59,7 +66,7 @@ namespace LEM_Effects
         private void RotateInWorld(float delta)
         {
             m_Timer += delta;
-            m_TargetTransform.rotation = Quaternion.Euler(0,0, m_Graph.Evaluate(m_Timer));
+            m_TargetTransform.rotation = Quaternion.Euler(0, 0, m_Graph.Evaluate(m_Timer));
         }
 
         public override bool OnUpdateEffect(float delta)
@@ -67,6 +74,7 @@ namespace LEM_Effects
             d_UpdateFunction(delta);
             return d_UpdateCheck.Invoke();
         }
+
 
     }
 

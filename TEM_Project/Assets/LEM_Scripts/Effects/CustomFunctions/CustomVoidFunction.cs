@@ -43,8 +43,8 @@ namespace LEM_Effects
             t1 = new SerializedObject(data);
         }
 
-
-        public override LEM_BaseEffect CreateClone()
+         //MAJOR MONOCHANGE
+        public override LEM_BaseEffect ScriptableClone()
         {
             CustomVoidFunction dummy = (CustomVoidFunction)MemberwiseClone();
 
@@ -77,6 +77,14 @@ namespace LEM_Effects
             dummy.m_UnityEvent = m_UnityEvent.Clone();
 
             return dummy;
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CustomVoidFunction t = go.AddComponent<CustomVoidFunction>();
+            t.CloneBaseValuesFrom(this);
+            t.m_UnityEvent = m_UnityEvent.Clone();
+            return t;
         }
 
 

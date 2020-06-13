@@ -27,6 +27,7 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
 
+
         public override void OnInitialiseEffect()
         {
             m_InitialAlphas = new float[m_TargetTextMeshes.Length];
@@ -87,7 +88,13 @@ namespace LEM_Effects
             t3 = m_Duration;
 
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaTextMeshes t = go.AddComponent<FadeToAlphaTextMeshes>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTextMeshes, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
 #endif
 
 

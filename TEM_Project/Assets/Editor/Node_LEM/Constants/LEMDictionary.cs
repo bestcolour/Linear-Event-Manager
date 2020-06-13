@@ -37,7 +37,7 @@ namespace LEM_Editor
              { "CustomVoidFunction", new NodeDictionaryDefinition(new CustomVoidFunctionNode()                              ,new Color(0.76f,0.15f,0.7f)) },
 
              //Set the state of a button
-             { "SetButtonInteractivityState", new NodeDictionaryDefinition(new SetButtonInteractivityStateNode()            ,new Color(0.4f,0.66f,0.18f)) },
+             //{ "SetButtonInteractivityState", new NodeDictionaryDefinition(new SetButtonInteractivityStateNode()            ,new Color(0.4f,0.66f,0.18f)) },
 	    #endregion
 
         #region Loading Linear Events

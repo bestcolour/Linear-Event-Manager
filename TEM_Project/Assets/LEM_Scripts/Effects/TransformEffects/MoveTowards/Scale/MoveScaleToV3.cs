@@ -19,6 +19,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+     
+
         public override void OnInitialiseEffect()
         {
             m_OriginalScale = m_TargetTransform.localScale;
@@ -55,7 +57,15 @@ namespace LEM_Effects
             t1 = m_TargetTransform;
             t2 = m_TargetScale;
             t3 = m_Duration;
-        } 
+        }   
+        
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            MoveScaleToV3 t = go.AddComponent<MoveScaleToV3>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetScale, out t.m_Duration);
+            return t;
+        }
 #endif
     }
 

@@ -5,7 +5,7 @@ namespace LEM_Effects
 
     public class FadeToAlphaText : TimerBasedUpdateEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Text, float, float> 
+        , IEffectSavable<Text, float, float>
 #endif
     {
         //target
@@ -29,6 +29,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+
         public override void OnInitialiseEffect()
         {
             //Record initial alpha first
@@ -45,7 +46,7 @@ namespace LEM_Effects
             m_Timer += delta;
 
             //Set target image colour as new colour value
-            m_NextColour.a = Mathf.Lerp(m_InitialAlpha, m_TargetAlpha, m_Timer/m_Duration);
+            m_NextColour.a = Mathf.Lerp(m_InitialAlpha, m_TargetAlpha, m_Timer / m_Duration);
             m_TargetText.color = m_NextColour;
 
             //Once the time passed exceeds the assigned duration, end this effect
@@ -68,6 +69,13 @@ namespace LEM_Effects
             m_Duration = t3;
 
         }
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaText t = go.AddComponent<FadeToAlphaText>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetText, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
 
         public void UnPack(out Text t1, out float t2, out float t3)
         {
@@ -75,7 +83,7 @@ namespace LEM_Effects
             t2 = m_TargetAlpha;
             t3 = m_Duration;
 
-        } 
+        }
 #endif
 
 

@@ -67,38 +67,63 @@ namespace LEM_Effects
 
 #if UNITY_EDITOR
 
-        public override LEM_BaseEffect CreateClone()
+        ////MAJOR MONOCHANGE
+        //public override LEM_BaseEffect ScriptableClone()
+        //{
+        //    AwaitKeyCodeInput newClone = ScriptableObject.CreateInstance<AwaitKeyCodeInput>();
+        //    //AwaitKeyCodeInput newClone = new AwaitKeyCodeInput();
+
+        //    ////AwaitKeyCodeInput newClone = (AwaitKeyCodeInput)MemberwiseClone();
+
+        //    //AwaitKeyCodeInputData newDataInstance = ScriptableObject.CreateInstance<AwaitKeyCodeInputData>();
+
+        //    //Hv to do this cause arrays are reference type 
+        //    int length = m_GetkeyDownKeyCodes != null ? m_GetkeyDownKeyCodes.Length : 0;
+        //    newClone.m_GetkeyDownKeyCodes = new KeyCode[length];
+        //    m_GetkeyDownKeyCodes?.CopyTo(newClone.m_GetkeyDownKeyCodes, 0);
+
+        //    length = m_GetkeyKeyCodes != null ? m_GetkeyKeyCodes.Length : 0;
+        //    newClone.m_GetkeyKeyCodes = new KeyCode[length];
+        //    m_GetkeyKeyCodes?.CopyTo(newClone.m_GetkeyKeyCodes, 0);
+
+        //    newClone.CloneBaseValuesFrom(this);
+        //    newClone.m_TargetLinearEvent = m_TargetLinearEvent;
+
+        //    //newClone.bm_NodeBaseData = bm_NodeBaseData;
+        //    //newClone.bm_NodeEffectType =bm_NodeEffectType;
+        //    //newClone.bm_UpdateCycle=  bm_UpdateCycle;
+
+        //    //for (int i = 0; i < newDataInstance.m_GetkeyDownKeyCodes.Length; i++)
+        //    //    newDataInstance.m_GetkeyDownKeyCodes[i] = m_GetkeyDownKeyCodes[i];
+
+        //    //for (int i = 0; i < newDataInstance.m_GetkeyKeyCodes.Length; i++)
+        //    //    newDataInstance.m_GetkeyKeyCodes[i] = m_GetkeyKeyCodes[i];
+
+        //    //newClone.m_InputData = newDataInstance;
+
+        //    return newClone;
+        //}
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
         {
-            AwaitKeyCodeInput newClone = ScriptableObject.CreateInstance<AwaitKeyCodeInput>();
-            //AwaitKeyCodeInput newClone = new AwaitKeyCodeInput();
-
-            ////AwaitKeyCodeInput newClone = (AwaitKeyCodeInput)MemberwiseClone();
-
-            //AwaitKeyCodeInputData newDataInstance = ScriptableObject.CreateInstance<AwaitKeyCodeInputData>();
+            AwaitKeyCodeInput t = go.AddComponent<AwaitKeyCodeInput>();
+            t.CloneBaseValuesFrom(this);
 
             //Hv to do this cause arrays are reference type 
             int length = m_GetkeyDownKeyCodes != null ? m_GetkeyDownKeyCodes.Length : 0;
-            newClone.m_GetkeyDownKeyCodes = new KeyCode[length];
-            m_GetkeyDownKeyCodes?.CopyTo(newClone.m_GetkeyDownKeyCodes, 0);
+            t.m_GetkeyDownKeyCodes = new KeyCode[length];
+            m_GetkeyDownKeyCodes?.CopyTo(t.m_GetkeyDownKeyCodes, 0);
 
             length = m_GetkeyKeyCodes != null ? m_GetkeyKeyCodes.Length : 0;
-            newClone.m_GetkeyKeyCodes = new KeyCode[length];
-            m_GetkeyKeyCodes?.CopyTo(newClone.m_GetkeyKeyCodes, 0);
+            t.m_GetkeyKeyCodes = new KeyCode[length];
+            m_GetkeyKeyCodes?.CopyTo(t.m_GetkeyKeyCodes, 0);
 
-            newClone.bm_NodeBaseData = bm_NodeBaseData;
-            newClone.bm_NodeEffectType =bm_NodeEffectType;
-            newClone.bm_UpdateCycle=  bm_UpdateCycle;
+            t.m_TargetLinearEvent = m_TargetLinearEvent;
 
-            //for (int i = 0; i < newDataInstance.m_GetkeyDownKeyCodes.Length; i++)
-            //    newDataInstance.m_GetkeyDownKeyCodes[i] = m_GetkeyDownKeyCodes[i];
+            return t;
 
-            //for (int i = 0; i < newDataInstance.m_GetkeyKeyCodes.Length; i++)
-            //    newDataInstance.m_GetkeyKeyCodes[i] = m_GetkeyKeyCodes[i];
-
-            //newClone.m_InputData = newDataInstance;
-
-            return newClone;
         }
+
         public void SetUp(LinearEvent t1, SerializedObject t2)
         {
             m_TargetLinearEvent = t1;
@@ -129,7 +154,9 @@ namespace LEM_Effects
             m_GetkeyDownKeyCodes?.CopyTo(data.m_GetkeyDownKeyCodes, 0);
 
             t2 = new SerializedObject(data);
-        } 
+        }
+
+       
 #endif
     }
 

@@ -26,7 +26,15 @@ namespace LEM_Effects
         public void UnPack(out LinearEvent t1)
         {
             t1 = m_TargetLinearEvent;
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LoadNewLinearEvent t = go.AddComponent<LoadNewLinearEvent>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetLinearEvent);
+            return t;
+        }
 #endif
     }
 

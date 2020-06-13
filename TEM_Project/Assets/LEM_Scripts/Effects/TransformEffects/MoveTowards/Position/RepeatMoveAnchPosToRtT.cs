@@ -5,7 +5,7 @@ namespace LEM_Effects
     //This move has no stop. It will keep moving until you use Stop Repeat event
     public class RepeatMoveAnchPosToRtT : UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<RectTransform, RectTransform, float, float> 
+        , IEffectSavable<RectTransform, RectTransform, float, float>
 #endif
     {
         [Tooltip("The RectTransform you want to lerp repeatedly")]
@@ -20,10 +20,11 @@ namespace LEM_Effects
         [Tooltip("This is the distance between the target transform and the target position for the target transform to be considered at the targetposition.")]
         [SerializeField, Range(0.0001f, 1000f)] float m_SnapDistance = 1f;
 
-        [SerializeField,ReadOnly]
+        [SerializeField, ReadOnly]
         Vector3 m_InitialPosition = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
+
 
 
         public override void OnInitialiseEffect()
@@ -35,7 +36,7 @@ namespace LEM_Effects
         public override bool OnUpdateEffect(float delta)
         {
             //meanwhile, move the transform to the target
-            m_TargetRectransform.anchoredPosition3D = Vector3.MoveTowards(m_TargetRectransform.anchoredPosition3D, m_TargetDestination.anchoredPosition3D,delta * m_Speed);
+            m_TargetRectransform.anchoredPosition3D = Vector3.MoveTowards(m_TargetRectransform.anchoredPosition3D, m_TargetDestination.anchoredPosition3D, delta * m_Speed);
 
             //if sqr distance between target transform and targetpos is less than snapping dist^2, 
             if (Vector3.SqrMagnitude(m_TargetDestination.anchoredPosition3D - m_TargetRectransform.anchoredPosition3D) < m_SnapDistance * m_SnapDistance)
@@ -63,7 +64,13 @@ namespace LEM_Effects
             t3 = m_Speed;
             t4 = m_SnapDistance;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatMoveAnchPosToRtT t = go.AddComponent<RepeatMoveAnchPosToRtT>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRectransform, out t.m_TargetDestination, out t.m_Speed, out t.m_SnapDistance);
+            return t;
+        }
 #endif
 
     }

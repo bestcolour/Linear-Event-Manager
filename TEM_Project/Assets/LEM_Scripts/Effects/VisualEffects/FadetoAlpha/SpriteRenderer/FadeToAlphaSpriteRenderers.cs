@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 namespace LEM_Effects
 {
@@ -25,6 +26,8 @@ namespace LEM_Effects
 
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
+
+  
 
         public override void OnInitialiseEffect()
         {
@@ -70,7 +73,15 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR      
+        
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaSpriteRenderers t = go.AddComponent<FadeToAlphaSpriteRenderers>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_SpriteRenderers, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
         public void SetUp(SpriteRenderer[] t1, float t2, float t3)
         {
             m_SpriteRenderers = t1;

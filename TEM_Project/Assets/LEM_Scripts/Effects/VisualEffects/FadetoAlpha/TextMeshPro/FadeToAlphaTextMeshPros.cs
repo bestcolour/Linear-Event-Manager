@@ -5,7 +5,7 @@ namespace LEM_Effects
 
     public class FadeToAlphaTextMeshPros : TimerBasedUpdateEffect
 #if UNITY_EDITOR
-        , IEffectSavable<TextMeshPro[], float, float> 
+        , IEffectSavable<TextMeshPro[], float, float>
 #endif
     {
         //target
@@ -26,6 +26,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+
+
         public override void OnInitialiseEffect()
         {
             m_InitialAlphas = new float[m_TargetTextMeshPros.Length];
@@ -45,7 +47,7 @@ namespace LEM_Effects
         public override bool OnUpdateEffect(float delta)
         {
             m_Timer += delta;
-            delta = m_Timer/m_Duration;
+            delta = m_Timer / m_Duration;
 
             //Lerp all the alphas of the images 
             for (int i = 0; i < m_TargetTextMeshPros.Length; i++)
@@ -80,14 +82,20 @@ namespace LEM_Effects
             m_Duration = t3;
 
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaTextMeshPros t = go.AddComponent<FadeToAlphaTextMeshPros>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTextMeshPros, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
         public void UnPack(out TextMeshPro[] t1, out float t2, out float t3)
         {
             t1 = m_TargetTextMeshPros;
             t2 = m_TargetAlpha;
             t3 = m_Duration;
 
-        } 
+        }
 #endif
 
     }

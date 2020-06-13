@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 namespace LEM_Effects
 {
@@ -130,6 +131,14 @@ namespace LEM_Effects
             t3 = m_PivotTransform;
             t4 = m_WorldRotation;
             t5 = m_Duration;
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            MoveRotationToV3AboutTPivot t = go.AddComponent<MoveRotationToV3AboutTPivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TransformToBeRotated, out t.m_TargetRotation, out t.m_PivotTransform, out t.m_WorldRotation, out t.m_Duration);
+            return t;
         }
 #endif
     }

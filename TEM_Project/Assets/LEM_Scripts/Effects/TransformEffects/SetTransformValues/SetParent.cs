@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
     public class SetParent : LEM_BaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Transform, int> 
+        , IEffectSavable<Transform, Transform, int>
 #endif
     {
         [Tooltip("The transform you want to set as the child transform")]
@@ -16,6 +16,8 @@ namespace LEM_Effects
         [SerializeField, Range(0, 1000)] int m_SiblingIndex = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
+
+
 
         public override void OnInitialiseEffect()
         {
@@ -49,13 +51,19 @@ namespace LEM_Effects
             m_ParentTransform = t2;
             m_SiblingIndex = t3;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            SetParent t = go.AddComponent<SetParent>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_ChildTransform, out t.m_ParentTransform, out t.m_SiblingIndex);
+            return t;
+        }
         public void UnPack(out Transform t1, out Transform t2, out int t3)
         {
             t1 = m_ChildTransform;
             t2 = m_ParentTransform;
             t3 = m_SiblingIndex;
-        } 
+        }
 #endif
-    } 
+    }
 }

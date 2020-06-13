@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
     public class OffsetWidthHeight : LEM_BaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<RectTransform, Vector2> 
+        , IEffectSavable<RectTransform, Vector2>
 #endif
     {
         [Tooltip("The transform/rectransform you want to change")]
@@ -13,6 +13,7 @@ namespace LEM_Effects
         [SerializeField] Vector2 m_OffSetDimensions = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
+
 
         public override void OnInitialiseEffect()
         {
@@ -26,12 +27,19 @@ namespace LEM_Effects
             m_TargetRectTransform = t1;
             m_OffSetDimensions = t2;
         }
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            OffsetWidthHeight t = go.AddComponent<OffsetWidthHeight>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRectTransform, out t.m_OffSetDimensions);
+            return t;
+        }
 
         public void UnPack(out RectTransform t1, out Vector2 t2)
         {
             t1 = m_TargetRectTransform;
             t2 = m_OffSetDimensions;
-        } 
+        }
 #endif
     }
 }

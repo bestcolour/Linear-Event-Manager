@@ -40,7 +40,15 @@ namespace LEM_Effects
             targetPosition = m_TargetPosition;
             targetRotation = m_TargetRotation;
             targetScale = m_TargetScale;
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            InstantiateGameObject t = go.AddComponent<InstantiateGameObject>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetObject, out t.m_NumberOfTimes, out t.m_TargetPosition, out t.m_TargetRotation, out t.m_TargetScale);
+            return t;
+        }
 #endif
 
         public override void OnInitialiseEffect()
@@ -64,6 +72,7 @@ namespace LEM_Effects
 
         }
 
+      
     }
 
 

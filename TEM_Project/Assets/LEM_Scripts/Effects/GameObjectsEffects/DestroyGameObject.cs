@@ -14,6 +14,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+   
+
         public override void OnInitialiseEffect()
         {
             //Destroy the targetted object
@@ -26,7 +28,13 @@ namespace LEM_Effects
         {
             m_TargetObject = targetObject;
         }
-
+     public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            DestroyGameObject t = go.AddComponent<DestroyGameObject>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetObject);
+            return t;
+        }
 
         public void UnPack(out GameObject targetObject)
         {

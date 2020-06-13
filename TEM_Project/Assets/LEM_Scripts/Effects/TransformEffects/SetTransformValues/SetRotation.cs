@@ -4,7 +4,7 @@ namespace LEM_Effects
 
     public class SetRotation : LEM_BaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3, bool> 
+        , IEffectSavable<Transform, Vector3, bool>
 #endif
     {
         [Tooltip("The transform/rectransform you want to set to. Not add rotation to, but set to")]
@@ -17,7 +17,7 @@ namespace LEM_Effects
         [Tooltip("True means to set the rotation relative to the transform's parent. False means to set the rotation relative to the world")]
         [SerializeField] bool m_RelativeToLocal = default;
 
-        public override EffectFunctionType FunctionType =>EffectFunctionType.InstantEffect;
+        public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
 #if UNITY_EDITOR
         public void SetUp(Transform t1, Vector3 t2, bool t3)
@@ -32,7 +32,15 @@ namespace LEM_Effects
             t1 = m_TargetTransform;
             t2 = m_TargetRotation;
             t3 = m_RelativeToLocal;
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            SetRotation t = go.AddComponent<SetRotation>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetRotation, out t.m_RelativeToLocal);
+            return t;
+        }
 #endif
 
         public override void OnInitialiseEffect()
@@ -49,6 +57,6 @@ namespace LEM_Effects
 
         }
 
-       
-    } 
+
+    }
 }

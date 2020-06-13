@@ -20,6 +20,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+      
         public override void OnInitialiseEffect()
         {
             m_SnapRange *= m_SnapRange;
@@ -40,6 +41,15 @@ namespace LEM_Effects
 
         }
 #if UNITY_EDITOR
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LerpScaleToT t = go.AddComponent<LerpScaleToT>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_ReferenceTransform, out t.m_Smoothing, out t.m_SnapRange);
+            return t;
+        }
+
 
         public void SetUp(Transform t1, Transform t2, float t3, float t4)
         {

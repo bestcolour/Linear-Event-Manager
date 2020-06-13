@@ -49,7 +49,7 @@ namespace LEM_Effects.Extensions
             Type objType = obj.GetType();
 
 
-            // Value type
+            // Value type returned as just a value
             if (objType.IsValueType || objType == typeof(string))
             {
                 return obj;
@@ -76,7 +76,7 @@ namespace LEM_Effects.Extensions
                 return Convert.ChangeType(newInstance, obj.GetType());
             }
 
-            // Unity Object
+            // Unity Object which means it will returned as a reference 
             else if (typeof(UnityEngine.Object).IsAssignableFrom(objType))
             {
                 return obj;

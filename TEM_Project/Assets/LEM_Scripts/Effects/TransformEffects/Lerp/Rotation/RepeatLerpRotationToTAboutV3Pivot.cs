@@ -128,6 +128,14 @@ namespace LEM_Effects
             t5 = m_Smoothing;
             t6 = m_SnapRange;
         }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatLerpRotationToTAboutV3Pivot t = go.AddComponent<RepeatLerpRotationToTAboutV3Pivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TransformToBeRotated, out t.m_ReferenceTransform, out t.m_PivotWorldPosition, out t.m_WorldRotation, out t.m_Smoothing, out t.m_SnapRange);
+            return t;
+        }
 #endif
     }
 }

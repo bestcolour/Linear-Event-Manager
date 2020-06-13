@@ -32,6 +32,16 @@ namespace LEM_Effects
             t3 = m_RelativeSpace;
         }
 
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveRateOfChangeRotationX t = go.AddComponent<CurveRateOfChangeRotationX>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetTransform, m_Graph.Clone(), m_RelativeSpace);
+
+            //UnPack(out t.m_TargetTransform, out t.m_Graph, out t.m_RelativeSpace);
+            return t;
+        }
+
         //public override LEM_BaseEffect CreateClone()
         //{
         //    CurveRateOfChangeRotationX copy = ScriptableObject.CreateInstance<CurveRateOfChangeRotationX>();
@@ -66,7 +76,7 @@ namespace LEM_Effects
             return d_UpdateCheck.Invoke();
         }
 
-
+       
     }
 
 }

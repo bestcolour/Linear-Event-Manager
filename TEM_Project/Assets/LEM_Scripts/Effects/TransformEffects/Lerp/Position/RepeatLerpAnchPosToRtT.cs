@@ -5,7 +5,7 @@ namespace LEM_Effects
     //This lerp has no stop. It will keep lerping until you use Stop Repeat event
     public class RepeatLerpAnchPosToRtT : UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<RectTransform, RectTransform, float, float> 
+        , IEffectSavable<RectTransform, RectTransform, float, float>
 #endif
     {
         [Tooltip("The RectTransform you want to lerp repeatedly")]
@@ -24,6 +24,7 @@ namespace LEM_Effects
         [SerializeField, Range(0.0001f, 1000f)] float m_SnapDistance = 1f;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
+
 
 
         public override void OnInitialiseEffect()
@@ -56,7 +57,13 @@ namespace LEM_Effects
             m_Smoothing = t3;
             m_SnapDistance = t4;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatLerpAnchPosToRtT t = go.AddComponent<RepeatLerpAnchPosToRtT>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRectransform, out t.m_TargetDestination, out t.m_Smoothing, out t.m_SnapDistance);
+            return t;
+        }
         public void UnPack(out RectTransform t1, out RectTransform t2, out float t3, out float t4)
         {
             t1 = m_TargetRectransform;

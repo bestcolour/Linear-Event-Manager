@@ -27,6 +27,14 @@ namespace LEM_Effects
             t1 = m_TargetLinearEvent;
         }
 
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LoadRandomLinearEvent t = go.AddComponent<LoadRandomLinearEvent>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetLinearEvent);
+            return t;
+        }
+
 #endif
     }
 

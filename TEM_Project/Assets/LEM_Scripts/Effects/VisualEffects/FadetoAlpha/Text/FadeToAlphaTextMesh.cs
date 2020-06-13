@@ -28,6 +28,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+      
+
         public override void OnInitialiseEffect()
         {
             //Record initial alpha first
@@ -59,7 +61,14 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR  
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaTextMesh t = go.AddComponent<FadeToAlphaTextMesh>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTextMesh, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
         public void SetUp(TextMesh t1, float t2, float t3)
         {
             m_TargetTextMesh = t1;

@@ -4,7 +4,7 @@ namespace LEM_Effects
 {
     public class LerpRotationToV3AboutV3Pivot : UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3, Vector3, bool, float, float> 
+        , IEffectSavable<Transform, Vector3, Vector3, bool, float, float>
 #endif
     {
 
@@ -121,7 +121,15 @@ namespace LEM_Effects
             t4 = m_WorldRotation;
             t5 = m_Smoothing;
             t6 = m_SnapRange;
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LerpRotationToV3AboutV3Pivot t = go.AddComponent<LerpRotationToV3AboutV3Pivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TransformToBeRotated, out t.m_TargetRotation, out t.m_PivotWorldPosition, out t.m_WorldRotation, out t.m_Smoothing, out t.m_SnapRange);
+            return t;
+        }
 #endif
     }
 }

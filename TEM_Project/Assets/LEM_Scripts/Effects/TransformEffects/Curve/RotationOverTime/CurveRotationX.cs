@@ -33,7 +33,14 @@ namespace LEM_Effects
             t2 = m_Graph;
             t3 = m_RelativeToWorld;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveRotationX t = go.AddComponent<CurveRotationX>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetTransform, m_Graph.Clone(), m_RelativeToWorld);
+            //UnPack(out t.m_TargetTransform, out t.m_Graph, out t.m_RelativeToWorld);
+            return t;
+        }
 #endif
         public override void OnInitialiseEffect()
         {
@@ -67,6 +74,7 @@ namespace LEM_Effects
             d_UpdateFunction(delta);
             return d_UpdateCheck.Invoke();
         }
+
 
     }
 

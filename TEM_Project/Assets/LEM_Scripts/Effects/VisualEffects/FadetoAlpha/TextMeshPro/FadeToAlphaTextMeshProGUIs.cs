@@ -56,7 +56,15 @@ namespace LEM_Effects
             t1 = m_TargetTexts;
             t2 = m_TargetAlpha;
             t3 = m_Duration;
-        } 
+        }   
+        
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaTextMeshProGUIs t = go.AddComponent<FadeToAlphaTextMeshProGUIs>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTexts, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
 #endif
 
         public override bool OnUpdateEffect(float delta)
@@ -87,7 +95,7 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-
+    
     }
 
 }

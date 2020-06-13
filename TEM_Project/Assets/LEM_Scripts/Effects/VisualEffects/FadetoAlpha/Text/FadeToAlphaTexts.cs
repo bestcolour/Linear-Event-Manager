@@ -4,7 +4,7 @@ namespace LEM_Effects
 {
     public class FadeToAlphaTexts : TimerBasedUpdateEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Text[], float, float> 
+        , IEffectSavable<Text[], float, float>
 #endif
     {
         //target
@@ -25,6 +25,7 @@ namespace LEM_Effects
 
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
+
 
 
         public override void OnInitialiseEffect()
@@ -87,7 +88,13 @@ namespace LEM_Effects
             t3 = m_Duration;
 
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaTexts t = go.AddComponent<FadeToAlphaTexts>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTexts, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
 #endif
 
 

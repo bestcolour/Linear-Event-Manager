@@ -54,7 +54,15 @@ namespace LEM_Effects
         public void UnPack(out float[] t1)
         {
             t1 = m_Probabilities;
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            BiasedProbabilityOutCome t = go.AddComponent<BiasedProbabilityOutCome>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_Probabilities);
+            return t;
+        }
 #endif
     }
 

@@ -38,7 +38,8 @@ namespace LEM_Editor
         public static LinearEvent CurrentLE { get; private set; } = default;
         public static NodeLEM_Settings Settings { get; private set; } = default;
 
-        //public static GameObject 
+        //Gameobject container which stores all the nodecommandinvoker's data 
+        public static GameObject EditorEffectsContainer { get; private set; } = null;
 
         const string k_EditorPref_LinearEventKey = "linearEventScenePath";
         const string k_EditorPref_SettingsKey = "currentSettings";
@@ -288,8 +289,6 @@ namespace LEM_Editor
 
         #region Initialisation
 
-      
-
         //Form of intialisation from pressing Open Window
         [MenuItem("Window/Lem Node Editor")]
         public static void OpenWindow()
@@ -399,8 +398,11 @@ namespace LEM_Editor
             }
 
             //Create the gameobjects which will store the monobehaviours for the various effects
-
-
+            if (EditorEffectsContainer == null)
+            {
+                EditorEffectsContainer = new GameObject();
+                //EditorEffectsContainer.hideFlags =HideFlags.HideAndDontSave;
+            }
         }
 
         //Form of intialisation from pressing Load Linear Event and that it is the first time/you plan to reopen the node editor

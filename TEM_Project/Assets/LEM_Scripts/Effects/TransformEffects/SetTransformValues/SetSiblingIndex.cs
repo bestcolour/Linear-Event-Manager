@@ -14,6 +14,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+   
+
         public override void OnInitialiseEffect()
         {
             if(m_SiblingIndex == -1)
@@ -46,6 +48,13 @@ namespace LEM_Effects
         {
             t1 = m_ChildTransform;
             t2 = m_SiblingIndex;
+        } 
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            SetSiblingIndex t = go.AddComponent<SetSiblingIndex>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_ChildTransform, out t.m_SiblingIndex);
+            return t;
         }
 #endif
     }

@@ -5,7 +5,7 @@ namespace LEM_Effects
 
     public class MoveScaleToV3AboutTPivot : TimerBasedUpdateEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3, Transform, float> 
+        , IEffectSavable<Transform, Vector3, Transform, float>
 #endif
     {
 
@@ -27,6 +27,7 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
 
+
         public override void OnInitialiseEffect()
         {
             m_Timer = 0f;
@@ -38,7 +39,7 @@ namespace LEM_Effects
         {
             m_Timer += delta;
 
-            m_NewScale = Vector3.Lerp(m_InitialScale, m_TargetScale, m_Timer/m_Duration);
+            m_NewScale = Vector3.Lerp(m_InitialScale, m_TargetScale, m_Timer / m_Duration);
 
             //Translate pivot point to the origin
             Vector3 dir = m_InitialPosition - m_Pivot.position;
@@ -72,7 +73,13 @@ namespace LEM_Effects
             m_Pivot = t3;
             m_Duration = t4;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            MoveScaleToV3AboutTPivot t = go.AddComponent<MoveScaleToV3AboutTPivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetScale, out t.m_Pivot,out t.m_Duration);
+            return t;
+        }
         public void UnPack(out Transform t1, out Vector3 t2, out Transform t3, out float t4)
         {
             t1 = m_TargetTransform;
@@ -80,7 +87,7 @@ namespace LEM_Effects
             t3 = m_Pivot;
             t4 = m_Duration;
 
-        } 
+        }
 #endif
 
         ////m_TargetTransform.localPosition = GetRelativePosition(m_InitialPosition, m_LocalPivotPosition, m_NewScale.Divide(m_InitialScale));

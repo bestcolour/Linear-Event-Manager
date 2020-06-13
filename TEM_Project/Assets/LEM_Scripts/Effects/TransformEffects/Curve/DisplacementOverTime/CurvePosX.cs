@@ -6,7 +6,7 @@ namespace LEM_Effects
 
     public class CurvePosX : SingleCurveBasedUpdateEffect<CurvePosX>
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, AnimationCurve, bool> 
+        , IEffectSavable<Transform, AnimationCurve, bool>
 #endif
     {
         [SerializeField] Transform m_TargetTransform = default;
@@ -42,7 +42,13 @@ namespace LEM_Effects
             t2 = m_Graph;
             t3 = m_RelativeToWorld;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurvePosX t = go.AddComponent<CurvePosX>();
+            t.SetUp(m_TargetTransform, m_Graph.Clone(), m_RelativeToWorld);
+            t.CloneBaseValuesFrom(this);
+            return t;
+        }
 #endif
         public override void OnInitialiseEffect()
         {
@@ -72,6 +78,7 @@ namespace LEM_Effects
             m_TargetTransform.localPosition = framePosition;
             return d_UpdateCheck.Invoke();
         }
+
 
     }
 

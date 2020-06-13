@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
     public class OffsetScale : LEM_BaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3> 
+        , IEffectSavable<Transform, Vector3>
 #endif
     {
         [Tooltip("The transform you want to offset")]
@@ -13,6 +13,8 @@ namespace LEM_Effects
         [SerializeField] Vector3 m_OffsetScale = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
+
+
 
         public override void OnInitialiseEffect()
         {
@@ -27,11 +29,19 @@ namespace LEM_Effects
             m_OffsetScale = t2;
         }
 
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            OffsetScale t = go.AddComponent<OffsetScale>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_OffsetScale);
+            return t;
+        }
+
         public void UnPack(out Transform t1, out Vector3 t2)
         {
             t1 = m_TargetTransform;
             t2 = m_OffsetScale;
-        } 
+        }
 #endif
-    } 
+    }
 }

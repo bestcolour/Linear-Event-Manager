@@ -29,6 +29,14 @@ namespace LEM_Effects
             m_NewText = t2;
         }
 
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            ReWordTextMesh t = go.AddComponent<ReWordTextMesh>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetText, out t.m_NewText);
+            return t;
+        }
+
         public void UnPack(out TextMesh t1, out string t2)
         {
             t1 = m_TargetText;

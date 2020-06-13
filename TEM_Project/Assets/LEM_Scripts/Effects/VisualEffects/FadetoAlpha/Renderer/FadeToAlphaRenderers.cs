@@ -26,6 +26,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+    
 
         public override void OnInitialiseEffect()
         {
@@ -96,6 +97,15 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            FadeToAlphaRenderers t = go.AddComponent<FadeToAlphaRenderers>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRenderers, out t.m_TargetAlpha, out t.m_Duration);
+            return t;
+        }
+
         public void SetUp(Renderer[] t1, float t2, float t3)
         {
             m_TargetRenderers = t1;
