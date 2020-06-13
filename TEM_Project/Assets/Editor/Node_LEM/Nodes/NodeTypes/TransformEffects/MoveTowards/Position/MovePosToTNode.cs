@@ -47,7 +47,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             MovePosToT myEffect = ScriptableObject.CreateInstance<MovePosToT>();
             myEffect.bm_NodeEffectType = EffectTypeName;

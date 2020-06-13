@@ -39,7 +39,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             ReWordTextMeshProGUI myEffect = ScriptableObject.CreateInstance<ReWordTextMeshProGUI>();
             myEffect.bm_NodeEffectType = EffectTypeName;

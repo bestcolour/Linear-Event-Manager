@@ -27,7 +27,7 @@ namespace LEM_Editor
                 if (cutNodes[i].ID_Initial == LEMDictionary.NodeIDs_Initials.k_BaseEffectInital)
                 {
                     baseEff = cutNodes[i] as BaseEffectNode;
-                    listOfEffects.Add(baseEff.CompileToBaseEffect());
+                    listOfEffects.Add(baseEff.CompileToBaseEffect(NodeLEM_Editor.EditorEffectsContainer));
                 }
                 //No worries no start here
                 else

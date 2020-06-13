@@ -46,7 +46,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             StopUpdateEffect myEffect = ScriptableObject.CreateInstance<StopUpdateEffect>();
             myEffect.bm_NodeEffectType = EffectTypeName;

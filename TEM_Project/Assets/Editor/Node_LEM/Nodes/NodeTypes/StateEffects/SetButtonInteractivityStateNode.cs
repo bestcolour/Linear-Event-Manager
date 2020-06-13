@@ -41,7 +41,7 @@
 
 //        }
 
-//        public override LEM_BaseEffect CompileToBaseEffect()
+//        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
 //        {
 //            SetButtonInteractivityState myEffect = ScriptableObject.CreateInstance<SetButtonInteractivityState>();
 //            myEffect.bm_NodeEffectType = EffectTypeName;

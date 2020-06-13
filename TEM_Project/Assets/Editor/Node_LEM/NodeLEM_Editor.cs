@@ -1976,7 +1976,7 @@ namespace LEM_Editor
             //This saves all events regardless of whether they are connected singularly, plurally or disconnected
             for (int i = 0; i < lemEffects.Length; i++)
             {
-                lemEffects[i] = allEffectNodes[i].CompileToBaseEffect();
+                lemEffects[i] = allEffectNodes[i].CompileToBaseEffect(CurrentLE.gameObject);
             }
 
             if (AllGroupRectsInEditorDictionary.Count > 0)
@@ -2124,7 +2124,7 @@ namespace LEM_Editor
         #region Node Related Static Functions
         public static LEM_BaseEffect GetNodeEffectFromID(string nodeID)
         {
-            return AllEffectsNodeInEditor[nodeID].effectNode.CompileToBaseEffect();
+            return AllEffectsNodeInEditor[nodeID].effectNode.CompileToBaseEffect(EditorEffectsContainer);
         }
 
         public static GroupRectNodeBase GetGroupRectDataFromID(string nodeID)

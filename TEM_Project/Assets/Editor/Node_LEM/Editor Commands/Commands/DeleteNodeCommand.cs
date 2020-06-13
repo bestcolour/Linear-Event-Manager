@@ -33,7 +33,7 @@ namespace LEM_Editor
                 switch (idInit)
                 {
                     case LEMDictionary.NodeIDs_Initials.k_BaseEffectInital:
-                        nodesEffects.Add(NodeLEM_Editor.AllEffectsNodeInEditor[deletedNodesID[i]].effectNode.CompileToBaseEffect());
+                        nodesEffects.Add(NodeLEM_Editor.AllEffectsNodeInEditor[deletedNodesID[i]].effectNode.CompileToBaseEffect(NodeLEM_Editor.EditorEffectsContainer));
                         break;
 
                     case LEMDictionary.NodeIDs_Initials.k_GroupRectNodeInitial:

@@ -36,7 +36,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             PauseLinearEvent myEffect = ScriptableObject.CreateInstance<PauseLinearEvent>();
             myEffect.bm_NodeEffectType = EffectTypeName;

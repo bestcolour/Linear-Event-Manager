@@ -47,7 +47,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             InstantiateGameObject effect = ScriptableObject.CreateInstance<InstantiateGameObject>();
             //effect.m_Description = m_LemEffectDescription;

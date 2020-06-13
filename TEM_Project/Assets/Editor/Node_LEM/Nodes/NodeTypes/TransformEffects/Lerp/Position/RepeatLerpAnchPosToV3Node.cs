@@ -42,7 +42,7 @@ namespace LEM_Editor
             LEMStyleLibrary.EndEditorLabelColourChange();
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             RepeatLerpAnchPosToV3 myEffect = ScriptableObject.CreateInstance<RepeatLerpAnchPosToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;

@@ -33,7 +33,7 @@
 
 //        }
 
-//        public override LEM_BaseEffect CompileToBaseEffect()
+//        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
 //        {
 //            AddGlobalDelay myEffect = ScriptableObject.CreateInstance<AddGlobalDelay>();
 //            myEffect.m_NodeEffectType = EffectTypeName;

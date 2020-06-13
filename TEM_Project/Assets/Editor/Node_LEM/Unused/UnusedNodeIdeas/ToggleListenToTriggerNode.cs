@@ -32,7 +32,7 @@
 
 //        }
 
-//        public override LEM_BaseEffect CompileToBaseEffect()
+//        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
 //        {
 //            ToggleListenToTrigger myEffect = ScriptableObject.CreateInstance<ToggleListenToTrigger>();
 //            myEffect.m_NodeEffectType = EffectTypeName;

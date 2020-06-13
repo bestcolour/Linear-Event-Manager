@@ -37,7 +37,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             DestroyGameObject myEffect = ScriptableObject.CreateInstance<DestroyGameObject>();
             myEffect.bm_NodeEffectType = EffectTypeName;

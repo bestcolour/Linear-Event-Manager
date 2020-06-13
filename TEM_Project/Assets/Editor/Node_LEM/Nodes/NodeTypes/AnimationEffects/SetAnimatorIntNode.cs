@@ -44,7 +44,7 @@ namespace LEM_Editor
             LEMStyleLibrary.EndEditorLabelColourChange();
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             SetAnimatorInt myEffect = ScriptableObject.CreateInstance<SetAnimatorInt>();
             myEffect.bm_NodeEffectType = EffectTypeName;

@@ -39,7 +39,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             OffsetScale myEffect = ScriptableObject.CreateInstance<OffsetScale>();
             myEffect.bm_NodeEffectType = EffectTypeName;

@@ -50,7 +50,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             RepeatMoveAnchPosToRtT myEffect = ScriptableObject.CreateInstance<RepeatMoveAnchPosToRtT>();
             myEffect.bm_NodeEffectType = EffectTypeName;

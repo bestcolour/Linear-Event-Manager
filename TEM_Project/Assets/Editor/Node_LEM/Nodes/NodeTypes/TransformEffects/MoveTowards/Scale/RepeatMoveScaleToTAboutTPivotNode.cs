@@ -52,7 +52,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             RepeatMoveScaleToTAboutTPivot myEffect = ScriptableObject.CreateInstance<RepeatMoveScaleToTAboutTPivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;

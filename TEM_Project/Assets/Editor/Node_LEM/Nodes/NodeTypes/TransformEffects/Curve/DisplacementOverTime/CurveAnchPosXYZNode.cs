@@ -47,7 +47,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             CurveAnchPosXYZ myEffect = ScriptableObject.CreateInstance<CurveAnchPosXYZ>();
             myEffect.bm_NodeEffectType = EffectTypeName;

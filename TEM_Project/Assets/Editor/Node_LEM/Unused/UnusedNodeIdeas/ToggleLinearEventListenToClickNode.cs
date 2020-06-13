@@ -34,7 +34,7 @@
 
 //        }
 
-//        public override LEM_BaseEffect CompileToBaseEffect()
+//        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
 //        {
 //            ToggleLinearEventListenToClick myEffect = ScriptableObject.CreateInstance<ToggleLinearEventListenToClick>();
 //            myEffect.m_NodeEffectType = EffectTypeName;

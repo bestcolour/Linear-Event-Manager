@@ -7,7 +7,7 @@ namespace LEM_Editor
     {
         protected override string EffectTypeName => "EqualRandomOutCome";
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             EqualProbabilityOutCome myEffect = ScriptableObject.CreateInstance<EqualProbabilityOutCome>();
             myEffect.bm_NodeEffectType = EffectTypeName;

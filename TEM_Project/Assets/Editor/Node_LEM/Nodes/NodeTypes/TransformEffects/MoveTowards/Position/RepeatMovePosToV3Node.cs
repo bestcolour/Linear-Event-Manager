@@ -48,7 +48,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             RepeatMovePosToV3 myEffect = ScriptableObject.CreateInstance<RepeatMovePosToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;

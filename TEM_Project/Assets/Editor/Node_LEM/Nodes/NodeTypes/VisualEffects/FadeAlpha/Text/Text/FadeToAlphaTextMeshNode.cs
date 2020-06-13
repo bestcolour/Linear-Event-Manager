@@ -45,7 +45,7 @@ namespace LEM_Editor
 
         }
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             FadeToAlphaTextMesh myEffect = ScriptableObject.CreateInstance<FadeToAlphaTextMesh>();
             myEffect.bm_NodeEffectType = EffectTypeName;
