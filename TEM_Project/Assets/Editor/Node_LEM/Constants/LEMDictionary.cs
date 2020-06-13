@@ -587,11 +587,11 @@ namespace LEM_Editor
         #region Fade Alpha
              //Fade Alpha effects fade various classes with the color property
 
-             //Fades the Alpha of image to a target alpha within a given duration
-		     { "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageNode()                                     ,new Color(0.19f ,0.74f,0.67f)) },
+             ////Fades the Alpha of image to a target alpha within a given duration
+		     //{ "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageNode()                                     ,new Color(0.19f ,0.74f,0.67f)) },
 
-             //Fades the Alpha of images to a target alpha within a given duration
-             { "FadeToAlphaImages", new NodeDictionaryDefinition(new FadeToAlphaImagesNode()                                   ,new Color(0.19f ,0.74f,0.67f)) },
+             ////Fades the Alpha of images to a target alpha within a given duration
+             //{ "FadeToAlphaImages", new NodeDictionaryDefinition(new FadeToAlphaImagesNode()                                   ,new Color(0.19f ,0.74f,0.67f)) },
 
              //Fades the Alpha of Renderer to a target alpha within a given duration
              { "FadeToAlphaRenderer", new NodeDictionaryDefinition(new FadeToAlphaRendererNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
@@ -605,11 +605,11 @@ namespace LEM_Editor
              //Fades the Alpha of SpriteRenderers to a target alpha within a given duration
              { "FadeToAlphaSpriteRenderers", new NodeDictionaryDefinition(new FadeToAlphaSpriteRenderersNode()                 ,new Color(0.067f ,0.48f,0.4f)) },
 
-             //Fades the Alpha of Text to a target alpha within a given duration
-             { "FadeToAlphaText", new NodeDictionaryDefinition(new  FadeToAlphaTextNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             ////Fades the Alpha of Text to a target alpha within a given duration
+             //{ "FadeToAlphaText", new NodeDictionaryDefinition(new  FadeToAlphaTextNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
 
-             //Fades the Alpha of Texts to a target alpha within a given duration
-             { "FadeToAlphaTexts", new NodeDictionaryDefinition(new FadeToAlphaTextsNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+             ////Fades the Alpha of Texts to a target alpha within a given duration
+             //{ "FadeToAlphaTexts", new NodeDictionaryDefinition(new FadeToAlphaTextsNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
 
              //Fades the Alpha of TextMesh to a target alpha within a given duration
              { "FadeToAlphaTextMesh", new NodeDictionaryDefinition(new  FadeToAlphaTextMeshNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
@@ -617,17 +617,17 @@ namespace LEM_Editor
              //Fades the Alpha of TextMeshes to a target alpha within a given duration
              { "FadeToAlphaTextMeshes", new NodeDictionaryDefinition(new FadeToAlphaTextMeshesNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
 
-             //Fades the Alpha of TextMeshPro to a target alpha within a given duration
-             { "FadeToAlphaTextMeshPro", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProNode()                         ,new Color(0.13f ,0.38f,0.55f)) },
+             ////Fades the Alpha of TextMeshPro to a target alpha within a given duration
+             //{ "FadeToAlphaTextMeshPro", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProNode()                         ,new Color(0.13f ,0.38f,0.55f)) },
 
-             //Fades the Alpha of TextMeshPros to a target alpha within a given duration
-             { "FadeToAlphaTextMeshPros", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProsNode()                       ,new Color(0.13f ,0.38f,0.55f)) },
+             ////Fades the Alpha of TextMeshPros to a target alpha within a given duration
+             //{ "FadeToAlphaTextMeshPros", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProsNode()                       ,new Color(0.13f ,0.38f,0.55f)) },
 
-             //Fades the Alpha of TextMeshProGUI to a target alpha within a given duration
-             { "FadeToAlphaTextMeshProGUI", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUINode()                   ,new Color(0.11f ,0.31f,0.45f)) },
+             ////Fades the Alpha of TextMeshProGUI to a target alpha within a given duration
+             //{ "FadeToAlphaTextMeshProGUI", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUINode()                   ,new Color(0.11f ,0.31f,0.45f)) },
 
-             //Fades the Alpha of TextMeshProGUIs to a target alpha within a given duration
-             { "FadeToAlphaTextMeshProGUIs", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIsNode()                 ,new Color(0.11f ,0.31f,0.45f)) },
+             ////Fades the Alpha of TextMeshProGUIs to a target alpha within a given duration
+             //{ "FadeToAlphaTextMeshProGUIs", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIsNode()                 ,new Color(0.11f ,0.31f,0.45f)) },
 
 
 
@@ -645,8 +645,8 @@ namespace LEM_Editor
              //Sets the text of a TextMeshPro class to a new text
              { "ReWordTextMeshPro", new NodeDictionaryDefinition(new ReWordTextMeshProNode()               ,new Color(0.13f ,0.38f,0.55f)) },
 
-             //Sets the text of a TextMeshProGUI class to a new text
-             { "ReWordTextMeshProGUI", new NodeDictionaryDefinition(new ReWordTextMeshProGUINode()         ,new Color(0.11f ,0.31f,0.45f)) }, 
+             ////Sets the text of a TextMeshProGUI class to a new text
+             //{ "ReWordTextMeshProGUI", new NodeDictionaryDefinition(new ReWordTextMeshProGUINode()         ,new Color(0.11f ,0.31f,0.45f)) }, 
 	#endregion
 
 

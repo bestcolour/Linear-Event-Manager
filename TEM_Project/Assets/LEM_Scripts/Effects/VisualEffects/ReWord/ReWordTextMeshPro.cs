@@ -6,12 +6,12 @@ namespace LEM_Effects
 
     public class ReWordTextMeshPro : LEM_BaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<TextMeshPro, string>
+        , IEffectSavable<TMP_Text, string>
 #endif
     {
         //target
         [Tooltip("The TextMeshPro you want to reword")]
-        [SerializeField] TextMeshPro m_TargetText = default;
+        [SerializeField] TMP_Text m_TargetText = default;
 
         [Tooltip("The text you want to insert into the target text")]
         [SerializeField] string m_NewText = default;
@@ -27,7 +27,7 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
-        public void SetUp(TextMeshPro t1, string t2)
+        public void SetUp(TMP_Text t1, string t2)
         {
             m_TargetText = t1;
             m_NewText = t2;
@@ -39,7 +39,7 @@ namespace LEM_Effects
             UnPack(out t.m_TargetText, out t.m_NewText);
             return t;
         }
-        public void UnPack(out TextMeshPro t1, out string t2)
+        public void UnPack(out TMP_Text t1, out string t2)
         {
             t1 = m_TargetText;
             t2 = m_NewText;
