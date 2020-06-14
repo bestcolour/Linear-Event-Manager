@@ -1250,7 +1250,6 @@ namespace LEM_Editor
                         else if (e.keyCode == KeyCode.A)
                         {
                             //Only when the focused control is null,
-                            Debug.Log(GUIUtility.keyboardControl);
                             if (GUIUtility.keyboardControl == 0)
                             {
                                 SelectAllNodes();

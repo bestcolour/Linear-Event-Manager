@@ -587,6 +587,12 @@ namespace LEM_Editor
         #region Fade Alpha
              //Fade Alpha effects fade various classes with the color property
 
+             //Fades Alpha of the Graphic (Image, Text , TextMeshPro, TextMeshProGUI or anything that inherits from Graphic class) to a target alpha within a given duration
+             { "FadeToAlphaGraphic", new NodeDictionaryDefinition(new FadeToAlphaGraphicNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
+
+             //Fades Alpha of the Graphics (Image, Text , TextMeshPro, TextMeshProGUI or anything that inherits from Graphic class) to a target alpha within a given duration
+             { "FadeToAlphaGraphics", new NodeDictionaryDefinition(new FadeToAlphaGraphicsNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
+
              ////Fades the Alpha of image to a target alpha within a given duration
 		     //{ "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageNode()                                     ,new Color(0.19f ,0.74f,0.67f)) },
 
@@ -639,10 +645,10 @@ namespace LEM_Editor
              //Sets the text of a Text class to a new text
              { "ReWordText", new NodeDictionaryDefinition(new ReWordTextNode()                             ,new Color(0.16f ,0.45f,0.65f)) },
 
-              //Sets the text of a Text class to a new text
+              //Sets the text of a TextMesh class to a new text
              { "ReWordTextMesh", new NodeDictionaryDefinition(new ReWordTextMeshNode()                             ,new Color(0.16f ,0.45f,0.65f)) },
 
-             //Sets the text of a TextMeshPro class to a new text
+             //Sets the text of a TextMeshPro, TextMeshProGUI or any class that inherits from TMP_Text class to a new text
              { "ReWordTextMeshPro", new NodeDictionaryDefinition(new ReWordTextMeshProNode()               ,new Color(0.13f ,0.38f,0.55f)) },
 
              ////Sets the text of a TextMeshProGUI class to a new text
