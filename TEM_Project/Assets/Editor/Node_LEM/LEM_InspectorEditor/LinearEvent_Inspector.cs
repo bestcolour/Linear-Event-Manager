@@ -10,7 +10,7 @@ namespace LEM_Editor
     //This is a script for the tutorial events manager's inspector editor 
     [CanEditMultipleObjects]
     [CustomEditor(typeof(LinearEvent))]
-    public class LE_InspectorEditor : Editor
+    public class LinearEvent_Inspector : Editor
     {
         //Declare measurements
         float m_LineHeightSpace = EditorGUIUtility.singleLineHeight * 1.5f;

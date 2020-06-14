@@ -11,7 +11,7 @@ namespace LEM_Effects
 
     [
 #if UNITY_EDITOR
-        CanEditMultipleObjects,ExecuteInEditMode,
+        CanEditMultipleObjects, ExecuteInEditMode,
 #endif
         System.Serializable]
     public class LinearEvent : MonoBehaviour
@@ -27,7 +27,7 @@ namespace LEM_Effects
 
         public void ClearAllEffects()
         {
-            if (m_AllEffects == null)
+            if (m_AllEffects == null || m_AllEffects.Length == 0)
                 return;
 
             for (int i = 0; i < m_AllEffects.Length; i++)
@@ -35,11 +35,22 @@ namespace LEM_Effects
                 Object.DestroyImmediate(m_AllEffects[i]);
             }
             m_AllEffects = null;
+            EditorUtility.SetDirty(this);
         }
 
         private void OnEnable()
         {
-            if (m_AllEffects == null)
+            Selection.selectionChanged += HideComponents;
+        }
+
+        private void OnDisable()
+        {
+            Selection.selectionChanged -= HideComponents;
+        }
+
+        void HideComponents()
+        {
+            if (m_AllEffects == null || m_AllEffects.Length == 0)
                 return;
 
             if (m_AllEffects[0].hideFlags == HideFlags.HideInInspector)

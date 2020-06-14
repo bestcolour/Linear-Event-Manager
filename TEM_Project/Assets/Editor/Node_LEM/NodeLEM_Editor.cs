@@ -2018,7 +2018,7 @@ namespace LEM_Editor
             if (Settings.m_SaveSceneTogether)
                 EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
 
-            //EditorUtility.SetDirty(CurrentLE);
+            EditorUtility.SetDirty(CurrentLE);
             //EditorSceneManager.MarkSceneDirty(CurrentLE.gameObject.scene);
 
             Debug.Log("Saved Linear Event File " + CurrentLE.name, CurrentLE);
