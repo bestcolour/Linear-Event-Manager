@@ -45,7 +45,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            SetPosition myEffect = ScriptableObject.CreateInstance<SetPosition>();
+            SetPosition myEffect = go.AddComponent<SetPosition>();
+            //SetPosition myEffect = ScriptableObject.CreateInstance<SetPosition>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;

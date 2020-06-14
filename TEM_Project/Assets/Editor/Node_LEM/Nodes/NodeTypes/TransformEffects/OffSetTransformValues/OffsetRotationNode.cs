@@ -44,7 +44,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            OffsetRotation myEffect = ScriptableObject.CreateInstance<OffsetRotation>();
+            OffsetRotation myEffect = go.AddComponent<OffsetRotation>();
+            //OffsetRotation myEffect = ScriptableObject.CreateInstance<OffsetRotation>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;

@@ -48,7 +48,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            FadeToAlphaSpriteRenderer myEffect = ScriptableObject.CreateInstance<FadeToAlphaSpriteRenderer>();
+            FadeToAlphaSpriteRenderer myEffect =go.AddComponent<FadeToAlphaSpriteRenderer>();
+            //FadeToAlphaSpriteRenderer myEffect = ScriptableObject.CreateInstance<FadeToAlphaSpriteRenderer>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

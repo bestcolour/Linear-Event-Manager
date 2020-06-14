@@ -49,7 +49,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            TranslateRelativeToTransform myEffect = ScriptableObject.CreateInstance<TranslateRelativeToTransform>();
+            TranslateRelativeToTransform myEffect = go.AddComponent<TranslateRelativeToTransform>();
+            //TranslateRelativeToTransform myEffect = ScriptableObject.CreateInstance<TranslateRelativeToTransform>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

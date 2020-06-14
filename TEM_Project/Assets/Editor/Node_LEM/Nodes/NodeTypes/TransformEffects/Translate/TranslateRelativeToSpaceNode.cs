@@ -49,7 +49,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            TranslateRelativeToSpace myEffect = ScriptableObject.CreateInstance<TranslateRelativeToSpace>();
+            TranslateRelativeToSpace myEffect = go.AddComponent<TranslateRelativeToSpace>();
+            //TranslateRelativeToSpace myEffect = ScriptableObject.CreateInstance<TranslateRelativeToSpace>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

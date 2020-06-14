@@ -54,7 +54,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            RepeatMoveRotationToTAboutTPivot myEffect = ScriptableObject.CreateInstance<RepeatMoveRotationToTAboutTPivot>();
+            RepeatMoveRotationToTAboutTPivot myEffect = go.AddComponent<RepeatMoveRotationToTAboutTPivot>();
+            //RepeatMoveRotationToTAboutTPivot myEffect = ScriptableObject.CreateInstance<RepeatMoveRotationToTAboutTPivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

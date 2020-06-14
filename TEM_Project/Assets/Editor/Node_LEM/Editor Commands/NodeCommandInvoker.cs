@@ -174,7 +174,7 @@ namespace LEM_Editor
             //Clear the next counter so that redo or undo wont overshoot as null will act as a stopper
             //thus in actual fact when i put 100 max action size, only 99 of them will be actual actions
             Counter++;
-            m_CommandHistory[Counter].OnClear();
+            m_CommandHistory[Counter]?.OnClear();
             m_CommandHistory[Counter] = null;
 
             d_OnCommand?.Invoke();

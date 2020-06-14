@@ -35,7 +35,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            LoadNewLinearEvent myEffect = ScriptableObject.CreateInstance<LoadNewLinearEvent>();
+            LoadNewLinearEvent myEffect = go.AddComponent<LoadNewLinearEvent>();
+            //LoadNewLinearEvent myEffect = ScriptableObject.CreateInstance<LoadNewLinearEvent>();
             myEffect.bm_NodeEffectType = EffectTypeName;
             //myEffect.m_Description = m_LemEffectDescription;
             myEffect.bm_UpdateCycle = m_UpdateCycle;

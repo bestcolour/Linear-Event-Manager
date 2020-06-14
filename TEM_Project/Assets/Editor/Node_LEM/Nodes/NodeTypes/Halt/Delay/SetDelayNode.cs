@@ -35,7 +35,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            SetDelayAt myEffect = ScriptableObject.CreateInstance<SetDelayAt>();
+            SetDelayAt myEffect = go.AddComponent<SetDelayAt>();
+            //SetDelayAt myEffect = ScriptableObject.CreateInstance<SetDelayAt>();
             myEffect.bm_NodeEffectType = EffectTypeName;
             //myEffect.m_Description = m_LemEffectDescription;
             myEffect.bm_UpdateCycle = m_UpdateCycle;

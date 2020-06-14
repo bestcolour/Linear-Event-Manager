@@ -70,7 +70,8 @@ namespace LEM_Editor
         }
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            AwaitAxisInput myEffect = ScriptableObject.CreateInstance<AwaitAxisInput>();
+            AwaitAxisInput myEffect = go.AddComponent<AwaitAxisInput>();
+            //AwaitAxisInput myEffect = ScriptableObject.CreateInstance<AwaitAxisInput>();
             myEffect.bm_NodeEffectType = EffectTypeName;
             //myEffect.m_Description = m_LemEffectDescription;
             myEffect.bm_UpdateCycle = m_UpdateCycle;

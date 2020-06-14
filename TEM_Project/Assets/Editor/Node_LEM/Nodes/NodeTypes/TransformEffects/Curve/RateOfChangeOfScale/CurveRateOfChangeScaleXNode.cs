@@ -37,7 +37,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            CurveRateOfChangeScaleX myEffect = ScriptableObject.CreateInstance<CurveRateOfChangeScaleX>();
+            CurveRateOfChangeScaleX myEffect = go.AddComponent<CurveRateOfChangeScaleX>();
+            //CurveRateOfChangeScaleX myEffect = ScriptableObject.CreateInstance<CurveRateOfChangeScaleX>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

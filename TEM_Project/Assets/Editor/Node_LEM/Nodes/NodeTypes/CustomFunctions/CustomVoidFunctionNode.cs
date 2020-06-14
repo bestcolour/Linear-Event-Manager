@@ -52,7 +52,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            CustomVoidFunction eff = ScriptableObject.CreateInstance<CustomVoidFunction>();
+            CustomVoidFunction eff =go.AddComponent<CustomVoidFunction>();
+            //CustomVoidFunction eff = ScriptableObject.CreateInstance<CustomVoidFunction>();
 
             eff.bm_NodeEffectType = EffectTypeName;
 

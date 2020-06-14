@@ -66,7 +66,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            AwaitKeyCodeInput myEffect = ScriptableObject.CreateInstance<AwaitKeyCodeInput>();
+            AwaitKeyCodeInput myEffect = go.AddComponent<AwaitKeyCodeInput>();
+            //AwaitKeyCodeInput myEffect = ScriptableObject.CreateInstance<AwaitKeyCodeInput>();
             myEffect.bm_NodeEffectType = EffectTypeName;
            //myEffect.m_Description = m_LemEffectDescription;
             myEffect.bm_UpdateCycle = m_UpdateCycle;

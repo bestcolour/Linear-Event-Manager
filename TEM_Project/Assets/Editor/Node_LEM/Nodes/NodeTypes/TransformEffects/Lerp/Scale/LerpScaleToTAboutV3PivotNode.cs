@@ -60,7 +60,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            LerpScaleToTAboutV3Pivot myEffect = ScriptableObject.CreateInstance<LerpScaleToTAboutV3Pivot>();
+            LerpScaleToTAboutV3Pivot myEffect = go.AddComponent<LerpScaleToTAboutV3Pivot>();
+            //LerpScaleToTAboutV3Pivot myEffect = ScriptableObject.CreateInstance<LerpScaleToTAboutV3Pivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

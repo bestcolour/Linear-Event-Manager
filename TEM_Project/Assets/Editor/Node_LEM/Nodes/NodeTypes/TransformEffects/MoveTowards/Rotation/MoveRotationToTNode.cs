@@ -49,7 +49,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            MoveRotationToT myEffect = ScriptableObject.CreateInstance<MoveRotationToT>();
+            MoveRotationToT myEffect = go.AddComponent<MoveRotationToT>();
+            //MoveRotationToT myEffect = ScriptableObject.CreateInstance<MoveRotationToT>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

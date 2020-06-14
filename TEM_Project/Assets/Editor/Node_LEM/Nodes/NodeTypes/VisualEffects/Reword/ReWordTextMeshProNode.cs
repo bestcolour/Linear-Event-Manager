@@ -8,7 +8,7 @@ namespace LEM_Editor
 
     public class ReWordTextMeshProNode : InstantEffectNode
     {
-        TextMeshPro m_TargetText = default;
+        TMP_Text m_TargetText = default;
 
         string m_NewString = default;
 
@@ -41,7 +41,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            ReWordTextMeshPro myEffect = ScriptableObject.CreateInstance<ReWordTextMeshPro>();
+            ReWordTextMeshPro myEffect = go.AddComponent<ReWordTextMeshPro>();
+            //ReWordTextMeshPro myEffect = ScriptableObject.CreateInstance<ReWordTextMeshPro>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

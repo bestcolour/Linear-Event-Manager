@@ -85,7 +85,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            LoadBiasedLinearEvent myEffect = ScriptableObject.CreateInstance<LoadBiasedLinearEvent>();
+            LoadBiasedLinearEvent myEffect = go.AddComponent<LoadBiasedLinearEvent>();
+            //LoadBiasedLinearEvent myEffect = ScriptableObject.CreateInstance<LoadBiasedLinearEvent>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

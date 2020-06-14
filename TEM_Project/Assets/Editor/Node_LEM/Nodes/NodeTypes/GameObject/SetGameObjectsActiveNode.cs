@@ -49,7 +49,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            SetGameObjectsActive eff = ScriptableObject.CreateInstance<SetGameObjectsActive>();
+            SetGameObjectsActive eff = go.AddComponent<SetGameObjectsActive>();
+            //SetGameObjectsActive eff = ScriptableObject.CreateInstance<SetGameObjectsActive>();
 
           //  eff.m_Description = m_LemEffectDescription;
             eff.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, TryToSaveNextPointNodeID());

@@ -50,7 +50,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            RepeatMoveScaleToV3 myEffect = ScriptableObject.CreateInstance<RepeatMoveScaleToV3>();
+            RepeatMoveScaleToV3 myEffect = go.AddComponent<RepeatMoveScaleToV3>();
+            //RepeatMoveScaleToV3 myEffect = ScriptableObject.CreateInstance<RepeatMoveScaleToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

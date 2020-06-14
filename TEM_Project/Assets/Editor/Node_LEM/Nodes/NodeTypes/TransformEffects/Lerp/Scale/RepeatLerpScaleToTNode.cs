@@ -54,7 +54,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            RepeatLerpScaleToT myEffect = ScriptableObject.CreateInstance<RepeatLerpScaleToT>();
+            RepeatLerpScaleToT myEffect = go.AddComponent<RepeatLerpScaleToT>();
+            //RepeatLerpScaleToT myEffect = ScriptableObject.CreateInstance<RepeatLerpScaleToT>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

@@ -277,6 +277,115 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &887989263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 887989265}
+  - component: {fileID: 887989264}
+  - component: {fileID: 887989266}
+  - component: {fileID: 887989267}
+  m_Layer: 0
+  m_Name: New Game Object
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &887989264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887989263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d45cac53c941ce2419cf926776fb500b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: AddDelay
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 203, y: 164}
+    m_NodeID: BEN_7ac91b2d-b410-4834-9ed3-0eefadf26469
+    m_NextPointsIDs: []
+  m_DelayTime: 0
+  m_TargetLinearEvent: {fileID: 1059183238}
+--- !u!4 &887989265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887989263}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &887989266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887989263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9ab9bed02919042943f8038cd65246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: CurveRateOfChangeRotationY
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 432, y: 161}
+    m_NodeID: BEN_8e0dd46c-3f40-4bb1-a2cd-308037edf127
+    m_NextPointsIDs: []
+  m_Timer: 0
+  m_Graph:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_Duration: 0
+  m_TargetTransform: {fileID: 0}
+  m_RelativeSpace: 0
+--- !u!114 &887989267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887989263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9ab9bed02919042943f8038cd65246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: CurveRateOfChangeRotationY
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 945.00037, y: 391.50015}
+    m_NodeID: BEN_c2afaf2d-cca8-4f2f-a786-9bd5db14e36f
+    m_NextPointsIDs: []
+  m_Timer: 0
+  m_Graph:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_Duration: 0
+  m_TargetTransform: {fileID: 0}
+  m_RelativeSpace: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,6 +479,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1059183237}
   - component: {fileID: 1059183238}
+  - component: {fileID: 1059183239}
+  - component: {fileID: 1059183241}
+  - component: {fileID: 1059183240}
+  - component: {fileID: 1059183244}
+  - component: {fileID: 1059183243}
+  - component: {fileID: 1059183242}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -404,54 +519,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllEffects:
-  - {fileID: 1378663024}
+  - {fileID: 1059183244}
+  - {fileID: 1059183243}
+  - {fileID: 1059183242}
   m_AllGroupRectNodes: []
   m_StartNodeData:
-    m_Position: {x: 338.5, y: 50}
-    m_NodeID: SN_8ab254cd-d59d-4e7a-a1c9-f2cdde2af4be
+    m_Position: {x: 347, y: 220.00003}
+    m_NodeID: SN_e52986b3-2528-4e84-a38e-2caa6acac2a4
     m_NextPointsIDs: []
   m_LinearEventIndex: -1
   m_PreviousEffectPlayed: {fileID: 0}
   m_UpdateCycle: []
   m_FixedUpdateCycle: []
   m_LateUpdateCycle: []
---- !u!1 &1327142948
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1327142949}
-  m_Layer: 0
-  m_Name: New Game Object
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1327142949
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1327142948}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1378663024
+--- !u!114 &1059183239
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1059183236}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d45cac53c941ce2419cf926776fb500b, type: 3}
@@ -460,8 +547,132 @@ MonoBehaviour:
   bm_NodeEffectType: AddDelay
   bm_UpdateCycle: 0
   bm_NodeBaseData:
-    m_Position: {x: 282.49976, y: 203.99988}
-    m_NodeID: BEN_6aa87e85-2516-4983-9d93-a7fa940fe96f
+    m_Position: {x: 123, y: 183}
+    m_NodeID: BEN_7ac91b2d-b410-4834-9ed3-0eefadf26469
+    m_NextPointsIDs: []
+  m_DelayTime: 0
+  m_TargetLinearEvent: {fileID: 1059183238}
+--- !u!114 &1059183240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059183236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9ab9bed02919042943f8038cd65246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: CurveRateOfChangeRotationY
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 432, y: 161}
+    m_NodeID: BEN_8e0dd46c-3f40-4bb1-a2cd-308037edf127
+    m_NextPointsIDs: []
+  m_Timer: 0
+  m_Graph:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_Duration: 0
+  m_TargetTransform: {fileID: 0}
+  m_RelativeSpace: 0
+--- !u!114 &1059183241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059183236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d45cac53c941ce2419cf926776fb500b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: AddDelay
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 123, y: 183}
+    m_NodeID: BEN_7ac91b2d-b410-4834-9ed3-0eefadf26469
+    m_NextPointsIDs: []
+  m_DelayTime: 0
+  m_TargetLinearEvent: {fileID: 1059183238}
+--- !u!114 &1059183242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059183236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9ab9bed02919042943f8038cd65246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: CurveRateOfChangeRotationY
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 892.50037, y: 391.50015}
+    m_NodeID: BEN_c2afaf2d-cca8-4f2f-a786-9bd5db14e36f
+    m_NextPointsIDs: []
+  m_Timer: 0
+  m_Graph:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_Duration: 0
+  m_TargetTransform: {fileID: 0}
+  m_RelativeSpace: 0
+--- !u!114 &1059183243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059183236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9ab9bed02919042943f8038cd65246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: CurveRateOfChangeRotationY
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 397, y: 331.00003}
+    m_NodeID: BEN_8e0dd46c-3f40-4bb1-a2cd-308037edf127
+    m_NextPointsIDs: []
+  m_Timer: 0
+  m_Graph:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_Duration: 0
+  m_TargetTransform: {fileID: 0}
+  m_RelativeSpace: 0
+--- !u!114 &1059183244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059183236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d45cac53c941ce2419cf926776fb500b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: AddDelay
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 88, y: 353.00003}
+    m_NodeID: BEN_7ac91b2d-b410-4834-9ed3-0eefadf26469
     m_NextPointsIDs: []
   m_DelayTime: 0
   m_TargetLinearEvent: {fileID: 1059183238}

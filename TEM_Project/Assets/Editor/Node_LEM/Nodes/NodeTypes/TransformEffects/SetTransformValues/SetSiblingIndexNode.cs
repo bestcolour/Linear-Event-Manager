@@ -41,7 +41,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            SetSiblingIndex myEffect = ScriptableObject.CreateInstance<SetSiblingIndex>();
+            SetSiblingIndex myEffect = go.AddComponent<SetSiblingIndex>();
+            //SetSiblingIndex myEffect = ScriptableObject.CreateInstance<SetSiblingIndex>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

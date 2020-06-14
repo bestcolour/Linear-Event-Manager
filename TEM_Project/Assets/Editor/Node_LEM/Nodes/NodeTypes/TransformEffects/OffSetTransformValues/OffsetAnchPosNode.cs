@@ -42,7 +42,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            OffsetAnchPos myEffect = ScriptableObject.CreateInstance<OffsetAnchPos>();
+            OffsetAnchPos myEffect = go.AddComponent<OffsetAnchPos>();
+            //OffsetAnchPos myEffect = ScriptableObject.CreateInstance<OffsetAnchPos>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

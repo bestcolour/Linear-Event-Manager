@@ -43,7 +43,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            CurvePosY myEffect = ScriptableObject.CreateInstance<CurvePosY>();
+            CurvePosY myEffect = go.AddComponent<CurvePosY>();
+            //CurvePosY myEffect = ScriptableObject.CreateInstance<CurvePosY>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

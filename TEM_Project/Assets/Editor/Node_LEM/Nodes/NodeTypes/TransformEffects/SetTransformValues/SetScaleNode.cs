@@ -42,7 +42,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            SetScale myEffect = ScriptableObject.CreateInstance<SetScale>();
+            SetScale myEffect =go.AddComponent<SetScale>();
+            //SetScale myEffect = ScriptableObject.CreateInstance<SetScale>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;

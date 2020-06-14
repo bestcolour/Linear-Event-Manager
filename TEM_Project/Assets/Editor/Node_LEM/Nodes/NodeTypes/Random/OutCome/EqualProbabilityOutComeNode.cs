@@ -9,7 +9,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            EqualProbabilityOutCome myEffect = ScriptableObject.CreateInstance<EqualProbabilityOutCome>();
+            EqualProbabilityOutCome myEffect = go.AddComponent<EqualProbabilityOutCome>();
+            //EqualProbabilityOutCome myEffect = ScriptableObject.CreateInstance<EqualProbabilityOutCome>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;

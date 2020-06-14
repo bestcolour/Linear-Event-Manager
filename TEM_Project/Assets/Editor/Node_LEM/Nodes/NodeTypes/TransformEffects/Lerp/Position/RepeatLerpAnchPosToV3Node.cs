@@ -44,7 +44,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            RepeatLerpAnchPosToV3 myEffect = ScriptableObject.CreateInstance<RepeatLerpAnchPosToV3>();
+            RepeatLerpAnchPosToV3 myEffect = go.AddComponent<RepeatLerpAnchPosToV3>();
+            //RepeatLerpAnchPosToV3 myEffect = ScriptableObject.CreateInstance<RepeatLerpAnchPosToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

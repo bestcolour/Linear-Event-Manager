@@ -51,7 +51,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            LEM_Effects.MoveAnchPosToRtT myEffect = ScriptableObject.CreateInstance<LEM_Effects.MoveAnchPosToRtT>();
+            MoveAnchPosToRtT myEffect = go.AddComponent<MoveAnchPosToRtT>();
+            //MoveAnchPosToRtT myEffect = ScriptableObject.CreateInstance<MoveAnchPosToRtT>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;
@@ -68,7 +69,7 @@ namespace LEM_Editor
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
-            LEM_Effects.MoveAnchPosToRtT loadFrom = effectToLoadFrom as LEM_Effects.MoveAnchPosToRtT;
+            MoveAnchPosToRtT loadFrom = effectToLoadFrom as MoveAnchPosToRtT;
             loadFrom.UnPack(out m_TargetRectransform, out m_TargetPosition, out m_Speed, out m_SnapDistance);
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;

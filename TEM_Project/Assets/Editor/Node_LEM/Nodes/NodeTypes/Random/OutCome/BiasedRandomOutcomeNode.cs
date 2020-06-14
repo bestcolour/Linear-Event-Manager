@@ -183,7 +183,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            BiasedProbabilityOutCome myEffect = ScriptableObject.CreateInstance<BiasedProbabilityOutCome>();
+            BiasedProbabilityOutCome myEffect =go.AddComponent<BiasedProbabilityOutCome>();
+            //BiasedProbabilityOutCome myEffect = ScriptableObject.CreateInstance<BiasedProbabilityOutCome>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

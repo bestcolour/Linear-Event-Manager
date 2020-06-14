@@ -56,7 +56,8 @@ namespace LEM_Editor
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
             
-            LerpRotationToV3AboutTPivot myEffect = ScriptableObject.CreateInstance<LerpRotationToV3AboutTPivot>();
+            LerpRotationToV3AboutTPivot myEffect = go.AddComponent<LerpRotationToV3AboutTPivot>();
+            //LerpRotationToV3AboutTPivot myEffect = ScriptableObject.CreateInstance<LerpRotationToV3AboutTPivot>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

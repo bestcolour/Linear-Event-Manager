@@ -43,7 +43,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            ReWordTextMesh myEffect = ScriptableObject.CreateInstance<ReWordTextMesh>();
+            ReWordTextMesh myEffect = go.AddComponent<ReWordTextMesh>();
+            //ReWordTextMesh myEffect = ScriptableObject.CreateInstance<ReWordTextMesh>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

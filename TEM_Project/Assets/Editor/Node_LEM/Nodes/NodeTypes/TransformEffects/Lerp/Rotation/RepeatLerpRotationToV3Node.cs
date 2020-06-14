@@ -52,7 +52,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            RepeatLerpRotationToV3 myEffect = ScriptableObject.CreateInstance<RepeatLerpRotationToV3>();
+            RepeatLerpRotationToV3 myEffect = go.AddComponent<RepeatLerpRotationToV3>();
+            //RepeatLerpRotationToV3 myEffect = ScriptableObject.CreateInstance<RepeatLerpRotationToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

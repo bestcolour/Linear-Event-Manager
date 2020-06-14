@@ -47,7 +47,8 @@ namespace LEM_Editor
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            MoveAnchPosToV3 myEffect = ScriptableObject.CreateInstance<MoveAnchPosToV3>();
+            MoveAnchPosToV3 myEffect = go.AddComponent<MoveAnchPosToV3>();
+            //MoveAnchPosToV3 myEffect = ScriptableObject.CreateInstance<MoveAnchPosToV3>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
            //myEffect.m_Description = m_LemEffectDescription;
