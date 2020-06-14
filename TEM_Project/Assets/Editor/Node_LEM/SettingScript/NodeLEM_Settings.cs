@@ -21,8 +21,8 @@ namespace LEM_Editor
         public SaveSettings m_SaveSettings = SaveSettings.DontSave;
         //public bool m_AutoSave = true;
 
-        [Tooltip("Hide saved effects on the Linear Event?")]
-        public bool m_ShowMonoBehaviours = false;
+        //[Tooltip("Hide saved effects on the Linear Event?")]
+        //public bool m_ShowMonoBehaviours = false;
 
         [Tooltip("Save scene when saving LinearEvent")]
         public bool m_SaveSceneTogether = true;

@@ -404,7 +404,7 @@ namespace LEM_Editor
             {
                 EditorEffectsContainer = new GameObject();
                 EditorEffectsContainer.name = "EditorEffectsContainer";
-                EditorEffectsContainer.hideFlags =HideFlags.HideAndDontSave;
+                EditorEffectsContainer.hideFlags = HideFlags.HideAndDontSave;
             }
         }
 
@@ -566,7 +566,7 @@ namespace LEM_Editor
         void OnDestroy()
         {
             TryToSaveLinearEvent();
-             
+
             //Unsubscribe b4 closing window
             AssemblyReloadEvents.beforeAssemblyReload -= SaveToLinearEvent;
             AssemblyReloadEvents.beforeAssemblyReload -= DeleteEditorContainer;
@@ -1975,7 +1975,6 @@ namespace LEM_Editor
                     break;
 
             }
-
         }
 
         //To be called when player presses "Save button" or when assembly reloads every time a script changes (when play mode is entered this will get called also but it doesnt save the values to the LE)
@@ -1991,14 +1990,14 @@ namespace LEM_Editor
             BaseEffectNode[] allEffectNodes = AllEffectsNodeInEditor.Values.Select(x => x.effectNode).ToArray();
 
             CurrentLE.ClearAllEffects();
-
-            HideFlags hideOrNot = Settings.m_ShowMonoBehaviours? HideFlags.NotEditable : HideFlags.HideInInspector;
+            //HideFlags flag = CurrentLE.FlagToFollow = Settings.m_ShowMonoBehaviours ? HideFlags.None : HideFlags.HideInInspector;
+            //HideFlags hideOrNot = Settings.m_ShowMonoBehaviours? HideFlags.NotEditable : HideFlags.HideInInspector;
 
             //This saves all events regardless of whether they are connected singularly, plurally or disconnected
             for (int i = 0; i < lemEffects.Length; i++)
             {
                 lemEffects[i] = allEffectNodes[i].CompileToBaseEffect(CurrentLE.gameObject);
-                lemEffects[i].hideFlags = hideOrNot;
+                lemEffects[i].hideFlags = HideFlags.HideInInspector;
             }
 
             if (AllGroupRectsInEditorDictionary.Count > 0)
