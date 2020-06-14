@@ -41,6 +41,7 @@ namespace LEM_Editor
         //Gameobject container which stores all the nodecommandinvoker's data 
         public static GameObject EditorEffectsContainer { get; private set; } = null;
 
+        //const string k_EditorPref_EditorEffectsContainerKey = "effectsContainerPath";
         const string k_EditorPref_LinearEventKey = "linearEventScenePath";
         const string k_EditorPref_SettingsKey = "currentSettings";
         const string k_DefaultSettingsFolderAssetPath = "Assets/Editor/Node_LEM/Settings";
@@ -316,6 +317,7 @@ namespace LEM_Editor
             //Well regardless of it being empty or not, ensure that node editor saves before reloading assembly
             //AssemblyReloadEvents.beforeAssemblyReload += SaveToLinearEvent;
             AssemblyReloadEvents.beforeAssemblyReload += SaveToLinearEvent;
+            AssemblyReloadEvents.beforeAssemblyReload += DeleteEditorContainer;
 
             //Due to beforeAssemblyReload being called when player enters play mode but doesnt save values, this needs to be added
             EditorApplication.playModeStateChanged += SaveBeforeEnterPlayMode;
@@ -401,7 +403,8 @@ namespace LEM_Editor
             if (EditorEffectsContainer == null)
             {
                 EditorEffectsContainer = new GameObject();
-                //EditorEffectsContainer.hideFlags =HideFlags.HideAndDontSave;
+                EditorEffectsContainer.name = "EditorEffectsContainer";
+                EditorEffectsContainer.hideFlags =HideFlags.HideAndDontSave;
             }
         }
 
@@ -563,9 +566,11 @@ namespace LEM_Editor
         void OnDestroy()
         {
             TryToSaveLinearEvent();
-
+             
             //Unsubscribe b4 closing window
             AssemblyReloadEvents.beforeAssemblyReload -= SaveToLinearEvent;
+            AssemblyReloadEvents.beforeAssemblyReload -= DeleteEditorContainer;
+
             EditorApplication.playModeStateChanged -= SaveBeforeEnterPlayMode;
             EditorApplication.playModeStateChanged -= LoadAfterExitingPlayMode;
             EditorApplication.quitting -= TryToSaveLinearEvent;
@@ -575,6 +580,7 @@ namespace LEM_Editor
             if (Settings != null)
                 EditorPrefs.SetString(k_EditorPref_SettingsKey, k_DefaultSettingsFolderAssetPath + "/" + Settings.name);
 
+            DeleteEditorContainer();
             CurrentLE = null;
         }
 
@@ -670,7 +676,7 @@ namespace LEM_Editor
             d_OnGUI?.Invoke();
         }
 
-        private void OnLostFocus()
+        void OnLostFocus()
         {
             TryToSaveLinearEvent();
         }
@@ -1921,6 +1927,11 @@ namespace LEM_Editor
 
         #region Saving and Loading
 
+        void DeleteEditorContainer()
+        {
+            UnityEngine.Object.DestroyImmediate(EditorEffectsContainer);
+        }
+
         //To be subscribed to the event which will be called before user presses "Play Button"
         void SaveBeforeEnterPlayMode(PlayModeStateChange state)
         {
@@ -1938,7 +1949,13 @@ namespace LEM_Editor
 
             //EditorPrefs.SetString("sceneAssetBasePath", sceneAssetBasePath);
             EditorPrefs.SetString(k_EditorPref_LinearEventKey, linearEventScenePath);
+
+            //linearEventScenePath = EditorEffectsContainer.transform.GetGameObjectPath();
+            //EditorPrefs.SetString(k_EditorPref_EditorEffectsContainerKey, linearEventScenePath);
+
+            DeleteEditorContainer();
         }
+
 
         void TryToSaveLinearEvent()
         {
@@ -1973,10 +1990,15 @@ namespace LEM_Editor
             LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllEffectsNodeInEditor.Count];
             BaseEffectNode[] allEffectNodes = AllEffectsNodeInEditor.Values.Select(x => x.effectNode).ToArray();
 
+            CurrentLE.ClearAllEffects();
+
+            HideFlags hideOrNot = Settings.m_ShowMonoBehaviours? HideFlags.NotEditable : HideFlags.HideInInspector;
+
             //This saves all events regardless of whether they are connected singularly, plurally or disconnected
             for (int i = 0; i < lemEffects.Length; i++)
             {
                 lemEffects[i] = allEffectNodes[i].CompileToBaseEffect(CurrentLE.gameObject);
+                lemEffects[i].hideFlags = hideOrNot;
             }
 
             if (AllGroupRectsInEditorDictionary.Count > 0)
@@ -1997,14 +2019,14 @@ namespace LEM_Editor
             if (Settings.m_SaveSceneTogether)
                 EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
 
-            EditorUtility.SetDirty(CurrentLE);
-            EditorSceneManager.MarkSceneDirty(CurrentLE.gameObject.scene);
+            //EditorUtility.SetDirty(CurrentLE);
+            //EditorSceneManager.MarkSceneDirty(CurrentLE.gameObject.scene);
 
             Debug.Log("Saved Linear Event File " + CurrentLE.name, CurrentLE);
             m_EditorState = EDITORSTATE.SAVED;
         }
 
-
+        //Loads the previously editing linear event after exiting playmode
         void LoadAfterExitingPlayMode(PlayModeStateChange state)
         {
             if (state != PlayModeStateChange.EnteredEditMode)
@@ -2018,6 +2040,9 @@ namespace LEM_Editor
                 return;
 
             LinearEvent prevLE = GameObject.Find(linearEventPath).GetComponent<LinearEvent>();
+
+            //linearEventPath = EditorPrefs.GetString(k_EditorPref_EditorEffectsContainerKey);
+            //EditorEffectsContainer = GameObject.Find(linearEventPath);
 
             NodeLEM_Editor.LoadNodeEditor(prevLE);
         }

@@ -24,6 +24,19 @@ namespace LEM_Effects
 #if UNITY_EDITOR
         [HideInInspector]
         public GroupRectNodeBase[] m_AllGroupRectNodes = default;
+
+        public void ClearAllEffects()
+        {
+            if (m_AllEffects == null)
+                return;
+
+            for (int i = 0; i < m_AllEffects.Length; i++)
+            {
+                Object.DestroyImmediate(m_AllEffects[i]);
+            }
+            m_AllEffects = null;
+        }
+
 #endif
 
         [HideInInspector]

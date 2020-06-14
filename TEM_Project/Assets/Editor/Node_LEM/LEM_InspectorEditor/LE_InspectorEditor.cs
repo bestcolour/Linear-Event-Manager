@@ -25,6 +25,7 @@ namespace LEM_Editor
             //GUILayout.BeginHorizontal();
 
             DrawLoadButton(linearEvent);
+            DrawClearButton(linearEvent);
             //DrawCreatePrefabButton(linearEvent);
             //DrawRemoveUnusedEventsButton(linearEvent);
 
@@ -42,6 +43,15 @@ namespace LEM_Editor
             if (GUILayout.Button("Load in Node Editor", GUILayout.Height(m_LineHeightSpace * 2)))
             {
                 NodeLEM_Editor.LoadNodeEditor(linearEvent);
+            }
+        }
+
+        void DrawClearButton(LinearEvent linearEvent)
+        {
+            //Creates a button to load the node editor
+            if (GUILayout.Button("Clear All Effects", GUILayout.Height(m_LineHeightSpace * 2)))
+            {
+                linearEvent.ClearAllEffects();
             }
         }
 
