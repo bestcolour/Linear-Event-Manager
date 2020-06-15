@@ -120,7 +120,7 @@ namespace LEM_Effects
         List<LEM_BaseEffect> m_FixedUpdateCycle = default, m_LateUpdateCycle = default;
 
         public Dictionary<string, LEM_BaseEffect> EffectsDictionary { get; private set; } = null;
-        //bool IsInitialised => EffectsDictionary == null;
+        bool IsInitialised => EffectsDictionary != null || EffectsDictionary.Count > 0;
         #endregion
 
         #region Initialisation Methods
@@ -130,6 +130,9 @@ namespace LEM_Effects
         /// </summary>
         public void InitialiseLinearEvent()
         {
+            if (IsInitialised)
+                return;
+
             m_UpdateCycle = new List<LEM_BaseEffect>(LinearEventsManager.StartingUpdateEffectCapacity);
             m_FixedUpdateCycle = new List<LEM_BaseEffect>(LinearEventsManager.StartingUpdateEffectCapacity);
             m_LateUpdateCycle = new List<LEM_BaseEffect>(LinearEventsManager.StartingUpdateEffectCapacity);
@@ -155,7 +158,7 @@ namespace LEM_Effects
         //#endif
         //        }
 
-        //LEManager -> Initialised this LE -> Chooses to run this Linear Event LEManager's awake from LEManager's List of Running LinearEvents
+        //LEManager -> Initialised this LE -> Chooses to run this LE on LEManager's awake from LEManager's List of Running LEs
         public void OnLEM_Awake_PlayLinearEvent()
         {
 #if UNITY_EDITOR
@@ -165,7 +168,7 @@ namespace LEM_Effects
             LoadStartingEffect(LinearEventsManager.InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
         }
 
-        //LEManager -> Initialised this LE -> Chooses to run this Linear Event LEManager's awake from LEManager's List of Running LinearEvents
+        //LEManager -> Initialised this LE -> Chooses to run this LE during runtime from LEManager's AllLEs list
         public void OnLEM_Runtime_PlayLinearEvent()
         {
 #if UNITY_EDITOR
@@ -176,7 +179,7 @@ namespace LEM_Effects
             //{
 
             LoadStartingEffect(LinearEventsManager.InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
-            LinearEventsManager.Instance.RunningLinearEvents.Add(this);
+            //LinearEventsManager.Instance.RunningLinearEvents.Add(this);
             //}
         }
 

@@ -36,23 +36,26 @@ namespace LEM_Editor
              //Invoke a UnityEvent 
              { "CustomVoidFunction", new NodeDictionaryDefinition(new CustomVoidFunctionNode()                              ,new Color(0.76f,0.15f,0.7f)) },
 
-             //Set the state of a button
-             //{ "SetButtonInteractivityState", new NodeDictionaryDefinition(new SetButtonInteractivityStateNode()            ,new Color(0.4f,0.66f,0.18f)) },
 	    #endregion
 
         #region Loading Linear Events
              
-             //Load a Linear Event
-             { "LoadLinearEvent", new NodeDictionaryDefinition(new LoadNewLinearEventNode()                                 ,new Color(0.76f,0.15f,0.7f)) },
+             //Play an already initialised Linear Event
+             {"PlayLinearEvent", new NodeDictionaryDefinition(new PlayLinearEventNode()                                 ,new Color(0.76f,0.15f,0.7f)) },
 
-             //Load multiple Linear Events
-             { "LoadLinearEvents", new NodeDictionaryDefinition(new LoadNewLinearEventsNode()                               ,new Color(0.76f,0.15f,0.7f)) },
+             //Play multiple already initialised Linear Events
+             { "PlayLinearEvents", new NodeDictionaryDefinition(new PlayLinearEventsNode()                               ,new Color(0.76f,0.15f,0.7f)) },
 
-             //Load with equal probability a Linear Event from a list of Linear Events
-             { "LoadRandomLinearEvent", new NodeDictionaryDefinition(new LoadRandomLinearEventNode()                        ,new Color(0.76f,0.15f,0.7f)) },
+             //Play with equal probability an already initialised Linear Event from a list of Linear Events
+             { "PlayRandomLinearEvent", new NodeDictionaryDefinition(new PlayRandomLinearEventNode()                        ,new Color(0.76f,0.15f,0.7f)) },
 
-             //Load with determined probabilities a Linear Event from a list of Linear Events
-             { "LoadBiasedLinearEvent", new NodeDictionaryDefinition(new LoadBiasedLinearEventNode()                        ,new Color(0.76f,0.15f,0.7f)) },
+             //Play with determined probabilities an already initialised Linear Event from a list of Linear Events
+             { "PlayBiasedLinearEvent", new NodeDictionaryDefinition(new PlayBiasedLinearEventNode()                        ,new Color(0.76f,0.15f,0.7f)) },
+
+             //{ "LoadLinearEvent", new NodeDictionaryDefinition(new LoadLinearEventNode()                        ,new Color(0.76f,0.15f,0.7f)) },
+
+             //{ "LoadLinearEvents", new NodeDictionaryDefinition(new LoadLinearEventsNode()                        ,new Color(0.76f,0.15f,0.7f)) },
+
 
 	    #endregion
 
@@ -593,12 +596,6 @@ namespace LEM_Editor
              //Fades Alpha of the Graphics (Image, Text , TextMeshPro, TextMeshProGUI or anything that inherits from Graphic class) to a target alpha within a given duration
              { "FadeToAlphaGraphics", new NodeDictionaryDefinition(new FadeToAlphaGraphicsNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
 
-             ////Fades the Alpha of image to a target alpha within a given duration
-		     //{ "FadeToAlphaImage", new NodeDictionaryDefinition(new FadeToAlphaImageNode()                                     ,new Color(0.19f ,0.74f,0.67f)) },
-
-             ////Fades the Alpha of images to a target alpha within a given duration
-             //{ "FadeToAlphaImages", new NodeDictionaryDefinition(new FadeToAlphaImagesNode()                                   ,new Color(0.19f ,0.74f,0.67f)) },
-
              //Fades the Alpha of Renderer to a target alpha within a given duration
              { "FadeToAlphaRenderer", new NodeDictionaryDefinition(new FadeToAlphaRendererNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
 
@@ -611,12 +608,6 @@ namespace LEM_Editor
              //Fades the Alpha of SpriteRenderers to a target alpha within a given duration
              { "FadeToAlphaSpriteRenderers", new NodeDictionaryDefinition(new FadeToAlphaSpriteRenderersNode()                 ,new Color(0.067f ,0.48f,0.4f)) },
 
-             ////Fades the Alpha of Text to a target alpha within a given duration
-             //{ "FadeToAlphaText", new NodeDictionaryDefinition(new  FadeToAlphaTextNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
-
-             ////Fades the Alpha of Texts to a target alpha within a given duration
-             //{ "FadeToAlphaTexts", new NodeDictionaryDefinition(new FadeToAlphaTextsNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
-
              //Fades the Alpha of TextMesh to a target alpha within a given duration
              { "FadeToAlphaTextMesh", new NodeDictionaryDefinition(new  FadeToAlphaTextMeshNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
 
@@ -628,21 +619,6 @@ namespace LEM_Editor
 
              //Fades the Alpha of CanvasGroups to a target alpha within a given duration
              { "FadeToAlphaCanvasGroups", new NodeDictionaryDefinition(new FadeToAlphaCanvasGroupsNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
-
-
-             ////Fades the Alpha of TextMeshPro to a target alpha within a given duration
-             //{ "FadeToAlphaTextMeshPro", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProNode()                         ,new Color(0.13f ,0.38f,0.55f)) },
-
-             ////Fades the Alpha of TextMeshPros to a target alpha within a given duration
-             //{ "FadeToAlphaTextMeshPros", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProsNode()                       ,new Color(0.13f ,0.38f,0.55f)) },
-
-             ////Fades the Alpha of TextMeshProGUI to a target alpha within a given duration
-             //{ "FadeToAlphaTextMeshProGUI", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUINode()                   ,new Color(0.11f ,0.31f,0.45f)) },
-
-             ////Fades the Alpha of TextMeshProGUIs to a target alpha within a given duration
-             //{ "FadeToAlphaTextMeshProGUIs", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProGUIsNode()                 ,new Color(0.11f ,0.31f,0.45f)) },
-
-
 
 	    #endregion
 
@@ -690,8 +666,6 @@ namespace LEM_Editor
              //Sets the text of a TextMeshPro, TextMeshProGUI or any class that inherits from TMP_Text class to a new text
              { "ReWordTextMeshPro", new NodeDictionaryDefinition(new ReWordTextMeshProNode()               ,new Color(0.13f ,0.38f,0.55f)) },
 
-             ////Sets the text of a TextMeshProGUI class to a new text
-             //{ "ReWordTextMeshProGUI", new NodeDictionaryDefinition(new ReWordTextMeshProGUINode()         ,new Color(0.11f ,0.31f,0.45f)) }, 
 	#endregion
 
 
@@ -706,6 +680,9 @@ namespace LEM_Editor
             //Sort everything into alphabetical order
             temp.Sort();
 
+#if UNITY_EDITOR
+            Debug.Log("There are " + temp.Count + " effects here");
+#endif
 
             s_NodeTypeKeys = temp.ToArray();
 

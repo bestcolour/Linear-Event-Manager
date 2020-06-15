@@ -125,7 +125,7 @@ public class LinearEventsManager : MonoBehaviour
 
     }
 
-    public static void LoadLinearEvent(LinearEvent linearEventToLoad)
+    public static void PlayLinearEvent(LinearEvent linearEventToLoad)
     {
         Instance.m_RunningLinearEvents.Add(linearEventToLoad);
         linearEventToLoad.OnLEM_Runtime_PlayLinearEvent();
