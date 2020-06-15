@@ -8,7 +8,7 @@ namespace LEM_Editor
 
     public class LerpAnchPosToV3Node : UpdateEffectNode
     {
-        protected override string EffectTypeName => "LerpAnchPosToV3Node";
+        protected override string EffectTypeName => "LerpAnchPosToV3";
 
         RectTransform m_TargetRectransform = default;
         Vector3 m_TargetPosition = default;

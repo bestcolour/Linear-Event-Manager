@@ -79,7 +79,10 @@ namespace LEM_Effects
                 Dictionary<string, LEM_BaseEffect> allEffectsDictionary = new Dictionary<string, LEM_BaseEffect>();
 
                 for (int i = 0; i < m_AllEffects.Length; i++)
+                {
+                    //Debug.Log("ELement " + i);
                     allEffectsDictionary.Add(m_AllEffects[i].bm_NodeBaseData.m_NodeID, m_AllEffects[i]);
+                }
 
                 return allEffectsDictionary;
             }

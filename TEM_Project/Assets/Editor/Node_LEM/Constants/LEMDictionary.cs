@@ -34,23 +34,23 @@ namespace LEM_Editor
 
         #region On their own for now
              //Invoke a UnityEvent 
-             { "CustomVoidFunction", new NodeDictionaryDefinition(new CustomVoidFunctionNode()                              ,new Color(0.76f,0.15f,0.7f)) },
+             { "CustomVoidFunction", new NodeDictionaryDefinition(new CustomVoidFunctionNode()                      ,new Color(0.337f, 0.396f, 0.451f)) },
 
 	    #endregion
 
         #region Loading Linear Events
              
              //Play an already initialised Linear Event
-             {"PlayLinearEvent", new NodeDictionaryDefinition(new PlayLinearEventNode()                                 ,new Color(0.76f,0.15f,0.7f)) },
+             {"PlayLinearEvent", new NodeDictionaryDefinition(new PlayLinearEventNode()                               ,new Color(0.804f, 0.38f, 0.333f)) },
 
              //Play multiple already initialised Linear Events
-             { "PlayLinearEvents", new NodeDictionaryDefinition(new PlayLinearEventsNode()                               ,new Color(0.76f,0.15f,0.7f)) },
+             { "PlayLinearEvents", new NodeDictionaryDefinition(new PlayLinearEventsNode()                             ,new Color(0.804f, 0.38f, 0.333f)) },
 
              //Play with equal probability an already initialised Linear Event from a list of Linear Events
-             { "PlayRandomLinearEvent", new NodeDictionaryDefinition(new PlayRandomLinearEventNode()                        ,new Color(0.76f,0.15f,0.7f)) },
+             { "PlayRandomLinearEvent", new NodeDictionaryDefinition(new PlayRandomLinearEventNode()                      ,new Color(0.804f, 0.38f, 0.333f)) },
 
              //Play with determined probabilities an already initialised Linear Event from a list of Linear Events
-             { "PlayBiasedLinearEvent", new NodeDictionaryDefinition(new PlayBiasedLinearEventNode()                        ,new Color(0.76f,0.15f,0.7f)) },
+             { "PlayBiasedLinearEvent", new NodeDictionaryDefinition(new PlayBiasedLinearEventNode()                       ,new Color(0.804f, 0.38f, 0.333f)) },
 
              //{ "LoadLinearEvent", new NodeDictionaryDefinition(new LoadLinearEventNode()                        ,new Color(0.76f,0.15f,0.7f)) },
 
@@ -191,7 +191,7 @@ namespace LEM_Editor
 		
         #region Position
              //Lerps a rectTransform to a vector3 position
-             { "LerpAnchPosToV3Node", new NodeDictionaryDefinition(new LerpAnchPosToV3Node()                                ,new Color(0.14f,0.44f,0.64f)) },
+             { "LerpAnchPosToV3", new NodeDictionaryDefinition(new LerpAnchPosToV3Node()                                ,new Color(0.14f,0.44f,0.64f)) },
 
              //Lerps a rectTransform to another rectTransform's anchored3DPosition
              { "LerpAnchPosToRtT", new NodeDictionaryDefinition(new LerpAnchPosToRtTNode()                                  ,new Color(0.14f,0.44f,0.64f)) },
@@ -339,7 +339,7 @@ namespace LEM_Editor
              { "RepeatMoveAnchPosToRtT", new NodeDictionaryDefinition(new RepeatMoveAnchPosToRtTNode()          ,new Color(0.36f ,0.17f,0.44f)) },
 
                //Move a RectTransform's anchoredPosition towards a Vector3 value and reset the rectTransform's anchoredPosition to its original value upon completion before Moving again
-             { "RepeatMoveAnchPosToV3Node", new NodeDictionaryDefinition(new RepeatMoveAnchPosToV3Node()        ,new Color(0.36f ,0.17f,0.44f)) },
+             { "RepeatMoveAnchPosToV3", new NodeDictionaryDefinition(new RepeatMoveAnchPosToV3Node()        ,new Color(0.36f ,0.17f,0.44f)) },
 
         #endregion
 
@@ -366,7 +366,7 @@ namespace LEM_Editor
 
              
              //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle
-             { "MoveRotationToTNode", new NodeDictionaryDefinition(new MoveRotationToTNode()                        ,new Color(0.49f,0.24f,0.60f)) },
+             { "MoveRotationToT", new NodeDictionaryDefinition(new MoveRotationToTNode()                        ,new Color(0.49f,0.24f,0.60f)) },
 
              //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle about a Transform pivot
              { "MoveRotationToTAboutTPivot", new NodeDictionaryDefinition(new MoveRotationToTAboutTPivotNode()      ,new Color(0.49f,0.24f,0.60f)) },
@@ -680,9 +680,7 @@ namespace LEM_Editor
             //Sort everything into alphabetical order
             temp.Sort();
 
-#if UNITY_EDITOR
-            Debug.Log("There are " + temp.Count + " effects here");
-#endif
+            //Debug.Log("There are " + temp.Count + " effects here");
 
             s_NodeTypeKeys = temp.ToArray();
 
@@ -692,6 +690,8 @@ namespace LEM_Editor
         public static object GetNodeObject(string nodeObjectType)
         {
             s_NodeTypesDictionary.TryGetValue(nodeObjectType, out NodeDictionaryDefinition value);
+            //Debug.Log("Node Object Type " + nodeObjectType);
+            //Debug.Log(" Value = " + value.m_Type);
             //Instantiate the object's type using an alternative method.
             //the usual "new" keyword to instantitate is faster but Activator aint too bad either
             object instantiatedObject = Activator.CreateInstance(value.m_Type.GetType());

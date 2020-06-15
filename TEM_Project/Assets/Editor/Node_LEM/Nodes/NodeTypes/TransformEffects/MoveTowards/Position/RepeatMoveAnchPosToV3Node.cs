@@ -11,7 +11,7 @@ namespace LEM_Editor
         Vector3 m_TargetPosition = default;
         float m_Duration = 0f;
 
-        protected override string EffectTypeName => "RepeatMoveAnchPosToV3Node";
+        protected override string EffectTypeName => "RepeatMoveAnchPosToV3";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)
         {

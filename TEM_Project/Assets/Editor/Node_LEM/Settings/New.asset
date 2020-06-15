@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EditorTheme: 1
   m_SaveSettings: 2
-  m_ShowMonoBehaviours: 0
   m_SaveSceneTogether: 1
   m_HistoryLength: 100
   m_ShowToolBar: 1
