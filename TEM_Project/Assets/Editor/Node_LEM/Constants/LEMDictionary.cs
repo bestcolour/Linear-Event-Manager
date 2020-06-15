@@ -623,6 +623,13 @@ namespace LEM_Editor
              //Fades the Alpha of TextMeshes to a target alpha within a given duration
              { "FadeToAlphaTextMeshes", new NodeDictionaryDefinition(new FadeToAlphaTextMeshesNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
 
+             //Fades the Alpha of CanvasGroup to a target alpha within a given duration
+             { "FadeToAlphaCanvasGroup", new NodeDictionaryDefinition(new FadeToAlphaCanvasGroupNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Fades the Alpha of CanvasGroups to a target alpha within a given duration
+             { "FadeToAlphaCanvasGroups", new NodeDictionaryDefinition(new FadeToAlphaCanvasGroupsNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+
+
              ////Fades the Alpha of TextMeshPro to a target alpha within a given duration
              //{ "FadeToAlphaTextMeshPro", new NodeDictionaryDefinition(new FadeToAlphaTextMeshProNode()                         ,new Color(0.13f ,0.38f,0.55f)) },
 
@@ -638,6 +645,38 @@ namespace LEM_Editor
 
 
 	    #endregion
+
+#region Curve Alpha
+             //Curves the Alpha of a Graphic to a target alpha within a given duration
+             { "CurveAlphaToGraphic", new NodeDictionaryDefinition(new  CurveAlphaToGraphicNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Curves the Alpha of Graphics to a target alpha within a given duration
+             { "CurveAlphaToGraphics", new NodeDictionaryDefinition(new  CurveAlphaToGraphicsNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Curves the Alpha of Renderer to a target alpha within a given duration
+             { "CurveAlphaToRenderer", new NodeDictionaryDefinition(new  CurveAlphaToRendererNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Curves the Alpha of Renderers to a target alpha within a given duration
+             { "CurveAlphaToRenderers", new NodeDictionaryDefinition(new  CurveAlphaToRenderersNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Curves the Alpha of SpriteRenderer to a target alpha within a given duration
+             { "CurveAlphaToSpriteRenderer", new NodeDictionaryDefinition(new  CurveAlphaToSpriteRendererNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Curves the Alpha of SpriteRenderers to a target alpha within a given duration
+             { "CurveAlphaToSpriteRenderers", new NodeDictionaryDefinition(new  CurveAlphaToSpriteRenderersNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Curves the Alpha of TextMesh to a target alpha within a given duration
+             { "CurveAlphaToTextMesh", new NodeDictionaryDefinition(new  CurveAlphaToTextMeshNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Curves the Alpha of TextMeshes to a target alpha within a given duration
+             { "CurveAlphaToTextMeshes", new NodeDictionaryDefinition(new  CurveAlphaToTextMeshesNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Curves the Alpha of CanvasGroup to a target alpha within a given duration
+             { "CurveAlphaToCanvasGroup", new NodeDictionaryDefinition(new  CurveAlphaToCanvasGroupNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+
+             //Curves the Alpha of CanvasGroups to a target alpha within a given duration
+             { "CurveAlphaToCanvasGroups", new NodeDictionaryDefinition(new  CurveAlphaToCanvasGroupsNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+	#endregion
 
         #region Reword
              //Sets the text of the different Text Classes to a new text

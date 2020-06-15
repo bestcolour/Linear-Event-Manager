@@ -34,7 +34,9 @@ namespace LEM_Effects
             m_InitialAlphas = new float[m_TargetRenderers.Length][];
             m_NextColours = new Color[m_TargetRenderers.Length][];
 
-            int fadeModeInt = (int)UnityEngine.Rendering.RenderQueue.Geometry;
+#if UNITY_EDITOR
+            int fadeModeInt = (int)UnityEngine.Rendering.RenderQueue.Geometry; 
+#endif
 
             for (int i = 0; i < m_TargetRenderers.Length; i++)
             {
