@@ -381,9 +381,12 @@ namespace LEM_Editor
         //Called only when you pressed the Load Linear Event button
         public static void LoadNodeEditor(LinearEvent linearEvent)
         {
+
             //This will be a key identifier for whether LoadNodeEditor button was pressed
             LinearEvent prevLE = CurrentLE;
             CurrentLE = linearEvent;
+
+
 
             //If this is the first time you are opening the window, or if u have previously closed the window and you wish to reopen it
             if (Instance == null)
@@ -394,8 +397,12 @@ namespace LEM_Editor
                 CurrentLE = prevLE;
                 Instance.TryToSaveLinearEvent();
 
+                //if (prevLE)
+                    //prevLE.CurrentlyBeingEdited = false;
+
                 //Load the new one
                 CurrentLE = linearEvent;
+                //CurrentLE.CurrentlyBeingEdited = true;
                 Instance.ResetandLoadNewEvent();
             }
 
@@ -1938,6 +1945,7 @@ namespace LEM_Editor
         void DeleteEditorContainer()
         {
             UnityEngine.Object.DestroyImmediate(EditorEffectsContainer);
+            //CurrentLE.CurrentlyBeingEdited = false;
         }
 
         //To be subscribed to the event which will be called before user presses "Play Button"

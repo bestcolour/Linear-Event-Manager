@@ -22,12 +22,20 @@ namespace LEM_Effects
         public LEM_BaseEffect[] m_AllEffects = default;
 
 #if UNITY_EDITOR
+        //public bool CurrentlyBeingEdited {private get; set; } = false;
+
         [HideInInspector]
         public GroupRectNodeBase[] m_AllGroupRectNodes = default;
 
         public void ClearAllEffects()
         {
-            if (m_AllEffects == null || m_AllEffects.Length == 0)
+            //if(CurrentlyBeingEdited)
+            //{
+                //Debug.LogWarning("Can't Clear with Linear Event opened in editor!");
+                //return;
+            //}
+            //else
+            if ( m_AllEffects == null || m_AllEffects.Length == 0)
                 return;
 
             for (int i = 0; i < m_AllEffects.Length; i++)

@@ -62,29 +62,29 @@ namespace LEM_Editor
         #region Random
 
              //Play the next effect randomly with equal probablity 
-             { "EqualRandomOutCome", new NodeDictionaryDefinition(new EqualProbabilityOutComeNode()                         ,new Color(0.302f,0.216f,0.851f)) },
+             { "EqualRandomOutCome", new NodeDictionaryDefinition(new EqualProbabilityOutComeNode()                        ,new Color(0.514f, 0.569f, 0.573f)) },
 
              //Play the next effect randomly with determined probablities
-             { "BiasedRandomOutcome", new NodeDictionaryDefinition(new BiasedRandomOutcomeNode()                            ,new Color(0.302f,0.216f,0.851f)) },
+             { "BiasedRandomOutcome", new NodeDictionaryDefinition(new BiasedRandomOutcomeNode()                         ,new Color(0.514f, 0.569f, 0.573f)) },
 
 	    #endregion
 
         #region GameObject
 
              //Instantiate a GameObject
-		     { "InstantiateGameObject", new NodeDictionaryDefinition(   new InstantiateGameObjectNode()                     ,new Color(0.04f,0.65f,0.2f)) },
+		     { "InstantiateGameObject", new NodeDictionaryDefinition(   new InstantiateGameObjectNode()                     ,new Color(0.137f, 0.608f, 0.337f)) },
 
              //Destroy a GameObject
-             { "DestroyGameObject", new NodeDictionaryDefinition(  new DestroyGameObjectNode()                              ,new Color(0.796f,0.098f,0.098f)) },
+             { "DestroyGameObject", new NodeDictionaryDefinition(  new DestroyGameObjectNode()                              ,new Color(0.753f, 0.224f, 0.169f)) },
 
              //Destroy GameObjects
-             { "DestroyGameObjects", new NodeDictionaryDefinition(  new DestroyGameObjectsNode()                            ,new Color(0.796f,0.098f,0.098f)) },
+             { "DestroyGameObjects", new NodeDictionaryDefinition(  new DestroyGameObjectsNode()                            ,new Color(0.753f, 0.224f, 0.169f)) },
 
              //Set a GameObject's active state
-             { "SetGameObjectActive", new NodeDictionaryDefinition(new SetGameObjectActiveNode()                            ,new Color(0.64f,0.09f,0.39f)) },
+             { "SetGameObjectActive", new NodeDictionaryDefinition(new SetGameObjectActiveNode()                            ,new Color(0.482f, 0.141f, 0.11f)) },
 
              //Set GameObjects' active state
-             { "SetGameObjectsActive", new NodeDictionaryDefinition(new SetGameObjectsActiveNode()                          ,new Color(0.64f,0.09f,0.39f)) },
+             { "SetGameObjectsActive", new NodeDictionaryDefinition(new SetGameObjectsActiveNode()                          ,new Color(0.482f, 0.141f, 0.11f)) },
 
 	#endregion
 
@@ -108,7 +108,7 @@ namespace LEM_Editor
              { "AwaitAxisInput",   new NodeDictionaryDefinition( new AwaitAxisInputNode()                                   ,new Color(0.59f,0.24f,0.75f)) },
 
              //Stops any effect which requires to be updated over multiple frames
-             { "StopUpdateEffect", new NodeDictionaryDefinition(new StopUpdateEffectNode()                                  ,new Color(1f ,0.55f,0f)) },
+             { "StopUpdateEffect", new NodeDictionaryDefinition(new StopUpdateEffectNode()                                  ,new Color(0.922f, 0.596f, 0.306f)) },
 
              //Pauses all Linear Events playing in the LinearEventManager
              { "GlobalPause", new NodeDictionaryDefinition(new PauseAllLinearEventsNode()                                   ,new Color(1f ,0.55f,0f)) },
@@ -286,22 +286,22 @@ namespace LEM_Editor
 
              //RepeatScale
              //Lerp a Transform's scale to a vector3 value and reset the Transform's scale to its original value upon completion before Lerping again
-             { "RepeatLerpScaleToV3", new NodeDictionaryDefinition(new RepeatLerpScaleToV3Node()                            ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleToV3", new NodeDictionaryDefinition(new RepeatLerpScaleToV3Node()                            ,new Color(0.12f ,0.38f,0.55f)) },
 
              //Lerp a Transform's scale to a vector3 value about a Vector3 pivot and reset the Transform's scale to its original value upon completion before Lerping again
-             { "RepeatLerpScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpScaleToV3AboutV3PivotNode()    ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpScaleToV3AboutV3PivotNode()    ,new Color(0.12f ,0.38f,0.55f)) },
 
              //Lerp a Transform's scale to a vector3 value about a Transform pivot and reset the Transform's scale to its original value upon completion before Lerping again
-             { "RepeatLerpScaleToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatLerpScaleToV3AboutTPivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatLerpScaleToV3AboutTPivotNode()      ,new Color(0.12f ,0.38f,0.55f)) },
 
              //Lerp a Transform's scale to a Reference Transform's value and reset the Transform's scale to its original value upon completion before Lerping again
-             { "RepeatLerpScaleToT", new NodeDictionaryDefinition(new RepeatLerpScaleToTNode()                              ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleToT", new NodeDictionaryDefinition(new RepeatLerpScaleToTNode()                              ,new Color(0.12f ,0.38f,0.55f)) },
 
              //Lerp a Transform's scale to a Reference Transform's value about a Transform pivot and reset the Transform's scale to its original value upon completion before Lerping again
-             { "RepeatLerpScaleToTAboutTPivot", new NodeDictionaryDefinition(new RepeatLerpScaleToTAboutTPivotNode()        ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleToTAboutTPivot", new NodeDictionaryDefinition(new RepeatLerpScaleToTAboutTPivotNode()        ,new Color(0.12f ,0.38f,0.55f)) },
 
              //Lerp a Transform's scale to a Reference Transform's value about a Vector3 pivot and reset the Transform's scale to its original value upon completion before Lerping again
-             { "RepeatLerpScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpScaleToTAboutV3PivotNode()      ,new Color(0.14f,0.44f,0.64f)) },
+             { "RepeatLerpScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatLerpScaleToTAboutV3PivotNode()      ,new Color(0.12f ,0.38f,0.55f)) },
 
         #endregion
 
@@ -356,13 +356,13 @@ namespace LEM_Editor
 
              //Repeat Rotation
              //Move a Transform's rotation/localRotation towards a V3 eulerAngle and reset to its original value upon completion before repeating movetowards again
-             { "RepeatMoveRotationToV3", new NodeDictionaryDefinition(new RepeatMoveRotationToV3Node()                                                  ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveRotationToV3", new NodeDictionaryDefinition(new RepeatMoveRotationToV3Node()                                                  ,new Color(0.36f ,0.17f,0.44f)) },
 
              //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a Transform pivot and reset to its original value upon completion before repeating movetowards again
-             { "RepeatMoveRotationToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutTPivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveRotationToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutTPivotNode()                            ,new Color(0.36f ,0.17f,0.44f)) },
 
              //Move a Transform's rotation/localRotation towards a V3 eulerAngle about a Vector3 pivot and reset to its original value upon completion before repeating movetowards again
-             { "RepeatMoveRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutV3PivotNode()                          ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveRotationToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveRotationToV3AboutV3PivotNode()                          ,new Color(0.36f ,0.17f,0.44f)) },
 
              
              //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle
@@ -376,13 +376,13 @@ namespace LEM_Editor
 
              //Repeat Rotation
              //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle and reset to its original value upon completion before repeating movetowards again
-             { "RepeatMoveRotationToT", new NodeDictionaryDefinition(new RepeatMoveRotationToTNode()                ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveRotationToT", new NodeDictionaryDefinition(new RepeatMoveRotationToTNode()                ,new Color(0.36f ,0.17f,0.44f)) },
 
              //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle about a Transform pivot and reset to its original value upon completion before repeating movetowards again
-             { "RepeatMoveRotationToTAboutTPivot", new NodeDictionaryDefinition(new RepeatMoveRotationToTAboutTPivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveRotationToTAboutTPivot", new NodeDictionaryDefinition(new RepeatMoveRotationToTAboutTPivotNode()                            ,new Color(0.36f ,0.17f,0.44f)) },
 
              //Move a Transform's rotation/localRotation towards a Reference Transform's eulerAngle about a Vector3 pivot and reset to its original value upon completion before repeating movetowards again
-             { "RepeatMoveRotationToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveRotationToTAboutV3PivotNode()                            ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveRotationToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveRotationToTAboutV3PivotNode()                            ,new Color(0.36f ,0.17f,0.44f)) },
 
 
 	    #endregion
@@ -402,13 +402,13 @@ namespace LEM_Editor
 
              //Repeat Scale
              //Move a Transform's scale towards a Vector3 value and reset the Transform's value upon completion before repeating the move to
-             {"RepeatMoveScaleToV3", new NodeDictionaryDefinition(new RepeatMoveScaleToV3Node()                             ,new Color(0.49f,0.24f,0.60f)) },
+             {"RepeatMoveScaleToV3", new NodeDictionaryDefinition(new RepeatMoveScaleToV3Node()                             ,new Color(0.36f ,0.17f,0.44f)) },
 
              //Move a Transform's scale towards a Vector3 value about a Transform pivot and reset the Transform's value upon completion before repeating the move to
-             { "RepeatMoveScaleToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatMoveScaleToV3AboutTPivotNode()      ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveScaleToV3AboutTPivot", new NodeDictionaryDefinition(new RepeatMoveScaleToV3AboutTPivotNode()      ,new Color(0.36f ,0.17f,0.44f)) },
 
              //Move a Transform's scale towards a Vector3 value about a Vector3 pivot and reset the Transform's value upon completion before repeating the move to
-             { "RepeatMoveScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveScaleToV3AboutV3PivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveScaleToV3AboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveScaleToV3AboutV3PivotNode()    ,new Color(0.36f ,0.17f,0.44f)) },
 
 
              //Move a Transform's scale towards a Transform's Scale value
@@ -423,13 +423,13 @@ namespace LEM_Editor
 
              //Repeat Scale
              //Move a Transform's scale towards a Transform's Scale value and reset the Transform's value upon completion before repeating the move to
-             {"RepeatMoveScaleToT", new NodeDictionaryDefinition(new RepeatMoveScaleToTNode()    ,new Color(0.49f,0.24f,0.60f)) },
+             {"RepeatMoveScaleToT", new NodeDictionaryDefinition(new RepeatMoveScaleToTNode()    ,new Color(0.36f ,0.17f,0.44f)) },
 
              //Move a Transform's scale towards a Transform's Scale value about a Transform pivot and reset the Transform's value upon completion before repeating the move to
-             { "RepeatMoveScaleToTAboutTPivot", new NodeDictionaryDefinition(new RepeatMoveScaleToTAboutTPivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveScaleToTAboutTPivot", new NodeDictionaryDefinition(new RepeatMoveScaleToTAboutTPivotNode()   ,new Color(0.36f ,0.17f,0.44f)) },
 
              //Move a Transform's scale towards a Transform's Scale value about a Vector3 pivot and reset the Transform's value upon completion before repeating the move to
-             { "RepeatMoveScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveScaleToTAboutV3PivotNode()    ,new Color(0.49f,0.24f,0.60f)) },
+             { "RepeatMoveScaleToTAboutV3Pivot", new NodeDictionaryDefinition(new RepeatMoveScaleToTAboutV3PivotNode()    ,new Color(0.36f ,0.17f,0.44f)) },
 
 
 	    #endregion
@@ -450,28 +450,28 @@ namespace LEM_Editor
 		     //CurvePos and CurveAnchPos effects are not additive. In other words, you can't add CurvePosX and CurvePosY together to expect them to move the transform in both the X and Y direction.
 
              //Control the value of a transform's X position with an AnimationCurve
-             { "CurvePosX", new NodeDictionaryDefinition(new CurvePosXNode()                        ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurvePosX", new NodeDictionaryDefinition(new CurvePosXNode()                        ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a RectTransform's X anchoredPosition3D with an AnimationCurve
-             { "CurveAnchPosX", new NodeDictionaryDefinition(new CurveAnchPosXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveAnchPosX", new NodeDictionaryDefinition(new CurveAnchPosXNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a transform's Y position with an AnimationCurve
-             { "CurvePosY", new NodeDictionaryDefinition(new CurvePosYNode()                        ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurvePosY", new NodeDictionaryDefinition(new CurvePosYNode()                        ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a RectTransform's Y anchoredPosition3D with an AnimationCurve
-             { "CurveAnchPosY", new NodeDictionaryDefinition(new CurveAnchPosYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveAnchPosY", new NodeDictionaryDefinition(new CurveAnchPosYNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a transform's Z position with an AnimationCurve
-             { "CurvePosZ", new NodeDictionaryDefinition(new CurvePosZNode()                        ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurvePosZ", new NodeDictionaryDefinition(new CurvePosZNode()                        ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a RectTransform's Z anchoredPosition3D with an AnimationCurve
-             { "CurveAnchPosZ", new NodeDictionaryDefinition(new CurveAnchPosZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveAnchPosZ", new NodeDictionaryDefinition(new CurveAnchPosZNode()                 ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a transform's XYZ position with an AnimationCurve
-             { "CurvePosXYZ", new NodeDictionaryDefinition(new CurvePosXYZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurvePosXYZ", new NodeDictionaryDefinition(new CurvePosXYZNode()                 ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a RectTransform's XYZ anchoredPosition3D with an AnimationCurve
-             { "CurveAnchPosXYZ", new NodeDictionaryDefinition(new CurveAnchPosXYZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveAnchPosXYZ", new NodeDictionaryDefinition(new CurveAnchPosXYZNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
         #endregion
 
@@ -483,22 +483,22 @@ namespace LEM_Editor
              //Absolute Value of areas under the curve lines = Total amount of Distance travelled by the transform
 
              //Control the rate of change of a RectTransform's AnchoredPosition X value over time with an AnimationCurve
-             { "CurveRateOfChangeAnchPosX", new NodeDictionaryDefinition(new CurveRateOfChangeAnchPosXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangeAnchPosX", new NodeDictionaryDefinition(new CurveRateOfChangeAnchPosXNode()                  ,new Color(0.129f, 0.184f, 0.239f)) },
 
              //Control the rate of change of a RectTransform's AnchoredPosition Y value over time with an AnimationCurve
-             { "CurveRateOfChangeAnchPosY", new NodeDictionaryDefinition(new CurveRateOfChangeAnchPosYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangeAnchPosY", new NodeDictionaryDefinition(new CurveRateOfChangeAnchPosYNode()                  ,new Color(0.129f, 0.184f, 0.239f)) },
 
              //Control the rate of change of a RectTransform's AnchoredPosition Z value over time with an AnimationCurve
-             { "CurveRateOfChangeAnchPosZ", new NodeDictionaryDefinition(new CurveRateOfChangeAnchPosZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangeAnchPosZ", new NodeDictionaryDefinition(new CurveRateOfChangeAnchPosZNode()                  ,new Color(0.129f, 0.184f, 0.239f)) },
 
              //Control the rate of change of a Transform's Position X value over time with an AnimationCurve
-             { "CurveRateOfChangePosX", new NodeDictionaryDefinition(new CurveRateOfChangePosXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangePosX", new NodeDictionaryDefinition(new CurveRateOfChangePosXNode()                 ,new Color(0.129f, 0.184f, 0.239f)) },
 
              //Control the rate of change of a Transform's Position Y value over time with an AnimationCurve
-             { "CurveRateOfChangePosY", new NodeDictionaryDefinition(new CurveRateOfChangePosYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangePosY", new NodeDictionaryDefinition(new CurveRateOfChangePosYNode()                 ,new Color(0.129f, 0.184f, 0.239f)) },
 
              //Control the rate of change of a Transform's Position Z value over time with an AnimationCurve
-             { "CurveRateOfChangePosZ", new NodeDictionaryDefinition(new CurveRateOfChangePosZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangePosZ", new NodeDictionaryDefinition(new CurveRateOfChangePosZNode()                 ,new Color(0.129f, 0.184f, 0.239f)) },
 
 
 
@@ -509,16 +509,16 @@ namespace LEM_Editor
              //CurveRotation effects are not additive. In other words, you can't add CurveRotationX and CurveRotationY together to expect them to rotate in both X and Y axis
 
              //Control the value of a transform's X rotation/localRotation with an AnimationCurve
-             { "CurveRotationX", new NodeDictionaryDefinition(new CurveRotationXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRotationX", new NodeDictionaryDefinition(new CurveRotationXNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a transform's Y rotation/localRotation with an AnimationCurve
-             { "CurveRotationY", new NodeDictionaryDefinition(new CurveRotationYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRotationY", new NodeDictionaryDefinition(new CurveRotationYNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a transform's Z rotation/localRotation with an AnimationCurve
-             { "CurveRotationZ", new NodeDictionaryDefinition(new CurveRotationZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRotationZ", new NodeDictionaryDefinition(new CurveRotationZNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the value of a transform's XYZ rotation/localRotation with an AnimationCurve
-             { "CurveRotationXYZ", new NodeDictionaryDefinition(new CurveRotationXYZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRotationXYZ", new NodeDictionaryDefinition(new CurveRotationXYZNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
 
         #endregion
@@ -531,13 +531,13 @@ namespace LEM_Editor
              //Absolute Value of areas under the curve lines (|+ve Area| + |-ve Area|) =Total amount of rotation rotated by transform
 
              //Control the rate of change of a Transform's Rotation X value over time with an AnimationCurve
-             { "CurveRateOfChangeRotationX", new NodeDictionaryDefinition(new CurveRateOfChangeRotationXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangeRotationX", new NodeDictionaryDefinition(new CurveRateOfChangeRotationXNode()                  ,new Color(0.129f, 0.184f, 0.239f)) },
 
              //Control the rate of change of a Transform's Rotation Y value over time with an AnimationCurve
-             { "CurveRateOfChangeRotationY", new NodeDictionaryDefinition(new CurveRateOfChangeRotationYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangeRotationY", new NodeDictionaryDefinition(new CurveRateOfChangeRotationYNode()                  ,new Color(0.129f, 0.184f, 0.239f)) },
 
              //Control the rate of change of a Transform's Rotation Z value over time with an AnimationCurve
-             { "CurveRateOfChangeRotationZ", new NodeDictionaryDefinition(new CurveRateOfChangeRotationZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangeRotationZ", new NodeDictionaryDefinition(new CurveRateOfChangeRotationZNode()                  ,new Color(0.129f, 0.184f, 0.239f)) },
 
 
 	    #endregion
@@ -547,16 +547,16 @@ namespace LEM_Editor
              //CurveScale effects are not additive. In other words, you can't add CurveScaleX and CurveScaleY together to expect them to scale in respect to both X and Y axis
 
              //Control the x value of a Transform's scale using an AnimationCurve
-             { "CurveScaleX", new NodeDictionaryDefinition(new CurveScaleXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveScaleX", new NodeDictionaryDefinition(new CurveScaleXNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the y value of a Transform's scale using an AnimationCurve
-             { "CurveScaleY", new NodeDictionaryDefinition(new CurveScaleYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveScaleY", new NodeDictionaryDefinition(new CurveScaleYNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
              //Control the z value of a Transform's scale using an AnimationCurve
-             { "CurveScaleZ", new NodeDictionaryDefinition(new CurveScaleZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveScaleZ", new NodeDictionaryDefinition(new CurveScaleZNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
               //Control the xyz value of a Transform's scale using an AnimationCurve
-             { "CurveScaleXYZ", new NodeDictionaryDefinition(new CurveScaleXYZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveScaleXYZ", new NodeDictionaryDefinition(new CurveScaleXYZNode()                  ,new Color(0.18f, 0.251f, 0.325f)) },
 
         #endregion
 
@@ -569,13 +569,13 @@ namespace LEM_Editor
              //Absolute Value of areas under the curve lines (|+ve Area| + |-ve Area|) =Total amount of change in scale by transform
 
              //Control the rate of change of a Transform's Scale X value over time with an AnimationCurve
-             { "CurveRateOfChangeScaleX", new NodeDictionaryDefinition(new CurveRateOfChangeScaleXNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangeScaleX", new NodeDictionaryDefinition(new CurveRateOfChangeScaleXNode()                  ,new Color(0.129f, 0.184f, 0.239f)) },
 
              //Control the rate of change of a Transform's Scale Y value over time with an AnimationCurve
-             { "CurveRateOfChangeScaleY", new NodeDictionaryDefinition(new CurveRateOfChangeScaleYNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangeScaleY", new NodeDictionaryDefinition(new CurveRateOfChangeScaleYNode()                  ,new Color(0.129f, 0.184f, 0.239f)) },
 
              //Control the rate of change of a Transform's Scale Z value over time with an AnimationCurve
-             { "CurveRateOfChangeScaleZ", new NodeDictionaryDefinition(new CurveRateOfChangeScaleZNode()                  ,new Color(0.302f,0.216f,0.851f)) },
+             { "CurveRateOfChangeScaleZ", new NodeDictionaryDefinition(new CurveRateOfChangeScaleZNode()                  ,new Color(0.129f, 0.184f, 0.239f)) },
 
 	    #endregion
 
@@ -591,80 +591,81 @@ namespace LEM_Editor
              //Fade Alpha effects fade various classes with the color property
 
              //Fades Alpha of the Graphic (Image, Text , TextMeshPro, TextMeshProGUI or anything that inherits from Graphic class) to a target alpha within a given duration
-             { "FadeToAlphaGraphic", new NodeDictionaryDefinition(new FadeToAlphaGraphicNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
+             { "FadeToAlphaGraphic", new NodeDictionaryDefinition(new FadeToAlphaGraphicNode()                               ,new Color(0.102f, 0.737f, 0.612f)) },
 
              //Fades Alpha of the Graphics (Image, Text , TextMeshPro, TextMeshProGUI or anything that inherits from Graphic class) to a target alpha within a given duration
-             { "FadeToAlphaGraphics", new NodeDictionaryDefinition(new FadeToAlphaGraphicsNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
-
-             //Fades the Alpha of Renderer to a target alpha within a given duration
-             { "FadeToAlphaRenderer", new NodeDictionaryDefinition(new FadeToAlphaRendererNode()                               ,new Color(0.07f ,0.55f,0.46f)) },
-
-             //Fades the Alpha of Renderers to a target alpha within a given duration
-             { "FadeToAlphaRenderers", new NodeDictionaryDefinition(new FadeToAlphaRenderersNode()                             ,new Color(0.07f ,0.55f,0.46f)) },
-
-             //Fades the Alpha of SpriteRenderer to a target alpha within a given duration
-             { "FadeToAlphaSpriteRenderer", new NodeDictionaryDefinition(new FadeToAlphaSpriteRendererNode()                   ,new Color(0.067f ,0.48f,0.4f)) },
-
-             //Fades the Alpha of SpriteRenderers to a target alpha within a given duration
-             { "FadeToAlphaSpriteRenderers", new NodeDictionaryDefinition(new FadeToAlphaSpriteRenderersNode()                 ,new Color(0.067f ,0.48f,0.4f)) },
-
-             //Fades the Alpha of TextMesh to a target alpha within a given duration
-             { "FadeToAlphaTextMesh", new NodeDictionaryDefinition(new  FadeToAlphaTextMeshNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
-
-             //Fades the Alpha of TextMeshes to a target alpha within a given duration
-             { "FadeToAlphaTextMeshes", new NodeDictionaryDefinition(new FadeToAlphaTextMeshesNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+             { "FadeToAlphaGraphics", new NodeDictionaryDefinition(new FadeToAlphaGraphicsNode()                               ,new Color(0.102f, 0.737f, 0.612f)) },
 
              //Fades the Alpha of CanvasGroup to a target alpha within a given duration
-             { "FadeToAlphaCanvasGroup", new NodeDictionaryDefinition(new FadeToAlphaCanvasGroupNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+             { "FadeToAlphaCanvasGroup", new NodeDictionaryDefinition(new FadeToAlphaCanvasGroupNode()                                      ,new Color(0.102f, 0.737f, 0.612f)) },
 
              //Fades the Alpha of CanvasGroups to a target alpha within a given duration
-             { "FadeToAlphaCanvasGroups", new NodeDictionaryDefinition(new FadeToAlphaCanvasGroupsNode()                                     ,new Color(0.16f ,0.45f,0.65f)) },
+             { "FadeToAlphaCanvasGroups", new NodeDictionaryDefinition(new FadeToAlphaCanvasGroupsNode()                                     ,new Color(0.102f, 0.737f, 0.612f)) },
+
+             //Fades the Alpha of Renderer to a target alpha within a given duration
+             { "FadeToAlphaRenderer", new NodeDictionaryDefinition(new FadeToAlphaRendererNode()                               ,new Color(0.078f, 0.561f, 0.467f)) },
+
+             //Fades the Alpha of Renderers to a target alpha within a given duration
+             { "FadeToAlphaRenderers", new NodeDictionaryDefinition(new FadeToAlphaRenderersNode()                             ,new Color(0.078f, 0.561f, 0.467f)) },
+
+             //Fades the Alpha of SpriteRenderer to a target alpha within a given duration
+             { "FadeToAlphaSpriteRenderer", new NodeDictionaryDefinition(new FadeToAlphaSpriteRendererNode()                   ,new Color(0.078f, 0.561f, 0.467f)) },
+
+             //Fades the Alpha of SpriteRenderers to a target alpha within a given duration
+             { "FadeToAlphaSpriteRenderers", new NodeDictionaryDefinition(new FadeToAlphaSpriteRenderersNode()                 ,new Color(0.078f, 0.561f, 0.467f)) },
+
+             //Fades the Alpha of TextMesh to a target alpha within a given duration
+             { "FadeToAlphaTextMesh", new NodeDictionaryDefinition(new  FadeToAlphaTextMeshNode()                                       ,new Color(0.102f, 0.737f, 0.612f)) },
+
+             //Fades the Alpha of TextMeshes to a target alpha within a given duration
+             { "FadeToAlphaTextMeshes", new NodeDictionaryDefinition(new FadeToAlphaTextMeshesNode()                                      ,new Color(0.102f, 0.737f, 0.612f)) },
+
 
 	    #endregion
 
 #region Curve Alpha
              //Curves the Alpha of a Graphic to a target alpha within a given duration
-             { "CurveAlphaToGraphic", new NodeDictionaryDefinition(new  CurveAlphaToGraphicNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToGraphic", new NodeDictionaryDefinition(new  CurveAlphaToGraphicNode()                                      ,new Color(0.075f, 0.553f, 0.459f)) },
 
              //Curves the Alpha of Graphics to a target alpha within a given duration
-             { "CurveAlphaToGraphics", new NodeDictionaryDefinition(new  CurveAlphaToGraphicsNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToGraphics", new NodeDictionaryDefinition(new  CurveAlphaToGraphicsNode()                                      ,new Color(0.075f, 0.553f, 0.459f)) },
 
              //Curves the Alpha of Renderer to a target alpha within a given duration
-             { "CurveAlphaToRenderer", new NodeDictionaryDefinition(new  CurveAlphaToRendererNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToRenderer", new NodeDictionaryDefinition(new  CurveAlphaToRendererNode()                                      ,new Color(0.055f, 0.4f, 0.333f)) },
 
              //Curves the Alpha of Renderers to a target alpha within a given duration
-             { "CurveAlphaToRenderers", new NodeDictionaryDefinition(new  CurveAlphaToRenderersNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToRenderers", new NodeDictionaryDefinition(new  CurveAlphaToRenderersNode()                                      ,new Color(0.055f, 0.4f, 0.333f)) },
 
              //Curves the Alpha of SpriteRenderer to a target alpha within a given duration
-             { "CurveAlphaToSpriteRenderer", new NodeDictionaryDefinition(new  CurveAlphaToSpriteRendererNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToSpriteRenderer", new NodeDictionaryDefinition(new  CurveAlphaToSpriteRendererNode()                                     ,new Color(0.055f, 0.4f, 0.333f)) },
 
              //Curves the Alpha of SpriteRenderers to a target alpha within a given duration
-             { "CurveAlphaToSpriteRenderers", new NodeDictionaryDefinition(new  CurveAlphaToSpriteRenderersNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToSpriteRenderers", new NodeDictionaryDefinition(new  CurveAlphaToSpriteRenderersNode()                                      ,new Color(0.055f, 0.4f, 0.333f)) },
 
              //Curves the Alpha of TextMesh to a target alpha within a given duration
-             { "CurveAlphaToTextMesh", new NodeDictionaryDefinition(new  CurveAlphaToTextMeshNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToTextMesh", new NodeDictionaryDefinition(new  CurveAlphaToTextMeshNode()                                      ,new Color(0.075f, 0.553f, 0.459f)) },
 
              //Curves the Alpha of TextMeshes to a target alpha within a given duration
-             { "CurveAlphaToTextMeshes", new NodeDictionaryDefinition(new  CurveAlphaToTextMeshesNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToTextMeshes", new NodeDictionaryDefinition(new  CurveAlphaToTextMeshesNode()                                      ,new Color(0.075f, 0.553f, 0.459f)) },
 
              //Curves the Alpha of CanvasGroup to a target alpha within a given duration
-             { "CurveAlphaToCanvasGroup", new NodeDictionaryDefinition(new  CurveAlphaToCanvasGroupNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToCanvasGroup", new NodeDictionaryDefinition(new  CurveAlphaToCanvasGroupNode()                                      ,new Color(0.075f, 0.553f, 0.459f)) },
 
              //Curves the Alpha of CanvasGroups to a target alpha within a given duration
-             { "CurveAlphaToCanvasGroups", new NodeDictionaryDefinition(new  CurveAlphaToCanvasGroupsNode()                                      ,new Color(0.16f ,0.45f,0.65f)) },
+             { "CurveAlphaToCanvasGroups", new NodeDictionaryDefinition(new  CurveAlphaToCanvasGroupsNode()                                      ,new Color(0.075f, 0.553f, 0.459f)) },
 	#endregion
 
         #region Reword
              //Sets the text of the different Text Classes to a new text
 
              //Sets the text of a Text class to a new text
-             { "ReWordText", new NodeDictionaryDefinition(new ReWordTextNode()                             ,new Color(0.16f ,0.45f,0.65f)) },
+             { "ReWordText", new NodeDictionaryDefinition(new ReWordTextNode()                             ,new Color(0.863f, 0.463f, 0.2f)) },
 
               //Sets the text of a TextMesh class to a new text
-             { "ReWordTextMesh", new NodeDictionaryDefinition(new ReWordTextMeshNode()                             ,new Color(0.16f ,0.45f,0.65f)) },
+             { "ReWordTextMesh", new NodeDictionaryDefinition(new ReWordTextMeshNode()                      ,new Color(0.863f, 0.463f, 0.2f)) },
 
              //Sets the text of a TextMeshPro, TextMeshProGUI or any class that inherits from TMP_Text class to a new text
-             { "ReWordTextMeshPro", new NodeDictionaryDefinition(new ReWordTextMeshProNode()               ,new Color(0.13f ,0.38f,0.55f)) },
+             { "ReWordTextMeshPro", new NodeDictionaryDefinition(new ReWordTextMeshProNode()               ,new Color(0.863f, 0.463f, 0.2f)) },
 
 	#endregion
 
