@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// © 2020 Lee Kee Shen All Rights Reserved
-/// Basically this is where i am going to store all the gameobject related events for TEM
-/// </summary>
+
 namespace LEM_Effects
 {
     public class DestroyGameObjects : LEM_BaseEffect

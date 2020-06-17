@@ -13,7 +13,8 @@ namespace LEM_Effects
 
         public override void OnInitialiseEffect()
         {
-            LinearEventsManager.PlayLinearEvent(m_TargetLinearEvent[Random.Range(0, m_TargetLinearEvent.Length)]);
+            //LinearEventsManager.PlayLinearEvent(m_TargetLinearEvent[Random.Range(0, m_TargetLinearEvent.Length)]);
+            m_TargetLinearEvent[Random.Range(0, m_TargetLinearEvent.Length)].PlayLinearEvent();
         }
 
 #if UNITY_EDITOR

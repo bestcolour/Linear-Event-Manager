@@ -16,7 +16,8 @@ namespace LEM_Effects
         {
             for (int i = 0; i < m_TargetLinearEvent.Length; i++)
             {
-                LinearEventsManager.PlayLinearEvent(m_TargetLinearEvent[i]);
+                m_TargetLinearEvent[i].PlayLinearEvent();
+                //LinearEventsManager.PlayLinearEvent(m_TargetLinearEvent[i]);
             }
         }
 #if UNITY_EDITOR

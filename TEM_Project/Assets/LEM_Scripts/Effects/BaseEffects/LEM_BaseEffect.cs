@@ -1,9 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-/// <summary>
-/// © 2020 Lee Kee Shen All Rights Reserved
-/// </summary>
 namespace LEM_Effects
 {
 

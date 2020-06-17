@@ -25,7 +25,8 @@ namespace LEM_Effects
                 //If randomfloat is more or equal to minrange, and lesser than maxrange,
                 if (randomFloat >= 0f && randomFloat < currentMaxRange)
                 {
-                    LinearEventsManager.PlayLinearEvent(m_TargetLinearEvent[i]);
+                    m_TargetLinearEvent[i].PlayLinearEvent();
+                    //LinearEventsManager.PlayLinearEvent();
                     return;
                 }
             }

@@ -14,7 +14,7 @@ namespace LEM_Effects
 
         public override void OnInitialiseEffect()
         {
-            LinearEventsManager.PlayLinearEvent(m_TargetLinearEvent);
+            m_TargetLinearEvent.PlayLinearEvent();
         }
 
 #if UNITY_EDITOR

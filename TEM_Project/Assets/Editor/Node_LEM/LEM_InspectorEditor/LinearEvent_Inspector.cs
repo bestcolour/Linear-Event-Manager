@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using LEM_Effects;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 
 namespace LEM_Editor
 {
@@ -22,14 +20,12 @@ namespace LEM_Editor
 
             LinearEvent linearEvent = (LinearEvent)target;
 
-            //GUILayout.BeginHorizontal();
+            GUILayout.BeginHorizontal();
 
             DrawLoadButton(linearEvent);
             DrawClearButton(linearEvent);
-            //DrawCreatePrefabButton(linearEvent);
-            //DrawRemoveUnusedEventsButton(linearEvent);
 
-            //GUILayout.EndHorizontal();
+            GUILayout.EndHorizontal();
 
             EditorGUILayout.Space();
             DrawInspector();
@@ -55,67 +51,49 @@ namespace LEM_Editor
             }
         }
 
-        //void DrawCreatePrefabButton(LinearEvent linearEvent)
-        //{
-        //    //Creates a button to load the node editor
-        //    if (GUILayout.Button("Save To Assets as Scene", GUILayout.Height(m_LineHeightSpace * 2)))
-        //    {
-        //        SaveEventAsScene(linearEvent);
-        //        //SaveEventAsAsset(linearEvent);
-        //    }
-        //}
-
-        //void DrawRemoveUnusedEventsButton(LinearEvent linearEvent)
-        //{
-        //    //Creates a button to load the node editor
-        //    if (GUILayout.Button("Remove Unused Events", GUILayout.Height(m_LineHeightSpace * 2)))
-        //    {
-        //        linearEvent.RemoveUnusedEvents();
-        //    }
-        //}
-
-        //void SaveEventAsScene( LinearEvent le)
-        //{
-        //    Scene s = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
-
-        //    if(le.transform.root != le.transform)
-        //    {
-        //        le.transform.SetParent(null);
-        //    }
-
-        //    EditorSceneManager.MoveGameObjectToScene(le.gameObject, s);
-
-        //    EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
-
-        //    bool saveok = EditorSceneManager.SaveScene(s);
-        //    //bool saveok= EditorSceneManager.SaveScene(s, "Assets/" + s.name+".unity" ,true);
-        //    Debug.Log("Save Success : " + saveok);
-        //}
-
-
-        //void SaveEventAsAsset(LinearEvent le)
-        //{
-        //    //PrefabUtility.SaveAsPrefabAsset(le.gameObject,"Assets/" + le.name + ".prefab");
-        //    ////AssetDatabase.CreateAsset(le.gameObject, "Assets/" + le.name + ".asset");
-        //    //EditorUtility.SetDirty(le);
-        //    //AssetDatabase.SaveAssets();
-        //    string s = JsonUtility.ToJson(le);
-
-        //    Debug.Log(s);
-        //}
-
         void DrawInspector()
         {
-            bool wasEnabled = GUI.enabled;
-            GUI.enabled = false;
+            bool wasDrawn = false;
+            string effectsName = "m_AllEffects";
 
-            EditorGUILayout.LabelField("Number of Events");
-            EditorGUILayout.IntField(serializedObject.FindProperty("m_AllEffects").arraySize);
+            SerializedProperty p = serializedObject.GetIterator();
+            //Skip drawing the monobehaviour object field
+            p.NextVisible(true);
 
-            GUI.enabled = wasEnabled;
-            //EditorGUILayout.PropertyField(serializedObject.FindProperty("m_AllEffects"));
+            while (p.NextVisible(true))
+            {
+                if (p.propertyPath.Contains(effectsName))
+                {
+                    //If the effects array was not drawn,
+                    if (!wasDrawn)
+                    {
+                        wasDrawn = GUI.enabled;
+                        GUI.enabled = false;
+                        EditorGUILayout.LabelField("Number of Events");
+                        EditorGUILayout.IntField(p.arraySize);
+                        GUI.enabled = wasDrawn;
+
+                        wasDrawn = true;
+                        continue;
+                    }
+                    continue;
+                }
+
+
+                EditorGUILayout.PropertyField(p);
+            }
+
+            #region OldCode
+            //bool wasEnabled = GUI.enabled;
+            //GUI.enabled = false;
+
+            //EditorGUILayout.LabelField("Number of Events");
+            //EditorGUILayout.IntField(serializedObject.FindProperty("m_AllEffects").arraySize);
+
+            //GUI.enabled = wasEnabled;
+
+            #endregion
         }
-
 
     }
 
