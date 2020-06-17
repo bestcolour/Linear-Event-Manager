@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaSpriteRenderers : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  FadeToAlphaSpriteRenderers : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<SpriteRenderer[], float, float> 
 #endif

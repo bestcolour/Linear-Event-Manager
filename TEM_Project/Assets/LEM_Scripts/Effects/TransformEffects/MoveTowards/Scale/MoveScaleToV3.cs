@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveScaleToV3 : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  MoveScaleToV3 : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, float> 
 #endif

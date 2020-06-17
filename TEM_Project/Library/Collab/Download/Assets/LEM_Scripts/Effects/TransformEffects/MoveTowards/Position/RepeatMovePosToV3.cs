@@ -5,7 +5,7 @@ namespace LEM_Effects
     //This move has no stop. It will keep moving until you use Stop Repeat event
     public class RepeatMovePosToV3 : UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Vector3,bool, float> 
+        , IEffectSavable<Transform, Vector3, bool, float>
 #endif
     {
         [Tooltip("The transform you want to move repeatedly")]
@@ -30,6 +30,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+
+
         public override void OnInitialiseEffect()
         {
             m_IntiialPosition = m_TargetTransform.position;
@@ -39,12 +41,12 @@ namespace LEM_Effects
         public override bool OnUpdateEffect(float delta)
         {
             //Increment the time variable by division of duration from delta time
-            m_Timer += delta ;
+            m_Timer += delta;
 
             delta = m_Timer / m_Duration;
 
             //meanwhile, move the transform to the target
-            m_TargetTransform.position = Vector3.Lerp(m_IntiialPosition, m_TargetPosition, delta );
+            m_TargetTransform.position = Vector3.Lerp(m_IntiialPosition, m_TargetPosition, delta);
 
             //Only when the duration is up, then consider the 
             //effect done
@@ -59,23 +61,29 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
-        public void SetUp(Transform t1, Vector3 t2,bool t3 ,float t4)
+        public void SetUp(Transform t1, Vector3 t2, bool t3, float t4)
         {
             m_TargetTransform = t1;
             m_TargetPosition = t2;
-            m_UseWorldSpace= t3;
+            m_UseWorldSpace = t3;
             m_Duration = t4;
 
         }
-
-        public void UnPack(out Transform t1, out Vector3 t2,out bool t3, out float t4)
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatMovePosToV3 t = go.AddComponent<RepeatMovePosToV3>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetPosition, out t.m_UseWorldSpace, out t.m_Duration);
+            return t;
+        }
+        public void UnPack(out Transform t1, out Vector3 t2, out bool t3, out float t4)
         {
             t1 = m_TargetTransform;
             t2 = m_TargetPosition;
             t3 = m_UseWorldSpace;
             t4 = m_Duration;
-        } 
+        }
 #endif
 
-    } 
+    }
 }

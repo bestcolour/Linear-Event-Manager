@@ -2,7 +2,7 @@
 
 namespace LEM_Effects
 {
-    public class AddDelayAt : LEM_BaseEffect
+    [AddComponentMenu("")] public class  AddDelayAt : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<LinearEvent, float> 
 #endif

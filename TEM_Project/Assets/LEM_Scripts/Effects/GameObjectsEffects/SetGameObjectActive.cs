@@ -2,7 +2,7 @@
 
 namespace LEM_Effects
 {
-    public class SetGameObjectActive : LEM_BaseEffect
+    [AddComponentMenu("")] public class  SetGameObjectActive : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<GameObject, bool> 
 #endif

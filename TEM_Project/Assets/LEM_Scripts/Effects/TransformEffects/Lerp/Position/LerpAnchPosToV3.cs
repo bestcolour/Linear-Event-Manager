@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class LerpAnchPosToV3 : UpdateBaseEffect
+    [AddComponentMenu("")] public class  LerpAnchPosToV3 : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<RectTransform, Vector3, float, float> 
 #endif

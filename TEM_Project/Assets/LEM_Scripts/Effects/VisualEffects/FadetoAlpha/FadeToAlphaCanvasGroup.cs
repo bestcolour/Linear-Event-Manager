@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaCanvasGroup : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  FadeToAlphaCanvasGroup : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<CanvasGroup, float, float>
 #endif

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEngine;
 namespace LEM_Effects
 {
 
@@ -38,6 +39,15 @@ namespace LEM_Effects
             t3 = m_Smoothing;
             t4 = m_SnapDistance;
         }
+
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LerpPosToT t = go.AddComponent<LerpPosToT>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetDestination, out t.m_Smoothing, out t.m_SnapDistance);
+            return t;
+        }
 #endif
 
         public override bool OnUpdateEffect(float delta)
@@ -56,7 +66,6 @@ namespace LEM_Effects
 
             return m_IsFinished;
         }
-
 
     } 
 }

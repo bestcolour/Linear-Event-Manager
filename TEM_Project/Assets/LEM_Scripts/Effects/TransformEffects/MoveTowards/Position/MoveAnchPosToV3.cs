@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveAnchPosToV3 : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  MoveAnchPosToV3 : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<RectTransform, Vector3, float>
 #endif

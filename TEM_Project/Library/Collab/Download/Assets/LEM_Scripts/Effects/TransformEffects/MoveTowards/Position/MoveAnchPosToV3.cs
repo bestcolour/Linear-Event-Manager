@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
     public class MoveAnchPosToV3 : TimerBasedUpdateEffect
 #if UNITY_EDITOR
-        , IEffectSavable<RectTransform, Vector3, float> 
+        , IEffectSavable<RectTransform, Vector3, float>
 #endif
     {
         [Tooltip("The transform you want to lerp repeatedly")]
@@ -39,7 +39,15 @@ namespace LEM_Effects
             t1 = m_TargetRectransform;
             t2 = m_TargetPosition;
             t3 = m_Duration;
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            MoveAnchPosToV3 t = go.AddComponent<MoveAnchPosToV3>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRectransform, out t.m_TargetPosition, out t.m_Duration);
+            return t;
+        }
 #endif
 
         public override bool OnUpdateEffect(float delta)
@@ -47,10 +55,10 @@ namespace LEM_Effects
             //Increment the time variable by division of duration from delta time
             m_Timer += delta;
 
-            delta = m_Timer/m_Duration;
+            delta = m_Timer / m_Duration;
 
             //meanwhile, move the transform to the target
-            m_TargetRectransform.anchoredPosition3D = Vector3.Lerp(m_OriginalPosition, m_TargetPosition,delta);
+            m_TargetRectransform.anchoredPosition3D = Vector3.Lerp(m_OriginalPosition, m_TargetPosition, delta);
 
             //Only when the duration is up, then consider the 
             //effect done
@@ -66,5 +74,5 @@ namespace LEM_Effects
         }
 
 
-    } 
+    }
 }

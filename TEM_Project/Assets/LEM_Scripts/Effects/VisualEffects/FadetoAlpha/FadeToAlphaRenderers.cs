@@ -2,7 +2,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //Will fade all materials on all the renderers
-    public class FadeToAlphaRenderers : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  FadeToAlphaRenderers : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Renderer[], float, float> 
 #endif

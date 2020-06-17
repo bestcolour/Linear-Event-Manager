@@ -2,7 +2,7 @@
 
 namespace LEM_Effects
 {
-    public class CurveRateOfChangeScaleX : SingleCurveBasedUpdateEffect<CurveRateOfChangeScaleX>
+    [AddComponentMenu("")] public class  CurveRateOfChangeScaleX : SingleCurveBasedUpdateEffect<CurveRateOfChangeScaleX>
 #if UNITY_EDITOR
         , IEffectSavable<Transform, AnimationCurve>
 #endif

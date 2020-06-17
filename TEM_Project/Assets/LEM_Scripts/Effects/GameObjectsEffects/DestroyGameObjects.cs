@@ -3,7 +3,7 @@
 
 namespace LEM_Effects
 {
-    public class DestroyGameObjects : LEM_BaseEffect
+    [AddComponentMenu("")] public class  DestroyGameObjects : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<GameObject[]> 
 #endif

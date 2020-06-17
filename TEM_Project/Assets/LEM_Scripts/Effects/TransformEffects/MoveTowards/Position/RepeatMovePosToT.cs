@@ -2,7 +2,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //This move has no stop. It will keep moving until you use Stop Repeat event
-    public class RepeatMovePosToT : UpdateBaseEffect
+    [AddComponentMenu("")] public class  RepeatMovePosToT : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, float, float>
 #endif

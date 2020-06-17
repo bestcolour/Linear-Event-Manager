@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class BiasedProbabilityOutCome : LEM_BaseEffect
+    [AddComponentMenu("")] public class  BiasedProbabilityOutCome : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<float[]> 
 #endif

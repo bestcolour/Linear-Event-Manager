@@ -3,7 +3,7 @@ using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaGraphics : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  FadeToAlphaGraphics : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Graphic[], float, float>
 #endif

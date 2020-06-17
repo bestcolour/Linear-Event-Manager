@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
-    public class CurveRotationXYZ : ThreeCurveBasedUpdateEffect<CurveRotationXYZ>
+    [AddComponentMenu("")] public class  CurveRotationXYZ : ThreeCurveBasedUpdateEffect<CurveRotationXYZ>
 #if UNITY_EDITOR
         , IEffectSavable<Transform, MainGraph, AnimationCurve, AnimationCurve, AnimationCurve, bool>
 #endif

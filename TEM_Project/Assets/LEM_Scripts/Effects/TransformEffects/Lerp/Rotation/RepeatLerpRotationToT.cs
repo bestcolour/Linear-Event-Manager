@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepeatLerpRotationToT : UpdateBaseEffect
+    [AddComponentMenu("")] public class  RepeatLerpRotationToT : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, bool, float, float>
 #endif

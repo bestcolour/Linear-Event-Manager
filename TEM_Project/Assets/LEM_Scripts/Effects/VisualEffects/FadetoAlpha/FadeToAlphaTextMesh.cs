@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class FadeToAlphaTextMesh : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  FadeToAlphaTextMesh : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<TextMesh, float, float>
 #endif

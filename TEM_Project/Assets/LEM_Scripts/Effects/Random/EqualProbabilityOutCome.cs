@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class EqualProbabilityOutCome : LEM_BaseEffect
+    [AddComponentMenu("")] public class  EqualProbabilityOutCome : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<int> 
 #endif

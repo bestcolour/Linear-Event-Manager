@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepeatLerpScaleToV3 : UpdateBaseEffect
+    [AddComponentMenu("")] public class  RepeatLerpScaleToV3 : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, float, float> 
 #endif

@@ -3,7 +3,7 @@
 namespace LEM_Effects
 {
 
-    public class CurveAnchPosX : SingleCurveBasedUpdateEffect<CurveAnchPosX>
+    [AddComponentMenu("")] public class  CurveAnchPosX : SingleCurveBasedUpdateEffect<CurveAnchPosX>
 #if UNITY_EDITOR
         , IEffectSavable<RectTransform, AnimationCurve>
 #endif

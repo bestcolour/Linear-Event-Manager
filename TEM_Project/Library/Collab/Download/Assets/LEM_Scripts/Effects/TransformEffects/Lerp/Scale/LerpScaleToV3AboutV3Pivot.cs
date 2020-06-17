@@ -25,6 +25,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+      
 
         public override void OnInitialiseEffect()
         {
@@ -64,6 +65,15 @@ namespace LEM_Effects
             m_LocalPivotPosition = t3;
             m_Smoothing = t4;
             m_SnapRange = t5;
+        }
+
+  public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LerpScaleToV3AboutV3Pivot t = go.AddComponent<LerpScaleToV3AboutV3Pivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetScale, out t.m_LocalPivotPosition, out t.m_Smoothing, out t.m_SnapRange);
+            return t;
+
         }
 
         public void UnPack(out Transform t1, out Vector3 t2, out Vector3 t3, out float t4, out float t5)

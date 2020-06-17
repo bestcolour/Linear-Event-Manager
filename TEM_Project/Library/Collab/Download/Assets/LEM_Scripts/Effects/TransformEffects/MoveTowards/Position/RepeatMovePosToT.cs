@@ -4,7 +4,7 @@ namespace LEM_Effects
     //This move has no stop. It will keep moving until you use Stop Repeat event
     public class RepeatMovePosToT : UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<Transform, Transform, float, float> 
+        , IEffectSavable<Transform, Transform, float, float>
 #endif
     {
         [Tooltip("The transform you want to lerp repeatedly")]
@@ -54,6 +54,13 @@ namespace LEM_Effects
             m_Speed = t3;
             m_SnapDistance = t4;
         }
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatMovePosToT t = go.AddComponent<RepeatMovePosToT>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetDestination, out t.m_Speed, out t.m_SnapDistance);
+            return t;
+        }
 
         public void UnPack(out Transform t1, out Transform t2, out float t3, out float t4)
         {
@@ -62,7 +69,7 @@ namespace LEM_Effects
             t3 = m_Speed;
             t4 = m_SnapDistance;
 
-        } 
+        }
 #endif
 
 

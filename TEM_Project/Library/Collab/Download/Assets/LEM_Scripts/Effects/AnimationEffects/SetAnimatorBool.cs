@@ -18,12 +18,22 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType =>EffectFunctionType.InstantEffect;
 
+      
         public override void OnInitialiseEffect()
         {
             m_TargetAnimator.SetBool(m_ParameterName, m_BooleanValue);
         }
 
 #if UNITY_EDITOR
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            SetAnimatorBool l = go.AddComponent<SetAnimatorBool>();
+            l.CloneBaseValuesFrom(this);
+            UnPack(out l.m_TargetAnimator, out l.m_ParameterName, out l.m_BooleanValue);
+            return l;
+        }
+
+
         public void SetUp(Animator t1, string t2, bool t3)
         {
             m_TargetAnimator = t1;

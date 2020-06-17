@@ -17,6 +17,8 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+      
+
         public override bool OnUpdateEffect(float delta)
         {
             m_TargetedTransform.Translate(m_DirectionalSpeed * delta, m_RelativeSpace);
@@ -38,7 +40,14 @@ namespace LEM_Effects
             t1 = m_TargetedTransform;
             t2 = m_DirectionalSpeed;
             t3 = m_RelativeSpace;
-        } 
+        }  
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            TranslateRelativeToSpace t = go.AddComponent<TranslateRelativeToSpace>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetedTransform, out t.m_DirectionalSpeed, out t.m_RelativeSpace);
+            return t;
+        }
 #endif
     }
 

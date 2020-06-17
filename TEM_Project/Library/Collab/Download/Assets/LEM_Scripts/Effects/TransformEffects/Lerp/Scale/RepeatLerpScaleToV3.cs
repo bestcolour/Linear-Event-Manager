@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEngine;
 namespace LEM_Effects
 {
     public class RepeatLerpScaleToV3 : UpdateBaseEffect
@@ -22,6 +23,7 @@ namespace LEM_Effects
         Vector3 m_InitialScale = default;
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+     
         public override void OnInitialiseEffect()
         {
             m_SnapRange *= m_SnapRange;
@@ -58,7 +60,15 @@ namespace LEM_Effects
             t3 = m_Smoothing;
             t4 = m_SnapRange;
 
-        } 
+        }
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatLerpScaleToV3 t = go.AddComponent<RepeatLerpScaleToV3>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetScale, out t.m_Smoothing, out t.m_SnapRange);
+            return t;
+        }
+
 #endif
     }
 

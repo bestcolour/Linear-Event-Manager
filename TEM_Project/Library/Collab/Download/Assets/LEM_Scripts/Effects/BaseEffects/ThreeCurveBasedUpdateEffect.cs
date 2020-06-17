@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using UnityEngine;
-namespace LEM_Effects.AbstractClasses
+﻿using UnityEngine;
+namespace LEM_Effects
 {
     public enum MainGraph { X, Y, Z }
 
@@ -20,7 +19,7 @@ namespace LEM_Effects.AbstractClasses
         protected RBoolIVoidDelegate d_UpdateCheck = null;
 
 #if UNITY_EDITOR
-        public override LEM_BaseEffect CreateClone()
+        public override LEM_BaseEffect ScriptableClone()
         {
             T c = (T)MemberwiseClone();
             c.m_GraphX = m_GraphX.Clone();

@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class FadeToAlphaRenderer : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  FadeToAlphaRenderer : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Renderer, float, float>
 #endif

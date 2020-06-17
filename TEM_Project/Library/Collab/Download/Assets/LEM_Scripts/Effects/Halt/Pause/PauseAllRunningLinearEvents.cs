@@ -13,6 +13,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantHaltEffect;
 
+
         public override void OnInitialiseEffect()
         {
             LinearEventsManager.Instance.PauseAllRunningLinearEvents = m_State;
@@ -27,7 +28,16 @@ namespace LEM_Effects
         public void UnPack(out bool t1)
         {
             t1 = m_State;
-        } 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            PauseAllRunningLinearEvents t = go.AddComponent<PauseAllRunningLinearEvents>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_State);
+            return t;
+        }
+
 #endif
     }
 

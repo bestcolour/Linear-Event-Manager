@@ -2,7 +2,7 @@
 
 namespace LEM_Effects
 {
-    public class PauseLinearEvent : LEM_BaseEffect
+    [AddComponentMenu("")] public class  PauseLinearEvent : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<LinearEvent, bool>
 #endif

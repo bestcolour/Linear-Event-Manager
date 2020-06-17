@@ -4,7 +4,7 @@ using System;
 namespace LEM_Effects
 {
     [Serializable]
-    public class DestroyGameObject : LEM_BaseEffect
+    [AddComponentMenu("")] public class  DestroyGameObject : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<GameObject> 
 #endif

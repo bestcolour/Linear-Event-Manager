@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using LEM_Effects.AbstractClasses;
+
 namespace LEM_Effects
 {
 
@@ -19,7 +19,7 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
 #if UNITY_EDITOR
-        public override LEM_BaseEffect CreateClone()
+        public override LEM_BaseEffect ScriptableClone()
         {
             CurvePosXYZ copy = (CurvePosXYZ)MemberwiseClone();
 
@@ -52,7 +52,13 @@ namespace LEM_Effects
             t5 = m_GraphZ;
             t6 = m_RelativeToWorld;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurvePosXYZ t = go.AddComponent<CurvePosXYZ>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetTransform, m_MainGraph, m_GraphX.Clone(), m_GraphY.Clone(), m_GraphZ.Clone(), m_RelativeToWorld);
+            return t;
+        }
 #endif
 
 
@@ -91,6 +97,8 @@ namespace LEM_Effects
 
             return d_UpdateCheck.Invoke();
         }
+
+
     }
 
 }

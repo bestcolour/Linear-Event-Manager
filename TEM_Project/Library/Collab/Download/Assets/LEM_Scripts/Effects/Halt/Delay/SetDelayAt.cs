@@ -15,6 +15,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantHaltEffect;
 
+     
         public override void OnInitialiseEffect()
         {
             m_TargetLinearEvent.SetDelayBeforeNextEffect = m_DelayTime;
@@ -32,7 +33,15 @@ namespace LEM_Effects
         {
             t1 = m_TargetLinearEvent;
             t2 = m_DelayTime;
-        } 
+        }  
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            SetDelayAt t = go.AddComponent<SetDelayAt>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetLinearEvent, out t.m_DelayTime);
+            return t;
+        }
+
 #endif
     }
 

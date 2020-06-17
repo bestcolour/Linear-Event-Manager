@@ -27,7 +27,7 @@ namespace LEM_Editor
 
             //Draw a object field for inputting  the gameobject to destroy
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.UPDATE_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
-            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.s_CurrentLabelColour);
+            LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
             //EditorGUI.LabelField(propertyRect, "RectTransform To Lerp");
             //propertyRect.y += 20f;
             m_TargetRectransform = (RectTransform)EditorGUI.ObjectField(propertyRect, "Target RectTransform", m_TargetRectransform, typeof(RectTransform), true);
@@ -43,9 +43,10 @@ namespace LEM_Editor
 
         
 
-        public override LEM_BaseEffect CompileToBaseEffect()
+        public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {
-            CurveAnchPosX myEffect = ScriptableObject.CreateInstance<CurveAnchPosX>();
+            CurveAnchPosX myEffect = go.AddComponent<CurveAnchPosX>();
+            //CurveAnchPosX myEffect = ScriptableObject.CreateInstance<CurveAnchPosX>();
             myEffect.bm_NodeEffectType = EffectTypeName;
 
             //myEffect.m_Description = m_LemEffectDescription;

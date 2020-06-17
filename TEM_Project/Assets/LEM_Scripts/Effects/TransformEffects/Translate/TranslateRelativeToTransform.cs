@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class TranslateRelativeToTransform : UpdateBaseEffect
+    [AddComponentMenu("")] public class  TranslateRelativeToTransform : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, Transform>
 #endif

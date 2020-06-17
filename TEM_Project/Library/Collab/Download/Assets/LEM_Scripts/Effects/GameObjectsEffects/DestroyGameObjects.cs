@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// © 2020 Lee Kee Shen All Rights Reserved
-/// Basically this is where i am going to store all the gameobject related events for TEM
-/// </summary>
+
 namespace LEM_Effects
 {
     public class DestroyGameObjects : LEM_BaseEffect
@@ -16,6 +13,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+      
         public override void OnInitialiseEffect()
         {
             //Destroy the targetted objects
@@ -26,6 +24,16 @@ namespace LEM_Effects
         }
 
 #if UNITY_EDITOR
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            DestroyGameObjects t = go.AddComponent<DestroyGameObjects>();
+
+            t.CloneBaseValuesFrom(this);
+            UnPack(out m_TargetObjects);
+            return t;
+        }
+
+
         public void SetUp(GameObject[] t1)
         {
             m_TargetObjects = t1;

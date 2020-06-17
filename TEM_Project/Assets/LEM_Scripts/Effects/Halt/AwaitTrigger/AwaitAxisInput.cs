@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
-    public class AwaitAxisInput : UpdateBaseEffect
+    [AddComponentMenu("")] public class  AwaitAxisInput : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<LinearEvent, SerializedObject>
 #endif

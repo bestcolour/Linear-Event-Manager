@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class OffsetAnchPos : LEM_BaseEffect
+    [AddComponentMenu("")] public class  OffsetAnchPos : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<RectTransform, Vector3>
 #endif

@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class MoveRotationToT : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  MoveRotationToT : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, bool, float>
 #endif

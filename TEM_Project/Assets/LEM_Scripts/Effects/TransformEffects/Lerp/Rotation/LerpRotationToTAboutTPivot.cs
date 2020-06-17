@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class LerpRotationToTAboutTPivot : UpdateBaseEffect
+    [AddComponentMenu("")] public class  LerpRotationToTAboutTPivot : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, Transform, bool, float, float>
 #endif

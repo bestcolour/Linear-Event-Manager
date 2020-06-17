@@ -129,6 +129,14 @@ namespace LEM_Effects
             t4 = m_WorldRotation;
             t5 = m_Duration;
         }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            MoveRotationToTAboutTPivot t = go.AddComponent<MoveRotationToTAboutTPivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TransformToBeRotated, out t.m_ReferenceTransform, out t.m_PivotTransform, out t.m_WorldRotation, out t.m_Duration);
+            return t;
+        }
 #endif
     }
 }

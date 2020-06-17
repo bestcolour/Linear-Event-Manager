@@ -3,7 +3,7 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class RepeatMoveScaleToV3AboutTPivot : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  RepeatMoveScaleToV3AboutTPivot : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, Transform, float> 
 #endif

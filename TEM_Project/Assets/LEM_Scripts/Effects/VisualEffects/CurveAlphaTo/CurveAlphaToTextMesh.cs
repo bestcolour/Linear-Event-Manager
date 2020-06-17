@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class CurveAlphaToTextMesh : SingleCurveBasedUpdateEffect<CurveAlphaToTextMesh>, IEffectSavable<TextMesh, AnimationCurve>
+    [AddComponentMenu("")] public class  CurveAlphaToTextMesh : SingleCurveBasedUpdateEffect<CurveAlphaToTextMesh>, IEffectSavable<TextMesh, AnimationCurve>
     {
         [SerializeField, Tooltip("The target TextMesh you wish to curve its alpha")]
         TextMesh m_TargetTextMesh = default;

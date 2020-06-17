@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepeatLerpRotationToTAboutV3Pivot : UpdateBaseEffect
+    [AddComponentMenu("")] public class  RepeatLerpRotationToTAboutV3Pivot : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, Vector3, bool, float, float>
 #endif

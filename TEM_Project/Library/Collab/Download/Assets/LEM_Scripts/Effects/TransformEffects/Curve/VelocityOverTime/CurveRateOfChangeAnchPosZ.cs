@@ -1,4 +1,4 @@
-﻿using LEM_Effects.AbstractClasses;
+﻿
 using UnityEngine;
 namespace LEM_Effects
 {
@@ -24,21 +24,31 @@ namespace LEM_Effects
             t2 = m_Graph;
         }
 
-        public override LEM_BaseEffect CreateClone()
+        //public override LEM_BaseEffect ScriptableClone()
+        //{
+        //    CurveRateOfChangeAnchPosZ copy = ScriptableObject.CreateInstance<CurveRateOfChangeAnchPosZ>();
+
+        //    copy.m_TargetRectransform = m_TargetRectransform;
+
+        //    copy.m_Graph = m_Graph.Clone();
+        //    //copy.m_Graph = new AnimationCurve();
+        //    //copy.m_Graph.keys = m_Graph.keys;
+        //    //copy.m_Graph.preWrapMode = m_Graph.preWrapMode;
+        //    //copy.m_Graph.postWrapMode = m_Graph.postWrapMode;
+
+        //    copy.CloneBaseValuesFrom(this);
+
+        //    return copy;
+        //}
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
         {
-            CurveRateOfChangeAnchPosZ copy = ScriptableObject.CreateInstance<CurveRateOfChangeAnchPosZ>();
-
-            copy.m_TargetRectransform = m_TargetRectransform;
-
-            copy.m_Graph = m_Graph.Clone();
-            //copy.m_Graph = new AnimationCurve();
-            //copy.m_Graph.keys = m_Graph.keys;
-            //copy.m_Graph.preWrapMode = m_Graph.preWrapMode;
-            //copy.m_Graph.postWrapMode = m_Graph.postWrapMode;
-
-            copy.CloneBaseValuesFrom(this);
-
-            return copy;
+            CurveRateOfChangeAnchPosZ t = go.AddComponent<CurveRateOfChangeAnchPosZ>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetRectransform, m_Graph.Clone());
+            //t.m_Graph =  m_Graph.Clone();
+            //t.m_TargetRectransform = m_TargetRectransform;
+            return t;
         }
 #endif
 
@@ -59,7 +69,7 @@ namespace LEM_Effects
             return d_UpdateCheck.Invoke();
         }
 
-
+      
     }
 
 }

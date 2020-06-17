@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class CurveAlphaToRenderers : SingleCurveBasedUpdateEffect<CurveAlphaToRenderers>
+    [AddComponentMenu("")] public class  CurveAlphaToRenderers : SingleCurveBasedUpdateEffect<CurveAlphaToRenderers>
 #if UNITY_EDITOR
         , IEffectSavable<Renderer[], AnimationCurve>
 #endif

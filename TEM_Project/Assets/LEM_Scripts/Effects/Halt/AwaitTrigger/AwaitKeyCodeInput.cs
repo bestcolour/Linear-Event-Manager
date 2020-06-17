@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class AwaitKeyCodeInput : UpdateBaseEffect
+    [AddComponentMenu("")] public class  AwaitKeyCodeInput : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<LinearEvent, SerializedObject> 
 #endif

@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
     public delegate void RVoidIFloatDelegate(float delta);
 
-    public class MoveRotationToV3 : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  MoveRotationToV3 : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, bool, float>
 #endif

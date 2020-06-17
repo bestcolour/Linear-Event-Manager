@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class PlayRandomLinearEvent : LEM_BaseEffect
+    [AddComponentMenu("")] public class  PlayRandomLinearEvent : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<LinearEvent[]> 
 #endif

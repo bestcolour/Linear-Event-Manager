@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
 
     //This lerp has no stop. It will keep lerping until you use Stop Repeat event
-    public class RepeatLerpAnchPosToV3 : UpdateBaseEffect
+    [AddComponentMenu("")] public class  RepeatLerpAnchPosToV3 : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<RectTransform, Vector3, float, float> 
 #endif

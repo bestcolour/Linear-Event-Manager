@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class CurveRateOfChangeAnchPosZ : SingleCurveBasedUpdateEffect<CurveRateOfChangeAnchPosZ>
+    [AddComponentMenu("")] public class  CurveRateOfChangeAnchPosZ : SingleCurveBasedUpdateEffect<CurveRateOfChangeAnchPosZ>
 #if UNITY_EDITOR
         , IEffectSavable<RectTransform, AnimationCurve>
 #endif

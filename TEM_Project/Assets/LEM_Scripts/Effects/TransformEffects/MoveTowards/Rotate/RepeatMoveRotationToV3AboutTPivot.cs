@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepeatMoveRotationToV3AboutTPivot : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  RepeatMoveRotationToV3AboutTPivot : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, Transform, bool, float>
 #endif

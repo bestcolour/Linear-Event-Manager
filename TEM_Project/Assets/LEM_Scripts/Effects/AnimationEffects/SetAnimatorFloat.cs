@@ -3,7 +3,7 @@
 namespace LEM_Effects
 {
 
-    public class SetAnimatorFloat : LEM_BaseEffect
+    [AddComponentMenu("")] public class  SetAnimatorFloat : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Animator, string, float> 
 #endif

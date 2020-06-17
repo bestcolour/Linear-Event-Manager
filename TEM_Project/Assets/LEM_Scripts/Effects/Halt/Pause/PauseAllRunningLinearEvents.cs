@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    public class PauseAllRunningLinearEvents : LEM_BaseEffect
+    [AddComponentMenu("")] public class  PauseAllRunningLinearEvents : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<bool> 
 #endif

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    public class ReWordText : LEM_BaseEffect
+    [AddComponentMenu("")] public class  ReWordText : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Text, string>
 #endif

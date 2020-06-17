@@ -31,53 +31,76 @@ namespace LEM_Effects
 
 
 #if UNITY_EDITOR
-        public override LEM_BaseEffect CreateClone()
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
         {
-            AwaitAxisInput newClone = ScriptableObject.CreateInstance<AwaitAxisInput>();
-            //AwaitAxisInput newClone = (AwaitAxisInput)MemberwiseClone();
-
-            //AwaitAxisInputData newDataInstance = ScriptableObject.CreateInstance<AwaitAxisInputData>();
-
-            //int length = m_MoreThanAxises != null ? m_MoreThanAxises.Length : 0;
-            //m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
-
-            //length = m_LessThanAxises != null ? m_LessThanAxises.Length : 0;
-            //m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
-
-            //length = m_ApproxEqualToAxises != null ? m_ApproxEqualToAxises.Length : 0;
-            //m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
-
-            //for (int i = 0; i < m_MoreThanAxises.Length; i++)
-            //m_MoreThanAxises[i] = m_MoreThanAxises[i];
-
-            //for (int i = 0; i < m_LessThanAxises.Length; i++)
-            //m_LessThanAxises[i] = m_LessThanAxises[i];
-
-            //for (int i = 0; i < m_ApproxEqualToAxises.Length; i++)
-            //m_ApproxEqualToAxises[i] = m_ApproxEqualToAxises[i];
-
-            //newClone.m_AxisInputData = newDataInstance;
+            AwaitAxisInput t = go.AddComponent<AwaitAxisInput>();
+            t.CloneBaseValuesFrom(this);
+            t.m_TargetLinearEvent = m_TargetLinearEvent;
 
             int length = m_MoreThanAxises != null ? m_MoreThanAxises.Length : 0;
-            newClone.m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
+            t.m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
 
             length = m_LessThanAxises != null ? m_LessThanAxises.Length : 0;
-            newClone.m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
+            t.m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
 
             length = m_ApproxEqualToAxises != null ? m_ApproxEqualToAxises.Length : 0;
-            newClone.m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
+            t.m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
 
 
-            m_MoreThanAxises?.CopyTo(newClone.m_MoreThanAxises,0);
-            m_LessThanAxises?.CopyTo(newClone.m_LessThanAxises,0);
-            m_ApproxEqualToAxises?.CopyTo(newClone.m_ApproxEqualToAxises,0);
+            m_MoreThanAxises?.CopyTo(t.m_MoreThanAxises, 0);
+            m_LessThanAxises?.CopyTo(t.m_LessThanAxises, 0);
+            m_ApproxEqualToAxises?.CopyTo(t.m_ApproxEqualToAxises, 0);
 
-            newClone.bm_NodeBaseData = bm_NodeBaseData;
-            newClone.bm_NodeEffectType = bm_NodeEffectType;
-            newClone.bm_UpdateCycle = bm_UpdateCycle;
-
-            return newClone;
+            return t;
         }
+
+        // MAJOR MONOCHANGE
+        //public override LEM_BaseEffect ScriptableClone()
+        //{
+        //    AwaitAxisInput newClone = ScriptableObject.CreateInstance<AwaitAxisInput>();
+
+        //    //AwaitAxisInputData newDataInstance = ScriptableObject.CreateInstance<AwaitAxisInputData>();
+
+        //    //int length = m_MoreThanAxises != null ? m_MoreThanAxises.Length : 0;
+        //    //m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
+
+        //    //length = m_LessThanAxises != null ? m_LessThanAxises.Length : 0;
+        //    //m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
+
+        //    //length = m_ApproxEqualToAxises != null ? m_ApproxEqualToAxises.Length : 0;
+        //    //m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
+
+        //    //for (int i = 0; i < m_MoreThanAxises.Length; i++)
+        //    //m_MoreThanAxises[i] = m_MoreThanAxises[i];
+
+        //    //for (int i = 0; i < m_LessThanAxises.Length; i++)
+        //    //m_LessThanAxises[i] = m_LessThanAxises[i];
+
+        //    //for (int i = 0; i < m_ApproxEqualToAxises.Length; i++)
+        //    //m_ApproxEqualToAxises[i] = m_ApproxEqualToAxises[i];
+
+        //    //newClone.m_AxisInputData = newDataInstance;
+
+        //    int length = m_MoreThanAxises != null ? m_MoreThanAxises.Length : 0;
+        //    newClone.m_MoreThanAxises = new AwaitAxisInputData.AxisData[length];
+
+        //    length = m_LessThanAxises != null ? m_LessThanAxises.Length : 0;
+        //    newClone.m_LessThanAxises = new AwaitAxisInputData.AxisData[length];
+
+        //    length = m_ApproxEqualToAxises != null ? m_ApproxEqualToAxises.Length : 0;
+        //    newClone.m_ApproxEqualToAxises = new AwaitAxisInputData.AxisData[length];
+
+
+        //    m_MoreThanAxises?.CopyTo(newClone.m_MoreThanAxises,0);
+        //    m_LessThanAxises?.CopyTo(newClone.m_LessThanAxises,0);
+        //    m_ApproxEqualToAxises?.CopyTo(newClone.m_ApproxEqualToAxises,0);
+
+        //    newClone.bm_NodeBaseData = bm_NodeBaseData;
+        //    newClone.bm_NodeEffectType = bm_NodeEffectType;
+        //    newClone.bm_UpdateCycle = bm_UpdateCycle;
+
+        //    return newClone;
+        //}
 
         public void SetUp(LinearEvent t1, SerializedObject t2)
         {
@@ -165,6 +188,7 @@ namespace LEM_Effects
             m_TargetLinearEvent.AddNumberOfAwaitingInput = -1;
         }
 
+     
     }
 
 }

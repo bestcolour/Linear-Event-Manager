@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using LEM_Effects.AbstractClasses;
 namespace LEM_Effects
 {
 
@@ -16,17 +15,17 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
 #if UNITY_EDITOR
-        public override LEM_BaseEffect CreateClone()
-        {
-            CurveAnchPosXYZ copy = (CurveAnchPosXYZ)MemberwiseClone();
+        //public override LEM_BaseEffect CreateClone()
+        //{
+        //    CurveAnchPosXYZ copy = (CurveAnchPosXYZ)MemberwiseClone();
 
-            //copy.m_TargetTransform = m_TargetTransform;
-            copy.m_GraphX = m_GraphX.Clone();
-            copy.m_GraphY = m_GraphY.Clone();
-            copy.m_GraphZ = m_GraphZ.Clone();
+        //    //copy.m_TargetTransform = m_TargetTransform;
+        //    copy.m_GraphX = m_GraphX.Clone();
+        //    copy.m_GraphY = m_GraphY.Clone();
+        //    copy.m_GraphZ = m_GraphZ.Clone();
 
-            return copy;
-        }
+        //    return copy;
+        //}
 
         public void SetUp(RectTransform t1, MainGraph t2, AnimationCurve t3, AnimationCurve t4, AnimationCurve t5)
         {
@@ -47,7 +46,14 @@ namespace LEM_Effects
             t4 = m_GraphY;
             t5 = m_GraphZ;
         }
-
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveAnchPosXYZ t = go.AddComponent<CurveAnchPosXYZ>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetRectTransform, m_MainGraph, m_GraphX.Clone(), m_GraphY.Clone(), m_GraphZ.Clone());
+            //UnPack(out t.m_TargetRectTransform, out t.m_MainGraph, out t.m_GraphX, out t.m_GraphY, out t.m_GraphZ);
+            return t;
+        }
 #endif
 
 
@@ -73,6 +79,8 @@ namespace LEM_Effects
 
             return d_UpdateCheck.Invoke();
         }
+
+
     }
 
 }

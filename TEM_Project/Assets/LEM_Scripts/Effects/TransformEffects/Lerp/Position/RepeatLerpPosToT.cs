@@ -2,7 +2,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
     //This lerp has no stop. It will keep lerping until you use Stop Repeat event
-    public class RepeatLerpPosToT : UpdateBaseEffect
+    [AddComponentMenu("")] public class  RepeatLerpPosToT : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, float, float> 
 #endif

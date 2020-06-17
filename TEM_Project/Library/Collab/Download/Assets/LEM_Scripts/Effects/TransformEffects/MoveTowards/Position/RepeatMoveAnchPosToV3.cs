@@ -5,7 +5,7 @@ namespace LEM_Effects
     //This move has no stop. It will keep moving until you use Stop Repeat event
     public class RepeatMoveAnchPosToV3 : UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<RectTransform, Vector3, float> 
+        , IEffectSavable<RectTransform, Vector3, float>
 #endif
     {
         [Tooltip("The transform you want to lerp repeatedly")]
@@ -26,6 +26,7 @@ namespace LEM_Effects
         Vector3 m_IntiialPosition = default;
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
+
 
 
         public override void OnInitialiseEffect()
@@ -58,6 +59,14 @@ namespace LEM_Effects
         }
 #if UNITY_EDITOR
 
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            RepeatMoveAnchPosToV3 t = go.AddComponent<RepeatMoveAnchPosToV3>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetRectransform, out t.m_TargetPosition, out t. m_Duration);
+            return t;
+        }
         public void SetUp(RectTransform t1, Vector3 t2, float t3)
         {
             m_TargetRectransform = t1;
@@ -71,7 +80,7 @@ namespace LEM_Effects
             t1 = m_TargetRectransform;
             t2 = m_TargetPosition;
             t3 = m_Duration;
-        } 
+        }
 #endif
 
 

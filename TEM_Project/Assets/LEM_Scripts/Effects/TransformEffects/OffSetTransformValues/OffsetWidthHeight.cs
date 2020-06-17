@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class OffsetWidthHeight : LEM_BaseEffect
+    [AddComponentMenu("")] public class  OffsetWidthHeight : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<RectTransform, Vector2>
 #endif

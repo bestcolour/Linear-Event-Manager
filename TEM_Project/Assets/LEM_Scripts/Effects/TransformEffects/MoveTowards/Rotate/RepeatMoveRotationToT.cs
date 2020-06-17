@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class RepeatMoveRotationToT : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  RepeatMoveRotationToT : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, bool, float>
 #endif

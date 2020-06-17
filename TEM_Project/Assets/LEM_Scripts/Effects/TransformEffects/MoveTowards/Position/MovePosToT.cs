@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MovePosToT : UpdateBaseEffect
+    [AddComponentMenu("")] public class  MovePosToT : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, float, float> 
 #endif

@@ -100,7 +100,7 @@ namespace LEM_Editor
         /// Saves node's value to a LEM_BaseEffect to be saved
         /// </summary>
         /// <returns></returns>
-        public abstract LEM_BaseEffect CompileToBaseEffect();
+        public abstract LEM_BaseEffect CompileToBaseEffect(GameObject go);
 
     }
 

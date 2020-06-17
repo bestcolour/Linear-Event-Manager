@@ -4,7 +4,7 @@ namespace LEM_Effects
 {
 
 
-    public class ReWordTextMeshPro : LEM_BaseEffect
+    [AddComponentMenu("")] public class  ReWordTextMeshPro : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<TMP_Text, string>
 #endif

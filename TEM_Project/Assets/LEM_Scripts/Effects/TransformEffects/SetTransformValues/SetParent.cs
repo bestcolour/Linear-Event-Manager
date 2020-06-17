@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class SetParent : LEM_BaseEffect
+    [AddComponentMenu("")] public class  SetParent : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, int>
 #endif

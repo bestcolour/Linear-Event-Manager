@@ -3,7 +3,7 @@
 namespace LEM_Effects
 {
 
-    public class CurvePosXYZ : ThreeCurveBasedUpdateEffect<CurvePosXYZ>
+    [AddComponentMenu("")] public class  CurvePosXYZ : ThreeCurveBasedUpdateEffect<CurvePosXYZ>
 #if UNITY_EDITOR
         , IEffectSavable<Transform, MainGraph, AnimationCurve, AnimationCurve, AnimationCurve, bool>
 #endif

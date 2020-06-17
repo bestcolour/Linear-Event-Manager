@@ -19,12 +19,22 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.InstantEffect;
 
+    
         public override void OnInitialiseEffect()
         {
             m_TargetAnimator.SetInteger(m_ParameterName, m_IntValue);
         }
 
 #if UNITY_EDITOR
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            SetAnimatorInt t = go.AddComponent<SetAnimatorInt>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetAnimator, out t.m_ParameterName, out t.m_IntValue);
+            return t;
+        }
+
+
         public void SetUp(Animator t1, string t2, int t3)
         {
             m_TargetAnimator = t1;

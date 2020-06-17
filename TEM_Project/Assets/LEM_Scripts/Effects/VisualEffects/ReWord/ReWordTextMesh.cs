@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class ReWordTextMesh : LEM_BaseEffect
+    [AddComponentMenu("")] public class  ReWordTextMesh : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<TextMesh, string>
 #endif

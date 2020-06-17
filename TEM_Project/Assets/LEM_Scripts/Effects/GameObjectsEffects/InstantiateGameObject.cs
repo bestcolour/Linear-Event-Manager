@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class InstantiateGameObject : LEM_BaseEffect
+    [AddComponentMenu("")] public class  InstantiateGameObject : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<GameObject, int, Vector3, Vector3, Vector3> 
 #endif

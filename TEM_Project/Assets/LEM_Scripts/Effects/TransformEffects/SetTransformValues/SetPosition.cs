@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class SetPosition : LEM_BaseEffect
+    [AddComponentMenu("")] public class  SetPosition : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, bool> 
 #endif

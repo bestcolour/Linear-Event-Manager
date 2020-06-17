@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class SetSiblingIndex : LEM_BaseEffect
+    [AddComponentMenu("")] public class  SetSiblingIndex : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, int>
 #endif

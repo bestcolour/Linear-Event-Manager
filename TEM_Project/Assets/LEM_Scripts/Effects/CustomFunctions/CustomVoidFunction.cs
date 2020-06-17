@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace LEM_Effects
 {
-    public class CustomVoidFunction : LEM_BaseEffect
+    [AddComponentMenu("")] public class  CustomVoidFunction : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<SerializedObject>
 #endif

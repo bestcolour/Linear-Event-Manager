@@ -24,6 +24,7 @@ namespace LEM_Effects
 
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
+       
 
         public override void OnInitialiseEffect()
         {
@@ -78,6 +79,14 @@ namespace LEM_Effects
             t3 = m_PivotWorldPosition;
             t4 = m_Duration;
 
+        }
+
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            MoveScaleToTAboutV3Pivot t = go.AddComponent<MoveScaleToTAboutV3Pivot>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_ReferenceTransform, out t.m_PivotWorldPosition, out t.m_Duration);
+            return t;
         }
 
 #endif

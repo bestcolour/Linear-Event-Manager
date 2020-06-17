@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveScaleToT : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  MoveScaleToT : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, float>
 #endif

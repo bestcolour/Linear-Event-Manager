@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class CurveScaleZ : SingleCurveBasedUpdateEffect<CurveScaleZ>
+    [AddComponentMenu("")] public class  CurveScaleZ : SingleCurveBasedUpdateEffect<CurveScaleZ>
 #if UNITY_EDITOR
         , IEffectSavable<Transform, AnimationCurve>
 #endif

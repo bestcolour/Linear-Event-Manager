@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class LerpPosToV3 : UpdateBaseEffect
+    [AddComponentMenu("")] public class  LerpPosToV3 : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3,bool, float, float> 
 #endif

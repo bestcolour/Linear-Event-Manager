@@ -1,4 +1,4 @@
-﻿using LEM_Effects.AbstractClasses;
+﻿
 using UnityEngine;
 namespace LEM_Effects
 {
@@ -24,7 +24,16 @@ namespace LEM_Effects
             t1 = m_TargetRectransform;
             t2 = m_Graph;
         }
+   public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveRateOfChangeAnchPosX t = go.AddComponent<CurveRateOfChangeAnchPosX>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetRectransform, m_Graph.Clone());
 
+
+            //UnPack(out t.m_TargetRectransform, out t.m_Graph);
+            return t;
+        }
         //public override LEM_BaseEffect CreateClone()
         //{
         //    CurveRateOfAnchPosX copy = ScriptableObject.CreateInstance<CurveRateOfAnchPosX>();
@@ -54,7 +63,7 @@ namespace LEM_Effects
             return d_UpdateCheck.Invoke();
         }
 
-       
+     
     }
 
 }

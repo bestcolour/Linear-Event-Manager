@@ -3,7 +3,7 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class LerpScaleToV3AboutTPivot : UpdateBaseEffect
+    [AddComponentMenu("")] public class  LerpScaleToV3AboutTPivot : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, Transform, float, float> 
 #endif

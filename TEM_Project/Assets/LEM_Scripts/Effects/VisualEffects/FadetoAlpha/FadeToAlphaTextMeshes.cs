@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 namespace LEM_Effects
 {
-    public class FadeToAlphaTextMeshes : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  FadeToAlphaTextMeshes : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<TextMesh[], float, float>
 #endif

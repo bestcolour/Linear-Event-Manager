@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class PlayBiasedLinearEvent : LEM_BaseEffect
+    [AddComponentMenu("")] public class  PlayBiasedLinearEvent : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<LinearEvent[], float[]> 
 #endif

@@ -3,7 +3,7 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class MoveScaleToTAboutV3Pivot : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  MoveScaleToTAboutV3Pivot : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, Vector3, float>
 #endif

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using LEM_Effects.AbstractClasses;
 
 namespace LEM_Effects
 {
@@ -35,6 +34,14 @@ namespace LEM_Effects
             t1 = m_TargetRectransform;
             t2 = m_Graph;
         }
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            CurveAnchPosX t = go.AddComponent<CurveAnchPosX>();
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetRectransform, m_Graph.Clone());
+            //UnPack(out t.m_TargetRectransform, out t.m_Graph);
+            return t;
+        }
 #endif
         public override void OnInitialiseEffect()
         {
@@ -42,7 +49,7 @@ namespace LEM_Effects
             m_OriginalPosition = m_TargetRectransform.anchoredPosition3D;
         }
 
-    
+
         public override bool OnUpdateEffect(float delta)
         {
             m_Timer += delta;
@@ -54,7 +61,7 @@ namespace LEM_Effects
             return d_UpdateCheck.Invoke();
         }
 
-      
+
     }
 
 }

@@ -2,7 +2,7 @@
 namespace LEM_Effects
 {
 
-    public class MoveAnchPosToRtT : UpdateBaseEffect
+    [AddComponentMenu("")] public class  MoveAnchPosToRtT : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<RectTransform, RectTransform, float, float> 
 #endif

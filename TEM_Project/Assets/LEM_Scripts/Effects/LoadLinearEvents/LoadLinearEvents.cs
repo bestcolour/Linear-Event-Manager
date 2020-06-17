@@ -2,7 +2,7 @@
 //namespace LEM_Effects
 //{
 
-//    public class LoadLinearEvents : LEM_BaseEffect
+//    [AddComponentMenu("")] public class  LoadLinearEvents : LEM_BaseEffect
 //#if UNITY_EDITOR
 //        , IEffectSavable<LinearEvent[]>
 //#endif

@@ -22,6 +22,16 @@ namespace LEM_Effects
         public override EffectFunctionType FunctionType => EffectFunctionType.UpdateEffect;
 
 #if UNITY_EDITOR
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            LerpAnchPosToRtT g = go.AddComponent<LerpAnchPosToRtT>();
+
+            g.CloneBaseValuesFrom(this);
+            UnPack(out g.m_TargetRectransform, out g.m_TargetDestination,out g.m_Smoothing,out g.m_SnapDistance);
+            return g;
+
+        }
+
         public void SetUp(RectTransform t1, RectTransform t2, float t3, float t4)
         {
             m_TargetRectransform = t1;
@@ -56,6 +66,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-
+       
     }
 }

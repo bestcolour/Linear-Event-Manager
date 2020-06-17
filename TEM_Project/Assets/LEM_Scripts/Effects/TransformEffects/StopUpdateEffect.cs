@@ -4,7 +4,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
-    public class StopUpdateEffect : LEM_BaseEffect
+    [AddComponentMenu("")] public class  StopUpdateEffect : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<LinearEvent, string>
 #endif

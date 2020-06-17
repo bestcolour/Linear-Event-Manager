@@ -3,7 +3,7 @@ namespace LEM_Effects
 {
 
     //This move has no stop. It will keep moving until you use Stop Repeat event
-    public class RepeatMoveAnchPosToV3 : UpdateBaseEffect
+    [AddComponentMenu("")] public class  RepeatMoveAnchPosToV3 : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<RectTransform, Vector3, float>
 #endif

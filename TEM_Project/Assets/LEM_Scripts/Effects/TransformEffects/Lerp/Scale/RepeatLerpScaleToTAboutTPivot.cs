@@ -3,7 +3,7 @@ using LEM_Effects.Extensions;
 namespace LEM_Effects
 {
 
-    public class RepeatLerpScaleToTAboutTPivot : UpdateBaseEffect
+    [AddComponentMenu("")] public class  RepeatLerpScaleToTAboutTPivot : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, Transform, float, float>
 #endif

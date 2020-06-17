@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace LEM_Effects
 {
-    public class MoveRotationToTAboutTPivot : TimerBasedUpdateEffect
+    [AddComponentMenu("")] public class  MoveRotationToTAboutTPivot : TimerBasedUpdateEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Transform, Transform, bool, float>
 #endif

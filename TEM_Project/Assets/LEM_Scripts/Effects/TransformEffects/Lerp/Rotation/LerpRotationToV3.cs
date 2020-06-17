@@ -4,7 +4,7 @@ namespace LEM_Effects
     public delegate float RFloatIFloatDelegate(float delta);
 
 
-    public class LerpRotationToV3 : UpdateBaseEffect
+    [AddComponentMenu("")] public class  LerpRotationToV3 : UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3, bool, float, float>
 #endif
@@ -125,7 +125,7 @@ namespace LEM_Effects
 //namespace LEM_Effects
 //{
 
-//    public class LerpRotation : UpdateBaseEffect
+//    [AddComponentMenu("")] public class  LerpRotation : UpdateBaseEffect
 //#if UNITY_EDITOR
 //        , IEffectSavable<Transform, Vector3, bool, float, float> 
 //#endif

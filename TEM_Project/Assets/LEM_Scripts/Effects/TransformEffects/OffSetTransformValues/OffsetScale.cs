@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace LEM_Effects
 {
-    public class OffsetScale : LEM_BaseEffect
+    [AddComponentMenu("")] public class  OffsetScale : LEM_BaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<Transform, Vector3>
 #endif

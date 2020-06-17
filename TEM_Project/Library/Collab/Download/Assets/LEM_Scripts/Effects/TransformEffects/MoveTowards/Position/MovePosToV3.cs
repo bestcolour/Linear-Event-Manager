@@ -49,6 +49,14 @@ namespace LEM_Effects
             t4 = m_Duration;
         }
 
+        public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
+        {
+            MovePosToV3 t = go.AddComponent<MovePosToV3>();
+            t.CloneBaseValuesFrom(this);
+            UnPack(out t.m_TargetTransform, out t.m_TargetPosition, out t.m_UseWorldSpace, out t.m_Duration);
+            return t;
+        }
+
 #endif
         public override bool OnUpdateEffect(float delta)
         {
@@ -74,6 +82,6 @@ namespace LEM_Effects
             return m_IsFinished;
         }
 
-
+    
     }
 }

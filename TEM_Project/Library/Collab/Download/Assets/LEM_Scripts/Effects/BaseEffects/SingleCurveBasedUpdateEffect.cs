@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-namespace LEM_Effects.AbstractClasses
+namespace LEM_Effects
 {
     public delegate bool RBoolIVoidDelegate();
 
@@ -13,7 +13,7 @@ namespace LEM_Effects.AbstractClasses
         protected RBoolIVoidDelegate d_UpdateCheck = null;
 
 #if UNITY_EDITOR
-        public override LEM_BaseEffect CreateClone()
+        public override LEM_BaseEffect ScriptableClone()
         {
             T c = (T)MemberwiseClone();
             c.m_Graph = m_Graph.Clone();
