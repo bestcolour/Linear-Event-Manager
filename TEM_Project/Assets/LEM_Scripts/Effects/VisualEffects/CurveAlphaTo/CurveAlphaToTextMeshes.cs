@@ -33,7 +33,7 @@ namespace LEM_Effects
             CurveAlphaToTextMeshes t = go.AddComponent<CurveAlphaToTextMeshes>();
 
             t.CloneBaseValuesFrom(this);
-            UnPack(out t.m_TargetTextMeshes, out t.m_Graph);
+            t.SetUp(m_TargetTextMeshes, m_Graph.Clone());
 
             return t;
         }

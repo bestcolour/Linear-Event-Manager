@@ -29,7 +29,7 @@ namespace LEM_Effects
             CurveAlphaToCanvasGroup t = go.AddComponent<CurveAlphaToCanvasGroup>();
 
             t.CloneBaseValuesFrom(this);
-            UnPack(out t.m_TargetCanvasGroup, out t.m_Graph);
+            t.SetUp(m_TargetCanvasGroup, m_Graph.Clone());
 
             return t;
         }

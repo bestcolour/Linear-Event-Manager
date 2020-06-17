@@ -30,7 +30,7 @@ namespace LEM_Effects
             CurveAlphaToGraphic t = go.AddComponent<CurveAlphaToGraphic>();
 
             t.CloneBaseValuesFrom(this);
-            UnPack(out t.m_TargetGraphic, out t.m_Graph);
+            t.SetUp(m_TargetGraphic, m_Graph.Clone());
 
             return t;
         }

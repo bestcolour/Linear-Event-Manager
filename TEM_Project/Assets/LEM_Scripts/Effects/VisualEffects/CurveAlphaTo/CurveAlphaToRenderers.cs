@@ -50,7 +50,8 @@ namespace LEM_Effects
         {
             CurveAlphaToRenderers t = go.AddComponent<CurveAlphaToRenderers>();
             t.CloneBaseValuesFrom(this);
-            UnPack(out t.m_TargetRenderers, out t.m_Graph);
+            t.SetUp(m_TargetRenderers, m_Graph.Clone());
+
             return t;
         }
 

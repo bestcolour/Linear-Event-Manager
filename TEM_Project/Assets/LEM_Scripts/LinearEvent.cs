@@ -2,14 +2,13 @@
 using UnityEngine;
 using LEM_Effects.Extensions;
 using LEM_Effects;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 [
 #if UNITY_EDITOR
-        CanEditMultipleObjects, ExecuteInEditMode,
+        ExecuteInEditMode,
 #endif
         System.Serializable]
 public class LinearEvent : MonoBehaviour
@@ -18,6 +17,10 @@ public class LinearEvent : MonoBehaviour
     #region Cached Values
     //NOTE ENSURE THAT THIS FIELD IS ALWAYS THE FIRST IN THIS SCRIPT. IF YOU WISH TO CHANGE IT, PLEASE TAKE A LOOK AT LinearEvent_Inspector.cs DrawInspector() METHOD FOR POTENTIAL ISSUES
     public LEM_BaseEffect[] m_AllEffects = default;
+
+#if UNITY_EDITOR
+    [SerializeField, Header("DESCRIPTION"), Tooltip("This is purely for labelling purposes. It will not be added as a variable in the final build."),TextArea(2,10)] string m_LinearDescription = default;
+#endif
 
     [Header("Settings"), SerializeField, Tooltip("Should Linear Event initalize its effect dictionary on awake?")]
     bool m_InitializeOnAwake = true;
@@ -28,10 +31,14 @@ public class LinearEvent : MonoBehaviour
     [SerializeField, Tooltip("How many effects should be executed in a single frame?")]
     int m_InstantEffectCapacity = 10;
 
+    [HideInInspector]
+    public NodeBaseData m_StartNodeData = default;
+
 
     #region Editor Variables and Methods
 
 #if UNITY_EDITOR
+
 
     [HideInInspector]
     public GroupRectNodeBase[] m_AllGroupRectNodes = default;
@@ -53,33 +60,66 @@ public class LinearEvent : MonoBehaviour
 
     private void OnEnable()
     {
-        Selection.selectionChanged += HideComponents;
+        Selection.selectionChanged += TryToHideComponents;
     }
 
     private void OnDisable()
     {
-        Selection.selectionChanged -= HideComponents;
+        Selection.selectionChanged -= TryToHideComponents;
     }
 
-    void HideComponents()
+    void TryToHideComponents()
     {
-        if (m_AllEffects == null || m_AllEffects.Length == 0)
+        if (Selection.activeGameObject != this.gameObject || m_AllEffects == null || m_AllEffects.Length == 0)
             return;
 
         if (m_AllEffects[0].hideFlags == HideFlags.HideInInspector)
             return;
 
+        HideComponents();
+    }
+
+    void HideComponents()
+    {
         for (int i = 0; i < m_AllEffects.Length; i++)
         {
             m_AllEffects[i].hideFlags = HideFlags.HideInInspector;
         }
     }
 
+    public void MoveLinearEventComponent(GameObject movingTo)
+    {
+        DuplicateLinearEvent(movingTo);
+        UnityEngine.Object.DestroyImmediate(this);
+    }
+
+    public void DuplicateLinearEvent(GameObject duplicatingTo)
+    {
+        LinearEvent duplicate = duplicatingTo.AddComponent<LinearEvent>();
+
+        //Copy arrays
+        duplicate.m_AllEffects = new LEM_BaseEffect[m_AllEffects.Length];
+        for (int i = 0; i < duplicate.m_AllEffects.Length; i++)
+        {
+            duplicate.m_AllEffects[i] = m_AllEffects[i].CloneMonoBehaviour(duplicatingTo);
+        }
+
+        duplicate.m_AllGroupRectNodes = new GroupRectNodeBase[m_AllGroupRectNodes.Length];
+        m_AllGroupRectNodes.CopyTo(duplicate.m_AllGroupRectNodes, 0);
+
+        //Copy Cached values
+        duplicate.m_InitializeOnAwake = m_InitializeOnAwake;
+        duplicate.m_UpdateEffectCapacity = m_UpdateEffectCapacity;
+        duplicate.m_InstantEffectCapacity = m_InstantEffectCapacity;
+        duplicate.m_StartNodeData = m_StartNodeData;
+        duplicate.m_LinearDescription = m_LinearDescription;
+
+        duplicate.HideComponents();
+    }
+
+
 #endif
     #endregion
-
-    [HideInInspector]
-    public NodeBaseData m_StartNodeData = default;
 
     //Runtime values
     public Dictionary<string, LEM_BaseEffect> GetAllEffectsDictionary

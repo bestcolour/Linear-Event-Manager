@@ -354,6 +354,13 @@ MonoBehaviour:
   - {fileID: 5828394576486204236}
   - {fileID: 5828394576486204235}
   - {fileID: 5828394576486204234}
+  m_InitializeOnAwake: 1
+  m_UpdateEffectCapacity: 5
+  m_InstantEffectCapacity: 10
+  m_StartNodeData:
+    m_Position: {x: 7444.554, y: 1495.4293}
+    m_NodeID: SN_b5b306f3-418a-4929-b4cd-021a4d3206c0
+    m_NextPointsIDs: []
   m_AllGroupRectNodes:
   - m_Position: {x: 841.37604, y: 785.5888}
     m_Size: {x: 653.3335, y: 687.9998}
@@ -780,15 +787,6 @@ MonoBehaviour:
     - BEN_5492a907-b14e-4aab-b191-787b01ac08c2
     - BEN_a2c63561-6bc4-4a0a-8af9-2c0ae341deb7
     m_LabelText: Repeat MoveScale
-  m_StartNodeData:
-    m_Position: {x: 7444.554, y: 1495.4293}
-    m_NodeID: SN_b5b306f3-418a-4929-b4cd-021a4d3206c0
-    m_NextPointsIDs: []
-  m_LinearEventIndex: -1
-  m_PreviousEffectPlayed: {fileID: 0}
-  m_UpdateCycle: []
-  m_FixedUpdateCycle: []
-  m_LateUpdateCycle: []
 --- !u!114 &5828394576486204628
 MonoBehaviour:
   m_ObjectHideFlags: 0

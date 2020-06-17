@@ -21,11 +21,11 @@ namespace LEM_Effects
 #if UNITY_EDITOR
         public override LEM_BaseEffect CloneMonoBehaviour(GameObject go)
         {
-            CurvePosZ g = go.AddComponent<CurvePosZ>();
+            CurvePosZ t = go.AddComponent<CurvePosZ>();
 
-            g.CloneBaseValuesFrom(this);
-            g.SetUp(m_TargetTransform, m_Graph.Clone(), m_RelativeToWorld);
-            return g;
+            t.CloneBaseValuesFrom(this);
+            t.SetUp(m_TargetTransform, m_Graph.Clone(), m_RelativeToWorld);
+            return t;
         }
 
         //public override LEM_BaseEffect CreateClone()
