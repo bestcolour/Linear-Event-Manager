@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 namespace LEM_Editor
@@ -13,7 +11,7 @@ namespace LEM_Editor
 
             GUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("Update Editor Skins"))
+            if (GUILayout.Button("Update Editor Skins",GUILayout.Height(30f)))
             {
                 LEMStyleLibrary.ReLoadLibrary();
             }

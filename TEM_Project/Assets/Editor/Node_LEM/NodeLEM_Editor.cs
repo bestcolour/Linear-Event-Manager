@@ -2031,8 +2031,8 @@ namespace LEM_Editor
             //Finished loading
             Repaint();
 
-            if (Settings.m_SaveSceneTogether)
-                EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+            //if (Settings.m_SaveSceneTogether)
+            //    EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
 
             EditorUtility.SetDirty(CurrentLE);
             //EditorSceneManager.MarkSceneDirty(CurrentLE.gameObject.scene);

@@ -19,13 +19,9 @@ namespace LEM_Editor
 
         [Header("Saving"), Tooltip("DontSave = NodeEditor doesnt save itself at all\nAlwaysSave = NodeEditor will always save itself whenever Editor loses windowfocus or before loading a new linear event\nSaveWhenCommandChange = NodeEditor will only save when there is a change in the editor base on its commands ie. Move Node, Cut, Paste, Create Node etc")]
         public SaveSettings m_SaveSettings = SaveSettings.DontSave;
-        //public bool m_AutoSave = true;
 
-        //[Tooltip("Hide saved effects on the Linear Event?")]
-        //public bool m_ShowMonoBehaviours = false;
-
-        [Tooltip("Save scene when saving LinearEvent")]
-        public bool m_SaveSceneTogether = true;
+        //[Tooltip("Save scene when saving LinearEvent")]
+        //public bool m_SaveSceneTogether = true;
 
         [Header("History")]
         public int m_HistoryLength = 100;
