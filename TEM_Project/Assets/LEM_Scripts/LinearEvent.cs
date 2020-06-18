@@ -2,9 +2,38 @@
 using UnityEngine;
 using LEM_Effects.Extensions;
 using LEM_Effects;
+using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+
+#region General Rules
+//General rules 
+//Rule #1 : Do not place an PlayLinearEvent effect as the first effect to play in any LinearEvent
+//Reason/Problem that had occured but is now fixed if you follow the rule: 
+//Linear Event 1: 
+// Node 1 -> Any kind of repeating update effect (eg. CurveAlphaToGraphic set to loop curve mode.)
+// Node 2 -> Play LinearEvent effect where the target Linear Event is Linear Event 2
+
+//Linear Event 2:
+// Node 1 -> AwaitKeyCodeInput
+// Node 2 -> StopLinearEvent
+// Node 3 -> AwaitKeyCodeInput
+// Node 4 -> PlayLinearEvent (Target is Linear Event 1)
+
+//Order of execution of events
+//Playing LE 1 will play LE 2
+//Press key (make sure its GetKeyDown)
+//Stops and reset LE 1
+//Press key agn
+//Plays LE 1 which plays LE 2 which plays LE 1 by adding the AwaitKeyCodeInput effect into the running effect list 
+//This will make the HasNoEffectsPlaying == false and hence disallow a continuous loop.
+
+
+
+
+#endregion
+
 
 [
 #if UNITY_EDITOR
@@ -50,7 +79,7 @@ public class LinearEvent : MonoBehaviour
 
         for (int i = 0; i < m_AllEffects.Length; i++)
         {
-            Object.DestroyImmediate(m_AllEffects[i],true);
+            UnityEngine.Object.DestroyImmediate(m_AllEffects[i],true);
         }
         m_AllEffects = new LEM_BaseEffect[0];
         m_AllGroupRectNodes = new GroupRectNodeBase[0];
@@ -73,7 +102,8 @@ public class LinearEvent : MonoBehaviour
         if (Selection.activeGameObject != this.gameObject || m_AllEffects == null || m_AllEffects.Length == 0)
             return;
 
-        if (m_AllEffects[0].hideFlags == HideFlags.HideInInspector)
+        //Change HideFlags to NotEditable to debug
+        if (m_AllEffects[0].hideFlags == HideFlags.NotEditable)
             return;
 
         HideComponents();
@@ -83,13 +113,16 @@ public class LinearEvent : MonoBehaviour
     {
         for (int i = 0; i < m_AllEffects.Length; i++)
         {
-            m_AllEffects[i].hideFlags = HideFlags.HideInInspector;
+            //Change HideFlags to NotEditable to debug
+            m_AllEffects[i].hideFlags = HideFlags.NotEditable;
         }
     }
 
     public void MoveLinearEventComponent(GameObject movingTo)
     {
         DuplicateLinearEvent(movingTo);
+
+        ClearAllEffects();
         UnityEngine.Object.DestroyImmediate(this,true);
     }
 
@@ -231,8 +264,9 @@ public class LinearEvent : MonoBehaviour
             return;
         }
 
-
-        LoadStartingEffect(m_InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
+        //Note: This needs to be 1 to prevent interference with looping
+        //View #1 rule in General Rules at the top for more information/reasoning why 1 is placed here
+        LoadStartingEffect(1, m_StartNodeData.m_NextPointsIDs[0]);
         LinearEventsManager.Instance.RunningLinearEvents.Add(this);
     }
 
@@ -399,7 +433,19 @@ public class LinearEvent : MonoBehaviour
             return;
         }
 
-        m_PreviousEffectPlayed.OnInitialiseEffect();
+
+
+#if UNITY_EDITOR
+        Type firstEffectPlayed = m_PreviousEffectPlayed.GetType();
+        if (firstEffectPlayed == typeof(PlayLinearEvent) || firstEffectPlayed == typeof(PlayLinearEvents) || firstEffectPlayed == typeof(PlayRandomLinearEvent)|| firstEffectPlayed == typeof(PlayBiasedLinearEvent))
+        {
+            Debug.LogWarning("Warning! The starting effect should not be a play linear event effect type to prevent interference in looping of Linear Event! Check Rule #1 in General Rules in LinearEvent.cs (at the top)");
+        }
+
+#endif
+
+
+            m_PreviousEffectPlayed.OnInitialiseEffect();
         maxEffectsPerFrame--;
 
         switch (m_PreviousEffectPlayed.FunctionType)
