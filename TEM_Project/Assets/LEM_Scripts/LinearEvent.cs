@@ -183,6 +183,12 @@ public class LinearEvent : MonoBehaviour
 
     void Awake()
     {
+        //This will prevent the initialization of LE all the time (if bool == true) during editor mode
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+            return;
+#endif
+
         if (m_InitializeOnAwake)
         {
             InitializeLinearEvent();

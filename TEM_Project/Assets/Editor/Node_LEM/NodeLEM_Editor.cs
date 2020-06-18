@@ -2101,30 +2101,33 @@ namespace LEM_Editor
                 StartNode = startTempNode;
             }
 
-            //Recr8 group nodes
-            for (int i = CurrentLE.m_AllGroupRectNodes.Length - 1; i > -1; i--)
-            //for (int i = 0; i < s_CurrentLE.m_AllGroupRectNodes.Length; i++)
+            //Execute only if array exists
+            if (CurrentLE.m_AllGroupRectNodes != null)
             {
-                if (CurrentLE.m_AllGroupRectNodes[i].HasAtLeastOneNestedNode)
-                    ReCreateGroupNode(
-                        CurrentLE.m_AllGroupRectNodes[i].m_NestedNodeIDs,
-                        CurrentLE.m_AllGroupRectNodes[i].m_NodeID,
-                        CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
-                else
-                    ReCreateGroupNode(
-                        CurrentLE.m_AllGroupRectNodes[i].m_Position,
-                        CurrentLE.m_AllGroupRectNodes[i].m_Size,
-                        CurrentLE.m_AllGroupRectNodes[i].m_NodeID,
-                        CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
-            }
+                //Recr8 group nodes
+                for (int i = CurrentLE.m_AllGroupRectNodes.Length - 1; i > -1; i--)
+                //for (int i = 0; i < s_CurrentLE.m_AllGroupRectNodes.Length; i++)
+                {
+                    if (CurrentLE.m_AllGroupRectNodes[i].HasAtLeastOneNestedNode)
+                        ReCreateGroupNode(
+                            CurrentLE.m_AllGroupRectNodes[i].m_NestedNodeIDs,
+                            CurrentLE.m_AllGroupRectNodes[i].m_NodeID,
+                            CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
+                    else
+                        ReCreateGroupNode(
+                            CurrentLE.m_AllGroupRectNodes[i].m_Position,
+                            CurrentLE.m_AllGroupRectNodes[i].m_Size,
+                            CurrentLE.m_AllGroupRectNodes[i].m_NodeID,
+                            CurrentLE.m_AllGroupRectNodes[i].m_LabelText);
+                }
 
-            //Restitch their parent connections
-            for (int i = 0; i < CurrentLE.m_AllGroupRectNodes.Length; i++)
-            {
-                if (!string.IsNullOrEmpty(CurrentLE.m_AllGroupRectNodes[i].m_ParentNodeID))
-                    AllGroupRectsInEditorDictionary[CurrentLE.m_AllGroupRectNodes[i].m_NodeID].m_GroupedParent = AllGroupRectsInEditorDictionary[CurrentLE.m_AllGroupRectNodes[i].m_ParentNodeID];
+                //Restitch their parent connections
+                for (int i = 0; i < CurrentLE.m_AllGroupRectNodes.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(CurrentLE.m_AllGroupRectNodes[i].m_ParentNodeID))
+                        AllGroupRectsInEditorDictionary[CurrentLE.m_AllGroupRectNodes[i].m_NodeID].m_GroupedParent = AllGroupRectsInEditorDictionary[CurrentLE.m_AllGroupRectNodes[i].m_ParentNodeID];
+                }
             }
-
 
             #region Stitch Connections
 
