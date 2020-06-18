@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class TestFireLEM : MonoBehaviour
 {
-    [SerializeField] LinearEvent m_LinearEvent = default;
+    [SerializeField,LinearDescription] LinearEvent m_Peepeepoopoo = default;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_LinearEvent.InitializeLinearEvent();
-        m_LinearEvent.PlayLinearEvent();
+        m_Peepeepoopoo.InitializeLinearEvent();
+        m_Peepeepoopoo.PlayLinearEvent();
     }
 
 }
