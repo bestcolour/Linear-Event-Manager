@@ -37,8 +37,8 @@ namespace LEM_Editor
 
         List<string> m_AllResults = new List<string>();
 
-        Vector2 m_PositionToDrawAt = default;
-        public Vector2 Position { set => m_PositionToDrawAt = value; }
+        public Vector2 PositionToDrawAt { private get; set; } = default;
+        //public Vector2 PositionToDrawAt { set => PositionToDrawAt = value; }
 
         Vector2 m_PreviousMousePosition = Vector2.zero;
 
@@ -140,18 +140,18 @@ namespace LEM_Editor
             bool isInSearchBox = false;
 
             //Rect starts at the mosue position and have dimension of width and height
-            Rect rect = new Rect(m_PositionToDrawAt.x, m_PositionToDrawAt.y, m_Width, m_Height);
+            Rect rect = new Rect(PositionToDrawAt.x, PositionToDrawAt.y, m_Width, m_Height);
 
             if (rect.Contains(e.mousePosition))
                 isInSearchBox = true;
 
             //Draw bg box
-            GUI.Box(rect, "");
-            //Just adding these values to make the search label look nicer
+            GUI.Box(rect, string.Empty);
+            //Just adding these values to make the search area look nicer
             rect.x += k_SearchFieldXOffset;
             rect.y += k_SearchFieldXOffset;
 
-            GUI.Label(rect, "Search: ", EditorStyles.boldLabel);
+            //GUI.Label(rect, "Search: ", EditorStyles.boldLabel);
 
 
             //Search field
@@ -251,9 +251,9 @@ namespace LEM_Editor
                     {
                         //If user is pressing down on control
                         if (e.control)
-                            OnConfirm(m_AllResults[i], m_PositionToDrawAt,true);
+                            OnConfirm(m_AllResults[i], PositionToDrawAt,true);
                         else
-                            OnConfirm(m_AllResults[i], m_PositionToDrawAt,false);
+                            OnConfirm(m_AllResults[i], PositionToDrawAt,false);
                     }
                 }
 
@@ -266,7 +266,7 @@ namespace LEM_Editor
             //Handle for enter keycode when choose on a selected result
             if (e.type == EventType.KeyUp && e.keyCode == KeyCode.Return && m_CurrSelectedResultIndex >= 0)
             {
-                OnConfirm(m_AllResults[m_CurrSelectedResultIndex], m_PositionToDrawAt,false);
+                OnConfirm(m_AllResults[m_CurrSelectedResultIndex], PositionToDrawAt,false);
             }
 
             if (e.type == EventType.Repaint)

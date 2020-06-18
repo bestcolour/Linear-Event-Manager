@@ -1124,7 +1124,7 @@ namespace LEM_Editor
                         if (s_CurrentClickedNode == null || !s_CurrentClickedNode.IsSelected)
                         {
                             //Open a custom created that allows creation of more nodes
-                            m_SearchBox.Position = currMousePosition * ScaleFactor;
+                            m_SearchBox.PositionToDrawAt = currMousePosition * ScaleFactor;
                             m_IsSearchBoxActive = true;
                             m_SearchBox.TriggerOnInputOnStart();
 

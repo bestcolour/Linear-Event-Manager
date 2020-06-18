@@ -226,8 +226,8 @@ public class LinearEvent : MonoBehaviour
         }
 
 
-        LoadStartingEffect(m_InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
         LinearEventsManager.Instance.RunningLinearEvents.Add(this);
+        LoadStartingEffect(m_InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
     }
 
 
