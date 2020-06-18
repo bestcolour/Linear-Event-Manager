@@ -706,7 +706,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2083921851
 GameObject:
@@ -718,9 +718,14 @@ GameObject:
   m_Component:
   - component: {fileID: 2083921854}
   - component: {fileID: 2083921856}
-  - component: {fileID: 2083921853}
+  - component: {fileID: 2083921861}
+  - component: {fileID: 2083921860}
+  - component: {fileID: 2083921859}
+  - component: {fileID: 2083921858}
+  - component: {fileID: 2083921862}
   - component: {fileID: 2083921857}
   - component: {fileID: 2083921855}
+  - component: {fileID: 2083921853}
   - component: {fileID: 2083921852}
   m_Layer: 0
   m_Name: GameObject
@@ -741,40 +746,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45cac53c941ce2419cf926776fb500b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bm_NodeEffectType: AddDelayAt
+  bm_NodeEffectType: AddDelay
   bm_UpdateCycle: 0
   bm_NodeBaseData:
-    m_Position: {x: 681.42865, y: 244.71431}
-    m_NodeID: BEN_32f99b0a-a72b-4d63-84df-edf0e19e81cd
+    m_Position: {x: 407.52383, y: 293.88895}
+    m_NodeID: BEN_6be5ef6d-375b-4e58-ac21-2df07db21436
     m_NextPointsIDs: []
-  m_DelayTime: 0
-  m_TargetLinearEvent: {fileID: 0}
+  m_DelayTime: 0.15
+  m_TargetLinearEvent: {fileID: 2083921860}
 --- !u!114 &2083921853
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2083921851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33e497938d38cb74492560adb572c903, type: 3}
+  m_Script: {fileID: 11500000, guid: fa723c36d14887b4d95cb1e75a164c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllEffects:
-  - {fileID: 2083921857}
-  - {fileID: 2083921855}
-  - {fileID: 2083921852}
-  m_LinearDescription: 
-  m_InitializeOnAwake: 1
-  m_UpdateEffectCapacity: 5
-  m_InstantEffectCapacity: 10
-  m_StartNodeData:
-    m_Position: {x: 172.98744, y: 42.387722}
-    m_NodeID: SN_d2582eee-2d6e-4c93-9ca7-c4c0f9ca0310
-    m_NextPointsIDs:
-    - BEN_45ff5157-237b-4df8-acd9-7faf36867943
-  m_AllGroupRectNodes: []
+  bm_NodeEffectType: PlayLinearEvent
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 1126.7361, y: 146.40172}
+    m_NodeID: BEN_8907049a-81e9-491a-861a-738148e02dfd
+    m_NextPointsIDs: []
+  m_TargetLinearEvent: {fileID: 2083921861}
 --- !u!4 &2083921854
 Transform:
   m_ObjectHideFlags: 0
@@ -787,7 +785,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2083921855
 MonoBehaviour:
@@ -798,18 +796,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 2083921851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd0e21565f0460e45b67887b2678e2e3, type: 3}
+  m_Script: {fileID: 11500000, guid: f7a82dd2abacd1d44820be65fb285c58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bm_NodeEffectType: SetSiblingIndex
+  bm_NodeEffectType: AwaitKeyCodeInput
   bm_UpdateCycle: 0
   bm_NodeBaseData:
-    m_Position: {x: 313.5804, y: 215.7652}
-    m_NodeID: BEN_45ff5157-237b-4df8-acd9-7faf36867943
+    m_Position: {x: 784.9092, y: 132.04059}
+    m_NodeID: BEN_892768c2-8a4b-4cf5-a2f9-654111b15f98
     m_NextPointsIDs:
-    - BEN_00fa12e2-edcc-4189-8353-9d1d8b9c5bd3
-  m_ChildTransform: {fileID: 2083921854}
-  m_SiblingIndex: 0
+    - BEN_8907049a-81e9-491a-861a-738148e02dfd
+  m_GetkeyKeyCodes: 
+  m_GetkeyDownKeyCodes: 0d000000
+  m_TargetLinearEvent: {fileID: 2083921860}
 --- !u!114 &2083921856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -822,7 +821,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44997e2546f650d4caff92026ec75471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LinearEvent: {fileID: 2083921853}
+  m_LinearEvent: {fileID: 2083921861}
 --- !u!114 &2083921857
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -832,17 +831,166 @@ MonoBehaviour:
   m_GameObject: {fileID: 2083921851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d45cac53c941ce2419cf926776fb500b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e243d4942e6e6e48a1cda98549a3202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bm_NodeEffectType: AddDelay
+  bm_NodeEffectType: StopLinearEvent
   bm_UpdateCycle: 0
   bm_NodeBaseData:
-    m_Position: {x: 648.8303, y: 56.515278}
-    m_NodeID: BEN_00fa12e2-edcc-4189-8353-9d1d8b9c5bd3
+    m_Position: {x: 414.05588, y: 121.914566}
+    m_NodeID: BEN_b00b620f-0f7c-4591-af5a-4a5f896eb050
+    m_NextPointsIDs:
+    - BEN_892768c2-8a4b-4cf5-a2f9-654111b15f98
+  m_TargetLinearEvent: {fileID: 2083921861}
+--- !u!114 &2083921858
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083921851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa723c36d14887b4d95cb1e75a164c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: PlayLinearEvent
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 562.1053, y: 152.68422}
+    m_NodeID: BEN_e11d3b0a-56ec-4036-bdc3-a5522838a3ec
     m_NextPointsIDs: []
-  m_DelayTime: 0
-  m_TargetLinearEvent: {fileID: 2083921853}
+  m_TargetLinearEvent: {fileID: 2083921860}
+--- !u!114 &2083921859
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083921851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3603037d54ffe7344bcc566a69254b49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: CurveAlphaToGraphic
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 198.94737, y: 155.84212}
+    m_NodeID: BEN_3e627bb1-0a46-43bd-9d02-29a7b04f990f
+    m_NextPointsIDs:
+    - BEN_e11d3b0a-56ec-4036-bdc3-a5522838a3ec
+  m_Timer: 0
+  m_Graph:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 10
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 1
+    m_RotationOrder: 4
+  m_Duration: 0
+  m_TargetGraphic: {fileID: 2137136932}
+--- !u!114 &2083921860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083921851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33e497938d38cb74492560adb572c903, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AllEffects:
+  - {fileID: 2083921862}
+  - {fileID: 2083921857}
+  - {fileID: 2083921855}
+  - {fileID: 2083921853}
+  - {fileID: 2083921852}
+  m_LinearDescription: Loop
+  m_InitializeOnAwake: 1
+  m_UpdateEffectCapacity: 5
+  m_InstantEffectCapacity: 10
+  m_StartNodeData:
+    m_Position: {x: -142.05257, y: 140.25215}
+    m_NodeID: SN_81f4c3ef-a66e-4ca6-aea0-000bcb10489f
+    m_NextPointsIDs:
+    - BEN_4eef123d-355e-4ad3-a13a-501aa0cf8ad4
+  m_AllGroupRectNodes: []
+--- !u!114 &2083921861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083921851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33e497938d38cb74492560adb572c903, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AllEffects:
+  - {fileID: 2083921859}
+  - {fileID: 2083921858}
+  m_LinearDescription: Curve
+  m_InitializeOnAwake: 1
+  m_UpdateEffectCapacity: 5
+  m_InstantEffectCapacity: 10
+  m_StartNodeData:
+    m_Position: {x: 11.697351, y: 111.38158}
+    m_NodeID: SN_9c98c530-cd42-425d-aaa6-0b20d7bfb63d
+    m_NextPointsIDs:
+    - BEN_3e627bb1-0a46-43bd-9d02-29a7b04f990f
+  m_AllGroupRectNodes: []
+--- !u!114 &2083921862
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083921851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7a82dd2abacd1d44820be65fb285c58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bm_NodeEffectType: AwaitKeyCodeInput
+  bm_UpdateCycle: 0
+  bm_NodeBaseData:
+    m_Position: {x: 118.24253, y: 97.553375}
+    m_NodeID: BEN_4eef123d-355e-4ad3-a13a-501aa0cf8ad4
+    m_NextPointsIDs:
+    - BEN_b00b620f-0f7c-4591-af5a-4a5f896eb050
+  m_GetkeyKeyCodes: 
+  m_GetkeyDownKeyCodes: 0d000000
+  m_TargetLinearEvent: {fileID: 2083921860}
 --- !u!1 &2137136930
 GameObject:
   m_ObjectHideFlags: 0

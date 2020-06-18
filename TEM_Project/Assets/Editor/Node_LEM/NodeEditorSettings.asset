@@ -10,7 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d396997542ccca5418d924bc6a44cb0e, type: 3}
-  m_Name: NewNodeEditorSettings
+  m_Name: NodeEditorSettings
   m_EditorClassIdentifier: 
-  m_AutoSave: 0
-  m_EditorTheme: 0
+  m_EditorTheme: 1
+  m_SaveSettings: 0
+  m_HistoryLength: 100
+  m_ShowToolBar: 1
+  m_ButtonSize: 50

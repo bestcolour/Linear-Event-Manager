@@ -48,6 +48,9 @@ namespace LEM_Editor
                 m_PreviousSize = m_EventCallbackArray.arraySize;
                 SetMidRectSize(NodeTextureDimensions.NORMAL_MID_SIZE + Vector2.up * k_CallBackGraphicHeight * m_PreviousSize);
             }
+
+            if (m_EventSerializedObject.hasModifiedProperties)
+                m_EventSerializedObject.ApplyModifiedProperties();
         }
 
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)

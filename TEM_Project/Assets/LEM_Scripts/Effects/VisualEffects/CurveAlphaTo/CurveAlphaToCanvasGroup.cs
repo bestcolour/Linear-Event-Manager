@@ -2,7 +2,11 @@
 namespace LEM_Effects
 {
 
-    [AddComponentMenu("")] public class  CurveAlphaToCanvasGroup : SingleCurveBasedUpdateEffect<CurveAlphaToGraphic>, IEffectSavable<CanvasGroup, AnimationCurve>
+    [AddComponentMenu("")]
+    public class CurveAlphaToCanvasGroup : SingleCurveBasedUpdateEffect<CurveAlphaToGraphic>
+#if UNITY_EDITOR
+        , IEffectSavable<CanvasGroup, AnimationCurve> 
+#endif
     {
         [SerializeField, Tooltip("The target CanvasGroup you wish to curve its alpha")]
         CanvasGroup m_TargetCanvasGroup = default;

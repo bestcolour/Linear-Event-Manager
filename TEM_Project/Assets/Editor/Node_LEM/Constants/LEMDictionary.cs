@@ -119,6 +119,9 @@ namespace LEM_Editor
              //Pauses the playing of effects on a specific Linear Event
              { "PauseLinearEvent", new NodeDictionaryDefinition(new PauseLinearEventNode()                                  ,new Color(1f ,0.55f,0f)) },
 
+             //Pauses the playing of effects on a specific Linear Event
+             { "StopLinearEvent", new NodeDictionaryDefinition(new StopLinearEventNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },
+
         #endregion
 
         #region Animator

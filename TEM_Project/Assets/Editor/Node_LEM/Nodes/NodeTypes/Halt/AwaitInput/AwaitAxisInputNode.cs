@@ -67,6 +67,9 @@ namespace LEM_Editor
                 SetMidRectSize(NodeTextureDimensions.LARGE_MID_SIZE + Vector2.up * 75f * m_PreviousArrayTotalSize);
             }
 
+            if (m_InputDataSerializedObject.hasModifiedProperties)
+                m_InputDataSerializedObject.ApplyModifiedProperties();
+
         }
         public override LEM_BaseEffect CompileToBaseEffect(GameObject go)
         {

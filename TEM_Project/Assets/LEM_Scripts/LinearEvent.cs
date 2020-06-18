@@ -19,7 +19,7 @@ public class LinearEvent : MonoBehaviour
     public LEM_BaseEffect[] m_AllEffects = default;
 
 #if UNITY_EDITOR
-    [SerializeField, Header("DESCRIPTION"), Tooltip("This is purely for labelling purposes. It will not be added as a variable in the final build."),TextArea(2,10)] string m_LinearDescription = default;
+    [Header("DESCRIPTION"), Tooltip("This is purely for labelling purposes. It will not be added as a variable in the final build."),TextArea(2,10)] public string m_LinearDescription = default;
 #endif
 
     [Header("Settings"), SerializeField, Tooltip("Should Linear Event initalize its effect dictionary on awake?")]
@@ -212,30 +212,54 @@ public class LinearEvent : MonoBehaviour
     public void PlayLinearEvent()
     {
 #if UNITY_EDITOR
-        Debug.Assert(IsInitialized, "You are trying to play the Linear Event " + name + " that has not been initialized or have 0 Effects in it!", this);
-        Debug.Assert(IsStartNodeConnected, "Linear Event " + name + " does not have its Start Node connected to any effects!", this);
+        Debug.Assert(IsInitialized, "You are trying to play the Linear Event " + m_LinearDescription + " that has not been initialized or have 0 Effects in it!", this);
+        Debug.Assert(IsStartNodeConnected, "Linear Event " + m_LinearDescription + " does not have its Start Node connected to any effects!", this);
 #endif
 
         //Checks if the Linear Event is currently being played
         if (!HasNoEffectsPlaying)
         {
 #if UNITY_EDITOR
-            Debug.LogWarning("Cannot play a Linear Event which is currently playing!", this);
+            Debug.LogWarning("Cannot play Linear Event "+ m_LinearDescription +" which is currently playing!", this);
 #endif
             return;
         }
 
 
-        LinearEventsManager.Instance.RunningLinearEvents.Add(this);
         LoadStartingEffect(m_InstantEffectCapacity, m_StartNodeData.m_NextPointsIDs[0]);
+        LinearEventsManager.Instance.RunningLinearEvents.Add(this);
     }
 
+    /// <summary>
+    /// Stops and resets the Linear Event
+    /// </summary>
+    public void StopLinearEvent()
+    {
+        while (m_UpdateCycle.Count > 0)
+        {
+            m_UpdateCycle[0].OnEndEffect();
+            m_UpdateCycle.RemoveEfficiently(0);
+        }
+
+        while (m_FixedUpdateCycle.Count > 0)
+        {
+            m_FixedUpdateCycle[0].OnEndEffect();
+            m_FixedUpdateCycle.RemoveEfficiently(0);
+        }
+
+        while (m_LateUpdateCycle.Count > 0)
+        {
+            m_LateUpdateCycle[0].OnEndEffect();
+            m_LateUpdateCycle.RemoveEfficiently(0);
+        }
+
+    }
 
     #region Main Update Methods
 
     public void CycleUpdate()
     {
-        if (m_PauseLinearEvent)
+        if (m_UpdateCycle.Count <= 0 || m_PauseLinearEvent)
             return;
 
         for (int i = 0; i < m_UpdateCycle.Count; i++)
@@ -252,7 +276,7 @@ public class LinearEvent : MonoBehaviour
 
     public void CycleFixedUpdate()
     {
-        if (m_PauseLinearEvent)
+        if (m_FixedUpdateCycle.Count <= 0 ||m_PauseLinearEvent)
             return;
 
         for (int i = 0; i < m_FixedUpdateCycle.Count; i++)
@@ -364,7 +388,7 @@ public class LinearEvent : MonoBehaviour
         if (!EffectsDictionary.TryGetValue(nextEffect, out m_PreviousEffectPlayed))
         {
 #if UNITY_EDITOR
-            Debug.LogWarning("Linear Event " + name + " does not contain the ID " + nextEffect, this);
+            Debug.LogWarning("Linear Event " + m_LinearDescription + " does not contain the ID " + nextEffect, this);
 #endif
             return;
         }

@@ -3,7 +3,11 @@ using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    [AddComponentMenu("")] public class  CurveAlphaToCanvasGroups : SingleCurveBasedUpdateEffect<CurveAlphaToCanvasGroups>, IEffectSavable<CanvasGroup[], AnimationCurve>
+    [AddComponentMenu("")]
+    public class CurveAlphaToCanvasGroups : SingleCurveBasedUpdateEffect<CurveAlphaToCanvasGroups>
+#if UNITY_EDITOR
+        , IEffectSavable<CanvasGroup[], AnimationCurve> 
+#endif
     {
         [SerializeField, Tooltip("The target Canvas Groups you wish to curve their alpha")]
         CanvasGroup[] m_TargetCanvasGroup = default;

@@ -12,7 +12,7 @@ namespace LEM_Editor
         // </summary>
         public enum SaveSettings { DontSave, AlwaysSave, SaveWhenCommandChange };
 
-        public const string k_DefaultFileName = "NewNodeEditorSettings";
+        public const string k_DefaultFileName = "NodeEditorSettings";
 
         [Header("Theme")]
         public EditorTheme m_EditorTheme = EditorTheme.Light;

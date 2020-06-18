@@ -3,7 +3,11 @@ using UnityEngine.UI;
 namespace LEM_Effects
 {
 
-    [AddComponentMenu("")] public class  CurveAlphaToGraphic : SingleCurveBasedUpdateEffect<CurveAlphaToGraphic>,IEffectSavable<Graphic, AnimationCurve>
+    [AddComponentMenu("")]
+    public class CurveAlphaToGraphic : SingleCurveBasedUpdateEffect<CurveAlphaToGraphic>
+#if UNITY_EDITOR
+        , IEffectSavable<Graphic, AnimationCurve> 
+#endif
     {
         [SerializeField, Tooltip("The target Graphic you wish to curve its alpha")]
         Graphic m_TargetGraphic = default;
