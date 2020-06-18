@@ -50,7 +50,7 @@ public class LinearEvent : MonoBehaviour
 
         for (int i = 0; i < m_AllEffects.Length; i++)
         {
-            Object.DestroyImmediate(m_AllEffects[i]);
+            Object.DestroyImmediate(m_AllEffects[i],true);
         }
         m_AllEffects = new LEM_BaseEffect[0];
         m_AllGroupRectNodes = new GroupRectNodeBase[0];
@@ -90,7 +90,7 @@ public class LinearEvent : MonoBehaviour
     public void MoveLinearEventComponent(GameObject movingTo)
     {
         DuplicateLinearEvent(movingTo);
-        UnityEngine.Object.DestroyImmediate(this);
+        UnityEngine.Object.DestroyImmediate(this,true);
     }
 
     public void DuplicateLinearEvent(GameObject duplicatingTo)

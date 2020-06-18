@@ -79,7 +79,7 @@ namespace LEM_Editor
             if (GUILayout.Button("Delete", GUILayout.Height(s_LineHeightSpace), GUILayout.Width(m_ButtonWidth)))
             {
                 m_CurrentLE.ClearAllEffects();
-                UnityEngine.Object.DestroyImmediate(m_CurrentLE,true);
+                UnityEngine.Object.DestroyImmediate(m_CurrentLE);
             }
         }
 
