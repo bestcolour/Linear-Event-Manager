@@ -1275,15 +1275,15 @@ namespace LEM_Editor
                             DoGroup();
                             GUI.changed = true;
                         }
-                        //Spawn all node types
-                        else if (e.keyCode == KeyCode.M)
-                        {
-                            for (int i = 0; i < LEMDictionary.s_NodeTypeKeys.Length; i++)
-                            {
-                                CommandInvoker.InvokeCommand(new CreateNodeCommand(currMousePosition, LEMDictionary.s_NodeTypeKeys[i]));
-                            }
-                            GUI.changed = true;
-                        }
+                        ////Spawn all node types
+                        //else if (e.keyCode == KeyCode.M)
+                        //{
+                        //    for (int i = 0; i < LEMDictionary.s_NodeTypeKeys.Length; i++)
+                        //    {
+                        //        CommandInvoker.InvokeCommand(new CreateNodeCommand(currMousePosition, LEMDictionary.s_NodeTypeKeys[i]));
+                        //    }
+                        //    GUI.changed = true;
+                        //}
 
                     }
 
