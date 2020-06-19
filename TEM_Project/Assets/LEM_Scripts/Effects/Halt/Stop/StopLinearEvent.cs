@@ -21,7 +21,7 @@ namespace LEM_Effects
 
         public override void OnInitialiseEffect()
         {
-            m_TargetLinearEvent.StopLinearEvent() ;
+            LinearEventsManager.StopLinearEvent(m_TargetLinearEvent);
         }
 
 

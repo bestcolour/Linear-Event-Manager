@@ -1,6 +1,13 @@
 ﻿#if UNITY_EDITOR
 namespace LEM_Effects
 {
+    public interface IEffectSavable
+    {
+        void SetUp();
+
+        void UnPack();
+
+    }
 
     public interface IEffectSavable<T1>
     {

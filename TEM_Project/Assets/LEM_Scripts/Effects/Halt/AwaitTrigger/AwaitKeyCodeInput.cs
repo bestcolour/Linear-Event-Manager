@@ -26,7 +26,7 @@ namespace LEM_Effects
 
         public override void OnInitialiseEffect()
         {
-            m_TargetLinearEvent.AddNumberOfAwaitingInput = 1;
+            m_TargetLinearEvent.AddNumberOfAwaitingInput();
 
         }
 
@@ -62,7 +62,7 @@ namespace LEM_Effects
         public override void OnEndEffect()
         {
             base.OnEndEffect();
-            m_TargetLinearEvent.AddNumberOfAwaitingInput = -1;
+            m_TargetLinearEvent.DeductNumberOfAwaitingInput();
         }
 
 #if UNITY_EDITOR

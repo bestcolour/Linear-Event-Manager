@@ -111,19 +111,25 @@ namespace LEM_Editor
              { "StopUpdateEffect", new NodeDictionaryDefinition(new StopUpdateEffectNode()                                  ,new Color(0.922f, 0.596f, 0.306f)) },
 
              //Pauses all Linear Events playing in the LinearEventManager
-             { "GlobalPause", new NodeDictionaryDefinition(new PauseAllLinearEventsNode()                                   ,new Color(1f ,0.55f,0f)) },
+             { "PauseAllPlayingLinearEvents", new NodeDictionaryDefinition(new PauseAllPlayingLinearEventsNode()                                   ,new Color(1f ,0.55f,0f)) },
 
              //Pauses the playing of effects on the current Linear Event
-             { "Pause", new NodeDictionaryDefinition(new PauseCurrentLinearEventNode()                                      ,new Color(1f ,0.55f,0f)) },
+             { "PauseThisLinearEvent", new NodeDictionaryDefinition(new PauseThisLinearEventNode()                                      ,new Color(1f ,0.55f,0f)) },
 
              //Pauses the playing of effects on a specific Linear Event
              { "PauseLinearEvent", new NodeDictionaryDefinition(new PauseLinearEventNode()                                  ,new Color(1f ,0.55f,0f)) },
 
-             //Pauses the playing of effects on the current Linear Event
-             { "StopCurrentLinearEvent", new NodeDictionaryDefinition(new StopCurrentLinearEventNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },
+             //Stops and resets the current Linear Event
+             { "StopThisLinearEvent", new NodeDictionaryDefinition(new StopThisLinearEventNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },
 
-             //Pauses the playing of effects on a specific Linear Event
-             { "StopLinearEventAt", new NodeDictionaryDefinition(new StopLinearEventAtNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },
+             //Stops and resets a specific Linear Event
+             { "StopLinearEvent", new NodeDictionaryDefinition(new StopLinearEventNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },   
+             
+             //Stops and resets LinearEvents
+             { "StopLinearEvents", new NodeDictionaryDefinition(new StopLinearEventsNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },
+
+             //Stops and resets all LinearEvents which are playing in the LinearEventManager
+             { "StopAllPlayingLinearEvents", new NodeDictionaryDefinition(new StopAllPlayingLinearEventsNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },
 
 
         #endregion

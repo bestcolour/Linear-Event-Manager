@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NodeEditorSettings
   m_EditorClassIdentifier: 
   m_EditorTheme: 1
-  m_SaveSettings: 0
+  m_SaveSettings: 2
   m_HistoryLength: 100
   m_ShowToolBar: 1
   m_ButtonSize: 50

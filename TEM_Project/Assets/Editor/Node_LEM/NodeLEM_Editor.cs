@@ -2008,7 +2008,7 @@ namespace LEM_Editor
             LEM_BaseEffect[] lemEffects = new LEM_BaseEffect[AllEffectsNodeInEditor.Count];
             BaseEffectNode[] allEffectNodes = AllEffectsNodeInEditor.Values.Select(x => x.effectNode).ToArray();
 
-            CurrentLE.ClearAllEffects();
+            CurrentLE.EditorMethod_ClearAllEffects();
             //HideFlags flag = CurrentLE.FlagToFollow = Settings.m_ShowMonoBehaviours ? HideFlags.None : HideFlags.HideInInspector;
             //HideFlags hideOrNot = Settings.m_ShowMonoBehaviours? HideFlags.NotEditable : HideFlags.HideInInspector;
 

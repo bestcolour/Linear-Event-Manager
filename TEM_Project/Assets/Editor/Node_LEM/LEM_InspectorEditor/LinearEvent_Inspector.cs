@@ -70,7 +70,7 @@ namespace LEM_Editor
             //Creates a button to load the node editor
             if (GUILayout.Button("Clear", GUILayout.Height(s_LineHeightSpace), GUILayout.Width(m_ButtonWidth)))
             {
-                m_CurrentLE.ClearAllEffects();
+                m_CurrentLE.EditorMethod_ClearAllEffects();
             }
         }
 
@@ -79,7 +79,7 @@ namespace LEM_Editor
             //Creates a button to load the node editor
             if (GUILayout.Button("Delete", GUILayout.Height(s_LineHeightSpace), GUILayout.Width(m_ButtonWidth)))
             {
-                m_CurrentLE.ClearAllEffects();
+                m_CurrentLE.EditorMethod_ClearAllEffects();
                 UnityEngine.Object.DestroyImmediate(m_CurrentLE, true);
             }
         }
@@ -104,7 +104,7 @@ namespace LEM_Editor
                 if (selectedObject == null)
                     return;
 
-                s_SelectedLE.MoveLinearEventComponent(selectedObject);
+                s_SelectedLE.EditorMethod_MoveLinearEventComponent(selectedObject);
                 ResetButtonCheckVar();
             }
 
@@ -115,7 +115,7 @@ namespace LEM_Editor
         {
             if (GUILayout.Button("Clone", GUILayout.Height(s_LineHeightSpace), GUILayout.Width(m_ButtonWidth)))
             {
-                m_CurrentLE.DuplicateLinearEvent(m_CurrentLE.gameObject);
+                m_CurrentLE.EditorMethod_DuplicateLinearEvent(m_CurrentLE.gameObject);
             }
 
 
@@ -137,7 +137,7 @@ namespace LEM_Editor
                 if (selectedObject == null)
                     return;
 
-                s_SelectedLE.DuplicateLinearEvent(selectedObject);
+                s_SelectedLE.EditorMethod_DuplicateLinearEvent(selectedObject);
                 ResetButtonCheckVar();
             }
 

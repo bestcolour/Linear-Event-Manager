@@ -159,7 +159,7 @@ namespace LEM_Effects
 
         public override void OnInitialiseEffect()
         {
-            m_TargetLinearEvent.AddNumberOfAwaitingInput = 1;
+            m_TargetLinearEvent.AddNumberOfAwaitingInput();
         }
 
         public override bool OnUpdateEffect(float delta)
@@ -190,7 +190,7 @@ namespace LEM_Effects
         public override void OnEndEffect()
         {
             base.OnEndEffect();
-            m_TargetLinearEvent.AddNumberOfAwaitingInput = -1;
+            m_TargetLinearEvent.DeductNumberOfAwaitingInput();
         }
 
      

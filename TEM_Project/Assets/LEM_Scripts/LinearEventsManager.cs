@@ -4,6 +4,7 @@ using LEM_Effects.Extensions;
 
 /// <summary>
 /// This is the Manager for all LinearEvents. This is where all Linear Events are updated in each Update Loop.
+/// It must be ensured that there can be only one instance of this manager at any given time. (Place this component prefably on a global PersistentObject)
 /// </summary>
 public class LinearEventsManager : MonoBehaviour
 {
@@ -21,6 +22,31 @@ public class LinearEventsManager : MonoBehaviour
         Instance = this;
     }
 
+    /// <summary>
+    /// Stops and resets all Running Events. 
+    /// </summary>
+    public static void StopandResetAllRunningEvents()
+    {
+        //O(n)
+        while (Instance.RunningLinearEvents.Count >0)
+        {
+            Instance.RunningLinearEvents[0].ClearAllUpdateLists();
+            Instance.RunningLinearEvents.RemoveEfficiently(0);
+        }
+
+    }
+
+    /// <summary>
+    /// Stops and Resets a LinearEvent which is running in the LinearEventsManager
+    /// </summary>
+    /// <param name="le"></param>
+    public static void StopLinearEvent(LinearEvent le)
+    {
+        //O(n)
+        le.ClearAllUpdateLists();
+        Instance.RunningLinearEvents.RemoveEfficiently(Instance.RunningLinearEvents.FindIndex(x => x == le));
+    }
+   
 
     #region Update Loop
     //Update loop will be where all the effects will be called and then removed if 

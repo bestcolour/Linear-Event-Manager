@@ -75,7 +75,10 @@ public class LinearEvent : MonoBehaviour
     [SerializeField, Header("Debug Settings")] bool m_ShowEffects = false;
     HideFlags m_CurrentFlags => m_ShowEffects ? HideFlags.NotEditable : HideFlags.HideInInspector;
 
-    public void ClearAllEffects()
+    /// <summary>
+    /// Editor Method: Clears all effects currently on the Linear Event
+    /// </summary>
+    public void EditorMethod_ClearAllEffects()
     {
         if (m_AllEffects == null || m_AllEffects.Length == 0)
             return;
@@ -92,15 +95,15 @@ public class LinearEvent : MonoBehaviour
 
     private void OnEnable()
     {
-        Selection.selectionChanged += TryToHideComponents;
+        Selection.selectionChanged += EditorMethod_TryToHideEffectComponents;
     }
 
     private void OnDisable()
     {
-        Selection.selectionChanged -= TryToHideComponents;
+        Selection.selectionChanged -= EditorMethod_TryToHideEffectComponents;
     }
 
-    void TryToHideComponents()
+    void EditorMethod_TryToHideEffectComponents()
     {
         if (Selection.activeGameObject != this.gameObject || m_AllEffects == null || m_AllEffects.Length == 0)
             return;
@@ -109,10 +112,10 @@ public class LinearEvent : MonoBehaviour
         if (m_AllEffects[0].hideFlags == m_CurrentFlags)
             return;
 
-        HideComponents();
+        EditorMethod_HideEffectComponents();
     }
 
-    void HideComponents()
+    void EditorMethod_HideEffectComponents()
     {
         for (int i = 0; i < m_AllEffects.Length; i++)
         {
@@ -121,15 +124,22 @@ public class LinearEvent : MonoBehaviour
         }
     }
 
-    public void MoveLinearEventComponent(GameObject movingTo)
+    /// <summary>
+    /// Editor Method: Duplicates the LinearEvent as well as all its effects to a targeted GameObject and then destroy the original copy and set of effects
+    /// </summary>
+    /// <param name="movingTo"></param>
+    public void EditorMethod_MoveLinearEventComponent(GameObject movingTo)
     {
-        DuplicateLinearEvent(movingTo);
+        EditorMethod_DuplicateLinearEvent(movingTo);
 
-        ClearAllEffects();
+        EditorMethod_ClearAllEffects();
         UnityEngine.Object.DestroyImmediate(this, true);
     }
 
-    public void DuplicateLinearEvent(GameObject duplicatingTo)
+    /// <summary>
+    /// Editor Method: Duplicates the LinearEvent
+    /// </summary>
+    public void EditorMethod_DuplicateLinearEvent(GameObject duplicatingTo)
     {
         LinearEvent duplicate = duplicatingTo.AddComponent<LinearEvent>();
 
@@ -150,7 +160,7 @@ public class LinearEvent : MonoBehaviour
         duplicate.m_StartNodeData = m_StartNodeData;
         duplicate.m_LinearDescription = m_LinearDescription;
 
-        duplicate.HideComponents();
+        duplicate.EditorMethod_HideEffectComponents();
 
         RefreshReferences(duplicate);
 
@@ -200,26 +210,25 @@ public class LinearEvent : MonoBehaviour
         }
     }
 
-    //public int m_LinearEventIndex = -1;
-
     #region Halt Variables
 
     float m_DelayBeforeNextEffect = 0f;
     public float AddDelayBeforeNextEffect { set { m_DelayBeforeNextEffect += value; } }
     public float SetDelayBeforeNextEffect { set { m_DelayBeforeNextEffect = value; } }
 
-    bool m_PauseLinearEvent = true;
-    public bool PauseLinearEvent { set { m_PauseLinearEvent = value; } }
+    public bool PauseLinearEvent { set; private get; } = true;
 
-    int m_NumOfAwaitingInput = default;
-    public int AddNumberOfAwaitingInput { set { m_NumOfAwaitingInput += value; } }
+    //Using ushort here cause i highly doubt u need a range of 4 billion int
+    ushort m_NumOfAwaitingInput = 0;
+
+    public void DeductNumberOfAwaitingInput() { m_NumOfAwaitingInput--; }
+    public void AddNumberOfAwaitingInput() { m_NumOfAwaitingInput++; }
 
     #endregion
 
     LEM_BaseEffect m_PreviousEffectPlayed = default;
 
     public bool HasNoEffectsPlaying => m_UpdateCycle.Count == 0 && m_FixedUpdateCycle.Count == 0 && m_LateUpdateCycle.Count == 0;
-    bool IsStartNodeConnected => m_StartNodeData.HasAtLeastOneNextPointNode;
 
     //Update cycles
     List<LEM_BaseEffect> m_UpdateCycle = default;
@@ -260,7 +269,7 @@ public class LinearEvent : MonoBehaviour
         m_LateUpdateCycle = new List<LEM_BaseEffect>(m_UpdateEffectCapacity);
 
         EffectsDictionary = GetAllEffectsDictionary;
-        m_PauseLinearEvent = false;
+        PauseLinearEvent = false;
     }
     #endregion
 
@@ -271,7 +280,7 @@ public class LinearEvent : MonoBehaviour
     {
 #if UNITY_EDITOR
         Debug.Assert(IsInitialized, "You are trying to play the Linear Event " + m_LinearDescription + " that has not been initialized or have 0 Effects in it!", this);
-        Debug.Assert(IsStartNodeConnected, "Linear Event " + m_LinearDescription + " does not have its Start Node connected to any effects!", this);
+        Debug.Assert(m_StartNodeData.HasAtLeastOneNextPointNode, "Linear Event " + m_LinearDescription + " does not have its Start Node connected to any effects!", this);
 #endif
 
         //Checks if the Linear Event is currently being played
@@ -289,10 +298,8 @@ public class LinearEvent : MonoBehaviour
         LinearEventsManager.Instance.RunningLinearEvents.Add(this);
     }
 
-    /// <summary>
-    /// Stops and resets the Linear Event
-    /// </summary>
-    public void StopLinearEvent()
+    #region Public Supporting Methods
+    public void ClearAllUpdateLists()
     {
         while (m_UpdateCycle.Count > 0)
         {
@@ -311,14 +318,15 @@ public class LinearEvent : MonoBehaviour
             m_LateUpdateCycle[0].OnEndEffect();
             m_LateUpdateCycle.RemoveEfficiently(0);
         }
-
     }
+    #endregion
+
 
     #region Main Update Methods
 
     public void CycleUpdate()
     {
-        if (m_UpdateCycle.Count <= 0 || m_PauseLinearEvent)
+        if (PauseLinearEvent)
             return;
 
         for (int i = 0; i < m_UpdateCycle.Count; i++)
@@ -335,7 +343,7 @@ public class LinearEvent : MonoBehaviour
 
     public void CycleFixedUpdate()
     {
-        if (m_FixedUpdateCycle.Count <= 0 || m_PauseLinearEvent)
+        if (PauseLinearEvent)
             return;
 
         for (int i = 0; i < m_FixedUpdateCycle.Count; i++)
@@ -352,7 +360,7 @@ public class LinearEvent : MonoBehaviour
     //Returns true when LinearEvent is out of effects to load
     public bool CycleLateUpdate()
     {
-        if (m_PauseLinearEvent)
+        if (PauseLinearEvent)
             return false;
 
         for (int i = 0; i < m_LateUpdateCycle.Count; i++)
@@ -379,7 +387,9 @@ public class LinearEvent : MonoBehaviour
 
     #endregion
 
-    #region Supporting Methods
+    #region Private Supporting Methods
+
+
     //Checks if this LinearEvent needs a click or some trigger b4 it can load next effect
     //Returns true if there is no more possible effects that can be loaded
     bool ListenToLoadNextEffect()
@@ -518,6 +528,8 @@ public class LinearEvent : MonoBehaviour
 
 
     #endregion
+
+
 
 }
 
