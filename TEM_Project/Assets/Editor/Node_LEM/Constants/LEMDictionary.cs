@@ -119,8 +119,12 @@ namespace LEM_Editor
              //Pauses the playing of effects on a specific Linear Event
              { "PauseLinearEvent", new NodeDictionaryDefinition(new PauseLinearEventNode()                                  ,new Color(1f ,0.55f,0f)) },
 
+             //Pauses the playing of effects on the current Linear Event
+             { "StopCurrentLinearEvent", new NodeDictionaryDefinition(new StopCurrentLinearEventNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },
+
              //Pauses the playing of effects on a specific Linear Event
-             { "StopLinearEvent", new NodeDictionaryDefinition(new StopLinearEventNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },
+             { "StopLinearEventAt", new NodeDictionaryDefinition(new StopLinearEventAtNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },
+
 
         #endregion
 
@@ -626,7 +630,7 @@ namespace LEM_Editor
 
 	    #endregion
 
-#region Curve Alpha
+        #region Curve Alpha
              //Curves the Alpha of a Graphic to a target alpha within a given duration
              { "CurveAlphaToGraphic", new NodeDictionaryDefinition(new  CurveAlphaToGraphicNode()                                      ,new Color(0.075f, 0.553f, 0.459f)) },
 

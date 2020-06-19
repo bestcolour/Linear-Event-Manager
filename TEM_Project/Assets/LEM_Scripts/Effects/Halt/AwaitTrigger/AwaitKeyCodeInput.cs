@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace LEM_Effects
 {
-    [AddComponentMenu("")] public class  AwaitKeyCodeInput : UpdateBaseEffect
+    [AddComponentMenu("")] public class  AwaitKeyCodeInput : LinkedTo_ParentLE_UpdateBaseEffect
 #if UNITY_EDITOR
-        , IEffectSavable<LinearEvent, SerializedObject> 
+        , IEffectSavable<LinearEvent, SerializedObject,bool> 
 #endif
     {
         //[SerializeField]
@@ -124,6 +124,11 @@ namespace LEM_Effects
 
         }
 
+        public override void OnRefreshReferenceToParentLinearEvent(LinearEvent linearEvent)
+        {
+            m_TargetLinearEvent = linearEvent;
+        }
+
         public void SetUp(LinearEvent t1, SerializedObject t2)
         {
             m_TargetLinearEvent = t1;
@@ -156,7 +161,17 @@ namespace LEM_Effects
             t2 = new SerializedObject(data);
         }
 
-       
+        public void SetUp(LinearEvent t1, SerializedObject t2, bool t3)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void UnPack(out LinearEvent t1, out SerializedObject t2, out bool t3)
+        {
+            throw new System.NotImplementedException();
+        }
+
+
 #endif
     }
 

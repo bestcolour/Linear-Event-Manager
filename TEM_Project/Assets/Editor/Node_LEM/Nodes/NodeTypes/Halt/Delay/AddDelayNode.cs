@@ -46,14 +46,14 @@ namespace LEM_Editor
             //string[] connectedPrevPointNodeIDs = TryToSavePrevPointNodeID();
 
             myEffect.bm_NodeBaseData = new NodeBaseData(m_MidRect.position, NodeID, connectedNextPointNodeIDs/*, connectedPrevPointNodeIDs*/);
-            myEffect.SetUp(NodeLEM_Editor.CurrentLE, m_DelayTimeToAdd);
+            myEffect.SetUp(NodeLEM_Editor.CurrentLE, m_DelayTimeToAdd,true);
             return myEffect;
         }
 
         public override void LoadFromBaseEffect(LEM_BaseEffect effectToLoadFrom)
         {
             AddDelayAt loadFrom = effectToLoadFrom as AddDelayAt;
-            loadFrom.UnPack(out LinearEvent unused, out m_DelayTimeToAdd);
+            loadFrom.UnPack(out LinearEvent unused, out m_DelayTimeToAdd,out bool ntUsed);
 
             //Important
             //m_LemEffectDescription = effectToLoadFrom.m_Description;

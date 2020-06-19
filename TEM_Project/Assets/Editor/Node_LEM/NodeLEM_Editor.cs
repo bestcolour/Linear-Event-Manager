@@ -381,12 +381,9 @@ namespace LEM_Editor
         //Called only when you pressed the Load Linear Event button
         public static void LoadNodeEditor(LinearEvent linearEvent)
         {
-
-            //This will be a key identifier for whether LoadNodeEditor button was pressed
+            ////This will be a key identifier for whether LoadNodeEditor button was pressed because Initialise Window will call OnEnable indirectly when getting window.
             LinearEvent prevLE = CurrentLE;
             CurrentLE = linearEvent;
-
-
 
             //If this is the first time you are opening the window, or if u have previously closed the window and you wish to reopen it
             if (Instance == null)
@@ -397,35 +394,34 @@ namespace LEM_Editor
                 CurrentLE = prevLE;
                 Instance.TryToSaveLinearEvent();
 
-                //if (prevLE)
-                    //prevLE.CurrentlyBeingEdited = false;
-
                 //Load the new one
                 CurrentLE = linearEvent;
-                //CurrentLE.CurrentlyBeingEdited = true;
                 Instance.ResetandLoadNewEvent();
             }
 
             //Create the gameobjects which will store the monobehaviours for the various effects
             if (EditorEffectsContainer == null)
-            {
-                EditorEffectsContainer = new GameObject();
-                EditorEffectsContainer.name = "EditorEffectsContainer";
-                EditorEffectsContainer.hideFlags = HideFlags.HideAndDontSave;
-            }
+                InitialiseEditorEffectsContainer("EditorEffectsContainer");
         }
+
+        //public static void QuickSaveLinearEvent(LinearEvent le)
+        //{
+        //    //Store old reference of gameobject and create new editoreffectscontainer
+        //    GameObject prevEditorEffectsContainer = EditorEffectsContainer;
+        //    InitialiseEditorEffectsContainer("EditorEffectsContainer2");
+
+        //    //Load all the le's data onto the newly creaed editoreffectscontaienr
+
+        //}
+
 
         //Form of intialisation from pressing Load Linear Event and that it is the first time/you plan to reopen the node editor
         public static void InitialiseWindow()
         {
             //Get window and this will trigger OnEnable
             NodeLEM_Editor editorWindow = GetWindow<NodeLEM_Editor>();
-
-            //Set the title of gui for the window to be TEM Node Editor
             editorWindow.titleContent = new GUIContent("TEM Node Editor");
-
             editorWindow.d_OnGUI = editorWindow.Initialise;
-
         }
 
 
@@ -503,6 +499,13 @@ namespace LEM_Editor
                 CreateConnectableNode(new Vector2(EditorGUIUtility.currentViewWidth * 0.5f, 50f), "StartNode", out ConnectableNode startTempNode);
                 StartNode = startTempNode;
             }
+        }
+
+        static void InitialiseEditorEffectsContainer(string name)
+        {
+            EditorEffectsContainer = new GameObject();
+            EditorEffectsContainer.name = name;
+            EditorEffectsContainer.hideFlags = HideFlags.HideAndDontSave;
         }
 
         #endregion

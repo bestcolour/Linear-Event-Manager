@@ -53,6 +53,8 @@ namespace LEM_Effects
 
         //    return copy;
         //}
+
+      
 #endif
 
 
@@ -81,7 +83,7 @@ namespace LEM_Effects
             return d_UpdateCheck.Invoke();
         }
 
-       
+      
     }
 
 }

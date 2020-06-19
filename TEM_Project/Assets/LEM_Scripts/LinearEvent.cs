@@ -48,7 +48,7 @@ public class LinearEvent : MonoBehaviour
     public LEM_BaseEffect[] m_AllEffects = default;
 
 #if UNITY_EDITOR
-    [Header("DESCRIPTION"), Tooltip("This is purely for labelling purposes. It will not be added as a variable in the final build."),TextArea(2,10)] public string m_LinearDescription = default;
+    [Header("DESCRIPTION"), Tooltip("This is purely for labelling purposes. It will not be added as a variable in the final build."), TextArea(2, 10)] public string m_LinearDescription = default;
 #endif
 
     [Header("Settings"), SerializeField, Tooltip("Should Linear Event initalize its effect dictionary on awake?")]
@@ -72,6 +72,9 @@ public class LinearEvent : MonoBehaviour
     [HideInInspector]
     public GroupRectNodeBase[] m_AllGroupRectNodes = default;
 
+    [SerializeField, Header("Debug Settings")] bool m_ShowEffects = false;
+    HideFlags m_CurrentFlags => m_ShowEffects ? HideFlags.NotEditable : HideFlags.HideInInspector;
+
     public void ClearAllEffects()
     {
         if (m_AllEffects == null || m_AllEffects.Length == 0)
@@ -79,7 +82,7 @@ public class LinearEvent : MonoBehaviour
 
         for (int i = 0; i < m_AllEffects.Length; i++)
         {
-            UnityEngine.Object.DestroyImmediate(m_AllEffects[i],true);
+            UnityEngine.Object.DestroyImmediate(m_AllEffects[i], true);
         }
         m_AllEffects = new LEM_BaseEffect[0];
         m_AllGroupRectNodes = new GroupRectNodeBase[0];
@@ -103,7 +106,7 @@ public class LinearEvent : MonoBehaviour
             return;
 
         //Change HideFlags to NotEditable to debug
-        if (m_AllEffects[0].hideFlags == HideFlags.NotEditable)
+        if (m_AllEffects[0].hideFlags == m_CurrentFlags)
             return;
 
         HideComponents();
@@ -114,7 +117,7 @@ public class LinearEvent : MonoBehaviour
         for (int i = 0; i < m_AllEffects.Length; i++)
         {
             //Change HideFlags to NotEditable to debug
-            m_AllEffects[i].hideFlags = HideFlags.NotEditable;
+            m_AllEffects[i].hideFlags = m_CurrentFlags;
         }
     }
 
@@ -123,7 +126,7 @@ public class LinearEvent : MonoBehaviour
         DuplicateLinearEvent(movingTo);
 
         ClearAllEffects();
-        UnityEngine.Object.DestroyImmediate(this,true);
+        UnityEngine.Object.DestroyImmediate(this, true);
     }
 
     public void DuplicateLinearEvent(GameObject duplicatingTo)
@@ -148,11 +151,32 @@ public class LinearEvent : MonoBehaviour
         duplicate.m_LinearDescription = m_LinearDescription;
 
         duplicate.HideComponents();
+
+        RefreshReferences(duplicate);
+
     }
 
+    //Duplicating and Moving Linear Event will cause references to be lost due to 
+    //copying and deleting(for eg. the TargetLinear Events which are either dragged and dropped or by default set to the current linear event in which the effect is in)
+    //Call this method to refresh those connections
+    void RefreshReferences(LinearEvent le)
+    {
+        if (le.m_AllEffects == null)
+            return;
+
+        for (int i = 0; i < le.m_AllEffects.Length; i++)
+        {
+            le.m_AllEffects[i].OnRefreshReferenceToParentLinearEvent(le);
+        }
+    }
 
 #endif
     #endregion
+
+
+    #endregion
+
+    #region RunTime Values
 
     //Runtime values
     public Dictionary<string, LEM_BaseEffect> GetAllEffectsDictionary
@@ -175,11 +199,6 @@ public class LinearEvent : MonoBehaviour
             return allEffectsDictionary;
         }
     }
-
-
-    #endregion
-
-    #region RunTime Values
 
     //public int m_LinearEventIndex = -1;
 
@@ -259,7 +278,7 @@ public class LinearEvent : MonoBehaviour
         if (!HasNoEffectsPlaying)
         {
 #if UNITY_EDITOR
-            Debug.LogWarning("Cannot play Linear Event "+ m_LinearDescription +" which is currently playing!", this);
+            Debug.LogWarning("Cannot play Linear Event " + m_LinearDescription + " which is currently playing!", this);
 #endif
             return;
         }
@@ -316,7 +335,7 @@ public class LinearEvent : MonoBehaviour
 
     public void CycleFixedUpdate()
     {
-        if (m_FixedUpdateCycle.Count <= 0 ||m_PauseLinearEvent)
+        if (m_FixedUpdateCycle.Count <= 0 || m_PauseLinearEvent)
             return;
 
         for (int i = 0; i < m_FixedUpdateCycle.Count; i++)
@@ -437,7 +456,7 @@ public class LinearEvent : MonoBehaviour
 
 #if UNITY_EDITOR
         Type firstEffectPlayed = m_PreviousEffectPlayed.GetType();
-        if (firstEffectPlayed == typeof(PlayLinearEvent) || firstEffectPlayed == typeof(PlayLinearEvents) || firstEffectPlayed == typeof(PlayRandomLinearEvent)|| firstEffectPlayed == typeof(PlayBiasedLinearEvent))
+        if (firstEffectPlayed == typeof(PlayLinearEvent) || firstEffectPlayed == typeof(PlayLinearEvents) || firstEffectPlayed == typeof(PlayRandomLinearEvent) || firstEffectPlayed == typeof(PlayBiasedLinearEvent))
         {
             Debug.LogWarning("Warning! The starting effect should not be a play linear event effect type to prevent interference in looping of Linear Event! Check Rule #1 in General Rules in LinearEvent.cs (at the top)");
         }
@@ -445,7 +464,7 @@ public class LinearEvent : MonoBehaviour
 #endif
 
 
-            m_PreviousEffectPlayed.OnInitialiseEffect();
+        m_PreviousEffectPlayed.OnInitialiseEffect();
         maxEffectsPerFrame--;
 
         switch (m_PreviousEffectPlayed.FunctionType)

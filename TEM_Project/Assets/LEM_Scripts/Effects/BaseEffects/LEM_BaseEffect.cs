@@ -68,6 +68,9 @@ namespace LEM_Effects
         public abstract LEM_BaseEffect CloneMonoBehaviour(GameObject go);
 
         public virtual LEM_BaseEffect ScriptableClone() { return (LEM_BaseEffect)this.MemberwiseClone(); }
+
+        //Function which refreshes the reference to the parent lienar event whenever the parent linear event moves itself to another gameobject
+        public virtual void OnRefreshReferenceToParentLinearEvent(LinearEvent linearEvent) { }
 #endif
 
     }

@@ -55,6 +55,7 @@ namespace LEM_Editor
 
         }
 
+        #region Draw Buttons
         void DrawOpenButton()
         {
             //Creates a button to load the node editor
@@ -79,7 +80,7 @@ namespace LEM_Editor
             if (GUILayout.Button("Delete", GUILayout.Height(s_LineHeightSpace), GUILayout.Width(m_ButtonWidth)))
             {
                 m_CurrentLE.ClearAllEffects();
-                UnityEngine.Object.DestroyImmediate(m_CurrentLE,true);
+                UnityEngine.Object.DestroyImmediate(m_CurrentLE, true);
             }
         }
 
@@ -142,12 +143,18 @@ namespace LEM_Editor
 
         }
 
+        #endregion
+
+        #region Supporting Methods
+
+
         void ResetButtonCheckVar()
         {
             s_SelectedLE = null;
             s_IsMoveComponentCommand = null;
         }
 
+        #endregion
 
         void DrawInspector()
         {

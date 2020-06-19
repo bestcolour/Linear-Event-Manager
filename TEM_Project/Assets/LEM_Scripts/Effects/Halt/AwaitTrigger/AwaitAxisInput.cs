@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LEM_Effects
 {
 
-    [AddComponentMenu("")] public class  AwaitAxisInput : UpdateBaseEffect
+    [AddComponentMenu("")] public class  AwaitAxisInput : LinkedTo_ParentLE_UpdateBaseEffect
 #if UNITY_EDITOR
         , IEffectSavable<LinearEvent, SerializedObject>
 #endif
@@ -54,6 +54,11 @@ namespace LEM_Effects
             return t;
         }
 
+
+        public override void OnRefreshReferenceToParentLinearEvent(LinearEvent linearEvent)
+        {
+            m_TargetLinearEvent = linearEvent;
+        }
         // MAJOR MONOCHANGE
         //public override LEM_BaseEffect ScriptableClone()
         //{
