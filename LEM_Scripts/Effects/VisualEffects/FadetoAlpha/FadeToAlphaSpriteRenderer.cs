@@ -35,9 +35,6 @@ namespace LEM_Effects
             //Record initial alpha first
             m_InitialAlpha = m_TargetSpriteRenderer.color.a;
 
-            //Recalculate the target alpha (convert to normalized value)
-            m_TargetAlpha /= 255f;
-
             m_NextColour = new Color(m_TargetSpriteRenderer.color.r, m_TargetSpriteRenderer.color.g, m_TargetSpriteRenderer.color.b, m_TargetSpriteRenderer.color.a);
         }
 

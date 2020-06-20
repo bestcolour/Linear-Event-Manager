@@ -50,8 +50,6 @@ namespace LEM_Effects
                 m_NextColours[i] = new Color(m_TargetRenderer.materials[i].color.r, m_TargetRenderer.materials[i].color.g, m_TargetRenderer.materials[i].color.b, m_TargetRenderer.materials[i].color.a);
             }
 
-            //Recalculate the target alpha (convert to normalized value)
-            m_TargetAlpha /= 255f;
         }
 
         public override bool OnUpdateEffect(float delta)

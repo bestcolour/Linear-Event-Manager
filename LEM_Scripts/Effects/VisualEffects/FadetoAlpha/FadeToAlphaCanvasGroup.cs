@@ -35,9 +35,6 @@ namespace LEM_Effects
             //Record initial alpha first
             m_InitialAlpha = m_TargetCanvasGroup.alpha;
 
-            //Recalculate the target alpha (convert to normalized value)
-            m_TargetAlpha /= 255f;
-
             m_NextAlpha = m_TargetCanvasGroup.alpha;
         }
 

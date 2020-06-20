@@ -36,9 +36,6 @@ namespace LEM_Effects
             //Record initial alpha first
             m_InitialAlpha = m_TargetGraphic.color.a;
 
-            //Recalculate the target alpha (convert to normalized value)
-            m_TargetAlpha /= 255f;
-
             m_NextColour = new Color(m_TargetGraphic.color.r, m_TargetGraphic.color.g, m_TargetGraphic.color.b, m_TargetGraphic.color.a);
         }
 

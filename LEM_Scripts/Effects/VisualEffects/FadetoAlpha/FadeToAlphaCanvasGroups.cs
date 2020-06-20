@@ -36,8 +36,6 @@ namespace LEM_Effects
             }
            
 
-            //Recalculate the target alpha (convert to normalized value)
-            m_TargetAlpha /= 255f;
 
         }
 

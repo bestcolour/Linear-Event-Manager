@@ -35,9 +35,6 @@ namespace LEM_Effects
             //Record initial alpha first
             m_InitialAlpha = m_TargetTextMesh.color.a;
 
-            //Recalculate the target alpha (convert to normalized value)
-            m_TargetAlpha /= 255f;
-
             m_NextColour = new Color(m_TargetTextMesh.color.r, m_TargetTextMesh.color.g, m_TargetTextMesh.color.b, m_TargetTextMesh.color.a);
         }
 
