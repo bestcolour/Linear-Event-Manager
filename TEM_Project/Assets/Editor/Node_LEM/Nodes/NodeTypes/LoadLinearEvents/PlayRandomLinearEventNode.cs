@@ -7,7 +7,7 @@ namespace LEM_Editor
 
     public class PlayRandomLinearEventNode : InstantEffectNode
     {
-        ArrayObjectDrawer<LinearEvent> m_ArrayOfGameObjects = new ArrayObjectDrawer<LinearEvent>();
+        LinearEventObjectDrawer m_ArrayOfGameObjects = new LinearEventObjectDrawer();
 
         protected override string EffectTypeName => "PlayRandomLinearEvent";
 

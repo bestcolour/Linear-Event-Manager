@@ -25,7 +25,9 @@ namespace LEM_Editor
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
-            EditorGUI.LabelField(propertyRect, "Target LinearEvent");
+            string label = m_TargetLinearEvent == null ? "LinearEvent to Stop" : "Stopping " + m_TargetLinearEvent.m_LinearDescription;
+            EditorGUI.LabelField(propertyRect, label);
+           
             propertyRect.y += 20f;
             m_TargetLinearEvent = (LinearEvent)EditorGUI.ObjectField(propertyRect, m_TargetLinearEvent, typeof(LinearEvent), true);
 

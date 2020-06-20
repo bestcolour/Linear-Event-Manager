@@ -420,7 +420,7 @@ namespace LEM_Editor
         {
             //Get window and this will trigger OnEnable
             NodeLEM_Editor editorWindow = GetWindow<NodeLEM_Editor>();
-            editorWindow.titleContent = new GUIContent("TEM Node Editor");
+            editorWindow.titleContent = new GUIContent("LEM Node Editor");
             editorWindow.d_OnGUI = editorWindow.Initialise;
         }
 
@@ -964,8 +964,8 @@ namespace LEM_Editor
 
         void HandleCurrentLinearEventLabel(Rect propertyRect, Event currentEvent)
         {
-            string label = "Linear Event : " + CurrentLE.name;
-            propertyRect.size = GUI.skin.label.CalcSize(new GUIContent(label, "The Linear Event you are currently editting"));
+            string label = "Linear Event : " + CurrentLE.m_LinearDescription;
+            propertyRect.size = GUI.skin.label.CalcSize(new GUIContent(label));
             propertyRect.x = 0;
             propertyRect.y = 0;
 

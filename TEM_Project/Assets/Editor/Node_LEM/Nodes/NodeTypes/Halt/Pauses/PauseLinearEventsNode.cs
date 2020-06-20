@@ -8,7 +8,7 @@ namespace LEM_Editor
     public class PauseLinearEventsNode : InstantEffectNode
     {
 
-        ArrayObjectDrawer<LinearEvent> m_ArrayOfGameObjects = new ArrayObjectDrawer<LinearEvent>();
+        LinearEventObjectDrawer m_ArrayOfGameObjects = new LinearEventObjectDrawer();
         bool m_State = true;
 
         protected override string EffectTypeName => "PauseLinearEvents";

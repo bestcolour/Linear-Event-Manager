@@ -44,8 +44,13 @@ namespace LEM_Editor
             LEMStyleLibrary.BeginEditorBoldLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
             LEMStyleLibrary.BeginEditorFoldOutLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
             ////m_State = EditorGUI.Toggle(propertyRect, "Listen To Click", m_State);
-           
-            m_TargetLinearEvent = (LinearEvent)EditorGUI.ObjectField(propertyRect, "Target LinearEvent", m_TargetLinearEvent, typeof(LinearEvent),true);
+
+
+            string label = m_TargetLinearEvent == null ? "Target LinearEvent" : "Targeting: " + m_TargetLinearEvent.m_LinearDescription;
+            EditorGUI.LabelField(propertyRect, label);
+            propertyRect.y += 20f;
+
+            m_TargetLinearEvent = (LinearEvent)EditorGUI.ObjectField(propertyRect, m_TargetLinearEvent, typeof(LinearEvent),true);
             propertyRect.y += 20f;
             propertyRect.height = EditorGUI.GetPropertyHeight(m_GetkeyKeyCodesArray);
 

@@ -9,7 +9,7 @@ namespace LEM_Editor
 
     public class PlayBiasedLinearEventNode : InstantEffectNode
     {
-        AdjustableArrayObjectDrawer<LinearEvent> m_ArrayOfGameObjects = default;
+        LinearEventAdjustableArrayObjectDrawer m_ArrayOfGameObjects = new LinearEventAdjustableArrayObjectDrawer (0, 75f, 150f, "% Element ");
 
         List<float> m_Probabilities = new List<float>();
 
@@ -21,8 +21,6 @@ namespace LEM_Editor
 
             //Override the rect size n pos
             SetNodeRects(position, NodeTextureDimensions.SMALL_MID_SIZE, NodeTextureDimensions.SMALL_TOP_SIZE);
-
-            m_ArrayOfGameObjects = new AdjustableArrayObjectDrawer<LinearEvent>(0,75f,150f,"% Element ");
 
         }
 
@@ -64,7 +62,7 @@ namespace LEM_Editor
                     m_Probabilities.Add(default);
             }
 
-            propertyRect.y += 20f;
+            propertyRect.y += LinearEventAdjustableArrayObjectDrawer.k_SeparationSpace + 20f;
             propertyRect.x += 100f;
             propertyRect.width = 30f;
             //Reususing float container to store the probability of all elements
@@ -72,10 +70,11 @@ namespace LEM_Editor
 
             for (dummyInt = 0; dummyInt < size; dummyInt++)
             {
+
                 m_Probabilities[dummyInt] = EditorGUI.FloatField(propertyRect, m_Probabilities[dummyInt]);
                 m_Probabilities[dummyInt] = Mathf.Clamp(m_Probabilities[dummyInt], 0f, 100f - propertyHeight);
                 propertyHeight += m_Probabilities[dummyInt];
-                propertyRect.y += EditorGUIUtility.singleLineHeight;
+                propertyRect.y += LinearEventAdjustableArrayObjectDrawer.SpacePerLine;
             }
 
 

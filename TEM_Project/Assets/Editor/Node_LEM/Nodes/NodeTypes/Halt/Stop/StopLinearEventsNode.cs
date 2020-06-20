@@ -8,7 +8,7 @@ namespace LEM_Editor
     public class StopLinearEventsNode : InstantEffectNode
     {
 
-        ArrayObjectDrawer<LinearEvent> m_ArrayOfGameObjects = new ArrayObjectDrawer<LinearEvent>();
+        LinearEventObjectDrawer m_ArrayOfGameObjects = new LinearEventObjectDrawer();
 
         protected override string EffectTypeName => "StopLinearEvents";
 

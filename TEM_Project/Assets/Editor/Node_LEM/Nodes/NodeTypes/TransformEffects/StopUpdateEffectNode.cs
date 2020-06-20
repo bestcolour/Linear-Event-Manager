@@ -32,7 +32,8 @@ namespace LEM_Editor
             Rect propertyRect = new Rect(m_MidRect.x + NodeGUIConstants.X_DIST_FROM_MIDRECT, m_MidRect.y + NodeGUIConstants.INSTANT_EFFNODE_Y_DIST_FROM_MIDRECT, m_MidRect.width - NodeGUIConstants.MIDRECT_WIDTH_OFFSET, EditorGUIUtility.singleLineHeight);
 
             LEMStyleLibrary.BeginEditorLabelColourChange(LEMStyleLibrary.CurrentLabelColour);
-            EditorGUI.LabelField(propertyRect, "LinearEvent effect resides in");
+            string label = m_EffectLinearEvent == null ? "LinearEvent that effect resides in" : "Effect resides in " + m_EffectLinearEvent.m_LinearDescription;
+            EditorGUI.LabelField(propertyRect, label);
             propertyRect.y += 20f;
             //propertyRect.height = EditorGUIUtility.singleLineHeight;
             m_EffectLinearEvent = (LinearEvent)EditorGUI.ObjectField(propertyRect, m_EffectLinearEvent, typeof(LinearEvent), true);

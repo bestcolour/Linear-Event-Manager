@@ -7,9 +7,8 @@ namespace LEM_Editor
 
     public class PlayLinearEventsNode : InstantEffectNode
     {
-
-        ArrayObjectDrawer<LinearEvent> m_ArrayOfGameObjects = new ArrayObjectDrawer<LinearEvent>();
-
+        LinearEventObjectDrawer m_ArrayOfGameObjects = new LinearEventObjectDrawer();
+   
         protected override string EffectTypeName => "PlayLinearEvents";
 
         public override void Initialise(Vector2 position, NodeSkinCollection nodeSkin, GUIStyle connectionPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onSelectNode, Action<string> onDeSelectNode, Action<BaseEffectNodePair> updateEffectNodeInDictionary, Color topSkinColour)

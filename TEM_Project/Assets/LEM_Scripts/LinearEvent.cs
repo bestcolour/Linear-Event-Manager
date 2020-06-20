@@ -318,6 +318,8 @@ public class LinearEvent : MonoBehaviour
             m_LateUpdateCycle[0].OnEndEffect();
             m_LateUpdateCycle.RemoveEfficiently(0);
         }
+
+        m_PreviousEffectPlayed = null;
     }
     #endregion
 

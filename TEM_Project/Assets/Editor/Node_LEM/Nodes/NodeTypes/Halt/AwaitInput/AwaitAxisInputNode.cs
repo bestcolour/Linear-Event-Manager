@@ -24,7 +24,7 @@ namespace LEM_Editor
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             //Override the rect size n pos
-            SetNodeRects(position, NodeTextureDimensions.LARGE_MID_SIZE, NodeTextureDimensions.LARGE_TOP_SIZE);
+            SetNodeRects(position, NodeTextureDimensions.JUMBO_MID_SIZE, NodeTextureDimensions.JUMBO_TOP_SIZE);
             //m_InputDataContent = new GUIContent("Inputs to Await");
 
             m_InputDataSerializedObject = new SerializedObject(ScriptableObject.CreateInstance<AwaitAxisInputData>());
@@ -64,7 +64,7 @@ namespace LEM_Editor
             if (m_PreviousArrayTotalSize != m_CurrentArrayTotalSize)
             {
                 m_PreviousArrayTotalSize = m_CurrentArrayTotalSize;
-                SetMidRectSize(NodeTextureDimensions.LARGE_MID_SIZE + Vector2.up * 75f * m_PreviousArrayTotalSize);
+                SetMidRectSize(NodeTextureDimensions.JUMBO_MID_SIZE + Vector2.up * 75f * m_PreviousArrayTotalSize);
             }
 
             if (m_InputDataSerializedObject.hasModifiedProperties)
