@@ -44,7 +44,7 @@ namespace LEM_Editor
         //const string k_EditorPref_EditorEffectsContainerKey = "effectsContainerPath";
         const string k_EditorPref_LinearEventKey = "linearEventScenePath";
         const string k_EditorPref_SettingsKey = "currentSettings";
-        const string k_DefaultSettingsFolderAssetPath = "Assets/Editor/Node_LEM";
+        const string k_DefaultSettingsFolderAssetPath = "Assets/Editor/LEM_Editor_Files/Node_LEM";
 
         #endregion
 

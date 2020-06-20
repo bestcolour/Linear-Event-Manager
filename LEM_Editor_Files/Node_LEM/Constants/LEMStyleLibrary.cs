@@ -32,7 +32,7 @@ namespace LEM_Editor
 
         //Just a default skin
         public static NodeSkinCollection WhiteBackgroundSkin { get; private set; } = null;
-        const string k_NodeTextureAssetPath = "Assets/Editor/Node_LEM/NodeTextures";
+        const string k_NodeTextureAssetPath = "Assets/Editor/LEM_Editor_Files/Node_LEM/NodeTextures";
 
 
         #region Loading
