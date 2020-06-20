@@ -5,7 +5,7 @@ Quick Steps to setting up LEM.
 1) Create a gameobject and add the Linear Event Manager component to the gameobject.
 2) Create another gameobject and add the Linear Event component to the object.
 3) Press "Open" to load the Linear Event in the Node Editor
-4) After saving the Linear Event, create any script to call a reference to the Linear Event you wish play.
+4) After saving the Linear Event, create any script to call a reference to the Initialize and Play the Linear Event you wish play.
 
 
 NODE EDITOR SPECIFIC CONTROLS
@@ -44,13 +44,14 @@ Button Size: Size of the toolbar buttons.
 
 Additional Notes: 
 - Linear Events inherits from Monobehaviour hence it can also work in Prefabs. 
-- I have not tested all 154 effects so yea... if you have any discoveries or bugs do comment and ill try to get back on it!
+- There is a custom Attribute called "LinearDescription" written in the package which you could use to make LinearEvent referencing easier.
 
 
 Future Fixes (if i ever get myself to do it) :
+- Create a guide on how to make Custom Nodes in this Node Editor
 - Fix the zooming of the node editor (right now its zoomed pivoted to the top left of the window screen)
 - Add more effects like maybe text animations
-- Maybe make the editor code look more organized
+- Maybe make the editor code more organized
 
 
 Reflections (Skip if you want):
