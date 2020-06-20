@@ -2,10 +2,12 @@
  Hi there! Linear Event Manager or LEM is a Unity Node Editor which allows for calling a series of methods arranged by a user via a node editor.
 
 Quick Steps to setting up LEM. 
-1) Create a gameobject and add the Linear Event Manager component to the gameobject.
-2) Create another gameobject and add the Linear Event component to the object.
-3) Press "Open" to load the Linear Event in the Node Editor
-4) After saving the Linear Event, create any script to call a reference to the Initialize and Play the Linear Event you wish play.
+1) Download the 3 Folders and import them into your Unity's Asset folder
+2) Create an "Editor" folder in you Asset folder if you don't already have one and place "LEM_Editor_Files" folder into it.
+3) Create a gameobject and add the Linear Event Manager component to the gameobject.
+4) Create another gameobject and add the Linear Event component to the object.
+5) Press "Open" to load the Linear Event in the Node Editor
+6) After saving the Linear Event, create any script to call a reference to the Initialize and Play the Linear Event you wish play.
 
 
 NODE EDITOR SPECIFIC CONTROLS
