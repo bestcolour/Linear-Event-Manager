@@ -104,8 +104,14 @@ namespace LEM_Editor
              //Halts the playing of effects on the current Linear Event until a certain KeyCode input condition is met
              { "AwaitKeyCodeInput",   new NodeDictionaryDefinition( new AwaitKeyCodeInputNode()                             ,new Color(0.59f,0.24f,0.75f)) },
 
+             //Halts the playing of effects on a specific Linear Event until a certain KeyCode input condition is met
+             { "AwaitKeyCodeInputAt",   new NodeDictionaryDefinition( new AwaitKeyCodeInputAtNode()                             ,new Color(0.59f,0.24f,0.75f)) },
+
              //Halts the playing of effects on the current Linear Event until a certain Axis input condition is met
              { "AwaitAxisInput",   new NodeDictionaryDefinition( new AwaitAxisInputNode()                                   ,new Color(0.59f,0.24f,0.75f)) },
+
+             //Halts the playing of effects on a specific Linear Event until a certain Axis input condition is met
+             { "AwaitAxisInputAt",   new NodeDictionaryDefinition( new AwaitAxisInputAtNode()                                   ,new Color(0.59f,0.24f,0.75f)) },
 
              //Stops any effect which requires to be updated over multiple frames
              { "StopUpdateEffect", new NodeDictionaryDefinition(new StopUpdateEffectNode()                                  ,new Color(0.922f, 0.596f, 0.306f)) },
@@ -118,6 +124,9 @@ namespace LEM_Editor
 
              //Pauses the playing of effects on a specific Linear Event
              { "PauseLinearEvent", new NodeDictionaryDefinition(new PauseLinearEventNode()                                  ,new Color(1f ,0.55f,0f)) },
+
+             //Pause the playing of effects of many specific Linear Events
+             { "PauseLinearEvents", new NodeDictionaryDefinition(new PauseLinearEventsNode()                                  ,new Color(1f ,0.55f,0f)) },
 
              //Stops and resets the current Linear Event
              { "StopThisLinearEvent", new NodeDictionaryDefinition(new StopThisLinearEventNode()                                 ,new Color(0.839f, 0.537f, 0.063f)) },

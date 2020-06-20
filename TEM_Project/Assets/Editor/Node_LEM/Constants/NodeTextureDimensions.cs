@@ -11,6 +11,8 @@ namespace LEM_Editor
 
         //width, height
         public static readonly Vector2 START_END_NODE = new Vector2(110, 70);
+        public static readonly Vector2 TINY_MID_SIZE = new Vector2(200, 50);
+        public static readonly Vector2 TINY_TOP_SIZE = new Vector2(200, 35);
         public static readonly Vector2 SMALL_MID_SIZE = new Vector2(245, 100);
         public static readonly Vector2 SMALL_TOP_SIZE = new Vector2(245, 35);
         public static readonly Vector2 NORMAL_MID_SIZE = new Vector2(275, 200);
@@ -19,6 +21,8 @@ namespace LEM_Editor
         public static readonly Vector2 BIG_TOP_SIZE = new Vector2(275, 35);
         public static readonly Vector2 LARGE_MID_SIZE = new Vector2(275, 325);
         public static readonly Vector2 LARGE_TOP_SIZE = new Vector2(275, 35);
+        public static readonly Vector2 JUMBO_MID_SIZE = new Vector2(275, 375);
+        public static readonly Vector2 JUMBO_TOP_SIZE = new Vector2(275, 35);
     } 
 
 

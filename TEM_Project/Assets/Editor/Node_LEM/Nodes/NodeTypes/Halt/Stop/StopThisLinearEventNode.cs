@@ -14,7 +14,7 @@ namespace LEM_Editor
             base.Initialise(position, nodeSkin, connectionPointStyle, onClickInPoint, onClickOutPoint, onSelectNode, onDeSelectNode, updateEffectNodeInDictionary, topSkinColour);
 
             //Override the rect size n pos
-            SetNodeRects(position, NodeTextureDimensions.SMALL_MID_SIZE, NodeTextureDimensions.SMALL_TOP_SIZE);
+            SetNodeRects(position, NodeTextureDimensions.TINY_MID_SIZE, NodeTextureDimensions.TINY_TOP_SIZE );
         }
 
 
