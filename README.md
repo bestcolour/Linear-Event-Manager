@@ -47,6 +47,7 @@ Button Size: Size of the toolbar buttons.
 Additional Notes: 
 - Linear Events inherits from Monobehaviour hence it can also work in Prefabs. 
 - There is a custom Attribute called "LinearDescription" written in the package which you could use to make LinearEvent referencing easier.
+- I've added a Clear GroupRectNodes Button incase any bugs which I have not foresee pertaining to groupnodes pop up. Press that button to save your nodes at the stake of your grouprectnodes (which are basically labels)
 
 
 Future Fixes (if i ever get myself to do it) :
