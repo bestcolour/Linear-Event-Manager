@@ -166,6 +166,11 @@ public class LinearEvent : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Clears all the GroupRectNodes in the LinearEvent. This is my safeguard for any potential unfix bugs which i have not encountered pertaining to GroupRectNodes.
+    /// </summary>
+    public void EditorMethod_ClearGroupRectNodes() { m_AllGroupRectNodes = null; }
+
     //Duplicating and Moving Linear Event will cause references to be lost due to 
     //copying and deleting(for eg. the TargetLinear Events which are either dragged and dropped or by default set to the current linear event in which the effect is in)
     //Call this method to refresh those connections

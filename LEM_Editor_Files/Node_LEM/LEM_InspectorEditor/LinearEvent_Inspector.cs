@@ -45,6 +45,8 @@ namespace LEM_Editor
             GUILayout.EndHorizontal();
 
 
+         
+
             EditorGUILayout.Space();
             //TryPopulateSerializedList();
             DrawInspector();
@@ -52,6 +54,12 @@ namespace LEM_Editor
 
             if (serializedObject.hasModifiedProperties)
                 serializedObject.ApplyModifiedProperties();
+
+            GUILayout.BeginHorizontal();
+            DrawClearGroupNodesButton();
+            GUILayout.EndHorizontal();
+
+
 
         }
 
@@ -142,6 +150,16 @@ namespace LEM_Editor
             }
 
         }
+
+        //For emergencies. In the case where there may be errors due to the GroupRectNodes having an id which does not exist anymore. This button will remove all the GroupRectNodes but you will save your effect nodes.
+        void DrawClearGroupNodesButton()
+        {
+            if (GUILayout.Button("Clear GroupRectNodes"))
+            {
+                m_CurrentLE.EditorMethod_ClearGroupRectNodes();
+            }
+        }
+
 
         #endregion
 

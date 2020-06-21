@@ -41,7 +41,8 @@ namespace LEM_Editor
 
             for (int i = 0; i < NodeCommandInvoker.s_Effect_ClipBoard.Count; i++)
             {
-                dummy = NodeCommandInvoker.s_Effect_ClipBoard[i].ScriptableClone();
+                //dummy = NodeCommandInvoker.s_Effect_ClipBoard[i].ScriptableClone();
+                dummy = NodeCommandInvoker.s_Effect_ClipBoard[i].CloneMonoBehaviour(NodeLEM_Editor.EditorEffectsContainer);
                 m_PastedEffectDictionary.Add(dummy.bm_NodeBaseData.m_NodeID, dummy);
             }
         }
@@ -167,7 +168,6 @@ namespace LEM_Editor
 
         public void Undo()
         {
-
             string[] allKeys = m_PastedEffectDictionary.Keys.ToArray();
             //PasteCommandData dummyCommandData = new PasteCommandData();
             //Save before deleting the node

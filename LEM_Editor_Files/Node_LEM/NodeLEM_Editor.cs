@@ -6,6 +6,7 @@ using System;
 using LEM_Effects;
 using LEM_Effects.Extensions;
 using System.Linq;
+using UnityEditor.Graphs;
 
 namespace LEM_Editor
 {
@@ -48,10 +49,11 @@ namespace LEM_Editor
 
         #endregion
 
-        //For saving 
+        //Holds all the connectable node (effect nodes,start node0 in the editor
         List<Node> m_AllConnectableNodesInEditor = new List<Node>();
         public static List<Node> AllConnectableNodesInEditor => Instance.m_AllConnectableNodesInEditor;
 
+        //Holds all the group rect node in editor
         List<Node> m_AllGroupRectNodesInEditor = new List<Node>();
         public static List<Node> AllGroupRectNodesInEditor => Instance.m_AllGroupRectNodesInEditor;
 
@@ -1839,13 +1841,18 @@ namespace LEM_Editor
             //Remove node from selected collection if it is inside
             TryToRemoveNodeFromSelectedCollection(nB.m_NodeID);
 
+
+
             //O(n) operation only, inother words same as list.Remove( )
             //Need nodeid to be checked cause Node references are lost during command invoker
             int indexOfNodeToRemove = AllConnectableNodesInEditor.FindIndex(x => x.NodeID == nB.m_NodeID);
             AllConnectableNodesInEditor.RemoveEfficiently(indexOfNodeToRemove);
 
-            if (AllEffectsNodeInEditor.ContainsKey(nB.m_NodeID))
-                AllEffectsNodeInEditor.Remove(nB.m_NodeID);
+            //Update the group node if the node has a parent only after removing the connetable node from AllConnectableNodesInEditor 
+            if (AllEffectsNodeInEditor[nB.m_NodeID].effectNode.IsGrouped)
+                AllEffectsNodeInEditor[nB.m_NodeID].effectNode.m_GroupedParent.RemoveChildFromDictionary(nB.m_NodeID);
+
+            AllEffectsNodeInEditor.Remove(nB.m_NodeID);
         }
 
         void OnClickRemoveConnection(Connection connectionToRemove)

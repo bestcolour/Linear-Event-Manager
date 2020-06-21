@@ -157,6 +157,11 @@ namespace LEM_Editor
             LEMStyleLibrary.EndEditorLabelColourChange();
         }
 
+        public void RemoveChildFromDictionary(string nodeID)
+        {
+            m_NestedNodesDictionary.Remove(nodeID);
+        }
+
         public void UpdateNestedNodes()
         {
             string[] keys = NestedNodesNodeIDs;
