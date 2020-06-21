@@ -4,6 +4,7 @@ using LEM_Effects.Extensions;
 
 /// <summary>
 /// This is the Manager for all LinearEvents. This is where all Linear Events are updated in each Update Loop.
+/// This script must be initialised first before any linear event is called
 /// It must be ensured that there can be only one instance of this manager at any given time. (Place this component prefably on a global PersistentObject)
 /// </summary>
 public class LinearEventsManager : MonoBehaviour
