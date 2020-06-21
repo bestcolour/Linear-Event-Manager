@@ -44,6 +44,7 @@ namespace LEM_Editor
 
         //const string k_EditorPref_EditorEffectsContainerKey = "effectsContainerPath";
         const string k_EditorPref_LinearEventKey = "linearEventScenePath";
+        const string k_EditorPref_LinearEventID = "linearEventID";
         const string k_EditorPref_SettingsKey = "currentSettings";
         const string k_DefaultSettingsFolderAssetPath = "Assets/Editor/LEM_Editor_Files/Node_LEM";
 
@@ -1970,14 +1971,13 @@ namespace LEM_Editor
             SaveToLinearEvent();
 
             //Save string path of current LE to editor pref
-            //string sceneAssetBasePath = EditorSceneManager.GetActiveScene().path;
             string linearEventScenePath = CurrentLE.transform.GetGameObjectPath();
 
-            //EditorPrefs.SetString("sceneAssetBasePath", sceneAssetBasePath);
             EditorPrefs.SetString(k_EditorPref_LinearEventKey, linearEventScenePath);
 
-            //linearEventScenePath = EditorEffectsContainer.transform.GetGameObjectPath();
-            //EditorPrefs.SetString(k_EditorPref_EditorEffectsContainerKey, linearEventScenePath);
+            //Get instance id 
+            int linearEventInstanceId = CurrentLE.GetInstanceID();
+            EditorPrefs.SetInt(k_EditorPref_LinearEventID, linearEventInstanceId);
 
             DeleteEditorContainer();
         }
@@ -2064,12 +2064,25 @@ namespace LEM_Editor
             if (string.IsNullOrEmpty(linearEventPath))
                 return;
 
-            LinearEvent prevLE = GameObject.Find(linearEventPath).GetComponent<LinearEvent>();
+
+            //LinearEvent prevLE;
+            LinearEvent[] eventsOnKeyedObject = GameObject.Find(linearEventPath).GetComponents<LinearEvent>();
+
+            //Get instance id from editorprefs
+            int linearEventInstanceId = EditorPrefs.GetInt(k_EditorPref_LinearEventID);
+
+            for (int i = 0; i < eventsOnKeyedObject.Length; i++)
+            {
+                if (eventsOnKeyedObject[i].GetInstanceID() != linearEventInstanceId)
+                    continue;
+
+
+                NodeLEM_Editor.LoadNodeEditor(eventsOnKeyedObject[i]);
+            }
 
             //linearEventPath = EditorPrefs.GetString(k_EditorPref_EditorEffectsContainerKey);
             //EditorEffectsContainer = GameObject.Find(linearEventPath);
 
-            NodeLEM_Editor.LoadNodeEditor(prevLE);
         }
 
         void LoadFromLinearEvent()
