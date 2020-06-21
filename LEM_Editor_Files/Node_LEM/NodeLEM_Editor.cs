@@ -1,12 +1,10 @@
-﻿using UnityEditor.SceneManagement;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
 using LEM_Effects;
 using LEM_Effects.Extensions;
 using System.Linq;
-using UnityEditor.Graphs;
 
 namespace LEM_Editor
 {
