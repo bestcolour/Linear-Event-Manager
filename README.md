@@ -11,24 +11,24 @@ Quick Steps to setting up LEM.
 
 
 NODE EDITOR SPECIFIC CONTROLS
-Right Click: Opens search box to search for Effects for which the Linear Event you are currently editing will play.
-Crlt + Click on searchbox option: Creates the selected option node but does'nt close the searchbox
-Crlt + Q: Undo previous action (Does not Undo changes done to the fields displayed on the Node)
-Crlt + W: Redo previous action (Does not Redo changes done to the fields displayed on the Node)
-Crlt + S: Saves currently editing Linear Event (Depending on settings, see Settings section)
-Crlt + C selected nodes: Copy
-Crlt + X selected nodes: Cut
-Crlt + V: Paste
-Crlt + G: Group selected nodes
-DeleteKey: Delete selected nodes
-Scroll: Zooms in or out normally
-Alt + Scroll: Zooms in or out slowly
-Click + Drag: Select nodes within the dragged area
-Alt + Click + Drag: Pan around the node editor
+- Right Click: Opens search box to search for Effects for which the Linear Event you are currently editing will play.
+- Crlt + Click on searchbox option: Creates the selected option node but does'nt close the searchbox
+- Crlt + Q: Undo previous action (Does not Undo changes done to the fields displayed on the Node)
+- Crlt + W: Redo previous action (Does not Redo changes done to the fields displayed on the Node)
+- Crlt + S: Saves currently editing Linear Event (Depending on settings, see Settings section)
+- Crlt + C selected nodes: Copy
+- Crlt + X selected nodes: Cut
+- Crlt + V: Paste
+- Crlt + G: Group selected nodes
+- DeleteKey: Delete selected nodes
+- Scroll: Zooms in or out normally
+- Alt + Scroll: Zooms in or out slowly
+- Click + Drag: Select nodes within the dragged area
+- Alt + Click + Drag: Pan around the node editor
 
 
 SETTINGS
-Setting is a scriptableobject asset which can be created by right clicking and clicking on the "Create > NODELEM Settings" but by default the package should have one in the Editor Folder
+- Setting is a scriptableobject asset which can be created by right clicking and clicking on the "Create > NODELEM Settings" but by default the package should have one in the Editor Folder
 
 Theme: Choose Dark im serious it looks better in my opinion.
 
