@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+
 using UnityEngine.Events;
 
 //You can remove this namespace if you wish to use this as well!s
@@ -19,4 +19,3 @@ namespace LEM_Effects.Extensions
     }
 
 }
-#endif
