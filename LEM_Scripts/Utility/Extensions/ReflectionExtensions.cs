@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+
 using System.Collections.Generic;
 using System;
 using System.Reflection;
@@ -141,4 +141,3 @@ namespace LEM_Effects.Extensions
 
 }
 
-#endif
